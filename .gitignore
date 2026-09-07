@@ -1,0 +1,50 @@
+# operating system
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# python, everywhere in the repo
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+
+# tooling caches
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# node, everywhere in the repo
+node_modules/
+
+# claude code state, all of it. the skill packs are third-party material with
+# their own licences and are not this project's code.
+.claude/
+
+# the owner's own notes, kept local. the file says so on its first line.
+/notes.md
+
+# documents kept local rather than published. the code is the repository; the
+# notes, plans and running logs beside it are working material.
+/CLAUDE.md
+/LICENSE
+/README.md
+/rules.md
+/math/01-fractals/NARRATION.md
+/math/01-fractals/CHUNKLOG.md
+/math/01-fractals/HANDOFF.md
+/math/01-fractals/PLAN.md
+/math/01-fractals/fractals_idea.md
+/math/01-fractals/plan/
+/math/web-math-fr/docs/

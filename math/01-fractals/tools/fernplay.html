@@ -1,0 +1,1346 @@
+<title>Fractal Player</title>
+<style>
+  :root {
+    --bg: #0E1116;
+    --ink: #E8E8EA;
+    --blue: #58C4DD;
+    --violet: #B49BE8;
+    --coral: #FF6B6B;
+    --green: #63D471;
+    --muted: #7C828C;
+    --leaf: #A5E3A0;
+    --sky: #8FD3E8;
+    --edge: #23262c;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 14px;
+  }
+  h1 { font-size: 15px; font-weight: 600; margin: 0 0 2px; letter-spacing: .3px; }
+  p#lead { color: var(--muted); margin: 0 0 10px; max-width: 900px; }
+  #tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 12px; }
+  #wrap { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+  #stage { position: relative; }
+  canvas#view { background: #080a0d; border: 1px solid var(--edge); border-radius: 4px; display: block; }
+  canvas#pick {
+    position: absolute; left: 10px; bottom: 10px; display: none;
+    border: 1px solid var(--leaf); border-radius: 3px; cursor: crosshair;
+    background: #080a0d;
+  }
+  #panel { width: 400px; min-width: 330px; }
+  fieldset { border: 1px solid var(--edge); border-radius: 4px; margin: 0 0 10px; padding: 8px 10px 10px; }
+  legend { color: var(--leaf); font-size: 12px; padding: 0 4px; letter-spacing: .2px; }
+  .row { display: grid; grid-template-columns: 74px 1fr 66px; gap: 8px; align-items: center; margin: 4px 0; }
+  .row > label { color: var(--muted); font-size: 12px; }
+  .row output { color: var(--sky); font-family: ui-monospace, Menlo, monospace; text-align: right; font-size: 12px; }
+  input[type=range] { width: 100%; accent-color: var(--leaf); height: 18px; }
+  input[type=text], textarea {
+    width: 100%; background: #0d1015; color: var(--ink); border: 1px solid var(--edge);
+    border-radius: 3px; padding: 4px 6px; font: 12px ui-monospace, Menlo, monospace;
+    box-sizing: border-box;
+  }
+  input[type=text]:focus, textarea:focus { outline: none; border-color: var(--leaf); }
+  textarea { resize: vertical; min-height: 46px; }
+  .strip { display: flex; gap: 6px; margin: 4px 0 8px; flex-wrap: wrap; }
+  button {
+    background: #161a20; color: var(--ink); border: 1px solid #2b3038;
+    border-radius: 3px; padding: 5px 10px; cursor: pointer; font-size: 12px;
+  }
+  button:hover { border-color: var(--leaf); }
+  button[aria-pressed="true"] { border-color: var(--leaf); color: var(--leaf); }
+  button.swatch[aria-pressed="true"] { border-color: currentColor; }
+  #stats { color: var(--muted); margin-top: 8px; font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  #stats b { color: var(--leaf); font-weight: 600; }
+  .warn { color: var(--coral); }
+  .note { color: var(--muted); font-size: 12px; margin: 2px 0 0; }
+  .lines { font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+</style>
+
+<h1>Fractal Player</h1>
+<p id="lead"></p>
+
+<div id="tabs"></div>
+
+<div id="wrap">
+  <div id="stage">
+    <canvas id="view" width="620" height="720"></canvas>
+    <canvas id="pick" width="150" height="150" title="click to move c"></canvas>
+  </div>
+  <div id="panel">
+    <div id="groups"></div>
+    <div class="strip" id="actions"></div>
+    <div id="stats"></div>
+  </div>
+</div>
+
+<script>
+// pure-maths start
+
+function rngFrom(seed) {
+  let t = seed >>> 0;
+  return function () {
+    t += 0x6D2B79F5;
+    let r = t;
+    r = Math.imul(r ^ (r >>> 15), r | 1);
+    r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function contraction(m) {
+  const t = m.a * m.a + m.b * m.b + m.c * m.c + m.d * m.d;
+  const det = m.a * m.d - m.b * m.c;
+  const root = Math.sqrt(Math.max(t * t - 4 * det * det, 0));
+  return Math.sqrt(Math.max((t + root) / 2, 0));
+}
+
+function runGame(maps, opt) {
+  const total = opt.points;
+  const weights = maps.map(m => Math.max(m.p, 0));
+  const sum = weights.reduce((a, b) => a + b, 0) || 1;
+  const cuts = [];
+  let acc = 0;
+  weights.forEach(w => { acc += w / sum; cuts.push(acc); });
+
+  const rand = opt.seed === undefined ? Math.random : rngFrom(opt.seed);
+  let x = opt.startx, y = opt.starty;
+  const xs = new Float64Array(total), ys = new Float64Array(total);
+  const who = new Uint8Array(total);
+  let kept = 0, escaped = false;
+  for (let i = 0; i < total + opt.drop; i++) {
+    const r = rand();
+    let k = 0;
+    while (k < cuts.length - 1 && r > cuts[k]) k++;
+    const m = maps[k];
+    const nx = m.a * x + m.b * y + m.e;
+    const ny = m.c * x + m.d * y + m.f;
+    x = nx; y = ny;
+    if (!isFinite(x) || !isFinite(y) || Math.abs(x) > 1e6 || Math.abs(y) > 1e6) {
+      escaped = true;
+      break;
+    }
+    if (i >= opt.drop) { xs[kept] = x; ys[kept] = y; who[kept] = k; kept++; }
+  }
+  return {xs, ys, who, kept, escaped};
+}
+
+function boxDimension(xs, ys, kept, opt) {
+  const cfg = opt || {};
+  const least = cfg.least === undefined ? 500 : cfg.least;
+  const cuts = cfg.cuts || [8, 16, 32, 64, 128];
+  if (kept < least) return null;
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (let i = 0; i < kept; i++) {
+    if (xs[i] < x0) x0 = xs[i];
+    if (xs[i] > x1) x1 = xs[i];
+    if (ys[i] < y0) y0 = ys[i];
+    if (ys[i] > y1) y1 = ys[i];
+  }
+  const span = Math.max(x1 - x0, y1 - y0);
+  if (!(span > 0)) return null;
+  const sizes = cuts.map(n => span / n);
+  const logs = sizes.map(s => {
+    const seen = new Set();
+    for (let i = 0; i < kept; i++) {
+      seen.add(Math.floor((xs[i] - x0) / s) + "," + Math.floor((ys[i] - y0) / s));
+    }
+    return [Math.log(s), Math.log(seen.size)];
+  });
+  const n = logs.length;
+  const mx = logs.reduce((a, p) => a + p[0], 0) / n;
+  const my = logs.reduce((a, p) => a + p[1], 0) / n;
+  let num = 0, den = 0;
+  logs.forEach(p => { num += (p[0] - mx) * (p[1] - my); den += (p[0] - mx) ** 2; });
+  return den === 0 ? null : -num / den;
+}
+
+function parseRules(text) {
+  const rules = {};
+  text.split(/\n+/).forEach(line => {
+    const m = line.trim().match(/^([A-Za-z])\s*(?:=|->)\s*(.*)$/);
+    if (m) rules[m[1]] = m[2].trim();
+  });
+  return rules;
+}
+
+function expand(axiom, rules, passes, cap) {
+  let word = axiom;
+  for (let i = 0; i < passes; i++) {
+    let out = "";
+    for (const ch of word) out += (rules[ch] !== undefined ? rules[ch] : ch);
+    if (out.length > cap) return {word: word, reached: i, capped: true};
+    word = out;
+  }
+  return {word: word, reached: passes, capped: false};
+}
+
+const DRAWN = /[A-WZ]/;
+
+function turtle(word, angleDeg, jitter, rand) {
+  const a = angleDeg * Math.PI / 180;
+  let x = 0, y = 0, h = Math.PI / 2, depth = 0;
+  const stack = [];
+  const segs = [];
+  const wobble = () => (jitter > 0 && rand ? 1 + (rand() * 2 - 1) * jitter : 1);
+  for (const ch of word) {
+    if (ch === "+") h += a * wobble();
+    else if (ch === "-") h -= a * wobble();
+    else if (ch === "[") { stack.push([x, y, h, depth]); depth++; }
+    else if (ch === "]") {
+      const s = stack.pop();
+      if (s) { x = s[0]; y = s[1]; h = s[2]; depth = s[3]; }
+    } else if (ch === "f") { x += Math.cos(h); y += Math.sin(h); }
+    else if (DRAWN.test(ch)) {
+      const nx = x + Math.cos(h), ny = y + Math.sin(h);
+      segs.push([x, y, nx, ny, depth]);
+      x = nx; y = ny;
+    }
+  }
+  return segs;
+}
+
+function relax(st, sweeps) {
+  const rows = st.rows, cols = st.cols, phi = st.phi, fixed = st.fixed;
+  const next = new Float64Array(phi.length);
+  for (let s = 0; s < sweeps; s++) {
+    next.set(phi);
+    for (let r = 1; r < rows - 1; r++) {
+      const row = r * cols;
+      for (let c = 1; c < cols - 1; c++) {
+        const i = row + c;
+        if (fixed[i]) continue;
+        next[i] = 0.25 * (phi[i - cols] + phi[i + cols] + phi[i - 1] + phi[i + 1]);
+      }
+    }
+    for (let r = 0; r < rows; r++) {
+      const row = r * cols;
+      if (!fixed[row]) next[row] = next[row + 1];
+      if (!fixed[row + cols - 1]) next[row + cols - 1] = next[row + cols - 2];
+    }
+    phi.set(next);
+  }
+}
+
+function dbmCreate(rows, cols, seed, sweeps, mode) {
+  const n = rows * cols;
+  const st = {
+    rows: rows, cols: cols, mode: mode || "gap",
+    phi: new Float64Array(n),
+    fixed: new Uint8Array(n),
+    cluster: new Uint8Array(n),
+    order: [],
+    rand: rngFrom(seed),
+    done: false,
+  };
+  let seedAt;
+  if (st.mode === "point") {
+    const mr = rows >> 1, mc = cols >> 1;
+    const far = Math.min(mr, mc);
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        st.phi[r * cols + c] = Math.min(1, Math.hypot(r - mr, c - mc) / far);
+      }
+    }
+    for (let c = 0; c < cols; c++) {
+      st.phi[c] = 1; st.fixed[c] = 1;
+      st.phi[(rows - 1) * cols + c] = 1; st.fixed[(rows - 1) * cols + c] = 1;
+    }
+    for (let r = 0; r < rows; r++) {
+      st.phi[r * cols] = 1; st.fixed[r * cols] = 1;
+      st.phi[r * cols + cols - 1] = 1; st.fixed[r * cols + cols - 1] = 1;
+    }
+    seedAt = mr * cols + mc;
+  } else {
+    for (let r = 0; r < rows; r++) {
+      const v = r / (rows - 1);
+      for (let c = 0; c < cols; c++) st.phi[r * cols + c] = v;
+    }
+    for (let c = 0; c < cols; c++) {
+      st.phi[c] = 0; st.fixed[c] = 1;
+      const b = (rows - 1) * cols + c;
+      st.phi[b] = 1; st.fixed[b] = 1;
+    }
+    seedAt = cols + (cols >> 1);
+  }
+  st.cluster[seedAt] = 1;
+  st.fixed[seedAt] = 1;
+  st.phi[seedAt] = 0;
+  st.order.push(seedAt);
+  relax(st, sweeps);
+  return st;
+}
+
+function dbmStep(st, eta, warm) {
+  const rows = st.rows, cols = st.cols, phi = st.phi, cluster = st.cluster;
+  const idx = [], w = [];
+  let total = 0;
+  for (let r = 1; r < rows - 1; r++) {
+    const row = r * cols;
+    for (let c = 1; c < cols - 1; c++) {
+      const i = row + c;
+      if (cluster[i]) continue;
+      if (!(cluster[i - cols] || cluster[i + cols] || cluster[i - 1] || cluster[i + 1])) continue;
+      const p = Math.pow(Math.max(phi[i], 0), eta);
+      idx.push(i); w.push(p); total += p;
+    }
+  }
+  if (!idx.length || !(total > 0)) { st.done = true; return false; }
+  let r = st.rand() * total, k = 0;
+  while (k < idx.length - 1 && r > w[k]) { r -= w[k]; k++; }
+  const at = idx[k];
+  cluster[at] = 1;
+  st.fixed[at] = 1;
+  phi[at] = 0;
+  st.order.push(at);
+  const hitRow = Math.floor(at / cols), hitCol = at % cols;
+  if (st.mode === "point") {
+    if (hitRow <= 1 || hitRow >= rows - 2 || hitCol <= 1 || hitCol >= cols - 2) st.done = true;
+  } else if (hitRow >= rows - 2) st.done = true;
+  relax(st, warm);
+  return true;
+}
+
+function dlaCreate(size, seed) {
+  const st = {
+    size: size,
+    grid: new Uint8Array(size * size),
+    order: [],
+    tracks: [],
+    radius: 2,
+    rand: rngFrom(seed),
+    done: false,
+  };
+  const at = (size >> 1) * size + (size >> 1);
+  st.grid[at] = 1;
+  st.order.push(at);
+  return st;
+}
+
+function dlaLaunch(st, kill, cap, traceLimit) {
+  const size = st.size, half = size >> 1, grid = st.grid;
+  const keep = traceLimit > 0;
+  const walk = keep ? [] : null;
+  const start = st.radius + 2;
+  const angle = st.rand() * Math.PI * 2;
+  let y = Math.round(half + start * Math.sin(angle));
+  let x = Math.round(half + start * Math.cos(angle));
+  const gone = (kill * start) * (kill * start);
+  for (let n = 0; n < cap; n++) {
+    if (keep) walk.push(y * size + x);
+    const d = st.rand();
+    if (d < 0.25) y += 1;
+    else if (d < 0.5) y -= 1;
+    else if (d < 0.75) x += 1;
+    else x -= 1;
+    const dy = y - half, dx = x - half;
+    if (dy * dy + dx * dx > gone) return false;
+    if (y < 1 || y >= size - 1 || x < 1 || x >= size - 1) return false;
+    if (grid[(y - 1) * size + x] || grid[(y + 1) * size + x]
+        || grid[y * size + x - 1] || grid[y * size + x + 1]) {
+      const at = y * size + x;
+      grid[at] = 1;
+      st.order.push(at);
+      const reach = Math.hypot(dy, dx) + 1;
+      if (reach > st.radius) st.radius = reach;
+      if (st.radius >= half - 2) st.done = true;
+      if (keep) {
+        walk.push(at);
+        st.tracks.push(walk);
+        while (st.tracks.length > traceLimit) st.tracks.shift();
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
+function dlaGrow(st, want, target, kill, cap, traceLimit) {
+  let added = 0, tries = 0;
+  while (added < want && tries < 400) {
+    if (st.done || st.order.length >= target) { break; }
+    tries++;
+    if (dlaLaunch(st, kill, cap, traceLimit)) added++;
+  }
+  return added;
+}
+
+function massDimension(order, size, shares) {
+  if (order.length < 60) return null;
+  const half = size >> 1;
+  let reach = 0;
+  const rad = new Float64Array(order.length);
+  for (let i = 0; i < order.length; i++) {
+    const dy = Math.floor(order[i] / size) - half, dx = order[i] % size - half;
+    rad[i] = Math.hypot(dy, dx);
+    if (rad[i] > reach) reach = rad[i];
+  }
+  if (!(reach > 4)) return null;
+  const logs = [];
+  for (const f of shares) {
+    const r = reach * f;
+    let n = 0;
+    for (let i = 0; i < rad.length; i++) if (rad[i] <= r) n++;
+    if (n > 0) logs.push([Math.log(r), Math.log(n)]);
+  }
+  if (logs.length < 3) return null;
+  const n = logs.length;
+  const mx = logs.reduce((a, p) => a + p[0], 0) / n;
+  const my = logs.reduce((a, p) => a + p[1], 0) / n;
+  let num = 0, den = 0;
+  logs.forEach(p => { num += (p[0] - mx) * (p[1] - my); den += (p[0] - mx) ** 2; });
+  return den === 0 ? null : num / den;
+}
+
+function escapeCount(zx0, zy0, cx, cy, iters, radius) {
+  let zx = zx0, zy = zy0;
+  const r2 = radius * radius;
+  for (let n = 1; n <= iters; n++) {
+    const t = zx * zx - zy * zy + cx;
+    zy = 2 * zx * zy + cy;
+    zx = t;
+    if (zx * zx + zy * zy > r2) return n;
+  }
+  return -1;
+}
+
+// pure-maths end
+
+const ESCAPE_STOPS = ["#1E1440", "#4A2A8C", "#8A3AB8", "#C75AB0", "#F0BEE0"];
+const ROLE = ["#B49BE8", "#58C4DD", "#63D471", "#FF6B6B", "#A5E3A0", "#8FD3E8"];
+const BACK = [8, 10, 13];
+
+function hexToRgb(h) {
+  const v = h.replace("#", "");
+  return [parseInt(v.slice(0, 2), 16), parseInt(v.slice(2, 4), 16), parseInt(v.slice(4, 6), 16)];
+}
+
+function rampOf(stops, n) {
+  const cols = stops.map(hexToRgb);
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1) * (cols.length - 1);
+    const lo = Math.floor(t), hi = Math.min(lo + 1, cols.length - 1), f = t - lo;
+    out.push([0, 1, 2].map(j => Math.round(cols[lo][j] * (1 - f) + cols[hi][j] * f)));
+  }
+  return out;
+}
+
+const RAMP = rampOf(ESCAPE_STOPS, 256);
+
+const view = document.getElementById("view");
+const ctx = view.getContext("2d");
+const pick = document.getElementById("pick");
+const pickCtx = pick.getContext("2d");
+const statsHost = document.getElementById("stats");
+
+let loop = null;
+let refine = null;
+function stopLoop() {
+  if (loop) { cancelAnimationFrame(loop); loop = null; }
+  if (refine) { clearTimeout(refine); refine = null; }
+}
+
+function clearCanvas() {
+  ctx.fillStyle = "#080a0d";
+  ctx.fillRect(0, 0, view.width, view.height);
+}
+
+function say(html) { statsHost.innerHTML = html; }
+
+function fitTo(x0, x1, y0, y1, w, h, pad) {
+  const sx = (x1 - x0) || 1, sy = (y1 - y0) || 1;
+  const k = Math.min(w * (1 - 2 * pad) / sx, h * (1 - 2 * pad) / sy);
+  return {
+    k: k,
+    ox: (w - sx * k) / 2 - x0 * k,
+    oy: h - (h - sy * k) / 2 + y0 * k,
+    sx: sx, sy: sy,
+  };
+}
+
+// ---------------------------------------------------------------- iterated maps
+
+const IFS_PRESETS = {
+  "Barnsley fern": [
+    {a: 0.00, b: 0.00, c: 0.00, d: 0.16, e: 0.00, f: 0.00, p: 0.01},
+    {a: 0.85, b: 0.04, c: -0.04, d: 0.85, e: 0.00, f: 1.60, p: 0.85},
+    {a: 0.20, b: -0.26, c: 0.23, d: 0.22, e: 0.00, f: 1.60, p: 0.07},
+    {a: -0.15, b: 0.28, c: 0.26, d: 0.24, e: 0.00, f: 0.44, p: 0.07},
+  ],
+  "Barnsley tree": [
+    {a: 0.00, b: 0.00, c: 0.00, d: 0.50, e: 0.00, f: 0.00, p: 0.05},
+    {a: 0.10, b: 0.00, c: 0.00, d: 0.10, e: 0.00, f: 0.20, p: 0.15},
+    {a: 0.42, b: -0.42, c: 0.42, d: 0.42, e: 0.00, f: 0.20, p: 0.40},
+    {a: 0.42, b: 0.42, c: -0.42, d: 0.42, e: 0.00, f: 0.20, p: 0.40},
+  ],
+  "Sierpinski triangle": [
+    {a: 0.5, b: 0, c: 0, d: 0.5, e: 0.00, f: 0.000, p: 1 / 3},
+    {a: 0.5, b: 0, c: 0, d: 0.5, e: 0.50, f: 0.000, p: 1 / 3},
+    {a: 0.5, b: 0, c: 0, d: 0.5, e: 0.25, f: 0.433, p: 1 / 3},
+  ],
+  "Heighway dragon": [
+    {a: 0.5, b: -0.5, c: 0.5, d: 0.5, e: 0, f: 0, p: 0.5},
+    {a: -0.5, b: -0.5, c: 0.5, d: -0.5, e: 1, f: 0, p: 0.5},
+  ],
+  "Levy C curve": [
+    {a: 0.5, b: 0.5, c: -0.5, d: 0.5, e: 0.0, f: 0.0, p: 0.5},
+    {a: 0.5, b: -0.5, c: 0.5, d: 0.5, e: 0.5, f: -0.5, p: 0.5},
+  ],
+};
+
+const KEYS = ["a", "b", "c", "d", "e", "f"];
+const LIMITS = {a: 1.5, b: 1.5, c: 1.5, d: 1.5, e: 6, f: 12};
+
+const ifsState = {
+  preset: "Barnsley fern",
+  maps: IFS_PRESETS["Barnsley fern"].map(m => ({...m})),
+  active: 1,
+  points: 90000,
+  startx: 0,
+  starty: 0,
+  drop: 20,
+  colour: "per move",
+};
+
+function ifsPanel() {
+  ifsState.active = Math.max(0, Math.min(ifsState.active, ifsState.maps.length - 1));
+  const g = document.getElementById("groups");
+  g.textContent = "";
+
+  const shape = fieldset("which shape");
+  const presets = document.createElement("div");
+  presets.className = "strip";
+  Object.keys(IFS_PRESETS).forEach(name => {
+    presets.appendChild(pressed(name, ifsState.preset === name, () => {
+      ifsState.preset = name;
+      ifsState.maps = IFS_PRESETS[name].map(m => ({...m}));
+      ifsState.active = Math.min(ifsState.active, ifsState.maps.length - 1);
+      ifsPanel(); redraw();
+    }));
+  });
+  shape.appendChild(presets);
+  g.appendChild(shape);
+
+  const which = fieldset("which move");
+  const buttons = document.createElement("div");
+  buttons.className = "strip";
+  ifsState.maps.forEach((m, i) => {
+    const b = pressed("move " + (i + 1), i === ifsState.active, () => {
+      ifsState.active = i; ifsPanel();
+    });
+    b.classList.add("swatch");
+    b.style.color = ifsState.colour === "one colour" ? "" : ROLE[i % ROLE.length];
+    buttons.appendChild(b);
+  });
+  which.appendChild(buttons);
+  KEYS.forEach(k => {
+    which.appendChild(range(k, -LIMITS[k], LIMITS[k], 0.005,
+      () => ifsState.maps[ifsState.active][k],
+      v => { ifsState.maps[ifsState.active][k] = v; },
+      v => v.toFixed(3)));
+  });
+  which.appendChild(range("p  chance", 0, 1, 0.005,
+    () => ifsState.maps[ifsState.active].p,
+    v => { ifsState.maps[ifsState.active].p = v; },
+    v => v.toFixed(3)));
+  const shrink = document.createElement("div");
+  shrink.className = "lines";
+  shrink.id = "shrinkLines";
+  which.appendChild(shrink);
+  g.appendChild(which);
+
+  const colours = fieldset("colour");
+  const modes = document.createElement("div");
+  modes.className = "strip";
+  ["one colour", "per move", "this move only"].forEach(mode => {
+    modes.appendChild(pressed(mode, ifsState.colour === mode, () => {
+      ifsState.colour = mode; ifsPanel(); redraw();
+    }));
+  });
+  colours.appendChild(modes);
+  const hint = document.createElement("p");
+  hint.className = "note";
+  hint.textContent = "per move gives each of the moves its own colour, so it is visible which "
+    + "points came from which. this move only lights the chosen move and dims the rest.";
+  colours.appendChild(hint);
+  g.appendChild(colours);
+
+  const run = fieldset("run");
+  run.appendChild(range("n  points", 2000, 300000, 2000,
+    () => ifsState.points, v => { ifsState.points = Math.round(v); },
+    v => Math.round(v).toLocaleString()));
+  run.appendChild(range("x0  start", -5, 5, 0.05,
+    () => ifsState.startx, v => { ifsState.startx = v; }, v => v.toFixed(2)));
+  run.appendChild(range("y0  start", -5, 15, 0.05,
+    () => ifsState.starty, v => { ifsState.starty = v; }, v => v.toFixed(2)));
+  run.appendChild(range("d  discard", 0, 200, 5,
+    () => ifsState.drop, v => { ifsState.drop = Math.round(v); },
+    v => String(Math.round(v))));
+  g.appendChild(run);
+
+  actions([
+    ["Back to the preset", () => {
+      ifsState.maps = IFS_PRESETS[ifsState.preset].map(m => ({...m}));
+      ifsPanel(); redraw();
+    }],
+    ["Random moves", () => {
+      const pick2 = () => Math.random() * 1.2 - 0.6;
+      ifsState.maps = ifsState.maps.map(() => ({
+        a: pick2(), b: pick2(), c: pick2(), d: pick2(),
+        e: Math.random() * 2 - 1, f: Math.random() * 2 - 1,
+        p: 1 / ifsState.maps.length,
+      }));
+      ifsPanel(); redraw();
+    }],
+    ["Save image", saveImage],
+  ]);
+  refreshShrink();
+}
+
+function refreshShrink() {
+  const host = document.getElementById("shrinkLines");
+  if (!host) return;
+  host.textContent = "";
+  ifsState.maps.forEach((m, i) => {
+    const s = contraction(m);
+    const line = document.createElement("div");
+    line.style.color = s < 1 ? "var(--muted)" : "var(--coral)";
+    line.textContent = "move " + (i + 1) + " shrinks by " + s.toFixed(3)
+      + (s < 1 ? "" : "  - above 1, this one spreads out");
+    host.appendChild(line);
+  });
+}
+
+function ifsDraw() {
+  view.width = 620; view.height = 720;
+  const res = runGame(ifsState.maps, ifsState);
+  const w = view.width, h = view.height;
+  clearCanvas();
+  refreshShrink();
+  if (res.escaped || res.kept < 10) {
+    say('<span class="warn">the point ran away - at least one move stretches instead of '
+      + 'shrinking, so there is no attractor to draw</span>');
+    return;
+  }
+  const xs = res.xs, ys = res.ys, who = res.who, kept = res.kept;
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (let i = 0; i < kept; i++) {
+    if (xs[i] < x0) x0 = xs[i];
+    if (xs[i] > x1) x1 = xs[i];
+    if (ys[i] < y0) y0 = ys[i];
+    if (ys[i] > y1) y1 = ys[i];
+  }
+  const fit = fitTo(x0, x1, y0, y1, w, h, 0.04);
+  const img = ctx.createImageData(w, h);
+  const data = img.data;
+  for (let i = 0; i < data.length; i += 4) {
+    data[i] = BACK[0]; data[i + 1] = BACK[1]; data[i + 2] = BACK[2]; data[i + 3] = 255;
+  }
+  const single = hexToRgb("#58C4DD");
+  const dim = [42, 48, 56];
+  const roles = ifsState.maps.map((m, i) => hexToRgb(ROLE[i % ROLE.length]));
+  const hot = hexToRgb("#FF6B6B");
+  for (let i = 0; i < kept; i++) {
+    const px = Math.round(xs[i] * fit.k + fit.ox);
+    const py = Math.round(fit.oy - ys[i] * fit.k);
+    if (px < 0 || px >= w || py < 0 || py >= h) continue;
+    let col = single;
+    if (ifsState.colour === "per move") col = roles[who[i]];
+    else if (ifsState.colour === "this move only") col = who[i] === ifsState.active ? hot : dim;
+    const at = (py * w + px) * 4;
+    if (ifsState.colour === "this move only" && who[i] !== ifsState.active
+        && data[at] !== BACK[0]) continue;
+    data[at] = col[0]; data[at + 1] = col[1]; data[at + 2] = col[2];
+  }
+  ctx.putImageData(img, 0, 0);
+
+  const d = boxDimension(xs, ys, kept);
+  let counts = "";
+  if (ifsState.colour !== "one colour") {
+    const tally = new Array(ifsState.maps.length).fill(0);
+    for (let i = 0; i < kept; i++) tally[who[i]]++;
+    counts = "<br>" + tally.map((n, i) =>
+      '<span style="color:' + ROLE[i % ROLE.length] + '">move ' + (i + 1) + " "
+      + n.toLocaleString() + "</span>").join("   ");
+  }
+  say("points kept " + kept.toLocaleString()
+    + "<br>width " + fit.sx.toFixed(2) + "   height " + fit.sy.toFixed(2)
+    + (d ? "<br>measured box dimension <b>" + d.toFixed(3) + "</b>" : "")
+    + counts);
+}
+
+// ------------------------------------------------------- Lindenmayer rewriting
+
+const LSYS_PRESETS = {
+  "plant": {axiom: "X", rules: "X = F+[[X]-X]-F[-FX]+X\nF = FF", angle: 25, passes: 6},
+  "Levy C curve": {axiom: "F", rules: "F = +F--F+", angle: 45, passes: 12},
+  "Koch curve": {axiom: "F", rules: "F = F+F--F+F", angle: 60, passes: 4},
+  "Koch snowflake": {axiom: "F--F--F", rules: "F = F+F--F+F", angle: 60, passes: 4},
+  "Sierpinski arrowhead": {axiom: "A", rules: "A = B-A-B\nB = A+B+A", angle: 60, passes: 7},
+  "Gosper flowsnake": {axiom: "A", rules: "A = A-B--B+A++AA+B-\nB = +A-BB--B-A++A+B", angle: 60, passes: 4},
+  "dragon": {axiom: "FX", rules: "X = X+YF+\nY = -FX-Y", angle: 90, passes: 11},
+};
+
+const lsysState = Object.assign({preset: "plant", jitter: 0, seed: 7, cap: 900000},
+  LSYS_PRESETS["plant"]);
+
+function lsysPanel() {
+  const g = document.getElementById("groups");
+  g.textContent = "";
+
+  const shape = fieldset("which rule set");
+  const presets = document.createElement("div");
+  presets.className = "strip";
+  Object.keys(LSYS_PRESETS).forEach(name => {
+    presets.appendChild(pressed(name, lsysState.preset === name, () => {
+      Object.assign(lsysState, LSYS_PRESETS[name], {preset: name});
+      lsysPanel(); redraw();
+    }));
+  });
+  shape.appendChild(presets);
+  g.appendChild(shape);
+
+  const rules = fieldset("seed and rules");
+  rules.appendChild(textRow("axiom", () => lsysState.axiom, v => { lsysState.axiom = v; }));
+  rules.appendChild(areaRow("rules", () => lsysState.rules, v => { lsysState.rules = v; }));
+  const hint = document.createElement("p");
+  hint.className = "note";
+  hint.textContent = "one rule a line, as symbol = replacement. any capital letter draws a "
+    + "step except X and Y, which only carry the rule along. + and - turn, [ and ] remember "
+    + "and return to a point.";
+  rules.appendChild(hint);
+  g.appendChild(rules);
+
+  const knobs = fieldset("turtle");
+  knobs.appendChild(range("turn", 0, 120, 0.5,
+    () => lsysState.angle, v => { lsysState.angle = v; }, v => v.toFixed(1) + "°"));
+  knobs.appendChild(range("passes", 0, 14, 1,
+    () => lsysState.passes, v => { lsysState.passes = Math.round(v); },
+    v => String(Math.round(v))));
+  knobs.appendChild(range("wobble", 0, 0.6, 0.01,
+    () => lsysState.jitter, v => { lsysState.jitter = v; }, v => v.toFixed(2)));
+  knobs.appendChild(range("seed", 1, 200, 1,
+    () => lsysState.seed, v => { lsysState.seed = Math.round(v); },
+    v => String(Math.round(v))));
+  g.appendChild(knobs);
+
+  actions([
+    ["Back to the preset", () => {
+      Object.assign(lsysState, LSYS_PRESETS[lsysState.preset]);
+      lsysPanel(); redraw();
+    }],
+    ["Save image", saveImage],
+  ]);
+}
+
+function lsysDraw() {
+  view.width = 620; view.height = 720;
+  clearCanvas();
+  const rules = parseRules(lsysState.rules);
+  const grown = expand(lsysState.axiom, rules, lsysState.passes, lsysState.cap);
+  const segs = turtle(grown.word, lsysState.angle, lsysState.jitter, rngFrom(lsysState.seed));
+  if (!segs.length) {
+    say('<span class="warn">nothing to draw - the rules never reach a drawing symbol</span>');
+    return;
+  }
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, deep = 0;
+  segs.forEach(s => {
+    x0 = Math.min(x0, s[0], s[2]); x1 = Math.max(x1, s[0], s[2]);
+    y0 = Math.min(y0, s[1], s[3]); y1 = Math.max(y1, s[1], s[3]);
+    if (s[4] > deep) deep = s[4];
+  });
+  const fit = fitTo(x0, x1, y0, y1, view.width, view.height, 0.05);
+  const thin = segs.length > 40000;
+  for (let i = 0; i < segs.length; i++) {
+    const s = segs[i];
+    const t = deep ? s[4] / deep : 0;
+    ctx.strokeStyle = "rgb(" + Math.round(90 + 75 * t) + ","
+      + Math.round(200 + 27 * t) + "," + Math.round(120 + 40 * t) + ")";
+    ctx.lineWidth = thin ? 0.6 : Math.max(0.7, 2.4 - 1.7 * t);
+    ctx.beginPath();
+    ctx.moveTo(s[0] * fit.k + fit.ox, fit.oy - s[1] * fit.k);
+    ctx.lineTo(s[2] * fit.k + fit.ox, fit.oy - s[3] * fit.k);
+    ctx.stroke();
+  }
+  say("word length " + grown.word.length.toLocaleString()
+    + "   segments <b>" + segs.length.toLocaleString() + "</b>"
+    + "<br>passes drawn " + grown.reached + " of " + lsysState.passes
+    + "   deepest branch " + deep
+    + (grown.capped ? '<br><span class="warn">the word passed the limit, so it stopped '
+      + "expanding early - lower the passes</span>" : ""));
+}
+
+// ------------------------------------------------------ dielectric breakdown
+
+const dbmState = {mode: "point", cols: 121, eta: 1, sites: 400, seed: 9, sweeps: 300, warm: 12};
+
+function dbmRows() {
+  return dbmState.mode === "point"
+    ? Math.round(dbmState.cols * 1.04)
+    : Math.max(40, Math.round(dbmState.cols * 0.58));
+}
+let dbm = null;
+
+function dbmPanel() {
+  const g = document.getElementById("groups");
+  g.textContent = "";
+  const where = fieldset("where it starts");
+  const modes = document.createElement("div");
+  modes.className = "strip";
+  [["from a point", "point"], ["across a gap", "gap"]].forEach(([label, key]) => {
+    modes.appendChild(pressed(label, dbmState.mode === key, () => {
+      dbmState.mode = key; dbmPanel(); redraw();
+    }));
+  });
+  where.appendChild(modes);
+  const said = document.createElement("p");
+  said.className = "note";
+  said.textContent = "from a point is the Lichtenberg figure - charge injected at one spot in "
+    + "an insulator, branching out in every direction, the burn left in glass or wood. across "
+    + "a gap is the same model with two plates, which is a bolt crossing the gap.";
+  where.appendChild(said);
+  g.appendChild(where);
+
+  const knobs = fieldset("the model");
+  knobs.appendChild(range("roughness", 0, 3, 0.05,
+    () => dbmState.eta, v => { dbmState.eta = v; }, v => v.toFixed(2)));
+  knobs.appendChild(range("grid across", 61, 161, 10,
+    () => dbmState.cols, v => { dbmState.cols = Math.round(v); },
+    v => String(Math.round(v))));
+  knobs.appendChild(range("sites", 40, 900, 20,
+    () => dbmState.sites, v => { dbmState.sites = Math.round(v); },
+    v => String(Math.round(v))));
+  knobs.appendChild(range("seed", 1, 200, 1,
+    () => dbmState.seed, v => { dbmState.seed = Math.round(v); },
+    v => String(Math.round(v))));
+  knobs.appendChild(range("sweeps a site", 4, 40, 1,
+    () => dbmState.warm, v => { dbmState.warm = Math.round(v); },
+    v => String(Math.round(v))));
+  const hint = document.createElement("p");
+  hint.className = "note";
+  hint.textContent = "the field is solved on the grid, then the chance a site lights up next "
+    + "is its field strength raised to the roughness. at 0 every edge site is equally likely; "
+    + "raise it and the tips take over.";
+  knobs.appendChild(hint);
+  g.appendChild(knobs);
+  actions([
+    ["Grow it again", () => { dbmState.seed = 1 + Math.floor(Math.random() * 199); dbmPanel(); redraw(); }],
+    ["Save image", saveImage],
+  ]);
+}
+
+function dbmDraw() {
+  view.width = 620; view.height = 720;
+  stopLoop();
+  clearCanvas();
+  dbm = dbmCreate(dbmRows(), dbmState.cols, dbmState.seed, dbmState.sweeps, dbmState.mode);
+  const tick = () => {
+    let added = 0;
+    while (added < 5 && !dbm.done && dbm.order.length < dbmState.sites) {
+      if (!dbmStep(dbm, dbmState.eta, dbmState.warm)) break;
+      added++;
+    }
+    dbmPaint();
+    if (!dbm.done && dbm.order.length < dbmState.sites) loop = requestAnimationFrame(tick);
+    else loop = null;
+  };
+  tick();
+}
+
+function dbmPaint() {
+  const rows = dbm.rows, cols = dbm.cols, phi = dbm.phi;
+  const w = view.width, h = view.height;
+  const cell = Math.min(w / cols, h / rows);
+  const ox = (w - cell * cols) / 2;
+  const oy = (h - cell * rows) / 2;
+  clearCanvas();
+
+  const field = ctx.createImageData(cols, rows);
+  const fd = field.data;
+  let peak = 0;
+  const mag = new Float64Array(rows * cols);
+  for (let r = 1; r < rows - 1; r++) {
+    for (let c = 1; c < cols - 1; c++) {
+      const i = r * cols + c;
+      const gy = phi[i + cols] - phi[i - cols];
+      const gx = phi[i + 1] - phi[i - 1];
+      const m = Math.hypot(gx, gy);
+      mag[i] = m;
+      if (m > peak) peak = m;
+    }
+  }
+  const glow = hexToRgb("#B49BE8");
+  for (let i = 0; i < rows * cols; i++) {
+    const t = peak > 0 ? Math.pow(Math.min(mag[i] / peak, 1), 0.8) : 0;
+    fd[i * 4] = glow[0]; fd[i * 4 + 1] = glow[1]; fd[i * 4 + 2] = glow[2];
+    fd[i * 4 + 3] = Math.round(t * 190);
+  }
+  const tmp = document.createElement("canvas");
+  tmp.width = cols; tmp.height = rows;
+  tmp.getContext("2d").putImageData(field, 0, 0);
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(tmp, ox, oy, cell * cols, cell * rows);
+
+  if (dbm.mode === "gap") {
+    ctx.fillStyle = "#C9CED6";
+    ctx.fillRect(ox, oy, cell * cols, Math.max(2, cell));
+    ctx.fillRect(ox, oy + cell * (rows - 1), cell * cols, Math.max(2, cell));
+  }
+
+  ctx.fillStyle = "#58C4DD";
+  const xs = new Float64Array(dbm.order.length), ys = new Float64Array(dbm.order.length);
+  dbm.order.forEach((at, i) => {
+    const r = Math.floor(at / cols), c = at % cols;
+    xs[i] = c; ys[i] = r;
+    ctx.fillRect(ox + c * cell, oy + r * cell, Math.max(1, cell), Math.max(1, cell));
+  });
+
+  const d = boxDimension(xs, ys, dbm.order.length, {least: 120, cuts: [2, 4, 8, 16]});
+  say("sites lit <b>" + dbm.order.length.toLocaleString() + "</b> of " + dbmState.sites
+    + "   grid " + cols + " by " + rows
+    + (d ? "<br>measured box dimension <b>" + d.toFixed(3) + "</b>" : "")
+    + (dbm.done ? (dbm.mode === "point" ? "<br>a branch reached the edge of the block"
+                                         : "<br>the tree reached the far plate") : ""));
+}
+
+// -------------------------------------------------- diffusion-limited aggregation
+
+const dlaState = {size: 161, target: 1200, kill: 2.5, seed: 11, traced: 3, cap: 6000};
+const MASS_SHARES = [0.10, 0.17, 0.28, 0.41, 0.59];
+let dla = null;
+
+function dlaPanel() {
+  const g = document.getElementById("groups");
+  g.textContent = "";
+  const knobs = fieldset("the walk");
+  knobs.appendChild(range("particles", 200, 4000, 100,
+    () => dlaState.target, v => { dlaState.target = Math.round(v); },
+    v => String(Math.round(v))));
+  knobs.appendChild(range("grid across", 81, 201, 10,
+    () => dlaState.size, v => { dlaState.size = Math.round(v) | 1; },
+    v => String(Math.round(v) | 1)));
+  knobs.appendChild(range("let go at", 1.5, 4, 0.1,
+    () => dlaState.kill, v => { dlaState.kill = v; }, v => v.toFixed(1) + " x r"));
+  knobs.appendChild(range("walks kept", 0, 6, 1,
+    () => dlaState.traced, v => { dlaState.traced = Math.round(v); },
+    v => String(Math.round(v))));
+  knobs.appendChild(range("seed", 1, 200, 1,
+    () => dlaState.seed, v => { dlaState.seed = Math.round(v); },
+    v => String(Math.round(v))));
+  const hint = document.createElement("p");
+  hint.className = "note";
+  hint.textContent = "a particle starts on the ring, steps to one of four neighbours with "
+    + "chance a quarter each, and stops the moment it touches the cluster. let go at is how "
+    + "far it may drift before it is abandoned and another is released. walks kept draws the "
+    + "paths the last few particles actually took.";
+  knobs.appendChild(hint);
+  g.appendChild(knobs);
+  actions([
+    ["Grow it again", () => {
+      dlaState.seed = 1 + Math.floor(Math.random() * 199); dlaPanel(); redraw();
+    }],
+    ["Save image", saveImage],
+  ]);
+}
+
+function dlaDraw() {
+  view.width = 620; view.height = 720;
+  stopLoop();
+  clearCanvas();
+  dla = dlaCreate(dlaState.size, dlaState.seed);
+  const tick = () => {
+    dlaGrow(dla, 14, dlaState.target, dlaState.kill, dlaState.cap, dlaState.traced);
+    dlaPaint();
+    if (!dla.done && dla.order.length < dlaState.target) loop = requestAnimationFrame(tick);
+    else loop = null;
+  };
+  tick();
+}
+
+function dlaPaint() {
+  const size = dla.size, half = size >> 1;
+  const w = view.width, h = view.height;
+  const cell = Math.min(w, h) / size;
+  const ox = (w - cell * size) / 2;
+  const oy = (h - cell * size) / 2;
+  const put = at => [ox + (at % size + 0.5) * cell, oy + (Math.floor(at / size) + 0.5) * cell];
+  clearCanvas();
+
+  ctx.strokeStyle = "#A5E3A0";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(ox + (half + 0.5) * cell, oy + (half + 0.5) * cell,
+          Math.min(dla.radius + 2, half) * cell, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.strokeStyle = "#4A5058";
+  ctx.lineWidth = 1;
+  dla.tracks.forEach(walk => {
+    ctx.beginPath();
+    walk.forEach((at, i) => {
+      const p = put(at);
+      if (i === 0) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]);
+    });
+    ctx.stroke();
+  });
+
+  ctx.fillStyle = "#58C4DD";
+  const side = Math.max(1, cell);
+  dla.order.forEach(at => {
+    ctx.fillRect(ox + (at % size) * cell, oy + Math.floor(at / size) * cell, side, side);
+  });
+  ctx.fillStyle = "#FF6B6B";
+  const seed = put(dla.order[0]);
+  ctx.fillRect(seed[0] - side, seed[1] - side, side * 2, side * 2);
+
+  const md = massDimension(dla.order, size, MASS_SHARES);
+  const xs = new Float64Array(dla.order.length), ys = new Float64Array(dla.order.length);
+  dla.order.forEach((at, i) => { xs[i] = at % size; ys[i] = Math.floor(at / size); });
+  const bd = boxDimension(xs, ys, dla.order.length, {least: 120, cuts: [2, 4, 8, 16]});
+  const steps = dla.tracks.reduce((a, t) => a + t.length, 0);
+  say("particles stuck <b>" + dla.order.length.toLocaleString() + "</b> of " + dlaState.target
+    + "   reach " + dla.radius.toFixed(0) + " cells of " + half
+    + (md ? "<br>mass-radius dimension <b>" + md.toFixed(3) + "</b>" : "")
+    + (bd ? "   box dimension " + bd.toFixed(3) : "")
+    + (dla.tracks.length ? "<br>last " + dla.tracks.length + " walks drawn, "
+      + steps.toLocaleString() + " steps between them" : "")
+    + (dla.done ? "<br>the cluster reached the edge of the grid" : ""));
+}
+
+// ------------------------------------------------------------- escape time
+
+const escState = {
+  cRe: -0.5, cIm: 0.5, iters: 180, radius: 2,
+  jZoom: 0, jx: 0, jy: 0,
+  mZoom: 0, mx: -0.6, my: 0,
+};
+
+function escPanel(kind) {
+  const g = document.getElementById("groups");
+  g.textContent = "";
+  if (kind === "julia") {
+    const cbox = fieldset("the constant c");
+    cbox.appendChild(range("real", -2, 1, 0.002,
+      () => escState.cRe, v => { escState.cRe = v; }, v => v.toFixed(3)));
+    cbox.appendChild(range("imaginary", -1.5, 1.5, 0.002,
+      () => escState.cIm, v => { escState.cIm = v; }, v => v.toFixed(3)));
+    const hint = document.createElement("p");
+    hint.className = "note";
+    hint.textContent = "the small map at the corner is the Mandelbrot set - click it to put c "
+      + "anywhere. inside it the Julia set holds together in one piece, outside it breaks into dust.";
+    cbox.appendChild(hint);
+    g.appendChild(cbox);
+  }
+  const look = fieldset("the view");
+  const pre = kind === "julia" ? "j" : "m";
+  look.appendChild(range("zoom", 0, kind === "julia" ? 10 : 16, 0.05,
+    () => escState[pre + "Zoom"], v => { escState[pre + "Zoom"] = v; },
+    v => "x" + Math.pow(2, v).toFixed(v > 6 ? 0 : 2)));
+  look.appendChild(range("centre x", -2.5, 1.5, 0.001,
+    () => escState[pre + "x"], v => { escState[pre + "x"] = v; }, v => v.toFixed(4)));
+  look.appendChild(range("centre y", -1.6, 1.6, 0.001,
+    () => escState[pre + "y"], v => { escState[pre + "y"] = v; }, v => v.toFixed(4)));
+  look.appendChild(range("steps tried", 30, 500, 10,
+    () => escState.iters, v => { escState.iters = Math.round(v); },
+    v => String(Math.round(v))));
+  look.appendChild(range("escape at", 2, 6, 0.1,
+    () => escState.radius, v => { escState.radius = v; }, v => v.toFixed(1)));
+  const hint2 = document.createElement("p");
+  hint2.className = "note";
+  hint2.textContent = "click the big picture to centre it there. the colour of a point outside "
+    + "is the number of steps it took to pass the escape distance.";
+  look.appendChild(hint2);
+  g.appendChild(look);
+  actions([
+    ["Back to the start", () => {
+      if (kind === "julia") { escState.cRe = -0.5; escState.cIm = 0.5; escState.jZoom = 0; escState.jx = 0; escState.jy = 0; }
+      else { escState.mZoom = 0; escState.mx = -0.6; escState.my = 0; }
+      escState.iters = 180; escState.radius = 2;
+      escPanel(kind); redraw();
+    }],
+    ["Save image", saveImage],
+  ]);
+}
+
+function escDraw(kind, step) {
+  const grain = step || 1;
+  if (view.width !== 620 || view.height !== 620) { view.width = 620; view.height = 620; }
+  const w = view.width, h = view.height;
+  const pre = kind === "julia" ? "j" : "m";
+  const span = (kind === "julia" ? 1.8 : 1.6) / Math.pow(2, escState[pre + "Zoom"]);
+  const cx0 = escState[pre + "x"], cy0 = escState[pre + "y"];
+  const img = ctx.createImageData(w, h);
+  const data = img.data;
+  const body = hexToRgb("#58C4DD");
+  let inside = 0, seen = 0;
+  for (let py = 0; py < h; py += grain) {
+    const y = cy0 + span * (1 - 2 * py / (h - 1));
+    for (let px = 0; px < w; px += grain) {
+      const x = cx0 + span * (2 * px / (w - 1) - 1);
+      const n = kind === "julia"
+        ? escapeCount(x, y, escState.cRe, escState.cIm, escState.iters, escState.radius)
+        : escapeCount(0, 0, x, y, escState.iters, escState.radius);
+      let col = body;
+      seen++;
+      if (n < 0) inside++;
+      else {
+        const t = Math.pow(n / escState.iters, 0.45);
+        col = RAMP[Math.min(255, Math.round(t * 255))];
+      }
+      for (let dy = 0; dy < grain && py + dy < h; dy++) {
+        let at = ((py + dy) * w + px) * 4;
+        for (let dx = 0; dx < grain && px + dx < w; dx++, at += 4) {
+          data[at] = col[0]; data[at + 1] = col[1]; data[at + 2] = col[2];
+          data[at + 3] = 255;
+        }
+      }
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  if (kind === "julia") drawPicker();
+  say((kind === "julia"
+      ? "c = " + escState.cRe.toFixed(3) + (escState.cIm < 0 ? " - " : " + ")
+        + Math.abs(escState.cIm).toFixed(3) + "i<br>"
+      : "")
+    + "half width " + span.toFixed(6) + "   steps tried " + escState.iters
+    + "<br>share of the frame that never escapes <b>"
+    + (inside / seen * 100).toFixed(1) + " per cent</b>"
+    + (grain > 1 ? "   (still sharpening)" : ""));
+}
+
+function escRedraw(kind) {
+  if (refine) { clearTimeout(refine); refine = null; }
+  escDraw(kind, 2);
+  refine = setTimeout(() => { refine = null; escDraw(kind, 1); }, 150);
+}
+
+function drawPicker() {
+  pick.style.display = "block";
+  const w = pick.width, h = pick.height;
+  const img = pickCtx.createImageData(w, h);
+  const data = img.data;
+  const body = hexToRgb("#58C4DD");
+  for (let py = 0; py < h; py++) {
+    const y = 1.25 - 2.5 * py / (h - 1);
+    for (let px = 0; px < w; px++) {
+      const x = -2.1 + 3.0 * px / (w - 1);
+      const n = escapeCount(0, 0, x, y, 90, 2);
+      const at = (py * w + px) * 4;
+      data[at + 3] = 255;
+      if (n < 0) { data[at] = body[0]; data[at + 1] = body[1]; data[at + 2] = body[2]; }
+      else {
+        const t = Math.pow(n / 90, 0.45);
+        const col = RAMP[Math.min(255, Math.round(t * 255))];
+        data[at] = Math.round(col[0] * 0.55);
+        data[at + 1] = Math.round(col[1] * 0.55);
+        data[at + 2] = Math.round(col[2] * 0.55);
+      }
+    }
+  }
+  pickCtx.putImageData(img, 0, 0);
+  const mx = (escState.cRe + 2.1) / 3.0 * (w - 1);
+  const my = (1.25 - escState.cIm) / 2.5 * (h - 1);
+  pickCtx.strokeStyle = "#A5E3A0";
+  pickCtx.lineWidth = 1.5;
+  pickCtx.beginPath();
+  pickCtx.arc(mx, my, 4, 0, Math.PI * 2);
+  pickCtx.stroke();
+}
+
+pick.onclick = e => {
+  const r = pick.getBoundingClientRect();
+  escState.cRe = -2.1 + 3.0 * (e.clientX - r.left) / (pick.width - 1);
+  escState.cIm = 1.25 - 2.5 * (e.clientY - r.top) / (pick.height - 1);
+  escPanel("julia");
+  redraw();
+};
+
+view.onclick = e => {
+  if (current !== "julia" && current !== "mandel") return;
+  const pre = current === "julia" ? "j" : "m";
+  const r = view.getBoundingClientRect();
+  const span = (current === "julia" ? 1.8 : 1.6) / Math.pow(2, escState[pre + "Zoom"]);
+  escState[pre + "x"] += span * (2 * (e.clientX - r.left) / (r.width - 1) - 1);
+  escState[pre + "y"] += span * (1 - 2 * (e.clientY - r.top) / (r.height - 1));
+  escPanel(current);
+  redraw();
+};
+
+// ------------------------------------------------------------- panel plumbing
+
+function fieldset(legend) {
+  const f = document.createElement("fieldset");
+  const l = document.createElement("legend");
+  l.textContent = legend;
+  f.appendChild(l);
+  return f;
+}
+
+function pressed(label, on, fn) {
+  const b = document.createElement("button");
+  b.textContent = label;
+  b.setAttribute("aria-pressed", on ? "true" : "false");
+  b.onclick = fn;
+  return b;
+}
+
+function range(label, min, max, step, get, set, fmt) {
+  const row = document.createElement("div");
+  row.className = "row";
+  const tag = document.createElement("label");
+  tag.textContent = label;
+  const input = document.createElement("input");
+  input.type = "range";
+  input.min = String(min); input.max = String(max); input.step = String(step);
+  input.value = String(get());
+  const out = document.createElement("output");
+  out.textContent = fmt(get());
+  input.oninput = () => {
+    set(parseFloat(input.value));
+    out.textContent = fmt(parseFloat(input.value));
+    redraw();
+  };
+  row.append(tag, input, out);
+  return row;
+}
+
+function textRow(label, get, set) {
+  const row = document.createElement("div");
+  row.className = "row";
+  row.style.gridTemplateColumns = "74px 1fr";
+  const tag = document.createElement("label");
+  tag.textContent = label;
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = get();
+  input.oninput = () => { set(input.value); redraw(); };
+  row.append(tag, input);
+  return row;
+}
+
+function areaRow(label, get, set) {
+  const row = document.createElement("div");
+  row.className = "row";
+  row.style.gridTemplateColumns = "74px 1fr";
+  row.style.alignItems = "start";
+  const tag = document.createElement("label");
+  tag.textContent = label;
+  const area = document.createElement("textarea");
+  area.rows = 2;
+  area.value = get();
+  area.oninput = () => { set(area.value); redraw(); };
+  row.append(tag, area);
+  return row;
+}
+
+function actions(list) {
+  const host = document.getElementById("actions");
+  host.textContent = "";
+  list.forEach(([label, fn]) => {
+    const b = document.createElement("button");
+    b.textContent = label;
+    b.onclick = fn;
+    host.appendChild(b);
+  });
+}
+
+function saveImage() {
+  const a = document.createElement("a");
+  a.download = current + ".png";
+  a.href = view.toDataURL("image/png");
+  a.click();
+}
+
+// ------------------------------------------------------------------- systems
+
+const SYSTEMS = {
+  ifs: {
+    label: "iterated maps",
+    lead: "A single point is moved over and over, one of the maps chosen at random each step. "
+      + "Every number behind every map is a slider, and the picture rebuilds as any of them "
+      + "moves. Each map can be given its own colour, so it is visible which points came from "
+      + "which one.",
+    panel: () => ifsPanel(),
+    draw: () => ifsDraw(),
+  },
+  lsys: {
+    label: "Lindenmayer plant",
+    lead: "A short seed word is rewritten by a handful of rules, once per pass, and the "
+      + "finished word is read as turtle instructions. The plant is the grass-like one; the "
+      + "axiom, the rules, the turning angle and the number of passes are all open to editing.",
+    panel: () => lsysPanel(),
+    draw: () => lsysDraw(),
+  },
+  dbm: {
+    label: "Lichtenberg figure",
+    lead: "The dielectric breakdown model. The electric field is solved on a grid, and the "
+      + "chance a site lights up next is its field strength raised to a power. Injected at a "
+      + "point it branches out in every direction, which is the Lichtenberg figure burnt into "
+      + "glass or wood; put between two plates it crosses the gap as a bolt. One knob, the "
+      + "roughness, carries it from a compact blob to a thin many-armed tree.",
+    panel: () => dbmPanel(),
+    draw: () => dbmDraw(),
+  },
+  dla: {
+    label: "wandering particles",
+    lead: "Diffusion-limited aggregation. One seed sits in the middle, and particles are "
+      + "released one at a time on the ring around it, each stepping to one of four "
+      + "neighbours at random until it touches what is already there and sticks. Nothing "
+      + "here knows about tips or fields, yet the arms shield the inside and the same "
+      + "branching comes out. The paths of the first few particles are kept on screen.",
+    panel: () => dlaPanel(),
+    draw: () => dlaDraw(),
+  },
+  julia: {
+    label: "Julia set",
+    lead: "For a fixed c, every starting point is put through z becomes z times z + c. The "
+      + "ones that never escape are the set; the rest are coloured by how many steps they "
+      + "took to leave. Move c and the shape changes with it.",
+    panel: () => escPanel("julia"),
+    draw: () => escRedraw("julia"),
+  },
+  mandel: {
+    label: "Mandelbrot set",
+    lead: "The same rule, but the starting point is always zero and c is what varies across "
+      + "the picture. A point is in the set when its walk never escapes. Click anywhere to "
+      + "centre on it, then wind the zoom up.",
+    panel: () => escPanel("mandel"),
+    draw: () => escRedraw("mandel"),
+  },
+};
+
+let current = "ifs";
+
+function buildTabs() {
+  const host = document.getElementById("tabs");
+  host.textContent = "";
+  Object.keys(SYSTEMS).forEach(key => {
+    host.appendChild(pressed(SYSTEMS[key].label, key === current, () => switchTo(key)));
+  });
+}
+
+function switchTo(key) {
+  stopLoop();
+  current = key;
+  pick.style.display = key === "julia" ? "block" : "none";
+  document.getElementById("lead").textContent = SYSTEMS[key].lead;
+  buildTabs();
+  SYSTEMS[key].panel();
+  redraw();
+}
+
+let pending = null;
+function redraw() {
+  if (pending) cancelAnimationFrame(pending);
+  pending = requestAnimationFrame(() => {
+    pending = null;
+    stopLoop();
+    SYSTEMS[current].draw();
+  });
+}
+
+switchTo("ifs");
+</script>

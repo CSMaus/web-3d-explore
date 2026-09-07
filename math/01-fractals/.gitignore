@@ -1,0 +1,18 @@
+# manim's intermediate output: partial movie files, texts, images. regenerated
+# on every render and larger than everything else in the repository put
+# together.
+media/
+
+# the rendered clips. 40 MB across 69 files, and every one of them is produced
+# from code2/ by one command, so what is kept is the code that makes them and
+# not the output. the local folder is untouched by this; it is only left out of
+# the repository.
+videos/
+
+# the check renders written by the coastline tracer and the layout checker.
+# these are diagnostics, produced from the photographs below.
+code2/assets/checks/
+
+# the photographs under code2/assets/candidates are inputs, not output, and are
+# deliberately kept: without them the coastline scenes in topics 2 and 3 cannot
+# be rendered from a clean checkout.

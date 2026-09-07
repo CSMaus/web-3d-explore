@@ -1,0 +1,44 @@
+# environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*-credentials.json
+service-account*.json
+.secrets.baseline.new
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+*.egg
+.Python
+
+# virtual environments
+.venv/
+venv/
+env/
+
+# tooling caches
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# logs
+*.log
+app/logs/*
+!app/logs/.gitkeep
+
+# editors and os
+.DS_Store
+**/.DS_Store
+.idea/
+.vscode/
+*.swp

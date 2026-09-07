@@ -1,0 +1,63 @@
+name: backend
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: math/web-math-fr/math-fr-be
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v8
+      - run: uv sync --frozen
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: test_mathfr
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U test -d test_mathfr"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      APP_CONFIG__DB__HOST: localhost
+      APP_CONFIG__DB__PORT: 5432
+      APP_CONFIG__DB__NAME: test_mathfr
+      APP_CONFIG__DB__USER: test
+      APP_CONFIG__RATE__ENABLED: "false"
+      DB_PASSWORD: test
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v8
+      - run: uv sync --frozen
+      - name: apply migrations
+        run: uv run alembic upgrade head
+      - name: check the schema matches the models
+        run: |
+          uv run alembic revision --autogenerate -m drift-check
+          test -z "$(grep -rL 'pass' alembic/versions/*drift_check*.py 2>/dev/null | head -1)" || true
+          grep -q "pass" "$(ls -t alembic/versions/*drift_check*.py | head -1)"
+      - run: uv run pytest --tb=short

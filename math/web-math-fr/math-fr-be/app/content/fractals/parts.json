@@ -1,0 +1,488 @@
+{
+  "parts": [
+    {
+      "number": 2,
+      "title": "the coastline paradox",
+      "beats": [
+        {
+          "slug": "02-coastline",
+          "seconds": 61.5,
+          "video": "",
+          "shows": "a satellite photograph of Britain with its coastline traced in blue. a gold bar sets the opening of a pair of dividers, and chords are laid along the coast at that opening, visibly cutting across every bay too small for it. the opening is halved four times - 0.77, 0.38, 0.19, 0.10, 0.05 - giving 23, 54, 128, 298 and 677 chords and totals of 17.7, 20.7, 24.7, 29.0 and 33.4, each landing as a row. a smooth arc then appears beside the coast and is walked at the same openings: its total settles while the coast's climbs. the pairs go onto a log-log plot, fall on a straight line, and the fitted slope becomes a dimension of 1.232, placed on a scale between a straight line and a filled square. finally the coast is replaced by three - the Norwegian fjord coast, Britain and the Atlantic coast of Portugal - each measured the same way, landing at 1.410, 1.232 and 1.195.",
+          "why": "the paradox has to be met as a measurement rather than a riddle: the chords are visible, the skipping is visible, and the total climbs every time the opening narrows. the smooth arc is the control that rules out \"this is just what measuring does\". the plot turns the climb into one number, and the three coasts show that number ordering them exactly as the eye does.",
+          "say": "Set a pair of dividers to a fixed opening and walk them along the coast. Count the steps, and there is a length. But watch what the wide opening does - it steps straight over every bay smaller than itself. So halve it, and walk again. Twenty-three steps became fifty-four, and the total went up. Halve it again. And again. The coast is not getting longer; the measurement is. Now do exactly the same to a smooth curve. It settles, quickly, on a length - that is what measuring is supposed to do. The coast never settles. Put every opening and every total on one plot, both logarithmic, and the points fall on a straight line. Subtract its slope from one and what comes out is a dimension: one point two three. Not one, which a line would give. Not two, which a filled patch would give. And the same measurement on three coasts puts them in exactly the order the eye does - the fjords at one point four one, Britain at one point two three, and the near-straight Atlantic coast of Portugal at one point one nine."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "box-counting dimension",
+      "beats": [
+        {
+          "slug": "03-box-counting",
+          "seconds": 56.9,
+          "video": "",
+          "shows": "the same photograph and traced coastline. a grid drops over it and every box the coast runs through is shaded gold and tallied, reaching 30, with a magnified window showing the touch test up close. the box is then halved four times, each size drawn on the coast with its own row: 30, 73, 173, 396 and 908. the rows fly onto a log-log plot, the fit gives 1.228, and the value the divider walk gave, 1.232, is set beside it. the coast then clears and a line, a square and a cube are each cut 2, 4 and 8 across, with exact counts - 2, 4, 8 for the line, 4, 16, 64 for the square, 8, 64, 512 for the cube - giving slopes of exactly 1.000, 2.000 and 3.000. the closing beat reads the Koch curve's dimension straight off its rule, four copies at a third, and sets it against what counting boxes gave.",
+          "why": "counting boxes needs only a shape and a grid, so it works where walking does not. it has to be checked twice before it can be trusted: against the other method on the same coast, and against shapes whose dimension is already known. the ordinary-shape counts are exact rather than sampled, so the whole numbers come out exact.",
+          "say": "Forget walking along it. Drop a grid over the whole coast and ask one question of each box: does any coast run through it? Thirty boxes at this size. Halve the box - seventy-three. Halve again - a hundred and seventy-three. Each halving more than doubles the count, and if this were a plain line it would exactly double. Sizes against counts, both logarithmic, and the slope is one point two three - the same answer the divider walk gave, by a method that shares nothing with it. Before trusting it further, try it where the answer is known. A line four across needs four boxes. A square four across needs sixteen. A cube, sixty-four. The slopes come out one, two and three exactly. And when the rule is known, no counting is needed at all: four copies, each a third of the size, and the logarithm reads the dimension straight off."
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "the Koch curve as an idealised coastline",
+      "beats": [
+        {
+          "slug": "04a-rule",
+          "seconds": 19.6,
+          "video": "",
+          "shows": "a single blue segment, with two readouts on the left: pieces 1, piece length 1. a small grey diagram at the top marks a segment into thirds in gold and lifts its middle third into a bump. the main segment then takes the same rule, becoming 4 pieces, then 16, 64, 256, each pass faster, while the readouts count 4, 16, 64, 256 and 1/3, 1/9, 1/27, 1/81. a window is drawn on one stretch of the finished curve and that stretch appears magnified in a box at the upper right.",
+          "why": "to fix the idea that one rule, applied without end, is the whole definition of the object, and that the two numbers worth tracking are how many pieces there are and how long each one is.",
+          "say": "One segment, and one rule: the middle third lifts into a bump. One piece becomes four, each a third as long. Now the same rule on all four. Then on all sixteen. The count multiplies by four every pass, the size divides by three. And magnified, the same rule is sitting there at the smaller scale."
+        },
+        {
+          "slug": "04b-copies",
+          "seconds": 16.1,
+          "video": "",
+          "shows": "the finished curve with four gold boxes over its quarters. a grey copy of the curve one pass earlier appears below. each quarter is lifted out, turned, magnified three times, and lands exactly on the grey copy. then four coral boxes appear inside the first quarter alone.",
+          "why": "self-similarity as an exact fact rather than a resemblance. the overlay lands precisely, and the precision is the point.",
+          "say": "The finished curve, cut into its four quarters. Take one, turn it, magnify it three times - it lands exactly on the curve one pass earlier. So does the next, and the next, and the last. Four copies, each a third of the width. And every quarter splits into four again, without end."
+        },
+        {
+          "slug": "04c-dimension",
+          "seconds": 12.9,
+          "video": "",
+          "shows": "four copies in blue, scale one third in gold. the relation d equals log 4 over log 3 assembles, the 4 flying from the blue label and the 3 from the gold. the value 1.262 lands in green. a scale from 1 to 2 carries a green needle at 1.262 marked Koch curve and a blue needle at 1.232 marked measured coast.",
+          "why": "the payoff. the exponent is computed from the construction rather than measured off a picture, and it lands where the real coast measurement landed.",
+          "say": "Four copies, at a third of the size. The logarithm reads the exponent off that pair: log four over log three, about one point two six. And the coast measured earlier came out at one point two three. The idealised curve lands on the same spot."
+        },
+        {
+          "slug": "04d-length",
+          "seconds": 9.4,
+          "video": "",
+          "shows": "a grey rectangle with a straight blue segment inside and a length readout. pass by pass the curve crinkles inside the same rectangle, the running length updates, and a coral column records each step: times four thirds to 7.47, then 9.96, 13.27, 17.70, 23.60. the rectangle is flagged every pass and never changes.",
+          "why": "unbounded length made arithmetical: the multiplier is fixed, and a fixed multiplier above one has no ceiling.",
+          "say": "The box never changes. The curve inside it does. Every pass multiplies the length by four thirds, and four thirds again and again has no ceiling."
+        },
+        {
+          "slug": "04e-snowflake",
+          "seconds": 17.7,
+          "video": "",
+          "shows": "a triangle with a coral perimeter readout and a green area readout in units of the starting triangle. six passes run: the perimeter climbs 9.87, 13.16, 17.55, 23.40, 31.20, 41.60, 55.47, while the area settles 1.000, 1.333, 1.481, 1.547, 1.577, 1.590, 1.595. a small plot beside them tracks the area against the pass number with a dashed line at eight fifths, and the points visibly flatten onto it.",
+          "why": "the two behaviours on screen at once, so that unbounded boundary and finite interior stop sounding like a contradiction.",
+          "say": "The same rule, now on all three sides of a triangle. The perimeter climbs the way it did before - nine, thirteen, seventeen, and on past fifty-five, with no ceiling. The area does not. One, then one and a third, then one point four eight, one point five five, one point five nine - each pass adds less than the last, and the points flatten onto eight fifths. A finite area, held inside a boundary of no finite length."
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "the Barnsley fern",
+      "beats": [
+        {
+          "slug": "05a-ifs",
+          "seconds": 90.2,
+          "video": "",
+          "shows": "a coordinate frame with its axes marked. the general form of a move is written out, x prime equals a x plus b y plus e and y prime equals c x plus d y plus f, with the incoming point blue, the outgoing point green and the six numbers gold. the whole region the fern can occupy is outlined. each of the four moves is then written with its actual numbers and applied to that whole region, so its image appears where that part of the plant will be, named as the stem, the fern one frond up, the left leaflet and the right leaflet. those four pieces are sent through the same four moves again, to 16, then 64, then 256 pieces, and the shape settles into the fern. a bar shows how often each move is chosen, 85 per cent for the second. then a single dot is put through four steps with every multiplication and addition substituted and worked out, and finally ninety thousand steps are run and every dot kept.",
+          "why": "the construction beat has to carry the whole definition: what a move is, what the four moves are, why those four give this shape and no other, why the choice is weighted, and what one step actually computes. the deterministic pass over the region is the answer to why the fern is the shape that comes out.",
+          "say": "A move takes a point and sends it somewhere else. Six numbers do it - four of them turn and stretch, the last two shift. Here are the four moves, with their numbers. Watch what each one does to the whole region the plant can occupy: the first flattens it to the stem. The second shrinks it a little and lifts it a frond up. The last two tip it into the left and the right leaflet. Now send those four pieces through the same four moves again. Sixteen. Sixty-four. Two hundred and fifty-six - and the shape has stopped changing. That shape is the fern, and nothing chose it. Now pick one move at random each step, the second one most of the time, and follow a single dot. Multiply, add, and there is the new point. Again. Ninety thousand times."
+        },
+        {
+          "slug": "05b-converge",
+          "seconds": 11.5,
+          "video": "",
+          "shows": "the sequence of moves that will be used runs across the top as coloured numbers. three framed panels each hold a starting dot in a different place, one nowhere near a fern, each labelled with its coordinates. the same sequence runs in all three and the panels fill into identical ferns.",
+          "why": "to remove the suspicion that the shape was hidden in the starting point, and to let the claim be checked - the sequence is on screen, so \"the same moves\" is visible rather than asserted.",
+          "say": "The same list of moves, in the same order, for all three. But three different starting dots - and one of them nowhere near a fern. They fill in identically. Where it began leaves no trace in the shape."
+        },
+        {
+          "slug": "05c-roles",
+          "seconds": 20.3,
+          "video": "",
+          "shows": "the fern in grey, then coloured by which move drew each dot: stem gold, body blue, leaflets green and coral. each move is isolated in turn, shown with its own equation and the number of dots it actually drew - 864, then 76602, then 6324 and 6210, out of ninety thousand. finally a gold box on one upper frond, magnified, showing the whole fern again.",
+          "why": "to tie each abstract move to a visible part, and to explain with a number why the second move seems to draw everything: it is chosen 85 times in a hundred.",
+          "say": "Each move draws its own part. The first lays the stem - and it only ever drew eight hundred and sixty-four dots out of ninety thousand. The second shrinks the whole fern and sets it a frond up the stalk; that one drew seventy-six thousand, which is why it looks like the entire plant. The last two place the leaflets. And that second move is why this frond, magnified, is the whole fern again."
+        },
+        {
+          "slug": "05d-attractor",
+          "seconds": 32.2,
+          "video": "",
+          "shows": "a circle, drawn well away from where the fern will be, with readouts for the widest piece and the number of pieces. all four moves are applied to it, giving four smaller circles; applied again, sixteen; again, sixty-four; again, two hundred and fifty-six - and by then the pieces have settled onto the shape of the fern, with the widest piece having shrunk from 4.19 to 2.20. the whole thing is then repeated from a square placed somewhere else entirely, which lands on the same fern. the four contraction factors close it out - 0.160, 0.851, 0.341, 0.379 - with the observation that every one is below 1.",
+          "why": "the earlier beats show that it converges; this one shows why. every move brings any two points closer, so distances shrink whatever happens, and everything is dragged onto the same shape.",
+          "say": "Start with anything at all - a circle, sitting nowhere near a fern. Put it through all four moves: four smaller circles. Put those four through all four moves: sixteen. Sixty-four. Two hundred and fifty-six - and they are no longer scattered, they are lying along a fern. Now throw that away and start again from a square, somewhere else entirely. The same fern. That is what every move has in common: each one hands back something smaller than it was given, every factor below one, so whatever is put in gets squeezed - and there is only one shape left to be squeezed onto."
+        },
+        {
+          "slug": "05e-dimension",
+          "seconds": 32.5,
+          "video": "",
+          "shows": "the fern under a grid, with the boxes it touches shaded and counted: 18 at box size 1.60, then 61, 196, 712, 2481 and 8451 as the box shrinks, each size drawn on the fern with its own row. the counts land on a log-log plot, a straight line fits them, and the relation resolves to about 1.779. the value drops onto the shared 1-to-2 scale beside a straight line, the measured coast, the Koch curve and a filled square.",
+          "why": "the first time box counting is run on something not built by a clean cutting rule. the method has to work on a scattered point cloud, and every count in the table has its own picture behind it.",
+          "say": "Lay a grid over the fern and count only the boxes it touches. Eighteen. Halve the box and count again - sixty-one. Then a hundred and ninety-six, seven hundred and twelve, and on to eight and a half thousand at the finest. Each halving multiplies the count by about three and a third, and the logarithm of that ratio is the dimension: one point seven eight. A shape drawn by four moves, sitting between a line and a filled square."
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "the wider geometric family",
+      "beats": [
+        {
+          "slug": "06a-cantor",
+          "seconds": 26.0,
+          "video": "",
+          "shows": "a blue segment. it is copied down a row, its middle third lights up coral, and that third is taken out, leaving two pieces. the same happens inside every piece left, six passes down the frame, the dust thinning. readouts count pieces 2, 4, 8 up to 64 and piece length 1/3 down to 1/729. the structure is stated as two copies at one third, the relation resolves to about 0.631, and a scale from 0 to 1 places it between a point and a line.",
+          "why": "the simplest object in the family, and the only one in the series with a dimension below one. it makes the scale itself mean something: dimension is not a count of directions here, it is a position on a continuum.",
+          "say": "Take out the middle third. Then take the middle third out of each piece that is left. And again. The count doubles, the pieces divide by three. Two copies at a third of the size gives log two over log three - about nought point six three. Less than a line. More than a point."
+        },
+        {
+          "slug": "06b-sierpinski-triangle",
+          "seconds": 19.3,
+          "video": "",
+          "shows": "a filled blue triangle. the central upside-down triangle lights coral and is cut out, leaving three half-size triangles, and the same happens inside each of them, five passes. readouts count 3, 9, 27, 81, 243 and side 1/2 down to 1/32. three copies at one half resolves to 1.585, with a note that this is the value the between-shape in the opening topic produced.",
+          "why": "the first object whose answer was already met by a different route, which is what makes the method look trustworthy rather than invented for each case.",
+          "say": "A filled triangle, and the middle comes out. Three half-size copies remain, and each of those loses its middle too. Three copies at one half: log three over log two, one point five eight five. That number already appeared, in the very first topic, on the shape that would not settle on a whole number."
+        },
+        {
+          "slug": "06c-sierpinski-carpet",
+          "seconds": 17.1,
+          "video": "",
+          "shows": "a filled blue square under a three-by-three grid. the centre cell lights coral and is cut, leaving eight squares, and every one of them loses its own centre, three passes. readouts count 8, 64, 512 and side 1/3, 1/9, 1/27. eight copies at one third resolves to 1.893 on the 1-to-2 scale.",
+          "why": "to show the answer tracks how much is kept: keeping eight ninths of the area lands much closer to 2 than keeping three quarters did.",
+          "say": "A three-by-three grid, and the centre cell comes out. Eight squares remain, and every one of them loses its own centre. Eight copies at a third: log eight over log three, one point eight nine. Thirds again, exactly as in the very first count."
+        },
+        {
+          "slug": "06d-dragon",
+          "seconds": 36.5,
+          "video": "",
+          "shows": "at the top right, a strip whose right half swings a half turn onto its left half and then opens to a right angle - one fold, which is the first dragon. below, the curve is then built by the equivalent rule: a copy appears, pivots a quarter turn about its end and joins on, slowly for the first three folds and quickly to twelve. the curve then clears and four copies in blue, gold, green and coral appear rotated about a shared point, interlocking into a filled region with no gaps.",
+          "why": "a rule that is neither removal nor scattering but folding, and a curve that fills area without crossing itself. the tiling is a real property, not decoration: the four copies share no edge at all.",
+          "say": "Fold a strip in half, and open the joint to a right angle. That is the first one. Doing that again and again is the same as this: copy the curve, turn it a quarter, join it on. Three folds. Six. Twelve, and it has stopped looking like folded paper. And four of these, each turned a quarter more than the last, fit around a point with no gaps and no overlaps at all."
+        },
+        {
+          "slug": "06e-plant",
+          "seconds": 41.6,
+          "video": "",
+          "shows": "five symbols are demonstrated one at a time on a turtle path - draw forward, turn left, turn right, remember this point, go back to it - with a legend building up a row at a time. the legend then shrinks to the side and stays. the rewriting rule appears with its fixed turn of 25 degrees, and a single upright segment grows pass by pass into a branching plant while a counter runs to 6. a window on one branch tip is magnified, showing the same branching again.",
+          "why": "the headline of the family. a rule short enough to read in one line produces something that looks grown - but only if the reader knows what the symbols in that line mean, which is why they are taught first.",
+          "say": "Five symbols, and that is the whole alphabet. Draw forward. Turn left. Turn right. Remember this spot - and come back to it. Now one rule that rewrites every segment into a short pattern of those, with every turn twenty-five degrees. Six passes. Nothing was drawn by hand and nothing was chosen along the way - and a branch tip, magnified, is the same plant again."
+        },
+        {
+          "slug": "06f-flowsnake",
+          "seconds": 32.8,
+          "video": "",
+          "shows": "a base path drawn one segment at a time with a counter running to seven. one of those segments is then singled out in gold, and the whole seven-segment path is placed onto it, with the measured ratio reading 0.378. that is noted as one over the square root of seven. every segment is then replaced at once, five passes with the count shown at each - 7, 49, 343, 2401, 16807 - until the curve has filled its hexagonal island solid.",
+          "why": "the family contains members whose claim is that they are beautiful and built by the same kind of rule. the beat still has to show the seven segments and the replacement rather than assert them.",
+          "say": "Count them: seven segments. Now take one of them, and drop the whole seven-segment path onto it - it fits, at nought point three seven eight of the length, which is one over the square root of seven. Do that to every segment. Forty-nine. Three hundred and forty-three. Two thousand four hundred. Sixteen thousand eight hundred - and by then the curve is not a line wandering about, it has filled its island solid, edge to edge, without ever crossing itself."
+        },
+        {
+          "slug": "06g-menger",
+          "seconds": 22.7,
+          "video": "",
+          "shows": "a solid shaded cube rotating slowly. it is cut into 27 and held. the seven cubes that go light up coral - the six face centres forming a cross, with a line noting that the seventh is buried in the middle where it cannot be seen - and are taken out, leaving 20. the rule repeats to 400, the body rotating so the tunnels read. readouts count 20, 400 and side 1/3, 1/9. twenty copies at one third resolves to 2.727.",
+          "why": "the family taken into three dimensions, where the answer sits between a surface and a solid - somewhere the 1-to-2 scale could not reach.",
+          "say": "A solid cube, cut three ways in every direction - twenty-seven pieces. Out come the middle of each face, and the middle of the cube itself, which stays out of sight because it is buried. Twenty are left, and each of those is hollowed the same way. Twenty copies at a third: two point seven three. More than a surface, less than a solid."
+        },
+        {
+          "slug": "06h-common-thread",
+          "seconds": 14.7,
+          "video": "",
+          "shows": "eight thumbnails across the top in order of dimension - Cantor dust, Koch curve, Sierpinski triangle, Barnsley fern, Sierpinski carpet, dragon curve, flowsnake, Menger sponge. a scale from 0 to 3 below. each thumbnail drops a line onto its own place on the scale with its value: 0.631, 1.262, 1.585, 1.779, 1.893, 2.000 shared by the dragon and the flowsnake, and 2.727.",
+          "why": "to convert eight separate results into one statement. the same procedure, run on eight unrelated rules, produced eight numbers that all mean the same thing.",
+          "say": "Eight objects. A removal rule, a folding rule, a growing rule, a rule picked at random - no two alike. And every one of them has a place on a single scale, from dust that is less than a line to a sponge that is nearly a solid. One rule, applied without end, and a dimension that is not a whole number."
+        },
+        {
+          "slug": "06i-dragon-maps",
+          "seconds": 40.0,
+          "video": "",
+          "shows": "the dragon curve as the attractor of exactly two moves. each move is applied to the whole curve and lands on one half of it, and both are written out in coordinates - f1(x, y) = (0.5x - 0.5y, 0.5x + 0.5y) and f2(x, y) = (1 - 0.5x - 0.5y, 0.5x - 0.5y) - each shrinking by 0.707, one turning 45 degrees and the other 135. a square drawn well away from the curve is then put through the two moves eight times, 1 piece to 256, with the widest piece falling by a factor of 0.707 every pass, 2.99 down to 0.19, until it settles on the dragon. the fern stands beside it as the four-move case. it closes on the Julia connection: a Julia set is also a two-move attractor, its two moves being the two square-root branches of z becomes z times z + c, drawn here by inverse iteration at c = -0.7 + 0.3i, with the difference stated as well as the likeness.",
+          "why": "the dragon curve reads as a Julia set to the eye, and the resemblance is real but not what it looks like. both are limit sets of a system of two maps applied over and over. they are not the same object: the dragon's maps are affine, so straight lines stay straight and the shape tiles the plane, while the square root bends the plane and the edge curls instead. saying only the first half would be misleading; saying neither leaves the viewer with a false impression they arrived at themselves.",
+          "say": "The dragon is not built by folding, in the end - it is what two moves settle onto. Apply the first to the whole curve and it lands exactly on the left half. Apply the second and it lands on the right. Two copies, each shrunk by nought point seven one and turned, and together they are the original. Same machinery as the fern, which needed four. Start from a square somewhere else entirely and put it through the two moves over and over - the widest piece shrinks by seven-tenths every pass, and it settles on the dragon. Now, this looks like a Julia set, and there is a real reason. A Julia set is a two-move attractor too: its moves are the two square roots of z minus c. But the dragon's moves keep straight lines straight, so it tiles the plane, while the square root bends them, so the edge curls. The dragon is not a Julia set, and no Julia set is a dragon curve."
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "title": "random fractals, lightning and crystal growth",
+      "beats": [
+        {
+          "slug": "07a-discharge",
+          "seconds": 18.4,
+          "video": "",
+          "shows": "two gold plates with a dark gap. a blue discharge grows from the top plate downward in bursts, forking as it goes, until it reaches the bottom plate. a window is then drawn on one fork and magnified, where that fork carries smaller forks of its own.",
+          "why": "the phenomenon before the model. the branching is shown as a thing that happens, with no explanation attached yet - and the magnified box has to actually contain smaller forks, which is why the simulation runs on a fine enough grid to have them.",
+          "say": "Two plates, and a gap. The discharge crosses it - but not as a line. It forks, and the forks fork, and it reaches the far plate by way of a tree. Magnify any one fork and there are smaller forks inside it."
+        },
+        {
+          "slug": "07b-breakdown-model",
+          "seconds": 24.8,
+          "video": "",
+          "shows": "the same plates with a single lit site at the top. a gold glow appears, brightest at the tip of that site - the strength of the field around it. the rule is stated: chance of lighting up is proportional to field strength. eight sites are added one at a time with the glow recomputed at each step, always concentrating at the growing tips. the rest fills in quickly, and the model is named.",
+          "why": "the mechanism, stated exactly. nothing chooses the branch - the field sets the odds and a weighted coin does the rest.",
+          "say": "Around the lit site there is a field, and it is strongest right at the tip. The rule is only this: the chance a site lights up next is proportional to the field there. So the tip is likely and the flank is not - but not impossible. That one weighted choice, made hundreds of times, is the whole tree."
+        },
+        {
+          "slug": "07c-aggregation",
+          "seconds": 50.1,
+          "video": "",
+          "shows": "the model is named first - diffusion-limited aggregation, Witten-Sander 1981 - and the rule is drawn before anything grows: a particle at a crossing with four arrows out of it, each marked 1/4, and three lines saying one step, four neighbours; each with chance 1/4; stops on first touch. then a single seed, seen close up. three particles enter one at a time and wander their actual paths, with the number of steps taken and the number stuck so far both counted on screen. the view opens out and particles arrive in bulk, with the particle count and the cluster reach in cells climbing as the arms spread. the dimension is then measured rather than announced: five rings of radius r are drawn from the seed, the particles inside each one light up and are counted into a table - 49, 124, 260, 518, 816 - the mass-radius law N(r) = k times r to the power d is written and taken to logs, and the five counts land on a log-log plot whose fitted slope reads 1.629, with the note that large clusters settle near 1.71.",
+          "why": "a second random mechanism, with no field and no plates - only wandering and sticking - producing the same kind of shape. two different processes landing in the same place is what makes the result general. the walk has to be the real one, and the dimension has to be measured on screen, or the beat is about nothing.",
+          "say": "This one has a name - diffusion-limited aggregation - and a rule small enough to write down. A particle takes one step at a time, to one of four neighbours, each with chance one in four, and it stops the moment it touches what is already there. Watch one arrive: sixty steps of wandering, and then it sticks. Another. Another. Now a thousand of them, and the arms spread out - the count and the reach are climbing on the right. Nothing here knows about tips or fields, but the arms shield the inside, so new arrivals stick to the outside. To measure it, draw a ring of radius r and count what is inside: forty-nine, then a hundred and twenty-four, and so on. If the count goes like r to the power d, then on a log-log plot that is a straight line, and its slope is d. One point six two nine. Large clusters settle near one point seven one."
+        },
+        {
+          "slug": "07d-physical-faces",
+          "seconds": 14.5,
+          "video": "",
+          "shows": "three framed panels growing side by side under the same rule with different random seeds, each named and each with a line saying what it is: a Lichtenberg figure in an insulator, the burn left in glass or wood; metal grown on an electrode, metal settling out of solution; a mineral dendrite in rock, manganese creeping through rock. a closing note that snowflake dendrites grow the same way.",
+          "why": "to place the model in the physical world. the same rule, run in three media, is what three unrelated-looking things have in common. the names matter here: a viewer who has seen a Lichtenberg figure in a block of acrylic or burnt into wood has already met this fractal without knowing it had a model behind it.",
+          "say": "The same growth rule, three times over. A Lichtenberg figure - the branching burn a discharge leaves inside glass, or across a plank of wood. Metal settling out of solution onto an electrode. Manganese creeping through a crack in rock, which looks so much like a plant that it fools people. Different materials, different scales, one rule - and snowflake dendrites are the same story again."
+        },
+        {
+          "slug": "07e-crystal",
+          "seconds": 33.9,
+          "video": "",
+          "shows": "the two outcomes side by side first - a branched dendrite and a flat-faced block, both grown by adding one particle at a time - under the question of what decides between them. the answer is then measured: the supply field around a square block is solved, a corner and the middle of a face are marked, and the two values are read off, 0.186 against 0.060, so a corner gets 3.11 times as much, with the rule growth speed is proportional to the supply reaching the surface. with that in hand the stair-stepped solid is named a hopper crystal - edges ahead, faces hollow - and turned, with the note that bismuth and rock salt grow this way. it closes on an ordered-to-fractal axis carrying three shapes and three marks: flat crystal, supply reaches every face; hopper crystal, corners run ahead; dendrite, tips take it all.",
+          "why": "the topic has spent four beats on branching growth, and every crystal anyone has held in their hand is flat-faced and ordered. the beat exists to answer that objection with a mechanism rather than a hedge, and the mechanism is one measured ratio.",
+          "say": "Both of these were built the same way, one particle at a time - so why does one branch and the other come out flat? Look at the supply. Solve for how much material reaches each part of the surface, and a corner sees three times what the middle of a face sees. Corners run ahead. Let that run and the faces never catch up: this is a hopper crystal, and bismuth and rock salt really do grow like this. So it is one axis, not two categories. Plenty of supply and the faces fill in - a flat crystal. Scarce supply and the tips take it all - a dendrite. The fractal is in the growth, not in the finished crystal."
+        },
+        {
+          "slug": "07f-contrasts",
+          "seconds": 23.1,
+          "video": "",
+          "shows": "three states. the plant beside a discharge, labelled fixed rule and random rule. then the fern beside three separate discharges, labelled always the same fern and never the same bolt. then three clusters grown at roughness 0.6, 1.0 and 2.0, from densely bushy to nearly a single channel, with their measured dimensions 1.603, 1.471 and 1.208 landing on the scale.",
+          "why": "three points that only make sense together: the same look can come from opposite mechanisms; randomness in the fern is a sampling method while randomness in the discharge is the object itself; and the amount of roughness is a dial with a number attached.",
+          "say": "A plant grown by a fixed rule, and a discharge grown by a random one - and they look like relatives. But run the fern again and it is the same fern; run the discharge again and it is never the same bolt. The randomness is the shape, not a flaw in it. And it has a setting: turn one number, and the branching thins from a bush to a channel, with the dimension following it down."
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "title": "complex numbers",
+      "beats": [
+        {
+          "slug": "08a-point-on-plane",
+          "seconds": 28.0,
+          "video": "",
+          "shows": "the ordinary number line with its ticks numbered. 1.5 is walked along it to 2.25, then -1.5 is walked to the same place, and the conclusion is written: every square lands on the right. -1 is marked in coral with nothing on the line that reaches it. only then is a new number invented, written as i times i = -1, and given a direction of its own - the vertical axis is drawn and i is placed on it. after that the plane is used as a plane: a point with a real part and an imaginary part, dropped onto both axes and read off as 2 + 1i, with three more points placed and named.",
+          "why": "the whole of topics 9 to 11 runs on the complex plane, and a viewer who has never met imaginary numbers has to be given the reason they exist before being shown the picture. the reason is one honest sentence: no ordinary number squares to a negative, so one is invented, and it cannot live on the line.",
+          "say": "Every ordinary number sits somewhere on this line. Square one and see where it lands: one and a half times itself is two and a quarter, over on the right. Try the negative - minus one and a half times itself - and it lands in exactly the same place. Every square lands on the right. So nothing on this line squares to minus one. Nothing. That is not a gap to be patched; it is a reason to invent a number, and we call it i, defined by exactly one thing: i times i is minus one. It cannot sit on the line, so it is given a direction of its own, straight up. Now every point on this plane is a number: so much along, so much up."
+        },
+        {
+          "slug": "08b-addition",
+          "seconds": 14.2,
+          "video": "",
+          "shows": "two arrows from the origin, blue and gold, each labelled with its coordinates. the gold arrow is lifted and laid at the tip of the blue one, and the sum lands in green where it ends. the whole thing repeats with a second pair, which stays on screen while the rule is stated beneath it.",
+          "why": "addition given a motion rather than a formula: one number shifts the other.",
+          "say": "Two numbers, two arrows. To add them, pick up the second arrow and lay it at the tip of the first. Where it ends is the sum. The same shift, from a different starting point, does the same thing. Addition moves a point - it does not turn it."
+        },
+        {
+          "slug": "08c-multiplication",
+          "seconds": 31.4,
+          "video": "",
+          "shows": "two numbers as arrows on the plane, then the multiplication done in full, one line at a time: the two factors, the four-term expansion, the line i times i = -1 that turns the last piece negative, the collected form, and the answer 0.796 + 1.692i, which is then placed on the plane where the algebra said it would be. the general rule (a + bi)(c + di) = (ac - bd) + (ad + bc)i follows. only then is the same answer read geometrically, with its arithmetic shown: lengths 1.43 times 1.31 = 1.87, angles 24.8 + 40.0 = 64.8 degrees, against an answer that is 1.87 long at 64.8 degrees. it closes on multiplying by i, with 1 times i = i and i times i = -1 written beside two quarter-turn arcs.",
+          "why": "squaring is the engine of everything from topic 9 onward, and the geometric reading of it - turn and stretch - is what makes the later pictures legible. but a viewer is owed the algebra first: what multiplying these numbers actually is, done with real numbers, before being told what it looks like.",
+          "say": "Multiply these two out the way you would multiply any two brackets. Four terms. Three of them are ordinary, and the fourth has i times i in it - which is minus one, so that piece flips sign. Collect, and the answer is nought point seven nine six plus one point six nine two i. There it is on the plane. In general: real times real minus imaginary times imaginary, and the cross terms make the new imaginary part. Now read the same answer the other way. This arrow is one point four three long, that one one point three one - and one point four three times one point three one is one point eight seven, which is exactly how long the answer is. The angles were twenty-five and forty degrees; the answer sits at sixty-five. Angles add, lengths multiply. And multiplying by i turns a quarter turn: one goes to i, i goes to minus one."
+        },
+        {
+          "slug": "08d-modulus-argument",
+          "seconds": 13.7,
+          "video": "",
+          "shows": "a single arrow with its angle drawn as a gold arc. live readouts give the distance from the origin and the angle in degrees, and the point is moved along a path where both change.",
+          "why": "to name the two quantities the turn-and-stretch picture uses, and to show they describe the point as completely as the two coordinates did - which requires both of them to actually move.",
+          "say": "Two coordinates describe this point. So do two other numbers: how far it is from the origin, and what angle it sits at. Move it, and both change. The distance is called the modulus, the angle the argument - and for turning and stretching, they are the useful pair."
+        },
+        {
+          "slug": "08e-squaring",
+          "seconds": 15.0,
+          "video": "",
+          "shows": "a unit circle. a point at 32 degrees is squared and lands at 64. then two walks: one starting just outside the circle is squared over and over and marches away off the frame in coral, while one just inside spirals in to the origin in green.",
+          "why": "squaring is multiplying a number by itself, so the angle doubles and the distance squares - and all of escape-time behaviour follows from that one sentence.",
+          "say": "Squaring multiplies a number by itself - so the angle doubles, and the distance is squared. And a distance squared is the whole story. Just outside the circle, squaring pushes it further out, and further again, without stopping. Just inside, it falls to nothing. This one operation drives everything that follows."
+        },
+        {
+          "slug": "08f-why-z2-plus-c",
+          "seconds": 47.0,
+          "video": "",
+          "shows": "squaring on its own, applied over and over to three starting points: one inside the unit circle falls to 0, one on it stays, one outside runs away - so the edge between the two outcomes is exactly that circle, and a circle is smooth. one fixed number c is then added after every squaring, and two full steps are drawn as two separate moves: the square, with the length and angle before and after, then the shift by c laid on the tip of the result. the orbit runs on and stays bounded. the same test is then applied to every starting point at once, which draws the Julia set, and a window on its edge is magnified to show that the edge is no longer a circle. it closes on the point: z times z is the turn and stretch from 08c, + c is the slide from 08b, and nothing else is added.",
+          "why": "topic 9 previously opened with the rule z becomes z times z + c already fixed, and nothing anywhere said where it came from. this beat answers that. squaring alone is shown to be too simple to be interesting - three outcomes and a circular boundary - and the shift is shown to be the smallest thing that can be added to break that, built from the two operations the topic has already taught.",
+          "say": "Take squaring on its own and apply it over and over. Start inside this circle and the point falls to zero. Start on it and it stays. Start outside and it runs away. Three outcomes, and the border between them is exactly the circle - perfectly smooth, dimension one, nothing to say about it. So add one thing: after every squaring, shift by a fixed number c. Watch a single step done twice over - square, which doubles the angle and squares the length, then slide by c. Again. The point wanders and never escapes. Now run that test on every starting point at once and keep the ones that stay bounded - and the border is no longer a circle. Look closer and it stays rough at every magnification. And notice what went into it: a turn and stretch, and a slide. Both from earlier in this topic. Nothing else."
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "title": "escape-time dynamics",
+      "beats": [
+        {
+          "slug": "09a-orbit",
+          "seconds": 19.9,
+          "video": "",
+          "shows": "the rule z becomes z times z + c with c fixed and marked on the plane, and a starting point put through it ten times, hopping around with a fading trail. beside it three readouts run: the step number, the current value of z written out, and its distance from 0. a plot on the right records that distance against the step number, with a dashed line at 2, and the trace stays well below it throughout.",
+          "why": "an orbit is a sequence of numbers before it is a picture, and the question that decides everything later is whether one number - the distance from zero - stays bounded. showing the coordinates and the distance at every step makes the walk something the viewer can follow rather than watch.",
+          "say": "One rule: take the point, square it, add c. Here is c, and here is where we start. Square, add - and it lands there. Again. Again. Watch the three numbers on the right: the step, the point itself, and the one that matters, its distance from zero. On the plot, that distance against step number. It goes up, it comes down, it never gets near two. This one stays."
+        },
+        {
+          "slug": "09b-escape-test",
+          "seconds": 17.3,
+          "video": "",
+          "shows": "the same plane with a circle of radius 2 drawn on it, and two starting points put through the same rule. the first crosses the circle and is gone, its distance climbing 1.30, 1.81, 4.19; the second wanders inside and stays. both distances are read out as they run and both are traced on one plot against the dashed line at 2 - one crosses it and shoots up, the other stays under it.",
+          "why": "the test that makes the whole topic computable is a single threshold, and it deserves to be seen crossed. having both walks on one plot makes the two outcomes a comparison rather than two separate claims.",
+          "say": "Draw a circle at distance two. Start here, and the walk crosses it - one point three, one point eight, four point two - and once it is out, it only gets further out. Start there instead, and it wanders about inside and never reaches the line. Two starting points, two answers, and nothing in between. That is the whole test."
+        },
+        {
+          "slug": "09c-julia-set",
+          "seconds": 15.9,
+          "video": "",
+          "shows": "an empty frame with c fixed beside it, and six starting points tried one at a time. each gets the first steps of its own walk drawn, clipped where it leaves the frame, and a written verdict: three stay, and three leave after 5, 2 and 1 steps. then the same test is run on every point in the frame at once and the ones that stay fill in as a solid body, with the share of the frame that stays printed as 17 per cent. the escape colouring follows and the shape is named.",
+          "why": "the set is defined by a test, and a definition is worth more acted out on six points than stated in a caption. the six verdicts also make the filled body read as the answer to a question rather than a picture that appeared.",
+          "say": "Fix c, and try a starting point. This one wanders and stays. So does this one, and this one. This one is gone in five steps. This one in two. This one in a single step. Six answers. Now do the same for every point in the frame and keep the ones that stay - about seventeen per cent of it - and that is the Julia set for this c. Colour the rest by how fast it left, and the edge between the two comes out."
+        },
+        {
+          "slug": "09d-julia-morph",
+          "seconds": 13.0,
+          "video": "",
+          "shows": "the Mandelbrot set in a panel on the right with a gold marker showing where c sits. five values of c are visited in turn and the large panel redraws for each - connected shapes while the marker is inside the set, scattered dust once it crosses out.",
+          "why": "to establish that there is a whole family, one per c, and that they differ in kind - and to make the reason visible, since the marker crossing the edge is exactly what changes the answer.",
+          "say": "There is not one of these - there is one for every c. Move c a little and the whole shape reorganises. Some hold together in a single connected piece. Others fly apart into dust. And watch where the marker is when that happens: it has crossed the edge of this shape on the right."
+        },
+        {
+          "slug": "09e-mandelbrot-atlas",
+          "seconds": 11.3,
+          "video": "",
+          "shows": "the c-plane. for every c the walk starting at zero is tested and the values that stay bounded fill in as the Mandelbrot set. two doorway points are marked: one inside, opening to a connected Julia set, one outside, opening to dust.",
+          "why": "the reframing the topic is built toward. the famous shape is not a shape - it is an index of every Julia set at once.",
+          "say": "So ask it the other way round. For each c, run just one walk - the one that starts at zero - and keep the values of c that stay bounded. That is the Mandelbrot set. And every point of it is a doorway: inside, the Julia set holds together. Outside, it is dust."
+        },
+        {
+          "slug": "09f-escape-colour",
+          "seconds": 16.1,
+          "video": "",
+          "shows": "the set in flat blue, then three points outside it marked one at a time with the number of steps each took to leave - 3, 9 and 23 - the later ones sitting closer to the edge. a colour key is built, the three counts are ticked onto it at their own heights, and the whole outside is then coloured by that count, turning the plain silhouette into the banded picture.",
+          "why": "the familiar coloured picture is usually presented as decoration. it is a measurement: every colour is an escape count. showing three actual counts before the colouring makes the picture readable rather than pretty.",
+          "say": "Every point outside the set leaves eventually - but not at the same speed. This one is gone in three steps. This one, a little closer in, takes nine. This one, closer still, twenty-three. So give each point a colour for its count: quick escapes at one end, slow ones at the other. Colour the whole picture that way and the bands appear. They are not decoration - each one is a number of steps."
+        },
+        {
+          "slug": "09g-newton-ship",
+          "seconds": 9.3,
+          "video": "",
+          "shows": "two other rules side by side, each named and each with its rule written under it. on the left, Newton's method on z³ = 1, coloured by which of the three roots the walk falls into, under z becomes z - (z³ - 1) / 3z². on the right, the burning ship, under z becomes (|x| + |y|i)² + c, with the note that x and y are the two parts of z and the rule is otherwise unchanged.",
+          "why": "to show that nothing in the previous six beats depended on the particular rule. change the rule and the same machinery produces a different object with the same kind of boundary. naming both and writing both rules is what keeps this from being a slideshow.",
+          "say": "Nothing so far depended on squaring and adding. Here is Newton's method looking for the cube roots of one - colour each starting point by which root it ends up at, and the borders between the three are fractal. And here is the burning ship: exactly the earlier rule, except that the two parts of z are made positive before squaring. One absolute value, and this is what comes out. Wherever two outcomes meet, the boundary between them is fractal."
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "title": "going deeper",
+      "beats": [
+        {
+          "slug": "10a-connectedness",
+          "seconds": 14.9,
+          "video": "",
+          "shows": "the Mandelbrot set in flat blue. a c inside it is marked green and opens to a connected Julia set above; a c outside is marked coral and opens to dust below. a second pair is then tried, giving the same answer. the closing line states that this map records which Julia sets hold together.",
+          "why": "to state exactly what the shape is, in a sentence that can be checked on screen. all four values of c have been verified by running the walk from zero.",
+          "say": "Pick a c inside the set: its Julia set holds together in one piece. Pick a c outside: it falls into dust. Try two more, and the answer does not change. That is what this map is - a record of which Julia sets hold together and which do not."
+        },
+        {
+          "slug": "10b-boundary-detail",
+          "seconds": 13.5,
+          "video": "",
+          "shows": "the coloured set. the interior and the far exterior dim almost to nothing, leaving a bright band along the edge. a gold marker then travels the boundary of the main body exactly.",
+          "why": "to locate the complexity. the inside is a plain filled region and the far outside is empty; the structure sits on the dividing line. the traversal is named for what it is - the main body's edge, which is genuinely a smooth curve - so the picture does not argue against the words.",
+          "say": "The inside is plain - one solid region. The far outside is plain too. Dim both, and a thin band along the edge is all that is left. This much of it, the edge of the main body, is a smooth curve. It is where the bulbs and the filaments meet it that the edge stops being simple."
+        },
+        {
+          "slug": "10c-endless-zoom",
+          "seconds": 12.3,
+          "video": "",
+          "shows": "a point on the edge magnified in seven stages, each growing out of the last, with a counter reaching 1074 times. spirals and filaments appear at every stage and the final frame is as structured as the first.",
+          "why": "to answer the objection that fine detail must eventually run out. it does not, and the counter makes the depth explicit.",
+          "say": "Magnify a point on the edge. Then magnify that. Ten times. A hundred. A thousand times over, and the edge has not smoothed out even slightly - still spiralling, still branching. Every scale looks like this."
+        },
+        {
+          "slug": "10d-boundary-dimension",
+          "seconds": 10.7,
+          "video": "",
+          "shows": "the set, with box counting run on its edge at three picture resolutions: 256 across gives 0.919, 512 gives 1.055, 1024 gives 1.114, and the trend is noted. a 1-to-2 scale then carries the Koch curve, the value measured here, and the proved value at 2, with the theorem stated below.",
+          "why": "to be straight about the difference between measuring and proving. the measurement climbs with every increase in resolution and does not stop, and the true answer is known by proof rather than by counting.",
+          "say": "Count the boxes the edge passes through. At this resolution the slope comes out below one. Make the picture finer and it climbs. Finer again, and it climbs again - and it never settles, because no finite picture can resolve this edge. The proved answer is exactly two. A boundary as rough as a curve can be."
+        },
+        {
+          "slug": "10e-period-doubling",
+          "seconds": 8.9,
+          "video": "",
+          "shows": "the set cropped to a band around its real axis, and directly beneath it, on the same horizontal scale, the bifurcation diagram of the same rule restricted to the real line. gold dashed lines at minus nought point seven five and minus one and a quarter run through both pictures, landing on the necks between the bulbs above and the splitting points below.",
+          "why": "to show that the bulbs are not decoration - each marks a doubling of the period - and to demonstrate it by alignment rather than assert it.",
+          "say": "Restrict the same rule to the real line and plot where it settles. The picture underneath lines up with the one above: every neck between the bulbs sits exactly on a splitting point. Each bulb is one doubling of the period - the route to chaos, sitting inside this picture."
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "title": "the optional deeper layer",
+      "beats": [
+        {
+          "slug": "11a-optional-strand",
+          "seconds": 4.5,
+          "video": "",
+          "shows": "a title card naming the strand as optional, with a line stating that the main arc is complete without it and that nothing here assumes it.",
+          "why": "to set the contract before any proof starts, so skipping the strand is a stated option rather than a loss.",
+          "say": "What follows is optional. The series is complete without it. Everything here is built from the ground up, and nothing in the earlier topics depends on it."
+        },
+        {
+          "slug": "11b-derive-dimension",
+          "seconds": 14.1,
+          "video": "",
+          "shows": "the Koch curve and the Sierpinski triangle with their structures labelled - four copies at one third, three at one half. the counting law is written as content equals inverse-scale to the power d, restated as N equals s to the d, then solved: taking logarithms brings the exponent down, and dividing isolates it. each rewrite stays on screen, with the step that produced it named beside it. the two examples are filled in, giving 1.262 and 1.585.",
+          "why": "the formula used since topic 4 was handed over, not derived. here it is earned in two rewrites.",
+          "say": "The counting law says the number of copies is the inverse scale raised to the dimension. Take the logarithm of both sides and the exponent comes down as a factor. Divide by the logarithm of the scale, and the dimension is alone on one side. That is the formula - earned, not handed over."
+        },
+        {
+          "slug": "11c-box-limit",
+          "seconds": 9.9,
+          "video": "",
+          "shows": "the Koch curve, with box counting run over three ranges of box size. the counts land on a log-log plot with a straight-line fit. the three slopes are listed - 1.2924 over the coarsest range, 1.2735 over the middle, 1.2520 over the finest - against the exact value log 4 over log 3, which is 1.2619.",
+          "why": "the two routes to the dimension agreeing: the counting method converges on the number the construction gives exactly.",
+          "say": "Run box counting on the same curve over three ranges of box size. Coarse boxes give one point two nine. The middle range, one point two seven. The finest, one point two five. They are closing in from both sides on log four over log three - the value the construction gives exactly."
+        },
+        {
+          "slug": "11d-hausdorff",
+          "seconds": 10.9,
+          "video": "",
+          "shows": "the Koch curve covered by boxes, noted as 64 pieces of size one twenty-seventh, and the quantity to be summed: each piece size raised to a power p. a plot tracks that sum as the construction deepens, for four values of p: at 1 the sum climbs, at 1.6 and 2.0 it falls away, at 1.2619 it is flat. the critical power is named as the Hausdorff dimension.",
+          "why": "the rigorous definition the series has been approximating, presented as a threshold rather than a formula.",
+          "say": "Cover the curve with pieces, and add up each piece size raised to a power. Deepen the construction and watch that sum. Below the critical power it blows up. Above it, it dies away. At exactly one point two six it holds steady - and that critical power is the Hausdorff dimension."
+        },
+        {
+          "slug": "11e-laplace",
+          "seconds": 8.9,
+          "video": "",
+          "shows": "a half-grown cluster with its field, the field named as the solution of the Laplace equation outside the cluster, and the growth rule as chance proportional to the field gradient raised to a power. three clusters grown at 0.6, 1.0 and 2.0 are shown with their measured dimensions 1.603, 1.471 and 1.208.",
+          "why": "the rule used in topic 7 was stated as a proportionality. here the field is named as the solution of an equation and the exponent is exposed as the single control.",
+          "say": "The field outside the cluster is not arbitrary - it is the solution of the Laplace equation there. Growth happens with a chance set by the field gradient, raised to a power. And that single power is the dial: raise it and the branching thins, and the dimension follows it down."
+        },
+        {
+          "slug": "11f-escape-proof",
+          "seconds": 15.7,
+          "video": "",
+          "shows": "the circle of radius two with a point just outside it. four lines build in sequence: the size of z exceeds two while the size of c is at most two; the size of z squared plus c is at least the size of z squared minus the size of c; that is at least the size of z squared minus two; and that exceeds the size of z. beneath, a logarithmic axis of the size of z, with the escape radius marked, carries the actual sizes along the walk as they land: 2.25, 5.15, 26.82, 719.18.",
+          "why": "the escape test has been a working rule since topic 9. here it is proved in four steps, with the numbers from a real walk landing on an axis where the growth is visible rather than merely stated.",
+          "say": "Once the size passes two, the square outruns the shift. Each step is at least the size squared, less two - and past two, that is bigger than the size it started from. So the size grows every step, without bound. Watch it: two and a quarter, five, twenty-seven, seven hundred."
+        },
+        {
+          "slug": "11g-shared-condition",
+          "seconds": 9.7,
+          "video": "",
+          "shows": "a Julia set with the walk starting at zero traced across it in green, and the Mandelbrot set beside it with the same c marked. the claim is stated below: the walk from zero stays bounded exactly when the set holds together.",
+          "why": "the two objects have been treated as linked since topic 9. this beat names the single condition that links them and shows it read on both pictures at once.",
+          "say": "On the left, the walk that starts at zero, traced on its own Julia set. On the right, the same c on the map. One condition governs both pictures: the walk from zero stays bounded exactly when the Julia set holds together in one piece."
+        },
+        {
+          "slug": "11h-theorems",
+          "seconds": 8.1,
+          "video": "",
+          "shows": "two cards. the first states that the set is connected, with its proof idea - the outside maps onto the outside of a disk. the second states that the edge has dimension two, with its idea - the edge is as rough as a curve can be. both are marked as having a full proof beyond this series, with the attributions below.",
+          "why": "to end the strand honestly. the two deepest facts are stated plainly, their proof ideas made concrete, and the boundary of what has been shown is marked rather than blurred.",
+          "say": "Two results, stated plainly. The set is connected - the argument maps its outside smoothly onto the outside of a disk. And its edge has dimension two, as rough as a curve is capable of being. Both proofs are beyond this series. What they mean is not."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+name: Python application
+
+on:
+  push:
+    branches: ["main", "staging", "qa", "develop", "pilot", "demo"]
+  pull_request:
+    branches: ["main", "staging", "qa", "develop", "pilot", "demo"]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          version: "0.7.8"
+      - name: Sync dependencies
+        run: uv sync --frozen --extra dev
+      - name: Run ruff check
+        run: uv run ruff check
+
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      web3d_db:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: test_web3d
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U test -d test_web3d"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+      math_db:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: test_math
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd="pg_isready -U test -d test_math"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      APP_CONFIG__MESSAGES_DB__URL: postgresql+asyncpg://test:test@localhost:5432/test_web3d
+      APP_CONFIG__CONTEXT_DB__URL: postgresql+asyncpg://test:test@localhost:5433/test_math
+      APP_CONFIG__REDIS__URL: redis://localhost:6379/0
+      APP_CONFIG__APP__MOCK_MODE: "true"
+      APP_CONFIG__RATE_LIMIT__ENABLED: "false"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          version: "0.7.8"
+      - name: Sync dependencies
+        run: uv sync --frozen --extra dev
+      - name: Apply messages_db migrations
+        run: uv run alembic -c alembic/messages.ini upgrade head
+      - name: Apply context_db migrations
+        run: uv run alembic -c alembic/context.ini upgrade head
+      - name: Run tests
+        run: uv run pytest --tb=short
