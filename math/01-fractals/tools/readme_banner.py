@@ -123,7 +123,20 @@ def breakdown(size: int, sites: int, eta: float = 1.0, sweeps: int = 24, seed: i
             nxt[on] = 0.0
             phi[...] = nxt
 
-    relax(sweeps * 8)
+    # jacobi relaxation carries the boundary value inward one cell a sweep, so
+    # the field does not reach the seed at all until the sweep count passes half
+    # the grid width. short of that the first growth step finds zero field
+    # everywhere and the whole figure comes out blank with no error, so the
+    # settling pass is sized from the grid rather than from the per-step count.
+    settle = max(sweeps * 8, size * 2)
+    relax(settle)
+    mid_field = float(phi[mid - 1, mid])
+    if mid_field <= 0.0:
+        raise RuntimeError(
+            f"the field never reached the seed: {settle} settling sweeps on a "
+            f"{size} grid, which needs more than {size // 2}"
+        )
+
     age = np.zeros((size, size))
     for step in range(sites):
         grown = np.zeros_like(on)
@@ -136,6 +149,10 @@ def breakdown(size: int, sites: int, eta: float = 1.0, sweeps: int = 24, seed: i
         strength = np.where(edge, np.clip(phi, 0, None) ** eta, 0.0)
         total = strength.sum()
         if total <= 0:
+            # stopping here on the first step means nothing was drawn at all,
+            # which is worth an error rather than a blank panel
+            if step == 0:
+                raise RuntimeError("no field at the seed's neighbours on the first step")
             break
         flat = rng.choice(strength.size, p=(strength / total).ravel())
         r, c = divmod(int(flat), size)
