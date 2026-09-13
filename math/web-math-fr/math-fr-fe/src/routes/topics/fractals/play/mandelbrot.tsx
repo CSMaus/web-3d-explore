@@ -79,21 +79,21 @@ function MandelbrotPage() {
       <div className="mt-4">
         <PlayTabs />
       </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "the Mandelbrot set"}</h1>
+      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "The Mandelbrot set"}</h1>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
           <section className="rounded border border-edge p-4">
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">VIEW</h2>
             <div className="mt-3 space-y-2">
-              <Slider label="zoom" min={0} max={22} step={0.05} value={zoom} format={(v) => `x${Math.pow(2, v).toExponential(1)}`} onChange={change(setZoom)} />
-              <Slider label="centre x" min={-2.5} max={1.5} step={0.0005} value={centre[0]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([v, centre[1]]))} />
-              <Slider label="centre y" min={-1.6} max={1.6} step={0.0005} value={centre[1]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([centre[0], v]))} />
-              <Slider label="max steps" min={40} max={900} step={20} value={iters} format={(v) => String(Math.round(v))} onChange={change((v: number) => setIters(Math.round(v)))} />
-              <Slider label="colour offset" min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={change(setShift)} />
+              <Slider label="Zoom" min={0} max={22} step={0.05} value={zoom} format={(v) => `x${Math.pow(2, v).toExponential(1)}`} onChange={change(setZoom)} />
+              <Slider label="Centre x" min={-2.5} max={1.5} step={0.0005} value={centre[0]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([v, centre[1]]))} />
+              <Slider label="Centre y" min={-1.6} max={1.6} step={0.0005} value={centre[1]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([centre[0], v]))} />
+              <Slider label="Max steps" min={40} max={900} step={20} value={iters} format={(v) => String(Math.round(v))} onChange={change((v: number) => setIters(Math.round(v)))} />
+              <Slider label="Colour offset" min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={change(setShift)} />
               <PaletteBar />
             </div>
             <p className="mt-3 text-[11px] text-muted">
-              click the picture to centre on that point, then wind the zoom up.
+              Click the picture to centre on that point, then wind the zoom up.
             </p>
           </section>
 
@@ -101,7 +101,7 @@ function MandelbrotPage() {
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">RESOLUTION</h2>
             <div className="mt-3 space-y-2">
               <Slider
-                label="supersample"
+                label="Supersample"
                 min={1}
                 max={4}
                 step={0.5}
@@ -121,12 +121,12 @@ function MandelbrotPage() {
                     : "w-full rounded border border-edge px-3 py-2 font-mono text-xs text-muted"
                 }
               >
-                {stale ? "recalculate" : "up to date"}
+                {stale ? "Recalculate" : "Up to date"}
               </button>
             </div>
             <p className="mt-3 text-[11px] text-muted">
-              the sharper pass redraws the same view at more pixels than the screen has and lets
-              the screen shrink it back down, which is what removes the stair edges. it reuses the
+              The sharper pass redraws the same view at more pixels than the screen has and lets
+              the screen shrink it back down, which is what removes the stair edges. It reuses the
               one drawing surface rather than keeping a second copy, so nothing accumulates, and
               the detail is stepped down until it fits both the hardware limit and a pixel budget.
             </p>
@@ -138,8 +138,8 @@ function MandelbrotPage() {
                 SERVER RENDER
               </h2>
               <p className="mt-2 text-[11px] text-muted">
-                past about a hundred thousand times, single precision on the graphics card runs out
-                of digits and the picture goes blocky. this view is deeper than that, so it is
+                Past about a hundred thousand times, single precision on the graphics card runs out
+                of digits and the picture goes blocky. This view is deeper than that, so it is
                 rendered on the server in double precision and streamed back one pass at a time,
                 each four times finer than the last.
               </p>
@@ -155,8 +155,8 @@ function MandelbrotPage() {
                   }
                 >
                   {shot.kind === "working" || shot.kind === "opening"
-                    ? "rendering"
-                    : "render on the server"}
+                    ? "Rendering"
+                    : "Render on the server"}
                 </button>
                 <button
                   type="button"
@@ -164,27 +164,27 @@ function MandelbrotPage() {
                   disabled={shot.kind === "idle"}
                   className="rounded border border-edge px-3 py-1.5 font-mono text-[11px] text-muted hover:border-muted disabled:opacity-40"
                 >
-                  stop
+                  Stop
                 </button>
               </div>
               <div className="mt-3 font-mono text-[11px] text-muted">
-                {shot.kind === "working" ? `pass ${shot.done} of 4` : null}
-                {shot.kind === "done" ? "finished, full resolution" : null}
-                {shot.kind === "idle" ? "not started" : null}
-                {shot.kind === "opening" ? "opening the connection" : null}
+                {shot.kind === "working" ? `Pass ${shot.done} of 4` : null}
+                {shot.kind === "done" ? "Finished, full resolution" : null}
+                {shot.kind === "idle" ? "Not started" : null}
+                {shot.kind === "opening" ? "Opening the connection" : null}
                 {shot.kind === "refused" || shot.kind === "busy" || shot.kind === "lost" ? (
                   <span className="text-warn">{shot.reason}</span>
                 ) : null}
               </div>
               {showing ? (
                 <p className="mt-2 text-[11px] text-muted">
-                  the connection is closed as soon as a view finishes, because the server holds
+                  The connection is closed as soon as a view finishes, because the server holds
                   capacity for as long as a socket is open whether or not it is computing.
                 </p>
               ) : null}
               {drifted && tile ? (
                 <p className="mt-2 text-[11px] text-warn">
-                  the view moved, so the server picture was dropped. render again.
+                  The view moved, so the server picture was dropped. Render again.
                 </p>
               ) : null}
             </section>
@@ -230,19 +230,19 @@ function MandelbrotPage() {
           <SaveImage stage={stage} name="mandelbrot" />
           <Readout
             rows={[
-              ["half width", span.toExponential(3)],
+              ["Half width", span.toExponential(3)],
               ["centre", `${centre[0].toFixed(8)}, ${centre[1].toFixed(8)}`],
-              ["steps tried", showing && tile ? String(tile.iters) : String(iters)],
+              ["Steps tried", showing && tile ? String(tile.iters) : String(iters)],
               [
-                "drawn at",
+                "Drawn at",
                 detail
                   ? `${detail.width} by ${detail.height}, ${(detail.pixels / 1e6).toFixed(1)}M pixels`
                   : "-",
               ],
-              ["detail in the picture", detail ? `${detail.factor.toFixed(1)} x screen` : "-"],
-              ["drawn by", showing ? "the server, double precision" : "the graphics card"],
+              ["Detail in the picture", detail ? `${detail.factor.toFixed(1)} x screen` : "-"],
+              ["Drawn by", showing ? "The server, double precision" : "The graphics card"],
               [
-                "server pass",
+                "Server pass",
                 showing && tile ? `${tile.width} by ${tile.height}, step ${tile.step}` : "-",
               ],
             ]}

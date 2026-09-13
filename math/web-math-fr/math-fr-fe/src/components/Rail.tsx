@@ -31,7 +31,7 @@ export function Rail({ items, here, onPick, className }: Props) {
   };
 
   return (
-    <nav className={cn("sticky top-24 self-start", className)} aria-label="on this page">
+    <nav className={cn("sticky top-24 self-start", className)} aria-label="On this page">
       <ol className="space-y-2.5">
         {items.map((item) => {
           const on = item.id === here;

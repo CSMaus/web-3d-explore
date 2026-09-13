@@ -7,8 +7,8 @@ const CARDS = [
   {
     slug: "fractals",
     number: 1,
-    title: "fractals",
-    summary: "roughness that does not smooth out",
+    title: "Fractals",
+    summary: "Roughness that does not smooth out",
     state: "ready",
     parts: 10,
     beats: 53,
@@ -18,8 +18,30 @@ const CARDS = [
   {
     slug: "chaos",
     number: 2,
-    title: "differential equations, attractors and chaos",
-    summary: "an equation whose unknown is a function",
+    title: "Differential equations, attractors and chaos",
+    summary: "An equation whose unknown is a function",
+    state: "writing",
+    parts: 0,
+    beats: 0,
+    seconds: 0,
+    systems: 7,
+  },
+  {
+    slug: "networks",
+    number: 3,
+    title: "Calculus into a first neural network",
+    summary: "The perceptron and what it became",
+    state: "writing",
+    parts: 0,
+    beats: 0,
+    seconds: 0,
+    systems: 7,
+  },
+  {
+    slug: "tokens",
+    number: 4,
+    title: "Tokens, embeddings and generation",
+    summary: "A string of text turned into numbers",
     state: "planned",
     parts: 0,
     beats: 0,
@@ -27,15 +49,16 @@ const CARDS = [
     systems: 0,
   },
   {
-    slug: "networks",
-    number: 3,
-    title: "calculus into a first neural network",
-    summary: "the perceptron and what it became",
-    state: "planned",
+    slug: "primes",
+    number: 5,
+    title: "An aside: the gaps between primes",
+    summary: "The gaps between primes as a return map",
+    state: "writing",
     parts: 0,
     beats: 0,
     seconds: 0,
-    systems: 0,
+    systems: 1,
+    aside: true,
   },
 ];
 
@@ -60,52 +83,71 @@ function serve(body: unknown) {
   );
 }
 
-describe("the topic index", () => {
+describe("The topic index", () => {
   beforeEach(() => {
     document.cookie = "mathfr_session_consent=accepted; path=/";
   });
 
-  it("lists every topic, built or not, in reading order", async () => {
+  it("Lists every topic, built or not, in reading order", async () => {
     serve(CARDS);
     await siteAt("/topics");
-    await waitFor(() => expect(screen.getByText("topic 1 - fractals")).toBeTruthy());
-    expect(screen.getByText("topic 2 - differential equations, attractors and chaos")).toBeTruthy();
-    expect(screen.getByText("topic 3 - calculus into a first neural network")).toBeTruthy();
+    await waitFor(() => expect(screen.getByText("Topic 1 - Fractals")).toBeTruthy());
+    expect(screen.getByText("Topic 2 - Differential equations, attractors and chaos")).toBeTruthy();
+    expect(screen.getByText("Topic 3 - Calculus into a first neural network")).toBeTruthy();
+    expect(screen.getByText("Topic 4 - Tokens, embeddings and generation")).toBeTruthy();
     const items = Array.from(document.querySelectorAll("li"));
-    expect(items[0].textContent).toContain("topic 1");
-    expect(items[2].textContent).toContain("topic 3");
+    expect(items[0].textContent).toContain("Topic 1");
+    expect(items[2].textContent).toContain("Topic 3");
+    expect(items[3].textContent).toContain("Topic 4");
   });
 
-  it("only the built topic is a link, and it points at its series", async () => {
+  it("A topic with pages is a link, whether or not it is filmed", async () => {
     serve(CARDS);
     await siteAt("/topics");
-    await waitFor(() => expect(screen.getByText("topic 1 - fractals")).toBeTruthy());
-    const links = Array.from(document.querySelectorAll("main a"));
-    expect(links.length).toBe(1);
-    expect(links[0].getAttribute("href")).toBe("/topics/fractals/parts");
+    await waitFor(() => expect(screen.getByText("Topic 1 - Fractals")).toBeTruthy());
+    const hrefs = Array.from(document.querySelectorAll("main a")).map((a) =>
+      a.getAttribute("href"),
+    );
+    // filmed goes to the series, built but unfilmed goes to the pages
+    expect(hrefs).toContain("/topics/fractals/parts");
+    expect(hrefs).toContain("/topics/chaos/play");
+    expect(hrefs).toContain("/topics/networks/play");
+    // tokens has pages now, so it links to them even though the card still says planned
+    expect(hrefs).toContain("/topics/tokens/play");
+    // the aside links to its one page from its own block under the list
+    expect(hrefs).toContain("/topics/primes/play/gaps");
+    expect(hrefs.length).toBe(5);
+    expect(screen.getByRole("link", { name: "Open the aside" })).toBeTruthy();
+    expect(screen.getByText("Asides")).toBeTruthy();
   });
 
-  it("says plainly what is not built rather than pretending", async () => {
+  it("Says plainly what exists on each, rather than pretending either way", async () => {
     serve(CARDS);
     await siteAt("/topics");
-    await waitFor(() => expect(screen.getByText("ready")).toBeTruthy());
-    expect(screen.getAllByText("planned").length).toBe(2);
-    expect(screen.getAllByText("the plan is written; nothing is built yet").length).toBe(2);
-    expect(screen.getByText(/10 parts, 53 beats, about 20 minutes, 7 things to move/)).toBeTruthy();
+    await waitFor(() => expect(screen.getByText("Ready")).toBeTruthy());
+    expect(screen.getAllByText("Being written").length).toBe(2);
+    expect(screen.getAllByText("Planned").length).toBe(1);
+    expect(screen.getByText(/10 parts, 53 beats, about 20 minutes, 7 things to move/i)).toBeTruthy();
+    expect(
+      screen.getAllByText(/7 things to move, and every equation. no clip filmed yet/i).length,
+    ).toBe(2);
+    expect(screen.getAllByText(/0 things to move, and every equation/i).length).toBe(1);
+    // tokens is planned on its card and built in the site, so it is the third with pages
+    expect(screen.getAllByText(/things to move, and every equation. no clip filmed yet/i).length).toBe(3);
   });
 
-  it("says what is missing when the backend is down, and still names the way in", async () => {
+  it("Says what is missing when the backend is down, and still names the way in", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(() => Promise.reject(new Error("connection refused"))),
     );
     await siteAt("/topics");
-    await waitFor(() => expect(screen.getByText("the backend is not answering")).toBeTruthy());
-    expect(screen.getByText(/\/topics\/fractals/)).toBeTruthy();
+    await waitFor(() => expect(screen.getByText("The backend is not answering")).toBeTruthy());
+    expect(screen.getByText(/\/topics\/fractals/i)).toBeTruthy();
   });
 });
 
-describe("navigation between and inside topics", () => {
+describe("Navigation between and inside topics", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
@@ -114,16 +156,16 @@ describe("navigation between and inside topics", () => {
     document.cookie = "mathfr_session_consent=accepted; path=/";
   });
 
-  it("the top bar moves between topics, not inside one", async () => {
+  it("The top bar moves between topics, not inside one", async () => {
     await siteAt("/topics");
     const bar = document.querySelector("header nav");
     const labels = Array.from(bar?.querySelectorAll("a") ?? []).map((a) => a.textContent);
-    expect(labels).toEqual(["home", "topics", "account"]);
+    expect(labels).toEqual(["Home", "Topics", "Account"]);
     expect(labels).not.toContain("play");
     expect(labels).not.toContain("theory");
   });
 
-  it("every page inside the topic carries the topic bar and its three sections", async () => {
+  it("Every page inside the topic carries the topic bar and its three sections", async () => {
     for (const path of [
       "/topics/fractals/parts",
       "/topics/fractals/theory",
@@ -132,7 +174,7 @@ describe("navigation between and inside topics", () => {
       "/topics/fractals/play/mandelbulb",
     ]) {
       const view = await siteAt(path);
-      await waitFor(() => expect(screen.getAllByText("topic 1 - fractals").length).toBe(1));
+      await waitFor(() => expect(screen.getAllByText("Topic 1 - Fractals").length).toBe(1));
       const hrefs = Array.from(document.querySelectorAll("main a")).map((a) =>
         a.getAttribute("href"),
       );
@@ -144,21 +186,23 @@ describe("navigation between and inside topics", () => {
     }
   });
 
-  it("the front page offers a way into the topics", async () => {
+  it("The front page offers a way into the topics", async () => {
     await siteAt("/");
-    await waitFor(() => expect(screen.getByText(/this page is not finished yet/)).toBeTruthy());
-    const link = screen.getByRole("link", { name: "the topics" });
-    expect(link.getAttribute("href")).toBe("/topics");
+    await waitFor(() => expect(screen.getByText(/this page is not finished yet/i)).toBeTruthy());
+    // the menu bar carries one of the same name, so this is scoped to the page
+    const link = document.querySelector('main a[href="/topics"]');
+    expect(link).toBeTruthy();
+    expect(link?.textContent).toBe("Topics");
   });
 
-  it("a topic with no section named goes to its series", async () => {
+  it("A topic with no section named goes to its series", async () => {
     await siteAt("/topics/fractals");
-    await waitFor(() => expect(screen.getAllByText("topic 1 - fractals").length).toBe(1));
-    expect(screen.getByRole("heading", { name: "the series, in order" })).toBeTruthy();
+    await waitFor(() => expect(screen.getAllByText("Topic 1 - Fractals").length).toBe(1));
+    expect(screen.getByRole("heading", { name: "The series, in order" })).toBeTruthy();
   });
 });
 
-describe("the page frame", () => {
+describe("The page frame", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
@@ -179,7 +223,7 @@ describe("the page frame", () => {
     "/account",
   ];
 
-  it("every page starts at the same width, so its left edge matches the menu", async () => {
+  it("Every page starts at the same width, so its left edge matches the menu", async () => {
     for (const path of everywhere) {
       const view = await siteAt(path);
       const main = document.querySelector("main");
@@ -190,7 +234,7 @@ describe("the page frame", () => {
   });
 });
 
-describe("the menu bar and the page agree on where the left edge is", () => {
+describe("The menu bar and the page agree on where the left edge is", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
@@ -198,7 +242,7 @@ describe("the menu bar and the page agree on where the left edge is", () => {
     );
   });
 
-  it("both use the same maximum width and the same padding", async () => {
+  it("Both use the same maximum width and the same padding", async () => {
     await siteAt("/topics");
     const bar = document.querySelector("header nav");
     const main = document.querySelector("main");

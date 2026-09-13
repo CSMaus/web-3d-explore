@@ -2,7 +2,7 @@ import { IFS_PRESETS, contraction, type Map2 } from "../src/systems/ifs.ts";
 
 const maps: Map2[] = IFS_PRESETS["Barnsley fern"];
 const carrier = maps.reduce((best, m, i) => (contraction(m) > contraction(maps[best]) ? i : best), 0);
-console.log("contractions", maps.map((m) => contraction(m).toFixed(3)).join(" "), "-> carrier is move", carrier + 1);
+console.log("contractions", maps.map((m) => contraction(m).toFixed(3)).join(" "), "-> Carrier is move", carrier + 1);
 
 const N = 120000;
 const xs = new Float64Array(N), ys = new Float64Array(N);

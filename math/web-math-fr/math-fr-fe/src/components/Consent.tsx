@@ -26,9 +26,9 @@ export function Consent() {
     <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-edge bg-ground/95 backdrop-blur">
       <div className="mx-auto flex max-w-4xl flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center">
         <p className="text-xs leading-relaxed text-muted">
-          this site keeps one cookie to hold a signed-in session, and records the network address
-          of each request with the page it asked for. addresses are kept for a limited period and
-          then removed. the clips are played through an external player on its cookie-free domain,
+          This site keeps one cookie to hold a signed-in session, and records the network address
+          of each request with the page it asked for. Addresses are kept for a limited period and
+          then removed. The clips are played through an external player on its cookie-free domain,
           so nothing is set by it before playback starts.
         </p>
         <div className="flex shrink-0 gap-2">
@@ -37,14 +37,14 @@ export function Consent() {
             onClick={() => decide("accepted")}
             className="rounded border border-leaf px-3 py-1.5 font-mono text-xs text-leaf"
           >
-            accept
+            Accept
           </button>
           <button
             type="button"
             onClick={() => decide("declined")}
             className="rounded border border-edge px-3 py-1.5 font-mono text-xs text-muted"
           >
-            decline
+            Decline
           </button>
         </div>
       </div>

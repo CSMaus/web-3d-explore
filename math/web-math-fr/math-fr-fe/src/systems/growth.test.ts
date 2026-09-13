@@ -18,8 +18,8 @@ function runGap(eta: number, sites: number) {
   return st;
 }
 
-describe("dielectric breakdown", () => {
-  it("relaxes to a radially even field from a point", () => {
+describe("Dielectric breakdown", () => {
+  it("Relaxes to a radially even field from a point", () => {
     const cols = 91;
     const st = dbmCreate(Math.round(cols * 1.04), cols, 1, 900, "point");
     const mr = st.rows >> 1;
@@ -38,7 +38,7 @@ describe("dielectric breakdown", () => {
     }
   });
 
-  it("branches in every direction from a point", () => {
+  it("Branches in every direction from a point", () => {
     const cols = 91;
     const st = dbmCreate(Math.round(cols * 1.04), cols, 9, 300, "point");
     while (!st.done && st.order.length < 400) if (!dbmStep(st, 1, 12)) break;
@@ -55,7 +55,7 @@ describe("dielectric breakdown", () => {
     for (const r of reach) expect(r).toBeGreaterThan(3);
   });
 
-  it("thins as the roughness rises, and the dimension follows it down", () => {
+  it("Thins as the roughness rises, and the dimension follows it down", () => {
     const soft = runGap(0.6, 300);
     const hard = runGap(2, 300);
     const cut = { least: 120, cuts: [2, 4, 8, 16] };
@@ -68,7 +68,7 @@ describe("dielectric breakdown", () => {
     expect(b).toBeLessThan(1.35);
   });
 
-  it("reaches the far plate across a gap", () => {
+  it("Reaches the far plate across a gap", () => {
     const st = runGap(2, 900);
     expect(st.done).toBe(true);
     const lowest = Math.max(...st.order.map((at) => Math.floor(at / st.cols)));
@@ -76,8 +76,8 @@ describe("dielectric breakdown", () => {
   });
 });
 
-describe("wandering particles", () => {
-  it("grows a cluster whose mass-radius dimension sits near the accepted value", () => {
+describe("Wandering particles", () => {
+  it("Grows a cluster whose mass-radius dimension sits near the accepted value", () => {
     const size = 161;
     const st = dlaCreate(size, 11);
     while (!st.done && st.order.length < 1200) {
@@ -91,7 +91,7 @@ describe("wandering particles", () => {
     expect(d).toBeLessThan(1.8);
   });
 
-  it("keeps only the most recent walks and they are long", () => {
+  it("Keeps only the most recent walks and they are long", () => {
     const st = dlaCreate(121, 5);
     while (!st.done && st.order.length < 400) {
       const before = st.order.length;
@@ -102,7 +102,7 @@ describe("wandering particles", () => {
     expect(Math.max(...st.tracks.map((t) => t.length))).toBeGreaterThan(20);
   });
 
-  it("records nothing when no walks are asked for", () => {
+  it("Records nothing when no walks are asked for", () => {
     const st = dlaCreate(101, 3);
     dlaGrow(st, 40, 120, 2.5, 6000, 0);
     expect(st.tracks.length).toBe(0);

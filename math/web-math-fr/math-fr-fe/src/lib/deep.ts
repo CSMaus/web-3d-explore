@@ -112,7 +112,7 @@ export function useDeep(enabled: boolean) {
       try {
         opened = new WebSocket(socketUrl());
       } catch {
-        setStage({ kind: "lost", reason: "the socket could not be opened" });
+        setStage({ kind: "lost", reason: "The socket could not be opened" });
         return;
       }
       socket.current = opened;
@@ -146,7 +146,7 @@ export function useDeep(enabled: boolean) {
         if (typeof next.nonce !== "number") {
           // a server too old to echo the request would otherwise leave the
           // page sitting on the first pass for ever, saying nothing.
-          setStage({ kind: "lost", reason: "the server did not answer with the view asked for" });
+          setStage({ kind: "lost", reason: "The server did not answer with the view asked for" });
           shut();
           return;
         }
@@ -165,7 +165,7 @@ export function useDeep(enabled: boolean) {
 
       opened.onerror = () => {
         if (gone.current) return;
-        setStage({ kind: "lost", reason: "the connection failed" });
+        setStage({ kind: "lost", reason: "The connection failed" });
       };
 
       opened.onclose = (event) => {

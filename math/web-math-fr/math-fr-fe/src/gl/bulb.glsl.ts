@@ -89,7 +89,8 @@ void main() {
   float reach = 2.45 / uZoom;
   vec3 eye = reach * vec3(cos(uElev) * ca, cos(uElev) * sa, sin(uElev));
   vec3 fwd = normalize(-eye);
-  vec3 side = normalize(cross(vec3(0.0, 0.0, 1.0), fwd));
+  // the side vector is horizontal by construction, so the frame holds straight above and below
+  vec3 side = vec3(sa, -ca, 0.0);
   vec3 up = cross(fwd, side);
   vec3 rd = normalize(fwd * 1.55 + side * uv.x + up * uv.y);
 

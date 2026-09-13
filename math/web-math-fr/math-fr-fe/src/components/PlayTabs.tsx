@@ -10,7 +10,7 @@ export function PlayTabs() {
         className="rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-muted"
         activeProps={{ className: "border-leaf text-leaf" }}
       >
-        all
+        All
       </Link>
       {SYSTEMS.map((item) => (
         <Link

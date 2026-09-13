@@ -7,7 +7,7 @@ export function Equations({ system }: { system: System | null }) {
       <section className="rounded border border-edge p-4">
         <h2 className="font-mono text-[11px] uppercase tracking-wider text-leaf">MATHEMATICS</h2>
         <p className="mt-2 text-xs text-muted">
-          the equations are served by the backend, which is not answering. the picture beside this
+          The equations are served by the backend, which is not answering. The picture beside this
           panel is drawn in the browser and needs nothing from it.
         </p>
       </section>

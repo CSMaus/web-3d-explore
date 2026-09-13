@@ -30,10 +30,10 @@ export function SaveImage({ stage, name }: Props) {
         onClick={save}
         className="rounded border border-edge px-3 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-leaf hover:text-leaf"
       >
-        save image
+        Save image
       </button>
       {trouble ? (
-        <p className="mt-1 text-[11px] text-warn">the picture could not be read back</p>
+        <p className="mt-1 text-[11px] text-warn">The picture could not be read back</p>
       ) : null}
     </div>
   );

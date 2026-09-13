@@ -12,18 +12,95 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as TopicsIndexRouteImport } from './routes/topics/index'
+import { Route as TopicsChaosIndexRouteImport } from './routes/topics/chaos/index'
+import { Route as TopicsChaosPartsRouteImport } from './routes/topics/chaos/parts'
+import { Route as TopicsChaosTheoryRouteImport } from './routes/topics/chaos/theory'
+import { Route as TopicsComplexIndexRouteImport } from './routes/topics/complex/index'
+import { Route as TopicsComplexPartsRouteImport } from './routes/topics/complex/parts'
+import { Route as TopicsComplexTheoryRouteImport } from './routes/topics/complex/theory'
 import { Route as TopicsFractalsIndexRouteImport } from './routes/topics/fractals/index'
 import { Route as TopicsFractalsPartsRouteImport } from './routes/topics/fractals/parts'
 import { Route as TopicsFractalsTheoryRouteImport } from './routes/topics/fractals/theory'
+import { Route as TopicsNetworksIndexRouteImport } from './routes/topics/networks/index'
+import { Route as TopicsNetworksPartsRouteImport } from './routes/topics/networks/parts'
+import { Route as TopicsNetworksTheoryRouteImport } from './routes/topics/networks/theory'
+import { Route as TopicsPrimesIndexRouteImport } from './routes/topics/primes/index'
+import { Route as TopicsPrimesPartsRouteImport } from './routes/topics/primes/parts'
+import { Route as TopicsPrimesTheoryRouteImport } from './routes/topics/primes/theory'
+import { Route as TopicsTokensIndexRouteImport } from './routes/topics/tokens/index'
+import { Route as TopicsTokensPartsRouteImport } from './routes/topics/tokens/parts'
+import { Route as TopicsTokensTheoryRouteImport } from './routes/topics/tokens/theory'
+import { Route as TopicsChaosPlayIndexRouteImport } from './routes/topics/chaos/play/index'
+import { Route as TopicsChaosPlayBifurcationRouteImport } from './routes/topics/chaos/play/bifurcation'
+import { Route as TopicsChaosPlayControlRouteImport } from './routes/topics/chaos/play/control'
+import { Route as TopicsChaosPlayFieldRouteImport } from './routes/topics/chaos/play/field'
+import { Route as TopicsChaosPlayLogisticRouteImport } from './routes/topics/chaos/play/logistic'
+import { Route as TopicsChaosPlayLorenzRouteImport } from './routes/topics/chaos/play/lorenz'
+import { Route as TopicsChaosPlayPhaseRouteImport } from './routes/topics/chaos/play/phase'
+import { Route as TopicsChaosPlayRosslerRouteImport } from './routes/topics/chaos/play/rossler'
+import { Route as TopicsChaosPlaySolversRouteImport } from './routes/topics/chaos/play/solvers'
+import { Route as TopicsComplexPlayIndexRouteImport } from './routes/topics/complex/play/index'
+import { Route as TopicsComplexPlayAddRouteImport } from './routes/topics/complex/play/add'
+import { Route as TopicsComplexPlayLineRouteImport } from './routes/topics/complex/play/line'
+import { Route as TopicsComplexPlayMultiplyRouteImport } from './routes/topics/complex/play/multiply'
+import { Route as TopicsComplexPlayQuaternionsRouteImport } from './routes/topics/complex/play/quaternions'
+import { Route as TopicsComplexPlayRoundRouteImport } from './routes/topics/complex/play/round'
+import { Route as TopicsComplexPlaySquareRouteImport } from './routes/topics/complex/play/square'
+import { Route as TopicsComplexPlayTurnRouteImport } from './routes/topics/complex/play/turn'
 import { Route as TopicsFractalsPlayIndexRouteImport } from './routes/topics/fractals/play/index'
 import { Route as TopicsFractalsPlaySystemRouteImport } from './routes/topics/fractals/play/$system'
+import { Route as TopicsFractalsPlayCredibilityRouteImport } from './routes/topics/fractals/play/credibility'
 import { Route as TopicsFractalsPlayDlaRouteImport } from './routes/topics/fractals/play/dla'
+import { Route as TopicsFractalsPlayHurstRouteImport } from './routes/topics/fractals/play/hurst'
 import { Route as TopicsFractalsPlayIfsRouteImport } from './routes/topics/fractals/play/ifs'
 import { Route as TopicsFractalsPlayJuliaRouteImport } from './routes/topics/fractals/play/julia'
 import { Route as TopicsFractalsPlayLichtenbergRouteImport } from './routes/topics/fractals/play/lichtenberg'
 import { Route as TopicsFractalsPlayLsystemRouteImport } from './routes/topics/fractals/play/lsystem'
 import { Route as TopicsFractalsPlayMandelbrotRouteImport } from './routes/topics/fractals/play/mandelbrot'
 import { Route as TopicsFractalsPlayMandelbulbRouteImport } from './routes/topics/fractals/play/mandelbulb'
+import { Route as TopicsFractalsPlayTailsRouteImport } from './routes/topics/fractals/play/tails'
+import { Route as TopicsNetworksPlayIndexRouteImport } from './routes/topics/networks/play/index'
+import { Route as TopicsNetworksPlayAccumulateRouteImport } from './routes/topics/networks/play/accumulate'
+import { Route as TopicsNetworksPlayAttentionRouteImport } from './routes/topics/networks/play/attention'
+import { Route as TopicsNetworksPlayBackpropRouteImport } from './routes/topics/networks/play/backprop'
+import { Route as TopicsNetworksPlayBlameRouteImport } from './routes/topics/networks/play/blame'
+import { Route as TopicsNetworksPlayCnnRouteImport } from './routes/topics/networks/play/cnn'
+import { Route as TopicsNetworksPlayDescentRouteImport } from './routes/topics/networks/play/descent'
+import { Route as TopicsNetworksPlayForwardRouteImport } from './routes/topics/networks/play/forward'
+import { Route as TopicsNetworksPlayGrowthRouteImport } from './routes/topics/networks/play/growth'
+import { Route as TopicsNetworksPlayLayersRouteImport } from './routes/topics/networks/play/layers'
+import { Route as TopicsNetworksPlayLearnRouteImport } from './routes/topics/networks/play/learn'
+import { Route as TopicsNetworksPlayLineRouteImport } from './routes/topics/networks/play/line'
+import { Route as TopicsNetworksPlayLstmRouteImport } from './routes/topics/networks/play/lstm'
+import { Route as TopicsNetworksPlayNetworkRouteImport } from './routes/topics/networks/play/network'
+import { Route as TopicsNetworksPlayNeuronRouteImport } from './routes/topics/networks/play/neuron'
+import { Route as TopicsNetworksPlayOptimisersRouteImport } from './routes/topics/networks/play/optimisers'
+import { Route as TopicsNetworksPlayPerceptronRouteImport } from './routes/topics/networks/play/perceptron'
+import { Route as TopicsNetworksPlayPicturesRouteImport } from './routes/topics/networks/play/pictures'
+import { Route as TopicsNetworksPlayRateRouteImport } from './routes/topics/networks/play/rate'
+import { Route as TopicsNetworksPlayRate2RouteImport } from './routes/topics/networks/play/rate2'
+import { Route as TopicsNetworksPlaySequenceRouteImport } from './routes/topics/networks/play/sequence'
+import { Route as TopicsNetworksPlaySlopeRouteImport } from './routes/topics/networks/play/slope'
+import { Route as TopicsNetworksPlaySolveRouteImport } from './routes/topics/networks/play/solve'
+import { Route as TopicsNetworksPlayUnitRouteImport } from './routes/topics/networks/play/unit'
+import { Route as TopicsNetworksPlayWordsRouteImport } from './routes/topics/networks/play/words'
+import { Route as TopicsPrimesPlayIndexRouteImport } from './routes/topics/primes/play/index'
+import { Route as TopicsPrimesPlayGapsRouteImport } from './routes/topics/primes/play/gaps'
+import { Route as TopicsTokensPlayIndexRouteImport } from './routes/topics/tokens/play/index'
+import { Route as TopicsTokensPlayArtefactsRouteImport } from './routes/topics/tokens/play/artefacts'
+import { Route as TopicsTokensPlayAttendRouteImport } from './routes/topics/tokens/play/attend'
+import { Route as TopicsTokensPlayBytesRouteImport } from './routes/topics/tokens/play/bytes'
+import { Route as TopicsTokensPlayCostRouteImport } from './routes/topics/tokens/play/cost'
+import { Route as TopicsTokensPlayGenerateRouteImport } from './routes/topics/tokens/play/generate'
+import { Route as TopicsTokensPlayMeaningRouteImport } from './routes/topics/tokens/play/meaning'
+import { Route as TopicsTokensPlayMergeRouteImport } from './routes/topics/tokens/play/merge'
+import { Route as TopicsTokensPlayOrderRouteImport } from './routes/topics/tokens/play/order'
+import { Route as TopicsTokensPlayPoolRouteImport } from './routes/topics/tokens/play/pool'
+import { Route as TopicsTokensPlayPredictRouteImport } from './routes/topics/tokens/play/predict'
+import { Route as TopicsTokensPlaySampleRouteImport } from './routes/topics/tokens/play/sample'
+import { Route as TopicsTokensPlaySegmentRouteImport } from './routes/topics/tokens/play/segment'
+import { Route as TopicsTokensPlaySpaceRouteImport } from './routes/topics/tokens/play/space'
+import { Route as TopicsTokensPlayTableRouteImport } from './routes/topics/tokens/play/table'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -38,6 +115,36 @@ const AccountRoute = AccountRouteImport.update({
 const TopicsIndexRoute = TopicsIndexRouteImport.update({
   id: '/topics/',
   path: '/topics/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosIndexRoute = TopicsChaosIndexRouteImport.update({
+  id: '/topics/chaos/',
+  path: '/topics/chaos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosPartsRoute = TopicsChaosPartsRouteImport.update({
+  id: '/topics/chaos/parts',
+  path: '/topics/chaos/parts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosTheoryRoute = TopicsChaosTheoryRouteImport.update({
+  id: '/topics/chaos/theory',
+  path: '/topics/chaos/theory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsComplexIndexRoute = TopicsComplexIndexRouteImport.update({
+  id: '/topics/complex/',
+  path: '/topics/complex/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsComplexPartsRoute = TopicsComplexPartsRouteImport.update({
+  id: '/topics/complex/parts',
+  path: '/topics/complex/parts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsComplexTheoryRoute = TopicsComplexTheoryRouteImport.update({
+  id: '/topics/complex/theory',
+  path: '/topics/complex/theory',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TopicsFractalsIndexRoute = TopicsFractalsIndexRouteImport.update({
@@ -55,6 +162,139 @@ const TopicsFractalsTheoryRoute = TopicsFractalsTheoryRouteImport.update({
   path: '/topics/fractals/theory',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TopicsNetworksIndexRoute = TopicsNetworksIndexRouteImport.update({
+  id: '/topics/networks/',
+  path: '/topics/networks/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPartsRoute = TopicsNetworksPartsRouteImport.update({
+  id: '/topics/networks/parts',
+  path: '/topics/networks/parts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksTheoryRoute = TopicsNetworksTheoryRouteImport.update({
+  id: '/topics/networks/theory',
+  path: '/topics/networks/theory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsPrimesIndexRoute = TopicsPrimesIndexRouteImport.update({
+  id: '/topics/primes/',
+  path: '/topics/primes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsPrimesPartsRoute = TopicsPrimesPartsRouteImport.update({
+  id: '/topics/primes/parts',
+  path: '/topics/primes/parts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsPrimesTheoryRoute = TopicsPrimesTheoryRouteImport.update({
+  id: '/topics/primes/theory',
+  path: '/topics/primes/theory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensIndexRoute = TopicsTokensIndexRouteImport.update({
+  id: '/topics/tokens/',
+  path: '/topics/tokens/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPartsRoute = TopicsTokensPartsRouteImport.update({
+  id: '/topics/tokens/parts',
+  path: '/topics/tokens/parts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensTheoryRoute = TopicsTokensTheoryRouteImport.update({
+  id: '/topics/tokens/theory',
+  path: '/topics/tokens/theory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosPlayIndexRoute = TopicsChaosPlayIndexRouteImport.update({
+  id: '/topics/chaos/play/',
+  path: '/topics/chaos/play/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosPlayBifurcationRoute =
+  TopicsChaosPlayBifurcationRouteImport.update({
+    id: '/topics/chaos/play/bifurcation',
+    path: '/topics/chaos/play/bifurcation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsChaosPlayControlRoute = TopicsChaosPlayControlRouteImport.update({
+  id: '/topics/chaos/play/control',
+  path: '/topics/chaos/play/control',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosPlayFieldRoute = TopicsChaosPlayFieldRouteImport.update({
+  id: '/topics/chaos/play/field',
+  path: '/topics/chaos/play/field',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosPlayLogisticRoute = TopicsChaosPlayLogisticRouteImport.update({
+  id: '/topics/chaos/play/logistic',
+  path: '/topics/chaos/play/logistic',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosPlayLorenzRoute = TopicsChaosPlayLorenzRouteImport.update({
+  id: '/topics/chaos/play/lorenz',
+  path: '/topics/chaos/play/lorenz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosPlayPhaseRoute = TopicsChaosPlayPhaseRouteImport.update({
+  id: '/topics/chaos/play/phase',
+  path: '/topics/chaos/play/phase',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosPlayRosslerRoute = TopicsChaosPlayRosslerRouteImport.update({
+  id: '/topics/chaos/play/rossler',
+  path: '/topics/chaos/play/rossler',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsChaosPlaySolversRoute = TopicsChaosPlaySolversRouteImport.update({
+  id: '/topics/chaos/play/solvers',
+  path: '/topics/chaos/play/solvers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsComplexPlayIndexRoute = TopicsComplexPlayIndexRouteImport.update({
+  id: '/topics/complex/play/',
+  path: '/topics/complex/play/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsComplexPlayAddRoute = TopicsComplexPlayAddRouteImport.update({
+  id: '/topics/complex/play/add',
+  path: '/topics/complex/play/add',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsComplexPlayLineRoute = TopicsComplexPlayLineRouteImport.update({
+  id: '/topics/complex/play/line',
+  path: '/topics/complex/play/line',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsComplexPlayMultiplyRoute =
+  TopicsComplexPlayMultiplyRouteImport.update({
+    id: '/topics/complex/play/multiply',
+    path: '/topics/complex/play/multiply',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsComplexPlayQuaternionsRoute =
+  TopicsComplexPlayQuaternionsRouteImport.update({
+    id: '/topics/complex/play/quaternions',
+    path: '/topics/complex/play/quaternions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsComplexPlayRoundRoute = TopicsComplexPlayRoundRouteImport.update({
+  id: '/topics/complex/play/round',
+  path: '/topics/complex/play/round',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsComplexPlaySquareRoute = TopicsComplexPlaySquareRouteImport.update({
+  id: '/topics/complex/play/square',
+  path: '/topics/complex/play/square',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsComplexPlayTurnRoute = TopicsComplexPlayTurnRouteImport.update({
+  id: '/topics/complex/play/turn',
+  path: '/topics/complex/play/turn',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TopicsFractalsPlayIndexRoute = TopicsFractalsPlayIndexRouteImport.update({
   id: '/topics/fractals/play/',
   path: '/topics/fractals/play/',
@@ -66,9 +306,20 @@ const TopicsFractalsPlaySystemRoute =
     path: '/topics/fractals/play/$system',
     getParentRoute: () => rootRouteImport,
   } as any)
+const TopicsFractalsPlayCredibilityRoute =
+  TopicsFractalsPlayCredibilityRouteImport.update({
+    id: '/topics/fractals/play/credibility',
+    path: '/topics/fractals/play/credibility',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const TopicsFractalsPlayDlaRoute = TopicsFractalsPlayDlaRouteImport.update({
   id: '/topics/fractals/play/dla',
   path: '/topics/fractals/play/dla',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsFractalsPlayHurstRoute = TopicsFractalsPlayHurstRouteImport.update({
+  id: '/topics/fractals/play/hurst',
+  path: '/topics/fractals/play/hurst',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TopicsFractalsPlayIfsRoute = TopicsFractalsPlayIfsRouteImport.update({
@@ -105,58 +356,519 @@ const TopicsFractalsPlayMandelbulbRoute =
     path: '/topics/fractals/play/mandelbulb',
     getParentRoute: () => rootRouteImport,
   } as any)
+const TopicsFractalsPlayTailsRoute = TopicsFractalsPlayTailsRouteImport.update({
+  id: '/topics/fractals/play/tails',
+  path: '/topics/fractals/play/tails',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlayIndexRoute = TopicsNetworksPlayIndexRouteImport.update({
+  id: '/topics/networks/play/',
+  path: '/topics/networks/play/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlayAccumulateRoute =
+  TopicsNetworksPlayAccumulateRouteImport.update({
+    id: '/topics/networks/play/accumulate',
+    path: '/topics/networks/play/accumulate',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayAttentionRoute =
+  TopicsNetworksPlayAttentionRouteImport.update({
+    id: '/topics/networks/play/attention',
+    path: '/topics/networks/play/attention',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayBackpropRoute =
+  TopicsNetworksPlayBackpropRouteImport.update({
+    id: '/topics/networks/play/backprop',
+    path: '/topics/networks/play/backprop',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayBlameRoute = TopicsNetworksPlayBlameRouteImport.update({
+  id: '/topics/networks/play/blame',
+  path: '/topics/networks/play/blame',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlayCnnRoute = TopicsNetworksPlayCnnRouteImport.update({
+  id: '/topics/networks/play/cnn',
+  path: '/topics/networks/play/cnn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlayDescentRoute =
+  TopicsNetworksPlayDescentRouteImport.update({
+    id: '/topics/networks/play/descent',
+    path: '/topics/networks/play/descent',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayForwardRoute =
+  TopicsNetworksPlayForwardRouteImport.update({
+    id: '/topics/networks/play/forward',
+    path: '/topics/networks/play/forward',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayGrowthRoute =
+  TopicsNetworksPlayGrowthRouteImport.update({
+    id: '/topics/networks/play/growth',
+    path: '/topics/networks/play/growth',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayLayersRoute =
+  TopicsNetworksPlayLayersRouteImport.update({
+    id: '/topics/networks/play/layers',
+    path: '/topics/networks/play/layers',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayLearnRoute = TopicsNetworksPlayLearnRouteImport.update({
+  id: '/topics/networks/play/learn',
+  path: '/topics/networks/play/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlayLineRoute = TopicsNetworksPlayLineRouteImport.update({
+  id: '/topics/networks/play/line',
+  path: '/topics/networks/play/line',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlayLstmRoute = TopicsNetworksPlayLstmRouteImport.update({
+  id: '/topics/networks/play/lstm',
+  path: '/topics/networks/play/lstm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlayNetworkRoute =
+  TopicsNetworksPlayNetworkRouteImport.update({
+    id: '/topics/networks/play/network',
+    path: '/topics/networks/play/network',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayNeuronRoute =
+  TopicsNetworksPlayNeuronRouteImport.update({
+    id: '/topics/networks/play/neuron',
+    path: '/topics/networks/play/neuron',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayOptimisersRoute =
+  TopicsNetworksPlayOptimisersRouteImport.update({
+    id: '/topics/networks/play/optimisers',
+    path: '/topics/networks/play/optimisers',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayPerceptronRoute =
+  TopicsNetworksPlayPerceptronRouteImport.update({
+    id: '/topics/networks/play/perceptron',
+    path: '/topics/networks/play/perceptron',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayPicturesRoute =
+  TopicsNetworksPlayPicturesRouteImport.update({
+    id: '/topics/networks/play/pictures',
+    path: '/topics/networks/play/pictures',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlayRateRoute = TopicsNetworksPlayRateRouteImport.update({
+  id: '/topics/networks/play/rate',
+  path: '/topics/networks/play/rate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlayRate2Route = TopicsNetworksPlayRate2RouteImport.update({
+  id: '/topics/networks/play/rate2',
+  path: '/topics/networks/play/rate2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlaySequenceRoute =
+  TopicsNetworksPlaySequenceRouteImport.update({
+    id: '/topics/networks/play/sequence',
+    path: '/topics/networks/play/sequence',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsNetworksPlaySlopeRoute = TopicsNetworksPlaySlopeRouteImport.update({
+  id: '/topics/networks/play/slope',
+  path: '/topics/networks/play/slope',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlaySolveRoute = TopicsNetworksPlaySolveRouteImport.update({
+  id: '/topics/networks/play/solve',
+  path: '/topics/networks/play/solve',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlayUnitRoute = TopicsNetworksPlayUnitRouteImport.update({
+  id: '/topics/networks/play/unit',
+  path: '/topics/networks/play/unit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsNetworksPlayWordsRoute = TopicsNetworksPlayWordsRouteImport.update({
+  id: '/topics/networks/play/words',
+  path: '/topics/networks/play/words',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsPrimesPlayIndexRoute = TopicsPrimesPlayIndexRouteImport.update({
+  id: '/topics/primes/play/',
+  path: '/topics/primes/play/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsPrimesPlayGapsRoute = TopicsPrimesPlayGapsRouteImport.update({
+  id: '/topics/primes/play/gaps',
+  path: '/topics/primes/play/gaps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlayIndexRoute = TopicsTokensPlayIndexRouteImport.update({
+  id: '/topics/tokens/play/',
+  path: '/topics/tokens/play/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlayArtefactsRoute =
+  TopicsTokensPlayArtefactsRouteImport.update({
+    id: '/topics/tokens/play/artefacts',
+    path: '/topics/tokens/play/artefacts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsTokensPlayAttendRoute = TopicsTokensPlayAttendRouteImport.update({
+  id: '/topics/tokens/play/attend',
+  path: '/topics/tokens/play/attend',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlayBytesRoute = TopicsTokensPlayBytesRouteImport.update({
+  id: '/topics/tokens/play/bytes',
+  path: '/topics/tokens/play/bytes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlayCostRoute = TopicsTokensPlayCostRouteImport.update({
+  id: '/topics/tokens/play/cost',
+  path: '/topics/tokens/play/cost',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlayGenerateRoute =
+  TopicsTokensPlayGenerateRouteImport.update({
+    id: '/topics/tokens/play/generate',
+    path: '/topics/tokens/play/generate',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TopicsTokensPlayMeaningRoute = TopicsTokensPlayMeaningRouteImport.update({
+  id: '/topics/tokens/play/meaning',
+  path: '/topics/tokens/play/meaning',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlayMergeRoute = TopicsTokensPlayMergeRouteImport.update({
+  id: '/topics/tokens/play/merge',
+  path: '/topics/tokens/play/merge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlayOrderRoute = TopicsTokensPlayOrderRouteImport.update({
+  id: '/topics/tokens/play/order',
+  path: '/topics/tokens/play/order',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlayPoolRoute = TopicsTokensPlayPoolRouteImport.update({
+  id: '/topics/tokens/play/pool',
+  path: '/topics/tokens/play/pool',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlayPredictRoute = TopicsTokensPlayPredictRouteImport.update({
+  id: '/topics/tokens/play/predict',
+  path: '/topics/tokens/play/predict',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlaySampleRoute = TopicsTokensPlaySampleRouteImport.update({
+  id: '/topics/tokens/play/sample',
+  path: '/topics/tokens/play/sample',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlaySegmentRoute = TopicsTokensPlaySegmentRouteImport.update({
+  id: '/topics/tokens/play/segment',
+  path: '/topics/tokens/play/segment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlaySpaceRoute = TopicsTokensPlaySpaceRouteImport.update({
+  id: '/topics/tokens/play/space',
+  path: '/topics/tokens/play/space',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsTokensPlayTableRoute = TopicsTokensPlayTableRouteImport.update({
+  id: '/topics/tokens/play/table',
+  path: '/topics/tokens/play/table',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/topics/': typeof TopicsIndexRoute
+  '/topics/chaos/parts': typeof TopicsChaosPartsRoute
+  '/topics/chaos/theory': typeof TopicsChaosTheoryRoute
+  '/topics/complex/parts': typeof TopicsComplexPartsRoute
+  '/topics/complex/theory': typeof TopicsComplexTheoryRoute
   '/topics/fractals/parts': typeof TopicsFractalsPartsRoute
   '/topics/fractals/theory': typeof TopicsFractalsTheoryRoute
+  '/topics/networks/parts': typeof TopicsNetworksPartsRoute
+  '/topics/networks/theory': typeof TopicsNetworksTheoryRoute
+  '/topics/primes/parts': typeof TopicsPrimesPartsRoute
+  '/topics/primes/theory': typeof TopicsPrimesTheoryRoute
+  '/topics/tokens/parts': typeof TopicsTokensPartsRoute
+  '/topics/tokens/theory': typeof TopicsTokensTheoryRoute
+  '/topics/chaos/': typeof TopicsChaosIndexRoute
+  '/topics/complex/': typeof TopicsComplexIndexRoute
   '/topics/fractals/': typeof TopicsFractalsIndexRoute
+  '/topics/networks/': typeof TopicsNetworksIndexRoute
+  '/topics/primes/': typeof TopicsPrimesIndexRoute
+  '/topics/tokens/': typeof TopicsTokensIndexRoute
+  '/topics/chaos/play/bifurcation': typeof TopicsChaosPlayBifurcationRoute
+  '/topics/chaos/play/control': typeof TopicsChaosPlayControlRoute
+  '/topics/chaos/play/field': typeof TopicsChaosPlayFieldRoute
+  '/topics/chaos/play/logistic': typeof TopicsChaosPlayLogisticRoute
+  '/topics/chaos/play/lorenz': typeof TopicsChaosPlayLorenzRoute
+  '/topics/chaos/play/phase': typeof TopicsChaosPlayPhaseRoute
+  '/topics/chaos/play/rossler': typeof TopicsChaosPlayRosslerRoute
+  '/topics/chaos/play/solvers': typeof TopicsChaosPlaySolversRoute
+  '/topics/complex/play/add': typeof TopicsComplexPlayAddRoute
+  '/topics/complex/play/line': typeof TopicsComplexPlayLineRoute
+  '/topics/complex/play/multiply': typeof TopicsComplexPlayMultiplyRoute
+  '/topics/complex/play/quaternions': typeof TopicsComplexPlayQuaternionsRoute
+  '/topics/complex/play/round': typeof TopicsComplexPlayRoundRoute
+  '/topics/complex/play/square': typeof TopicsComplexPlaySquareRoute
+  '/topics/complex/play/turn': typeof TopicsComplexPlayTurnRoute
   '/topics/fractals/play/$system': typeof TopicsFractalsPlaySystemRoute
+  '/topics/fractals/play/credibility': typeof TopicsFractalsPlayCredibilityRoute
   '/topics/fractals/play/dla': typeof TopicsFractalsPlayDlaRoute
+  '/topics/fractals/play/hurst': typeof TopicsFractalsPlayHurstRoute
   '/topics/fractals/play/ifs': typeof TopicsFractalsPlayIfsRoute
   '/topics/fractals/play/julia': typeof TopicsFractalsPlayJuliaRoute
   '/topics/fractals/play/lichtenberg': typeof TopicsFractalsPlayLichtenbergRoute
   '/topics/fractals/play/lsystem': typeof TopicsFractalsPlayLsystemRoute
   '/topics/fractals/play/mandelbrot': typeof TopicsFractalsPlayMandelbrotRoute
   '/topics/fractals/play/mandelbulb': typeof TopicsFractalsPlayMandelbulbRoute
+  '/topics/fractals/play/tails': typeof TopicsFractalsPlayTailsRoute
+  '/topics/networks/play/accumulate': typeof TopicsNetworksPlayAccumulateRoute
+  '/topics/networks/play/attention': typeof TopicsNetworksPlayAttentionRoute
+  '/topics/networks/play/backprop': typeof TopicsNetworksPlayBackpropRoute
+  '/topics/networks/play/blame': typeof TopicsNetworksPlayBlameRoute
+  '/topics/networks/play/cnn': typeof TopicsNetworksPlayCnnRoute
+  '/topics/networks/play/descent': typeof TopicsNetworksPlayDescentRoute
+  '/topics/networks/play/forward': typeof TopicsNetworksPlayForwardRoute
+  '/topics/networks/play/growth': typeof TopicsNetworksPlayGrowthRoute
+  '/topics/networks/play/layers': typeof TopicsNetworksPlayLayersRoute
+  '/topics/networks/play/learn': typeof TopicsNetworksPlayLearnRoute
+  '/topics/networks/play/line': typeof TopicsNetworksPlayLineRoute
+  '/topics/networks/play/lstm': typeof TopicsNetworksPlayLstmRoute
+  '/topics/networks/play/network': typeof TopicsNetworksPlayNetworkRoute
+  '/topics/networks/play/neuron': typeof TopicsNetworksPlayNeuronRoute
+  '/topics/networks/play/optimisers': typeof TopicsNetworksPlayOptimisersRoute
+  '/topics/networks/play/perceptron': typeof TopicsNetworksPlayPerceptronRoute
+  '/topics/networks/play/pictures': typeof TopicsNetworksPlayPicturesRoute
+  '/topics/networks/play/rate': typeof TopicsNetworksPlayRateRoute
+  '/topics/networks/play/rate2': typeof TopicsNetworksPlayRate2Route
+  '/topics/networks/play/sequence': typeof TopicsNetworksPlaySequenceRoute
+  '/topics/networks/play/slope': typeof TopicsNetworksPlaySlopeRoute
+  '/topics/networks/play/solve': typeof TopicsNetworksPlaySolveRoute
+  '/topics/networks/play/unit': typeof TopicsNetworksPlayUnitRoute
+  '/topics/networks/play/words': typeof TopicsNetworksPlayWordsRoute
+  '/topics/primes/play/gaps': typeof TopicsPrimesPlayGapsRoute
+  '/topics/tokens/play/artefacts': typeof TopicsTokensPlayArtefactsRoute
+  '/topics/tokens/play/attend': typeof TopicsTokensPlayAttendRoute
+  '/topics/tokens/play/bytes': typeof TopicsTokensPlayBytesRoute
+  '/topics/tokens/play/cost': typeof TopicsTokensPlayCostRoute
+  '/topics/tokens/play/generate': typeof TopicsTokensPlayGenerateRoute
+  '/topics/tokens/play/meaning': typeof TopicsTokensPlayMeaningRoute
+  '/topics/tokens/play/merge': typeof TopicsTokensPlayMergeRoute
+  '/topics/tokens/play/order': typeof TopicsTokensPlayOrderRoute
+  '/topics/tokens/play/pool': typeof TopicsTokensPlayPoolRoute
+  '/topics/tokens/play/predict': typeof TopicsTokensPlayPredictRoute
+  '/topics/tokens/play/sample': typeof TopicsTokensPlaySampleRoute
+  '/topics/tokens/play/segment': typeof TopicsTokensPlaySegmentRoute
+  '/topics/tokens/play/space': typeof TopicsTokensPlaySpaceRoute
+  '/topics/tokens/play/table': typeof TopicsTokensPlayTableRoute
+  '/topics/chaos/play/': typeof TopicsChaosPlayIndexRoute
+  '/topics/complex/play/': typeof TopicsComplexPlayIndexRoute
   '/topics/fractals/play/': typeof TopicsFractalsPlayIndexRoute
+  '/topics/networks/play/': typeof TopicsNetworksPlayIndexRoute
+  '/topics/primes/play/': typeof TopicsPrimesPlayIndexRoute
+  '/topics/tokens/play/': typeof TopicsTokensPlayIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/topics': typeof TopicsIndexRoute
+  '/topics/chaos/parts': typeof TopicsChaosPartsRoute
+  '/topics/chaos/theory': typeof TopicsChaosTheoryRoute
+  '/topics/complex/parts': typeof TopicsComplexPartsRoute
+  '/topics/complex/theory': typeof TopicsComplexTheoryRoute
   '/topics/fractals/parts': typeof TopicsFractalsPartsRoute
   '/topics/fractals/theory': typeof TopicsFractalsTheoryRoute
+  '/topics/networks/parts': typeof TopicsNetworksPartsRoute
+  '/topics/networks/theory': typeof TopicsNetworksTheoryRoute
+  '/topics/primes/parts': typeof TopicsPrimesPartsRoute
+  '/topics/primes/theory': typeof TopicsPrimesTheoryRoute
+  '/topics/tokens/parts': typeof TopicsTokensPartsRoute
+  '/topics/tokens/theory': typeof TopicsTokensTheoryRoute
+  '/topics/chaos': typeof TopicsChaosIndexRoute
+  '/topics/complex': typeof TopicsComplexIndexRoute
   '/topics/fractals': typeof TopicsFractalsIndexRoute
+  '/topics/networks': typeof TopicsNetworksIndexRoute
+  '/topics/primes': typeof TopicsPrimesIndexRoute
+  '/topics/tokens': typeof TopicsTokensIndexRoute
+  '/topics/chaos/play/bifurcation': typeof TopicsChaosPlayBifurcationRoute
+  '/topics/chaos/play/control': typeof TopicsChaosPlayControlRoute
+  '/topics/chaos/play/field': typeof TopicsChaosPlayFieldRoute
+  '/topics/chaos/play/logistic': typeof TopicsChaosPlayLogisticRoute
+  '/topics/chaos/play/lorenz': typeof TopicsChaosPlayLorenzRoute
+  '/topics/chaos/play/phase': typeof TopicsChaosPlayPhaseRoute
+  '/topics/chaos/play/rossler': typeof TopicsChaosPlayRosslerRoute
+  '/topics/chaos/play/solvers': typeof TopicsChaosPlaySolversRoute
+  '/topics/complex/play/add': typeof TopicsComplexPlayAddRoute
+  '/topics/complex/play/line': typeof TopicsComplexPlayLineRoute
+  '/topics/complex/play/multiply': typeof TopicsComplexPlayMultiplyRoute
+  '/topics/complex/play/quaternions': typeof TopicsComplexPlayQuaternionsRoute
+  '/topics/complex/play/round': typeof TopicsComplexPlayRoundRoute
+  '/topics/complex/play/square': typeof TopicsComplexPlaySquareRoute
+  '/topics/complex/play/turn': typeof TopicsComplexPlayTurnRoute
   '/topics/fractals/play/$system': typeof TopicsFractalsPlaySystemRoute
+  '/topics/fractals/play/credibility': typeof TopicsFractalsPlayCredibilityRoute
   '/topics/fractals/play/dla': typeof TopicsFractalsPlayDlaRoute
+  '/topics/fractals/play/hurst': typeof TopicsFractalsPlayHurstRoute
   '/topics/fractals/play/ifs': typeof TopicsFractalsPlayIfsRoute
   '/topics/fractals/play/julia': typeof TopicsFractalsPlayJuliaRoute
   '/topics/fractals/play/lichtenberg': typeof TopicsFractalsPlayLichtenbergRoute
   '/topics/fractals/play/lsystem': typeof TopicsFractalsPlayLsystemRoute
   '/topics/fractals/play/mandelbrot': typeof TopicsFractalsPlayMandelbrotRoute
   '/topics/fractals/play/mandelbulb': typeof TopicsFractalsPlayMandelbulbRoute
+  '/topics/fractals/play/tails': typeof TopicsFractalsPlayTailsRoute
+  '/topics/networks/play/accumulate': typeof TopicsNetworksPlayAccumulateRoute
+  '/topics/networks/play/attention': typeof TopicsNetworksPlayAttentionRoute
+  '/topics/networks/play/backprop': typeof TopicsNetworksPlayBackpropRoute
+  '/topics/networks/play/blame': typeof TopicsNetworksPlayBlameRoute
+  '/topics/networks/play/cnn': typeof TopicsNetworksPlayCnnRoute
+  '/topics/networks/play/descent': typeof TopicsNetworksPlayDescentRoute
+  '/topics/networks/play/forward': typeof TopicsNetworksPlayForwardRoute
+  '/topics/networks/play/growth': typeof TopicsNetworksPlayGrowthRoute
+  '/topics/networks/play/layers': typeof TopicsNetworksPlayLayersRoute
+  '/topics/networks/play/learn': typeof TopicsNetworksPlayLearnRoute
+  '/topics/networks/play/line': typeof TopicsNetworksPlayLineRoute
+  '/topics/networks/play/lstm': typeof TopicsNetworksPlayLstmRoute
+  '/topics/networks/play/network': typeof TopicsNetworksPlayNetworkRoute
+  '/topics/networks/play/neuron': typeof TopicsNetworksPlayNeuronRoute
+  '/topics/networks/play/optimisers': typeof TopicsNetworksPlayOptimisersRoute
+  '/topics/networks/play/perceptron': typeof TopicsNetworksPlayPerceptronRoute
+  '/topics/networks/play/pictures': typeof TopicsNetworksPlayPicturesRoute
+  '/topics/networks/play/rate': typeof TopicsNetworksPlayRateRoute
+  '/topics/networks/play/rate2': typeof TopicsNetworksPlayRate2Route
+  '/topics/networks/play/sequence': typeof TopicsNetworksPlaySequenceRoute
+  '/topics/networks/play/slope': typeof TopicsNetworksPlaySlopeRoute
+  '/topics/networks/play/solve': typeof TopicsNetworksPlaySolveRoute
+  '/topics/networks/play/unit': typeof TopicsNetworksPlayUnitRoute
+  '/topics/networks/play/words': typeof TopicsNetworksPlayWordsRoute
+  '/topics/primes/play/gaps': typeof TopicsPrimesPlayGapsRoute
+  '/topics/tokens/play/artefacts': typeof TopicsTokensPlayArtefactsRoute
+  '/topics/tokens/play/attend': typeof TopicsTokensPlayAttendRoute
+  '/topics/tokens/play/bytes': typeof TopicsTokensPlayBytesRoute
+  '/topics/tokens/play/cost': typeof TopicsTokensPlayCostRoute
+  '/topics/tokens/play/generate': typeof TopicsTokensPlayGenerateRoute
+  '/topics/tokens/play/meaning': typeof TopicsTokensPlayMeaningRoute
+  '/topics/tokens/play/merge': typeof TopicsTokensPlayMergeRoute
+  '/topics/tokens/play/order': typeof TopicsTokensPlayOrderRoute
+  '/topics/tokens/play/pool': typeof TopicsTokensPlayPoolRoute
+  '/topics/tokens/play/predict': typeof TopicsTokensPlayPredictRoute
+  '/topics/tokens/play/sample': typeof TopicsTokensPlaySampleRoute
+  '/topics/tokens/play/segment': typeof TopicsTokensPlaySegmentRoute
+  '/topics/tokens/play/space': typeof TopicsTokensPlaySpaceRoute
+  '/topics/tokens/play/table': typeof TopicsTokensPlayTableRoute
+  '/topics/chaos/play': typeof TopicsChaosPlayIndexRoute
+  '/topics/complex/play': typeof TopicsComplexPlayIndexRoute
   '/topics/fractals/play': typeof TopicsFractalsPlayIndexRoute
+  '/topics/networks/play': typeof TopicsNetworksPlayIndexRoute
+  '/topics/primes/play': typeof TopicsPrimesPlayIndexRoute
+  '/topics/tokens/play': typeof TopicsTokensPlayIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/topics/': typeof TopicsIndexRoute
+  '/topics/chaos/parts': typeof TopicsChaosPartsRoute
+  '/topics/chaos/theory': typeof TopicsChaosTheoryRoute
+  '/topics/complex/parts': typeof TopicsComplexPartsRoute
+  '/topics/complex/theory': typeof TopicsComplexTheoryRoute
   '/topics/fractals/parts': typeof TopicsFractalsPartsRoute
   '/topics/fractals/theory': typeof TopicsFractalsTheoryRoute
+  '/topics/networks/parts': typeof TopicsNetworksPartsRoute
+  '/topics/networks/theory': typeof TopicsNetworksTheoryRoute
+  '/topics/primes/parts': typeof TopicsPrimesPartsRoute
+  '/topics/primes/theory': typeof TopicsPrimesTheoryRoute
+  '/topics/tokens/parts': typeof TopicsTokensPartsRoute
+  '/topics/tokens/theory': typeof TopicsTokensTheoryRoute
+  '/topics/chaos/': typeof TopicsChaosIndexRoute
+  '/topics/complex/': typeof TopicsComplexIndexRoute
   '/topics/fractals/': typeof TopicsFractalsIndexRoute
+  '/topics/networks/': typeof TopicsNetworksIndexRoute
+  '/topics/primes/': typeof TopicsPrimesIndexRoute
+  '/topics/tokens/': typeof TopicsTokensIndexRoute
+  '/topics/chaos/play/bifurcation': typeof TopicsChaosPlayBifurcationRoute
+  '/topics/chaos/play/control': typeof TopicsChaosPlayControlRoute
+  '/topics/chaos/play/field': typeof TopicsChaosPlayFieldRoute
+  '/topics/chaos/play/logistic': typeof TopicsChaosPlayLogisticRoute
+  '/topics/chaos/play/lorenz': typeof TopicsChaosPlayLorenzRoute
+  '/topics/chaos/play/phase': typeof TopicsChaosPlayPhaseRoute
+  '/topics/chaos/play/rossler': typeof TopicsChaosPlayRosslerRoute
+  '/topics/chaos/play/solvers': typeof TopicsChaosPlaySolversRoute
+  '/topics/complex/play/add': typeof TopicsComplexPlayAddRoute
+  '/topics/complex/play/line': typeof TopicsComplexPlayLineRoute
+  '/topics/complex/play/multiply': typeof TopicsComplexPlayMultiplyRoute
+  '/topics/complex/play/quaternions': typeof TopicsComplexPlayQuaternionsRoute
+  '/topics/complex/play/round': typeof TopicsComplexPlayRoundRoute
+  '/topics/complex/play/square': typeof TopicsComplexPlaySquareRoute
+  '/topics/complex/play/turn': typeof TopicsComplexPlayTurnRoute
   '/topics/fractals/play/$system': typeof TopicsFractalsPlaySystemRoute
+  '/topics/fractals/play/credibility': typeof TopicsFractalsPlayCredibilityRoute
   '/topics/fractals/play/dla': typeof TopicsFractalsPlayDlaRoute
+  '/topics/fractals/play/hurst': typeof TopicsFractalsPlayHurstRoute
   '/topics/fractals/play/ifs': typeof TopicsFractalsPlayIfsRoute
   '/topics/fractals/play/julia': typeof TopicsFractalsPlayJuliaRoute
   '/topics/fractals/play/lichtenberg': typeof TopicsFractalsPlayLichtenbergRoute
   '/topics/fractals/play/lsystem': typeof TopicsFractalsPlayLsystemRoute
   '/topics/fractals/play/mandelbrot': typeof TopicsFractalsPlayMandelbrotRoute
   '/topics/fractals/play/mandelbulb': typeof TopicsFractalsPlayMandelbulbRoute
+  '/topics/fractals/play/tails': typeof TopicsFractalsPlayTailsRoute
+  '/topics/networks/play/accumulate': typeof TopicsNetworksPlayAccumulateRoute
+  '/topics/networks/play/attention': typeof TopicsNetworksPlayAttentionRoute
+  '/topics/networks/play/backprop': typeof TopicsNetworksPlayBackpropRoute
+  '/topics/networks/play/blame': typeof TopicsNetworksPlayBlameRoute
+  '/topics/networks/play/cnn': typeof TopicsNetworksPlayCnnRoute
+  '/topics/networks/play/descent': typeof TopicsNetworksPlayDescentRoute
+  '/topics/networks/play/forward': typeof TopicsNetworksPlayForwardRoute
+  '/topics/networks/play/growth': typeof TopicsNetworksPlayGrowthRoute
+  '/topics/networks/play/layers': typeof TopicsNetworksPlayLayersRoute
+  '/topics/networks/play/learn': typeof TopicsNetworksPlayLearnRoute
+  '/topics/networks/play/line': typeof TopicsNetworksPlayLineRoute
+  '/topics/networks/play/lstm': typeof TopicsNetworksPlayLstmRoute
+  '/topics/networks/play/network': typeof TopicsNetworksPlayNetworkRoute
+  '/topics/networks/play/neuron': typeof TopicsNetworksPlayNeuronRoute
+  '/topics/networks/play/optimisers': typeof TopicsNetworksPlayOptimisersRoute
+  '/topics/networks/play/perceptron': typeof TopicsNetworksPlayPerceptronRoute
+  '/topics/networks/play/pictures': typeof TopicsNetworksPlayPicturesRoute
+  '/topics/networks/play/rate': typeof TopicsNetworksPlayRateRoute
+  '/topics/networks/play/rate2': typeof TopicsNetworksPlayRate2Route
+  '/topics/networks/play/sequence': typeof TopicsNetworksPlaySequenceRoute
+  '/topics/networks/play/slope': typeof TopicsNetworksPlaySlopeRoute
+  '/topics/networks/play/solve': typeof TopicsNetworksPlaySolveRoute
+  '/topics/networks/play/unit': typeof TopicsNetworksPlayUnitRoute
+  '/topics/networks/play/words': typeof TopicsNetworksPlayWordsRoute
+  '/topics/primes/play/gaps': typeof TopicsPrimesPlayGapsRoute
+  '/topics/tokens/play/artefacts': typeof TopicsTokensPlayArtefactsRoute
+  '/topics/tokens/play/attend': typeof TopicsTokensPlayAttendRoute
+  '/topics/tokens/play/bytes': typeof TopicsTokensPlayBytesRoute
+  '/topics/tokens/play/cost': typeof TopicsTokensPlayCostRoute
+  '/topics/tokens/play/generate': typeof TopicsTokensPlayGenerateRoute
+  '/topics/tokens/play/meaning': typeof TopicsTokensPlayMeaningRoute
+  '/topics/tokens/play/merge': typeof TopicsTokensPlayMergeRoute
+  '/topics/tokens/play/order': typeof TopicsTokensPlayOrderRoute
+  '/topics/tokens/play/pool': typeof TopicsTokensPlayPoolRoute
+  '/topics/tokens/play/predict': typeof TopicsTokensPlayPredictRoute
+  '/topics/tokens/play/sample': typeof TopicsTokensPlaySampleRoute
+  '/topics/tokens/play/segment': typeof TopicsTokensPlaySegmentRoute
+  '/topics/tokens/play/space': typeof TopicsTokensPlaySpaceRoute
+  '/topics/tokens/play/table': typeof TopicsTokensPlayTableRoute
+  '/topics/chaos/play/': typeof TopicsChaosPlayIndexRoute
+  '/topics/complex/play/': typeof TopicsComplexPlayIndexRoute
   '/topics/fractals/play/': typeof TopicsFractalsPlayIndexRoute
+  '/topics/networks/play/': typeof TopicsNetworksPlayIndexRoute
+  '/topics/primes/play/': typeof TopicsPrimesPlayIndexRoute
+  '/topics/tokens/play/': typeof TopicsTokensPlayIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -164,70 +876,378 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/topics/'
+    | '/topics/chaos/parts'
+    | '/topics/chaos/theory'
+    | '/topics/complex/parts'
+    | '/topics/complex/theory'
     | '/topics/fractals/parts'
     | '/topics/fractals/theory'
+    | '/topics/networks/parts'
+    | '/topics/networks/theory'
+    | '/topics/primes/parts'
+    | '/topics/primes/theory'
+    | '/topics/tokens/parts'
+    | '/topics/tokens/theory'
+    | '/topics/chaos/'
+    | '/topics/complex/'
     | '/topics/fractals/'
+    | '/topics/networks/'
+    | '/topics/primes/'
+    | '/topics/tokens/'
+    | '/topics/chaos/play/bifurcation'
+    | '/topics/chaos/play/control'
+    | '/topics/chaos/play/field'
+    | '/topics/chaos/play/logistic'
+    | '/topics/chaos/play/lorenz'
+    | '/topics/chaos/play/phase'
+    | '/topics/chaos/play/rossler'
+    | '/topics/chaos/play/solvers'
+    | '/topics/complex/play/add'
+    | '/topics/complex/play/line'
+    | '/topics/complex/play/multiply'
+    | '/topics/complex/play/quaternions'
+    | '/topics/complex/play/round'
+    | '/topics/complex/play/square'
+    | '/topics/complex/play/turn'
     | '/topics/fractals/play/$system'
+    | '/topics/fractals/play/credibility'
     | '/topics/fractals/play/dla'
+    | '/topics/fractals/play/hurst'
     | '/topics/fractals/play/ifs'
     | '/topics/fractals/play/julia'
     | '/topics/fractals/play/lichtenberg'
     | '/topics/fractals/play/lsystem'
     | '/topics/fractals/play/mandelbrot'
     | '/topics/fractals/play/mandelbulb'
+    | '/topics/fractals/play/tails'
+    | '/topics/networks/play/accumulate'
+    | '/topics/networks/play/attention'
+    | '/topics/networks/play/backprop'
+    | '/topics/networks/play/blame'
+    | '/topics/networks/play/cnn'
+    | '/topics/networks/play/descent'
+    | '/topics/networks/play/forward'
+    | '/topics/networks/play/growth'
+    | '/topics/networks/play/layers'
+    | '/topics/networks/play/learn'
+    | '/topics/networks/play/line'
+    | '/topics/networks/play/lstm'
+    | '/topics/networks/play/network'
+    | '/topics/networks/play/neuron'
+    | '/topics/networks/play/optimisers'
+    | '/topics/networks/play/perceptron'
+    | '/topics/networks/play/pictures'
+    | '/topics/networks/play/rate'
+    | '/topics/networks/play/rate2'
+    | '/topics/networks/play/sequence'
+    | '/topics/networks/play/slope'
+    | '/topics/networks/play/solve'
+    | '/topics/networks/play/unit'
+    | '/topics/networks/play/words'
+    | '/topics/primes/play/gaps'
+    | '/topics/tokens/play/artefacts'
+    | '/topics/tokens/play/attend'
+    | '/topics/tokens/play/bytes'
+    | '/topics/tokens/play/cost'
+    | '/topics/tokens/play/generate'
+    | '/topics/tokens/play/meaning'
+    | '/topics/tokens/play/merge'
+    | '/topics/tokens/play/order'
+    | '/topics/tokens/play/pool'
+    | '/topics/tokens/play/predict'
+    | '/topics/tokens/play/sample'
+    | '/topics/tokens/play/segment'
+    | '/topics/tokens/play/space'
+    | '/topics/tokens/play/table'
+    | '/topics/chaos/play/'
+    | '/topics/complex/play/'
     | '/topics/fractals/play/'
+    | '/topics/networks/play/'
+    | '/topics/primes/play/'
+    | '/topics/tokens/play/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/account'
     | '/topics'
+    | '/topics/chaos/parts'
+    | '/topics/chaos/theory'
+    | '/topics/complex/parts'
+    | '/topics/complex/theory'
     | '/topics/fractals/parts'
     | '/topics/fractals/theory'
+    | '/topics/networks/parts'
+    | '/topics/networks/theory'
+    | '/topics/primes/parts'
+    | '/topics/primes/theory'
+    | '/topics/tokens/parts'
+    | '/topics/tokens/theory'
+    | '/topics/chaos'
+    | '/topics/complex'
     | '/topics/fractals'
+    | '/topics/networks'
+    | '/topics/primes'
+    | '/topics/tokens'
+    | '/topics/chaos/play/bifurcation'
+    | '/topics/chaos/play/control'
+    | '/topics/chaos/play/field'
+    | '/topics/chaos/play/logistic'
+    | '/topics/chaos/play/lorenz'
+    | '/topics/chaos/play/phase'
+    | '/topics/chaos/play/rossler'
+    | '/topics/chaos/play/solvers'
+    | '/topics/complex/play/add'
+    | '/topics/complex/play/line'
+    | '/topics/complex/play/multiply'
+    | '/topics/complex/play/quaternions'
+    | '/topics/complex/play/round'
+    | '/topics/complex/play/square'
+    | '/topics/complex/play/turn'
     | '/topics/fractals/play/$system'
+    | '/topics/fractals/play/credibility'
     | '/topics/fractals/play/dla'
+    | '/topics/fractals/play/hurst'
     | '/topics/fractals/play/ifs'
     | '/topics/fractals/play/julia'
     | '/topics/fractals/play/lichtenberg'
     | '/topics/fractals/play/lsystem'
     | '/topics/fractals/play/mandelbrot'
     | '/topics/fractals/play/mandelbulb'
+    | '/topics/fractals/play/tails'
+    | '/topics/networks/play/accumulate'
+    | '/topics/networks/play/attention'
+    | '/topics/networks/play/backprop'
+    | '/topics/networks/play/blame'
+    | '/topics/networks/play/cnn'
+    | '/topics/networks/play/descent'
+    | '/topics/networks/play/forward'
+    | '/topics/networks/play/growth'
+    | '/topics/networks/play/layers'
+    | '/topics/networks/play/learn'
+    | '/topics/networks/play/line'
+    | '/topics/networks/play/lstm'
+    | '/topics/networks/play/network'
+    | '/topics/networks/play/neuron'
+    | '/topics/networks/play/optimisers'
+    | '/topics/networks/play/perceptron'
+    | '/topics/networks/play/pictures'
+    | '/topics/networks/play/rate'
+    | '/topics/networks/play/rate2'
+    | '/topics/networks/play/sequence'
+    | '/topics/networks/play/slope'
+    | '/topics/networks/play/solve'
+    | '/topics/networks/play/unit'
+    | '/topics/networks/play/words'
+    | '/topics/primes/play/gaps'
+    | '/topics/tokens/play/artefacts'
+    | '/topics/tokens/play/attend'
+    | '/topics/tokens/play/bytes'
+    | '/topics/tokens/play/cost'
+    | '/topics/tokens/play/generate'
+    | '/topics/tokens/play/meaning'
+    | '/topics/tokens/play/merge'
+    | '/topics/tokens/play/order'
+    | '/topics/tokens/play/pool'
+    | '/topics/tokens/play/predict'
+    | '/topics/tokens/play/sample'
+    | '/topics/tokens/play/segment'
+    | '/topics/tokens/play/space'
+    | '/topics/tokens/play/table'
+    | '/topics/chaos/play'
+    | '/topics/complex/play'
     | '/topics/fractals/play'
+    | '/topics/networks/play'
+    | '/topics/primes/play'
+    | '/topics/tokens/play'
   id:
     | '__root__'
     | '/'
     | '/account'
     | '/topics/'
+    | '/topics/chaos/parts'
+    | '/topics/chaos/theory'
+    | '/topics/complex/parts'
+    | '/topics/complex/theory'
     | '/topics/fractals/parts'
     | '/topics/fractals/theory'
+    | '/topics/networks/parts'
+    | '/topics/networks/theory'
+    | '/topics/primes/parts'
+    | '/topics/primes/theory'
+    | '/topics/tokens/parts'
+    | '/topics/tokens/theory'
+    | '/topics/chaos/'
+    | '/topics/complex/'
     | '/topics/fractals/'
+    | '/topics/networks/'
+    | '/topics/primes/'
+    | '/topics/tokens/'
+    | '/topics/chaos/play/bifurcation'
+    | '/topics/chaos/play/control'
+    | '/topics/chaos/play/field'
+    | '/topics/chaos/play/logistic'
+    | '/topics/chaos/play/lorenz'
+    | '/topics/chaos/play/phase'
+    | '/topics/chaos/play/rossler'
+    | '/topics/chaos/play/solvers'
+    | '/topics/complex/play/add'
+    | '/topics/complex/play/line'
+    | '/topics/complex/play/multiply'
+    | '/topics/complex/play/quaternions'
+    | '/topics/complex/play/round'
+    | '/topics/complex/play/square'
+    | '/topics/complex/play/turn'
     | '/topics/fractals/play/$system'
+    | '/topics/fractals/play/credibility'
     | '/topics/fractals/play/dla'
+    | '/topics/fractals/play/hurst'
     | '/topics/fractals/play/ifs'
     | '/topics/fractals/play/julia'
     | '/topics/fractals/play/lichtenberg'
     | '/topics/fractals/play/lsystem'
     | '/topics/fractals/play/mandelbrot'
     | '/topics/fractals/play/mandelbulb'
+    | '/topics/fractals/play/tails'
+    | '/topics/networks/play/accumulate'
+    | '/topics/networks/play/attention'
+    | '/topics/networks/play/backprop'
+    | '/topics/networks/play/blame'
+    | '/topics/networks/play/cnn'
+    | '/topics/networks/play/descent'
+    | '/topics/networks/play/forward'
+    | '/topics/networks/play/growth'
+    | '/topics/networks/play/layers'
+    | '/topics/networks/play/learn'
+    | '/topics/networks/play/line'
+    | '/topics/networks/play/lstm'
+    | '/topics/networks/play/network'
+    | '/topics/networks/play/neuron'
+    | '/topics/networks/play/optimisers'
+    | '/topics/networks/play/perceptron'
+    | '/topics/networks/play/pictures'
+    | '/topics/networks/play/rate'
+    | '/topics/networks/play/rate2'
+    | '/topics/networks/play/sequence'
+    | '/topics/networks/play/slope'
+    | '/topics/networks/play/solve'
+    | '/topics/networks/play/unit'
+    | '/topics/networks/play/words'
+    | '/topics/primes/play/gaps'
+    | '/topics/tokens/play/artefacts'
+    | '/topics/tokens/play/attend'
+    | '/topics/tokens/play/bytes'
+    | '/topics/tokens/play/cost'
+    | '/topics/tokens/play/generate'
+    | '/topics/tokens/play/meaning'
+    | '/topics/tokens/play/merge'
+    | '/topics/tokens/play/order'
+    | '/topics/tokens/play/pool'
+    | '/topics/tokens/play/predict'
+    | '/topics/tokens/play/sample'
+    | '/topics/tokens/play/segment'
+    | '/topics/tokens/play/space'
+    | '/topics/tokens/play/table'
+    | '/topics/chaos/play/'
+    | '/topics/complex/play/'
     | '/topics/fractals/play/'
+    | '/topics/networks/play/'
+    | '/topics/primes/play/'
+    | '/topics/tokens/play/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
   TopicsIndexRoute: typeof TopicsIndexRoute
+  TopicsChaosPartsRoute: typeof TopicsChaosPartsRoute
+  TopicsChaosTheoryRoute: typeof TopicsChaosTheoryRoute
+  TopicsComplexPartsRoute: typeof TopicsComplexPartsRoute
+  TopicsComplexTheoryRoute: typeof TopicsComplexTheoryRoute
   TopicsFractalsPartsRoute: typeof TopicsFractalsPartsRoute
   TopicsFractalsTheoryRoute: typeof TopicsFractalsTheoryRoute
+  TopicsNetworksPartsRoute: typeof TopicsNetworksPartsRoute
+  TopicsNetworksTheoryRoute: typeof TopicsNetworksTheoryRoute
+  TopicsPrimesPartsRoute: typeof TopicsPrimesPartsRoute
+  TopicsPrimesTheoryRoute: typeof TopicsPrimesTheoryRoute
+  TopicsTokensPartsRoute: typeof TopicsTokensPartsRoute
+  TopicsTokensTheoryRoute: typeof TopicsTokensTheoryRoute
+  TopicsChaosIndexRoute: typeof TopicsChaosIndexRoute
+  TopicsComplexIndexRoute: typeof TopicsComplexIndexRoute
   TopicsFractalsIndexRoute: typeof TopicsFractalsIndexRoute
+  TopicsNetworksIndexRoute: typeof TopicsNetworksIndexRoute
+  TopicsPrimesIndexRoute: typeof TopicsPrimesIndexRoute
+  TopicsTokensIndexRoute: typeof TopicsTokensIndexRoute
+  TopicsChaosPlayBifurcationRoute: typeof TopicsChaosPlayBifurcationRoute
+  TopicsChaosPlayControlRoute: typeof TopicsChaosPlayControlRoute
+  TopicsChaosPlayFieldRoute: typeof TopicsChaosPlayFieldRoute
+  TopicsChaosPlayLogisticRoute: typeof TopicsChaosPlayLogisticRoute
+  TopicsChaosPlayLorenzRoute: typeof TopicsChaosPlayLorenzRoute
+  TopicsChaosPlayPhaseRoute: typeof TopicsChaosPlayPhaseRoute
+  TopicsChaosPlayRosslerRoute: typeof TopicsChaosPlayRosslerRoute
+  TopicsChaosPlaySolversRoute: typeof TopicsChaosPlaySolversRoute
+  TopicsComplexPlayAddRoute: typeof TopicsComplexPlayAddRoute
+  TopicsComplexPlayLineRoute: typeof TopicsComplexPlayLineRoute
+  TopicsComplexPlayMultiplyRoute: typeof TopicsComplexPlayMultiplyRoute
+  TopicsComplexPlayQuaternionsRoute: typeof TopicsComplexPlayQuaternionsRoute
+  TopicsComplexPlayRoundRoute: typeof TopicsComplexPlayRoundRoute
+  TopicsComplexPlaySquareRoute: typeof TopicsComplexPlaySquareRoute
+  TopicsComplexPlayTurnRoute: typeof TopicsComplexPlayTurnRoute
   TopicsFractalsPlaySystemRoute: typeof TopicsFractalsPlaySystemRoute
+  TopicsFractalsPlayCredibilityRoute: typeof TopicsFractalsPlayCredibilityRoute
   TopicsFractalsPlayDlaRoute: typeof TopicsFractalsPlayDlaRoute
+  TopicsFractalsPlayHurstRoute: typeof TopicsFractalsPlayHurstRoute
   TopicsFractalsPlayIfsRoute: typeof TopicsFractalsPlayIfsRoute
   TopicsFractalsPlayJuliaRoute: typeof TopicsFractalsPlayJuliaRoute
   TopicsFractalsPlayLichtenbergRoute: typeof TopicsFractalsPlayLichtenbergRoute
   TopicsFractalsPlayLsystemRoute: typeof TopicsFractalsPlayLsystemRoute
   TopicsFractalsPlayMandelbrotRoute: typeof TopicsFractalsPlayMandelbrotRoute
   TopicsFractalsPlayMandelbulbRoute: typeof TopicsFractalsPlayMandelbulbRoute
+  TopicsFractalsPlayTailsRoute: typeof TopicsFractalsPlayTailsRoute
+  TopicsNetworksPlayAccumulateRoute: typeof TopicsNetworksPlayAccumulateRoute
+  TopicsNetworksPlayAttentionRoute: typeof TopicsNetworksPlayAttentionRoute
+  TopicsNetworksPlayBackpropRoute: typeof TopicsNetworksPlayBackpropRoute
+  TopicsNetworksPlayBlameRoute: typeof TopicsNetworksPlayBlameRoute
+  TopicsNetworksPlayCnnRoute: typeof TopicsNetworksPlayCnnRoute
+  TopicsNetworksPlayDescentRoute: typeof TopicsNetworksPlayDescentRoute
+  TopicsNetworksPlayForwardRoute: typeof TopicsNetworksPlayForwardRoute
+  TopicsNetworksPlayGrowthRoute: typeof TopicsNetworksPlayGrowthRoute
+  TopicsNetworksPlayLayersRoute: typeof TopicsNetworksPlayLayersRoute
+  TopicsNetworksPlayLearnRoute: typeof TopicsNetworksPlayLearnRoute
+  TopicsNetworksPlayLineRoute: typeof TopicsNetworksPlayLineRoute
+  TopicsNetworksPlayLstmRoute: typeof TopicsNetworksPlayLstmRoute
+  TopicsNetworksPlayNetworkRoute: typeof TopicsNetworksPlayNetworkRoute
+  TopicsNetworksPlayNeuronRoute: typeof TopicsNetworksPlayNeuronRoute
+  TopicsNetworksPlayOptimisersRoute: typeof TopicsNetworksPlayOptimisersRoute
+  TopicsNetworksPlayPerceptronRoute: typeof TopicsNetworksPlayPerceptronRoute
+  TopicsNetworksPlayPicturesRoute: typeof TopicsNetworksPlayPicturesRoute
+  TopicsNetworksPlayRateRoute: typeof TopicsNetworksPlayRateRoute
+  TopicsNetworksPlayRate2Route: typeof TopicsNetworksPlayRate2Route
+  TopicsNetworksPlaySequenceRoute: typeof TopicsNetworksPlaySequenceRoute
+  TopicsNetworksPlaySlopeRoute: typeof TopicsNetworksPlaySlopeRoute
+  TopicsNetworksPlaySolveRoute: typeof TopicsNetworksPlaySolveRoute
+  TopicsNetworksPlayUnitRoute: typeof TopicsNetworksPlayUnitRoute
+  TopicsNetworksPlayWordsRoute: typeof TopicsNetworksPlayWordsRoute
+  TopicsPrimesPlayGapsRoute: typeof TopicsPrimesPlayGapsRoute
+  TopicsTokensPlayArtefactsRoute: typeof TopicsTokensPlayArtefactsRoute
+  TopicsTokensPlayAttendRoute: typeof TopicsTokensPlayAttendRoute
+  TopicsTokensPlayBytesRoute: typeof TopicsTokensPlayBytesRoute
+  TopicsTokensPlayCostRoute: typeof TopicsTokensPlayCostRoute
+  TopicsTokensPlayGenerateRoute: typeof TopicsTokensPlayGenerateRoute
+  TopicsTokensPlayMeaningRoute: typeof TopicsTokensPlayMeaningRoute
+  TopicsTokensPlayMergeRoute: typeof TopicsTokensPlayMergeRoute
+  TopicsTokensPlayOrderRoute: typeof TopicsTokensPlayOrderRoute
+  TopicsTokensPlayPoolRoute: typeof TopicsTokensPlayPoolRoute
+  TopicsTokensPlayPredictRoute: typeof TopicsTokensPlayPredictRoute
+  TopicsTokensPlaySampleRoute: typeof TopicsTokensPlaySampleRoute
+  TopicsTokensPlaySegmentRoute: typeof TopicsTokensPlaySegmentRoute
+  TopicsTokensPlaySpaceRoute: typeof TopicsTokensPlaySpaceRoute
+  TopicsTokensPlayTableRoute: typeof TopicsTokensPlayTableRoute
+  TopicsChaosPlayIndexRoute: typeof TopicsChaosPlayIndexRoute
+  TopicsComplexPlayIndexRoute: typeof TopicsComplexPlayIndexRoute
   TopicsFractalsPlayIndexRoute: typeof TopicsFractalsPlayIndexRoute
+  TopicsNetworksPlayIndexRoute: typeof TopicsNetworksPlayIndexRoute
+  TopicsPrimesPlayIndexRoute: typeof TopicsPrimesPlayIndexRoute
+  TopicsTokensPlayIndexRoute: typeof TopicsTokensPlayIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -253,6 +1273,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/topics/chaos/': {
+      id: '/topics/chaos/'
+      path: '/topics/chaos'
+      fullPath: '/topics/chaos/'
+      preLoaderRoute: typeof TopicsChaosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/parts': {
+      id: '/topics/chaos/parts'
+      path: '/topics/chaos/parts'
+      fullPath: '/topics/chaos/parts'
+      preLoaderRoute: typeof TopicsChaosPartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/theory': {
+      id: '/topics/chaos/theory'
+      path: '/topics/chaos/theory'
+      fullPath: '/topics/chaos/theory'
+      preLoaderRoute: typeof TopicsChaosTheoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/': {
+      id: '/topics/complex/'
+      path: '/topics/complex'
+      fullPath: '/topics/complex/'
+      preLoaderRoute: typeof TopicsComplexIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/parts': {
+      id: '/topics/complex/parts'
+      path: '/topics/complex/parts'
+      fullPath: '/topics/complex/parts'
+      preLoaderRoute: typeof TopicsComplexPartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/theory': {
+      id: '/topics/complex/theory'
+      path: '/topics/complex/theory'
+      fullPath: '/topics/complex/theory'
+      preLoaderRoute: typeof TopicsComplexTheoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/topics/fractals/': {
       id: '/topics/fractals/'
       path: '/topics/fractals'
@@ -274,6 +1336,188 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsFractalsTheoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/topics/networks/': {
+      id: '/topics/networks/'
+      path: '/topics/networks'
+      fullPath: '/topics/networks/'
+      preLoaderRoute: typeof TopicsNetworksIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/parts': {
+      id: '/topics/networks/parts'
+      path: '/topics/networks/parts'
+      fullPath: '/topics/networks/parts'
+      preLoaderRoute: typeof TopicsNetworksPartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/theory': {
+      id: '/topics/networks/theory'
+      path: '/topics/networks/theory'
+      fullPath: '/topics/networks/theory'
+      preLoaderRoute: typeof TopicsNetworksTheoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/primes/': {
+      id: '/topics/primes/'
+      path: '/topics/primes'
+      fullPath: '/topics/primes/'
+      preLoaderRoute: typeof TopicsPrimesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/primes/parts': {
+      id: '/topics/primes/parts'
+      path: '/topics/primes/parts'
+      fullPath: '/topics/primes/parts'
+      preLoaderRoute: typeof TopicsPrimesPartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/primes/theory': {
+      id: '/topics/primes/theory'
+      path: '/topics/primes/theory'
+      fullPath: '/topics/primes/theory'
+      preLoaderRoute: typeof TopicsPrimesTheoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/': {
+      id: '/topics/tokens/'
+      path: '/topics/tokens'
+      fullPath: '/topics/tokens/'
+      preLoaderRoute: typeof TopicsTokensIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/parts': {
+      id: '/topics/tokens/parts'
+      path: '/topics/tokens/parts'
+      fullPath: '/topics/tokens/parts'
+      preLoaderRoute: typeof TopicsTokensPartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/theory': {
+      id: '/topics/tokens/theory'
+      path: '/topics/tokens/theory'
+      fullPath: '/topics/tokens/theory'
+      preLoaderRoute: typeof TopicsTokensTheoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/play/': {
+      id: '/topics/chaos/play/'
+      path: '/topics/chaos/play'
+      fullPath: '/topics/chaos/play/'
+      preLoaderRoute: typeof TopicsChaosPlayIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/play/bifurcation': {
+      id: '/topics/chaos/play/bifurcation'
+      path: '/topics/chaos/play/bifurcation'
+      fullPath: '/topics/chaos/play/bifurcation'
+      preLoaderRoute: typeof TopicsChaosPlayBifurcationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/play/control': {
+      id: '/topics/chaos/play/control'
+      path: '/topics/chaos/play/control'
+      fullPath: '/topics/chaos/play/control'
+      preLoaderRoute: typeof TopicsChaosPlayControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/play/field': {
+      id: '/topics/chaos/play/field'
+      path: '/topics/chaos/play/field'
+      fullPath: '/topics/chaos/play/field'
+      preLoaderRoute: typeof TopicsChaosPlayFieldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/play/logistic': {
+      id: '/topics/chaos/play/logistic'
+      path: '/topics/chaos/play/logistic'
+      fullPath: '/topics/chaos/play/logistic'
+      preLoaderRoute: typeof TopicsChaosPlayLogisticRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/play/lorenz': {
+      id: '/topics/chaos/play/lorenz'
+      path: '/topics/chaos/play/lorenz'
+      fullPath: '/topics/chaos/play/lorenz'
+      preLoaderRoute: typeof TopicsChaosPlayLorenzRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/play/phase': {
+      id: '/topics/chaos/play/phase'
+      path: '/topics/chaos/play/phase'
+      fullPath: '/topics/chaos/play/phase'
+      preLoaderRoute: typeof TopicsChaosPlayPhaseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/play/rossler': {
+      id: '/topics/chaos/play/rossler'
+      path: '/topics/chaos/play/rossler'
+      fullPath: '/topics/chaos/play/rossler'
+      preLoaderRoute: typeof TopicsChaosPlayRosslerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/chaos/play/solvers': {
+      id: '/topics/chaos/play/solvers'
+      path: '/topics/chaos/play/solvers'
+      fullPath: '/topics/chaos/play/solvers'
+      preLoaderRoute: typeof TopicsChaosPlaySolversRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/play/': {
+      id: '/topics/complex/play/'
+      path: '/topics/complex/play'
+      fullPath: '/topics/complex/play/'
+      preLoaderRoute: typeof TopicsComplexPlayIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/play/add': {
+      id: '/topics/complex/play/add'
+      path: '/topics/complex/play/add'
+      fullPath: '/topics/complex/play/add'
+      preLoaderRoute: typeof TopicsComplexPlayAddRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/play/line': {
+      id: '/topics/complex/play/line'
+      path: '/topics/complex/play/line'
+      fullPath: '/topics/complex/play/line'
+      preLoaderRoute: typeof TopicsComplexPlayLineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/play/multiply': {
+      id: '/topics/complex/play/multiply'
+      path: '/topics/complex/play/multiply'
+      fullPath: '/topics/complex/play/multiply'
+      preLoaderRoute: typeof TopicsComplexPlayMultiplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/play/quaternions': {
+      id: '/topics/complex/play/quaternions'
+      path: '/topics/complex/play/quaternions'
+      fullPath: '/topics/complex/play/quaternions'
+      preLoaderRoute: typeof TopicsComplexPlayQuaternionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/play/round': {
+      id: '/topics/complex/play/round'
+      path: '/topics/complex/play/round'
+      fullPath: '/topics/complex/play/round'
+      preLoaderRoute: typeof TopicsComplexPlayRoundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/play/square': {
+      id: '/topics/complex/play/square'
+      path: '/topics/complex/play/square'
+      fullPath: '/topics/complex/play/square'
+      preLoaderRoute: typeof TopicsComplexPlaySquareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/complex/play/turn': {
+      id: '/topics/complex/play/turn'
+      path: '/topics/complex/play/turn'
+      fullPath: '/topics/complex/play/turn'
+      preLoaderRoute: typeof TopicsComplexPlayTurnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/topics/fractals/play/': {
       id: '/topics/fractals/play/'
       path: '/topics/fractals/play'
@@ -288,11 +1532,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsFractalsPlaySystemRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/topics/fractals/play/credibility': {
+      id: '/topics/fractals/play/credibility'
+      path: '/topics/fractals/play/credibility'
+      fullPath: '/topics/fractals/play/credibility'
+      preLoaderRoute: typeof TopicsFractalsPlayCredibilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/topics/fractals/play/dla': {
       id: '/topics/fractals/play/dla'
       path: '/topics/fractals/play/dla'
       fullPath: '/topics/fractals/play/dla'
       preLoaderRoute: typeof TopicsFractalsPlayDlaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/fractals/play/hurst': {
+      id: '/topics/fractals/play/hurst'
+      path: '/topics/fractals/play/hurst'
+      fullPath: '/topics/fractals/play/hurst'
+      preLoaderRoute: typeof TopicsFractalsPlayHurstRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/topics/fractals/play/ifs': {
@@ -337,6 +1595,307 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsFractalsPlayMandelbulbRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/topics/fractals/play/tails': {
+      id: '/topics/fractals/play/tails'
+      path: '/topics/fractals/play/tails'
+      fullPath: '/topics/fractals/play/tails'
+      preLoaderRoute: typeof TopicsFractalsPlayTailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/': {
+      id: '/topics/networks/play/'
+      path: '/topics/networks/play'
+      fullPath: '/topics/networks/play/'
+      preLoaderRoute: typeof TopicsNetworksPlayIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/accumulate': {
+      id: '/topics/networks/play/accumulate'
+      path: '/topics/networks/play/accumulate'
+      fullPath: '/topics/networks/play/accumulate'
+      preLoaderRoute: typeof TopicsNetworksPlayAccumulateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/attention': {
+      id: '/topics/networks/play/attention'
+      path: '/topics/networks/play/attention'
+      fullPath: '/topics/networks/play/attention'
+      preLoaderRoute: typeof TopicsNetworksPlayAttentionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/backprop': {
+      id: '/topics/networks/play/backprop'
+      path: '/topics/networks/play/backprop'
+      fullPath: '/topics/networks/play/backprop'
+      preLoaderRoute: typeof TopicsNetworksPlayBackpropRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/blame': {
+      id: '/topics/networks/play/blame'
+      path: '/topics/networks/play/blame'
+      fullPath: '/topics/networks/play/blame'
+      preLoaderRoute: typeof TopicsNetworksPlayBlameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/cnn': {
+      id: '/topics/networks/play/cnn'
+      path: '/topics/networks/play/cnn'
+      fullPath: '/topics/networks/play/cnn'
+      preLoaderRoute: typeof TopicsNetworksPlayCnnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/descent': {
+      id: '/topics/networks/play/descent'
+      path: '/topics/networks/play/descent'
+      fullPath: '/topics/networks/play/descent'
+      preLoaderRoute: typeof TopicsNetworksPlayDescentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/forward': {
+      id: '/topics/networks/play/forward'
+      path: '/topics/networks/play/forward'
+      fullPath: '/topics/networks/play/forward'
+      preLoaderRoute: typeof TopicsNetworksPlayForwardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/growth': {
+      id: '/topics/networks/play/growth'
+      path: '/topics/networks/play/growth'
+      fullPath: '/topics/networks/play/growth'
+      preLoaderRoute: typeof TopicsNetworksPlayGrowthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/layers': {
+      id: '/topics/networks/play/layers'
+      path: '/topics/networks/play/layers'
+      fullPath: '/topics/networks/play/layers'
+      preLoaderRoute: typeof TopicsNetworksPlayLayersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/learn': {
+      id: '/topics/networks/play/learn'
+      path: '/topics/networks/play/learn'
+      fullPath: '/topics/networks/play/learn'
+      preLoaderRoute: typeof TopicsNetworksPlayLearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/line': {
+      id: '/topics/networks/play/line'
+      path: '/topics/networks/play/line'
+      fullPath: '/topics/networks/play/line'
+      preLoaderRoute: typeof TopicsNetworksPlayLineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/lstm': {
+      id: '/topics/networks/play/lstm'
+      path: '/topics/networks/play/lstm'
+      fullPath: '/topics/networks/play/lstm'
+      preLoaderRoute: typeof TopicsNetworksPlayLstmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/network': {
+      id: '/topics/networks/play/network'
+      path: '/topics/networks/play/network'
+      fullPath: '/topics/networks/play/network'
+      preLoaderRoute: typeof TopicsNetworksPlayNetworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/neuron': {
+      id: '/topics/networks/play/neuron'
+      path: '/topics/networks/play/neuron'
+      fullPath: '/topics/networks/play/neuron'
+      preLoaderRoute: typeof TopicsNetworksPlayNeuronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/optimisers': {
+      id: '/topics/networks/play/optimisers'
+      path: '/topics/networks/play/optimisers'
+      fullPath: '/topics/networks/play/optimisers'
+      preLoaderRoute: typeof TopicsNetworksPlayOptimisersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/perceptron': {
+      id: '/topics/networks/play/perceptron'
+      path: '/topics/networks/play/perceptron'
+      fullPath: '/topics/networks/play/perceptron'
+      preLoaderRoute: typeof TopicsNetworksPlayPerceptronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/pictures': {
+      id: '/topics/networks/play/pictures'
+      path: '/topics/networks/play/pictures'
+      fullPath: '/topics/networks/play/pictures'
+      preLoaderRoute: typeof TopicsNetworksPlayPicturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/rate': {
+      id: '/topics/networks/play/rate'
+      path: '/topics/networks/play/rate'
+      fullPath: '/topics/networks/play/rate'
+      preLoaderRoute: typeof TopicsNetworksPlayRateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/rate2': {
+      id: '/topics/networks/play/rate2'
+      path: '/topics/networks/play/rate2'
+      fullPath: '/topics/networks/play/rate2'
+      preLoaderRoute: typeof TopicsNetworksPlayRate2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/sequence': {
+      id: '/topics/networks/play/sequence'
+      path: '/topics/networks/play/sequence'
+      fullPath: '/topics/networks/play/sequence'
+      preLoaderRoute: typeof TopicsNetworksPlaySequenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/slope': {
+      id: '/topics/networks/play/slope'
+      path: '/topics/networks/play/slope'
+      fullPath: '/topics/networks/play/slope'
+      preLoaderRoute: typeof TopicsNetworksPlaySlopeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/solve': {
+      id: '/topics/networks/play/solve'
+      path: '/topics/networks/play/solve'
+      fullPath: '/topics/networks/play/solve'
+      preLoaderRoute: typeof TopicsNetworksPlaySolveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/unit': {
+      id: '/topics/networks/play/unit'
+      path: '/topics/networks/play/unit'
+      fullPath: '/topics/networks/play/unit'
+      preLoaderRoute: typeof TopicsNetworksPlayUnitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/networks/play/words': {
+      id: '/topics/networks/play/words'
+      path: '/topics/networks/play/words'
+      fullPath: '/topics/networks/play/words'
+      preLoaderRoute: typeof TopicsNetworksPlayWordsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/primes/play/': {
+      id: '/topics/primes/play/'
+      path: '/topics/primes/play'
+      fullPath: '/topics/primes/play/'
+      preLoaderRoute: typeof TopicsPrimesPlayIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/primes/play/gaps': {
+      id: '/topics/primes/play/gaps'
+      path: '/topics/primes/play/gaps'
+      fullPath: '/topics/primes/play/gaps'
+      preLoaderRoute: typeof TopicsPrimesPlayGapsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/': {
+      id: '/topics/tokens/play/'
+      path: '/topics/tokens/play'
+      fullPath: '/topics/tokens/play/'
+      preLoaderRoute: typeof TopicsTokensPlayIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/artefacts': {
+      id: '/topics/tokens/play/artefacts'
+      path: '/topics/tokens/play/artefacts'
+      fullPath: '/topics/tokens/play/artefacts'
+      preLoaderRoute: typeof TopicsTokensPlayArtefactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/attend': {
+      id: '/topics/tokens/play/attend'
+      path: '/topics/tokens/play/attend'
+      fullPath: '/topics/tokens/play/attend'
+      preLoaderRoute: typeof TopicsTokensPlayAttendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/bytes': {
+      id: '/topics/tokens/play/bytes'
+      path: '/topics/tokens/play/bytes'
+      fullPath: '/topics/tokens/play/bytes'
+      preLoaderRoute: typeof TopicsTokensPlayBytesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/cost': {
+      id: '/topics/tokens/play/cost'
+      path: '/topics/tokens/play/cost'
+      fullPath: '/topics/tokens/play/cost'
+      preLoaderRoute: typeof TopicsTokensPlayCostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/generate': {
+      id: '/topics/tokens/play/generate'
+      path: '/topics/tokens/play/generate'
+      fullPath: '/topics/tokens/play/generate'
+      preLoaderRoute: typeof TopicsTokensPlayGenerateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/meaning': {
+      id: '/topics/tokens/play/meaning'
+      path: '/topics/tokens/play/meaning'
+      fullPath: '/topics/tokens/play/meaning'
+      preLoaderRoute: typeof TopicsTokensPlayMeaningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/merge': {
+      id: '/topics/tokens/play/merge'
+      path: '/topics/tokens/play/merge'
+      fullPath: '/topics/tokens/play/merge'
+      preLoaderRoute: typeof TopicsTokensPlayMergeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/order': {
+      id: '/topics/tokens/play/order'
+      path: '/topics/tokens/play/order'
+      fullPath: '/topics/tokens/play/order'
+      preLoaderRoute: typeof TopicsTokensPlayOrderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/pool': {
+      id: '/topics/tokens/play/pool'
+      path: '/topics/tokens/play/pool'
+      fullPath: '/topics/tokens/play/pool'
+      preLoaderRoute: typeof TopicsTokensPlayPoolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/predict': {
+      id: '/topics/tokens/play/predict'
+      path: '/topics/tokens/play/predict'
+      fullPath: '/topics/tokens/play/predict'
+      preLoaderRoute: typeof TopicsTokensPlayPredictRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/sample': {
+      id: '/topics/tokens/play/sample'
+      path: '/topics/tokens/play/sample'
+      fullPath: '/topics/tokens/play/sample'
+      preLoaderRoute: typeof TopicsTokensPlaySampleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/segment': {
+      id: '/topics/tokens/play/segment'
+      path: '/topics/tokens/play/segment'
+      fullPath: '/topics/tokens/play/segment'
+      preLoaderRoute: typeof TopicsTokensPlaySegmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/space': {
+      id: '/topics/tokens/play/space'
+      path: '/topics/tokens/play/space'
+      fullPath: '/topics/tokens/play/space'
+      preLoaderRoute: typeof TopicsTokensPlaySpaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/tokens/play/table': {
+      id: '/topics/tokens/play/table'
+      path: '/topics/tokens/play/table'
+      fullPath: '/topics/tokens/play/table'
+      preLoaderRoute: typeof TopicsTokensPlayTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -344,18 +1903,95 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
   TopicsIndexRoute: TopicsIndexRoute,
+  TopicsChaosPartsRoute: TopicsChaosPartsRoute,
+  TopicsChaosTheoryRoute: TopicsChaosTheoryRoute,
+  TopicsComplexPartsRoute: TopicsComplexPartsRoute,
+  TopicsComplexTheoryRoute: TopicsComplexTheoryRoute,
   TopicsFractalsPartsRoute: TopicsFractalsPartsRoute,
   TopicsFractalsTheoryRoute: TopicsFractalsTheoryRoute,
+  TopicsNetworksPartsRoute: TopicsNetworksPartsRoute,
+  TopicsNetworksTheoryRoute: TopicsNetworksTheoryRoute,
+  TopicsPrimesPartsRoute: TopicsPrimesPartsRoute,
+  TopicsPrimesTheoryRoute: TopicsPrimesTheoryRoute,
+  TopicsTokensPartsRoute: TopicsTokensPartsRoute,
+  TopicsTokensTheoryRoute: TopicsTokensTheoryRoute,
+  TopicsChaosIndexRoute: TopicsChaosIndexRoute,
+  TopicsComplexIndexRoute: TopicsComplexIndexRoute,
   TopicsFractalsIndexRoute: TopicsFractalsIndexRoute,
+  TopicsNetworksIndexRoute: TopicsNetworksIndexRoute,
+  TopicsPrimesIndexRoute: TopicsPrimesIndexRoute,
+  TopicsTokensIndexRoute: TopicsTokensIndexRoute,
+  TopicsChaosPlayBifurcationRoute: TopicsChaosPlayBifurcationRoute,
+  TopicsChaosPlayControlRoute: TopicsChaosPlayControlRoute,
+  TopicsChaosPlayFieldRoute: TopicsChaosPlayFieldRoute,
+  TopicsChaosPlayLogisticRoute: TopicsChaosPlayLogisticRoute,
+  TopicsChaosPlayLorenzRoute: TopicsChaosPlayLorenzRoute,
+  TopicsChaosPlayPhaseRoute: TopicsChaosPlayPhaseRoute,
+  TopicsChaosPlayRosslerRoute: TopicsChaosPlayRosslerRoute,
+  TopicsChaosPlaySolversRoute: TopicsChaosPlaySolversRoute,
+  TopicsComplexPlayAddRoute: TopicsComplexPlayAddRoute,
+  TopicsComplexPlayLineRoute: TopicsComplexPlayLineRoute,
+  TopicsComplexPlayMultiplyRoute: TopicsComplexPlayMultiplyRoute,
+  TopicsComplexPlayQuaternionsRoute: TopicsComplexPlayQuaternionsRoute,
+  TopicsComplexPlayRoundRoute: TopicsComplexPlayRoundRoute,
+  TopicsComplexPlaySquareRoute: TopicsComplexPlaySquareRoute,
+  TopicsComplexPlayTurnRoute: TopicsComplexPlayTurnRoute,
   TopicsFractalsPlaySystemRoute: TopicsFractalsPlaySystemRoute,
+  TopicsFractalsPlayCredibilityRoute: TopicsFractalsPlayCredibilityRoute,
   TopicsFractalsPlayDlaRoute: TopicsFractalsPlayDlaRoute,
+  TopicsFractalsPlayHurstRoute: TopicsFractalsPlayHurstRoute,
   TopicsFractalsPlayIfsRoute: TopicsFractalsPlayIfsRoute,
   TopicsFractalsPlayJuliaRoute: TopicsFractalsPlayJuliaRoute,
   TopicsFractalsPlayLichtenbergRoute: TopicsFractalsPlayLichtenbergRoute,
   TopicsFractalsPlayLsystemRoute: TopicsFractalsPlayLsystemRoute,
   TopicsFractalsPlayMandelbrotRoute: TopicsFractalsPlayMandelbrotRoute,
   TopicsFractalsPlayMandelbulbRoute: TopicsFractalsPlayMandelbulbRoute,
+  TopicsFractalsPlayTailsRoute: TopicsFractalsPlayTailsRoute,
+  TopicsNetworksPlayAccumulateRoute: TopicsNetworksPlayAccumulateRoute,
+  TopicsNetworksPlayAttentionRoute: TopicsNetworksPlayAttentionRoute,
+  TopicsNetworksPlayBackpropRoute: TopicsNetworksPlayBackpropRoute,
+  TopicsNetworksPlayBlameRoute: TopicsNetworksPlayBlameRoute,
+  TopicsNetworksPlayCnnRoute: TopicsNetworksPlayCnnRoute,
+  TopicsNetworksPlayDescentRoute: TopicsNetworksPlayDescentRoute,
+  TopicsNetworksPlayForwardRoute: TopicsNetworksPlayForwardRoute,
+  TopicsNetworksPlayGrowthRoute: TopicsNetworksPlayGrowthRoute,
+  TopicsNetworksPlayLayersRoute: TopicsNetworksPlayLayersRoute,
+  TopicsNetworksPlayLearnRoute: TopicsNetworksPlayLearnRoute,
+  TopicsNetworksPlayLineRoute: TopicsNetworksPlayLineRoute,
+  TopicsNetworksPlayLstmRoute: TopicsNetworksPlayLstmRoute,
+  TopicsNetworksPlayNetworkRoute: TopicsNetworksPlayNetworkRoute,
+  TopicsNetworksPlayNeuronRoute: TopicsNetworksPlayNeuronRoute,
+  TopicsNetworksPlayOptimisersRoute: TopicsNetworksPlayOptimisersRoute,
+  TopicsNetworksPlayPerceptronRoute: TopicsNetworksPlayPerceptronRoute,
+  TopicsNetworksPlayPicturesRoute: TopicsNetworksPlayPicturesRoute,
+  TopicsNetworksPlayRateRoute: TopicsNetworksPlayRateRoute,
+  TopicsNetworksPlayRate2Route: TopicsNetworksPlayRate2Route,
+  TopicsNetworksPlaySequenceRoute: TopicsNetworksPlaySequenceRoute,
+  TopicsNetworksPlaySlopeRoute: TopicsNetworksPlaySlopeRoute,
+  TopicsNetworksPlaySolveRoute: TopicsNetworksPlaySolveRoute,
+  TopicsNetworksPlayUnitRoute: TopicsNetworksPlayUnitRoute,
+  TopicsNetworksPlayWordsRoute: TopicsNetworksPlayWordsRoute,
+  TopicsPrimesPlayGapsRoute: TopicsPrimesPlayGapsRoute,
+  TopicsTokensPlayArtefactsRoute: TopicsTokensPlayArtefactsRoute,
+  TopicsTokensPlayAttendRoute: TopicsTokensPlayAttendRoute,
+  TopicsTokensPlayBytesRoute: TopicsTokensPlayBytesRoute,
+  TopicsTokensPlayCostRoute: TopicsTokensPlayCostRoute,
+  TopicsTokensPlayGenerateRoute: TopicsTokensPlayGenerateRoute,
+  TopicsTokensPlayMeaningRoute: TopicsTokensPlayMeaningRoute,
+  TopicsTokensPlayMergeRoute: TopicsTokensPlayMergeRoute,
+  TopicsTokensPlayOrderRoute: TopicsTokensPlayOrderRoute,
+  TopicsTokensPlayPoolRoute: TopicsTokensPlayPoolRoute,
+  TopicsTokensPlayPredictRoute: TopicsTokensPlayPredictRoute,
+  TopicsTokensPlaySampleRoute: TopicsTokensPlaySampleRoute,
+  TopicsTokensPlaySegmentRoute: TopicsTokensPlaySegmentRoute,
+  TopicsTokensPlaySpaceRoute: TopicsTokensPlaySpaceRoute,
+  TopicsTokensPlayTableRoute: TopicsTokensPlayTableRoute,
+  TopicsChaosPlayIndexRoute: TopicsChaosPlayIndexRoute,
+  TopicsComplexPlayIndexRoute: TopicsComplexPlayIndexRoute,
   TopicsFractalsPlayIndexRoute: TopicsFractalsPlayIndexRoute,
+  TopicsNetworksPlayIndexRoute: TopicsNetworksPlayIndexRoute,
+  TopicsPrimesPlayIndexRoute: TopicsPrimesPlayIndexRoute,
+  TopicsTokensPlayIndexRoute: TopicsTokensPlayIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

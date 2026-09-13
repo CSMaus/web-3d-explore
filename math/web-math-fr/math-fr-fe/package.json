@@ -12,7 +12,10 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -b",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
-    "check:maths": "node --experimental-strip-types scripts/check-maths.ts"
+    "check:maths": "node --experimental-strip-types scripts/check-maths.ts",
+    "check:chaos": "node --experimental-strip-types scripts/check-chaos.ts",
+    "check:net": "node --experimental-strip-types scripts/check-net.ts",
+    "check:tokens": "node --experimental-strip-types scripts/check-tokens.ts"
   },
   "dependencies": {
     "@tanstack/react-router": "^1.170.33",

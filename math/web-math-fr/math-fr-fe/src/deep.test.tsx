@@ -6,10 +6,10 @@ import { socketUrl } from "@/lib/deep";
 
 const SYSTEM = {
   id: "mandelbrot",
-  name: "the Mandelbrot set",
-  summary: "a summary",
-  blocks: [{ label: "step", tex: "z", note: "a note" }],
-  dimension: { label: "dimension", tex: "d", note: "a note" },
+  name: "The Mandelbrot set",
+  summary: "A summary",
+  blocks: [{ label: "Step", tex: "z", note: "A note" }],
+  dimension: { label: "Dimension", tex: "d", note: "A note" },
 };
 
 /** a stand-in for the browser socket that records what was sent and can be driven. */
@@ -92,7 +92,7 @@ const zoomTo = async (times: number) => {
   });
 };
 
-describe("the deep-zoom socket on the Mandelbrot page", () => {
+describe("The deep-zoom socket on the Mandelbrot page", () => {
   beforeEach(() => {
     FakeSocket.made = [];
     vi.stubGlobal("WebSocket", FakeSocket as unknown as typeof WebSocket);
@@ -100,39 +100,39 @@ describe("the deep-zoom socket on the Mandelbrot page", () => {
     serveSystem();
   });
 
-  it("says nothing about the server while the card can still draw the view", async () => {
+  it("Says nothing about the server while the card can still draw the view", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await waitFor(() => expect(screen.getByText("VIEW")).toBeTruthy());
     expect(screen.queryByText("SERVER RENDER")).toBeNull();
     expect(FakeSocket.made.length).toBe(0);
   });
 
-  it("offers the server only past the point single precision runs out", async () => {
+  it("Offers the server only past the point single precision runs out", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await waitFor(() => expect(screen.getByText("VIEW")).toBeTruthy());
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
-    expect(screen.getByRole("button", { name: "render on the server" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Render on the server" })).toBeTruthy();
   });
 
-  it("opens no socket until the render is asked for", async () => {
+  it("Opens no socket until the render is asked for", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     expect(FakeSocket.made.length).toBe(0);
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     expect(FakeSocket.made.length).toBe(1);
     expect(FakeSocket.made[0].url).toBe(socketUrl());
   });
 
-  it("sends the view it is looking at, bounded in size", async () => {
+  it("Sends the view it is looking at, bounded in size", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
@@ -145,34 +145,34 @@ describe("the deep-zoom socket on the Mandelbrot page", () => {
     expect(Number(want.nonce)).toBeGreaterThan(0);
   });
 
-  it("shows each pass as it arrives and counts them", async () => {
+  it("Shows each pass as it arrives and counts them", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
     const id = Number(live.sent[0].nonce);
 
     await act(async () => live.deliver(tileFor(id, 8, false)));
-    await waitFor(() => expect(screen.getByText("pass 1 of 4")).toBeTruthy());
-    expect(screen.getByAltText("the set rendered on the server")).toBeTruthy();
+    await waitFor(() => expect(screen.getByText("Pass 1 of 4")).toBeTruthy());
+    expect(screen.getByAltText("The set rendered on the server")).toBeTruthy();
 
     await act(async () => live.deliver(tileFor(id, 4, false)));
-    await waitFor(() => expect(screen.getByText("pass 2 of 4")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Pass 2 of 4")).toBeTruthy());
 
     await act(async () => live.deliver(tileFor(id, 1, true)));
-    await waitFor(() => expect(screen.getByText("finished, full resolution")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Finished, full resolution")).toBeTruthy());
   });
 
-  it("closes the socket as soon as the view is finished", async () => {
+  it("Closes the socket as soon as the view is finished", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
@@ -182,44 +182,44 @@ describe("the deep-zoom socket on the Mandelbrot page", () => {
     expect(live.closed).not.toBeNull();
   });
 
-  it("throws away a pass that belongs to a view already left", async () => {
+  it("Throws away a pass that belongs to a view already left", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
     const id = Number(live.sent[0].nonce);
     await act(async () => live.deliver(tileFor(id - 1, 8, false)));
-    expect(screen.queryByAltText("the set rendered on the server")).toBeNull();
+    expect(screen.queryByAltText("The set rendered on the server")).toBeNull();
     await act(async () => live.deliver(tileFor(id, 8, false)));
-    expect(screen.getByAltText("the set rendered on the server")).toBeTruthy();
+    expect(screen.getByAltText("The set rendered on the server")).toBeTruthy();
   });
 
-  it("drops the picture when the view moves, and says why", async () => {
+  it("Drops the picture when the view moves, and says why", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
     await act(async () => live.deliver(tileFor(Number(live.sent[0].nonce), 1, true)));
-    expect(screen.getByAltText("the set rendered on the server")).toBeTruthy();
+    expect(screen.getByAltText("The set rendered on the server")).toBeTruthy();
     await zoomTo(19);
-    await waitFor(() => expect(screen.getByText(/the view moved/)).toBeTruthy());
-    expect(screen.queryByAltText("the set rendered on the server")).toBeNull();
+    await waitFor(() => expect(screen.getByText(/the view moved/i)).toBeTruthy());
+    expect(screen.queryByAltText("The set rendered on the server")).toBeNull();
   });
 
-  it("reports a refusal from the server rather than waiting for ever", async () => {
+  it("Reports a refusal from the server rather than waiting for ever", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
@@ -227,80 +227,80 @@ describe("the deep-zoom socket on the Mandelbrot page", () => {
       live.deliver({
         kind: "refused",
         nonce: live.sent[0].nonce,
-        reason: "that render is larger than the budget allows",
+        reason: "That render is larger than the budget allows",
       }),
     );
     await waitFor(() =>
-      expect(screen.getByText("that render is larger than the budget allows")).toBeTruthy(),
+      expect(screen.getByText("That render is larger than the budget allows")).toBeTruthy(),
     );
     expect(live.closed).not.toBeNull();
   });
 
-  it("reports a busy server and keeps the connection for the retry", async () => {
+  it("Reports a busy server and keeps the connection for the retry", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
     await act(async () =>
-      live.deliver({ kind: "busy", reason: "too many renders in flight" }),
+      live.deliver({ kind: "busy", reason: "Too many renders in flight" }),
     );
-    await waitFor(() => expect(screen.getByText("too many renders in flight")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Too many renders in flight")).toBeTruthy());
   });
 
-  it("reports a connection that drops mid render", async () => {
+  it("Reports a connection that drops mid render", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
     await act(async () => live.close(1006));
-    await waitFor(() => expect(screen.getByText(/the connection closed \(1006\)/)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/the connection closed \(1006\)/i)).toBeTruthy());
   });
 
-  it("stops on request and leaves nothing open", async () => {
+  it("Stops on request and leaves nothing open", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
     await act(async () => {
-      screen.getByRole("button", { name: "stop" }).click();
+      screen.getByRole("button", { name: "Stop" }).click();
     });
     expect(live.closed).not.toBeNull();
-    await waitFor(() => expect(screen.getByText("not started")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Not started")).toBeTruthy());
   });
 
-  it("names the server as what drew the picture, and the card otherwise", async () => {
+  it("Names the server as what drew the picture, and the card otherwise", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
-    await waitFor(() => expect(screen.getByText("the graphics card")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("The graphics card")).toBeTruthy());
     await zoomTo(20);
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
     await act(async () => live.deliver(tileFor(Number(live.sent[0].nonce), 1, true)));
-    await waitFor(() => expect(screen.getByText("the server, double precision")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("The server, double precision")).toBeTruthy());
   });
 });
 
-describe("the socket address", () => {
-  it("follows wherever the api lives", () => {
+describe("The socket address", () => {
+  it("Follows wherever the api lives", () => {
     expect(socketUrl()).toBe("ws://localhost:1585/api/deep");
   });
 });
 
-describe("a server that does not answer with the view asked for", () => {
+describe("A server that does not answer with the view asked for", () => {
   beforeEach(() => {
     FakeSocket.made = [];
     vi.stubGlobal("WebSocket", FakeSocket as unknown as typeof WebSocket);
@@ -308,12 +308,12 @@ describe("a server that does not answer with the view asked for", () => {
     serveSystem();
   });
 
-  it("says so instead of sitting on the first pass for ever", async () => {
+  it("Says so instead of sitting on the first pass for ever", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());
@@ -321,13 +321,13 @@ describe("a server that does not answer with the view asked for", () => {
     delete stripped.nonce;
     await act(async () => live.deliver(stripped));
     await waitFor(() =>
-      expect(screen.getByText("the server did not answer with the view asked for")).toBeTruthy(),
+      expect(screen.getByText("The server did not answer with the view asked for")).toBeTruthy(),
     );
     expect(live.closed).not.toBeNull();
   });
 });
 
-describe("the palette reaches the server", () => {
+describe("The palette reaches the server", () => {
   beforeEach(() => {
     FakeSocket.made = [];
     vi.stubGlobal("WebSocket", FakeSocket as unknown as typeof WebSocket);
@@ -335,12 +335,12 @@ describe("the palette reaches the server", () => {
     serveSystem();
   });
 
-  it("sends the colours the page is drawing in, not the server's own", async () => {
+  it("Sends the colours the page is drawing in, not the server's own", async () => {
     await pageAt("/topics/fractals/play/mandelbrot");
     await zoomTo(20);
     await waitFor(() => expect(screen.getByText("SERVER RENDER")).toBeTruthy());
     await act(async () => {
-      screen.getByRole("button", { name: "render on the server" }).click();
+      screen.getByRole("button", { name: "Render on the server" }).click();
     });
     const live = FakeSocket.made[0];
     await act(async () => live.open());

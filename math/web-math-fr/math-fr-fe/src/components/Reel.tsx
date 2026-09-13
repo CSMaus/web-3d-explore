@@ -1,18 +1,23 @@
 import { useEffect, useRef, useState } from "react";
-import type { Beat } from "@/lib/api";
+import type { Part } from "@/lib/api";
 
-type Props = { beat: Beat; accent: string };
+type Props = { part: Part; accent: string };
 
-export function Reel({ beat, accent }: Props) {
+/**
+ * one part of the series: its clip, its name and its length, and a short
+ * caption that opens on request. the caption stands in for the voice-over for
+ * a reader who cannot hear it; the explanation itself is in the clip.
+ */
+export function Reel({ part, accent }: Props) {
   const host = useRef<HTMLElement | null>(null);
   const [near, setNear] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const node = host.current;
     if (!node) return;
     // this observer decides only whether the player is worth mounting. which
-    // part the reader is in is decided once for the whole page, by useHere,
-    // because a per-beat callback that only fires on entry cannot answer it.
+    // part the reader is in is decided once for the whole page, by useHere.
     const watch = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -26,13 +31,14 @@ export function Reel({ beat, accent }: Props) {
     return () => watch.disconnect();
   }, []);
 
-  const src = beat.video
-    ? `https://www.youtube-nocookie.com/embed/${beat.video}?rel=0&modestbranding=1&playsinline=1`
+  const seconds = part.beats.reduce((s, b) => s + b.seconds, 0);
+  const src = part.video
+    ? `https://www.youtube-nocookie.com/embed/${part.video}?rel=0&modestbranding=1&playsinline=1`
     : "";
 
   return (
-    <section ref={host} className="grid gap-8 py-16 lg:grid-cols-[1fr_1fr]">
-      <div className="lg:sticky lg:top-24 lg:self-start">
+    <section ref={host} className="py-10">
+      <div className="mx-auto max-w-3xl">
         <div
           className="relative aspect-video w-full overflow-hidden rounded border"
           style={{ borderColor: accent }}
@@ -40,7 +46,7 @@ export function Reel({ beat, accent }: Props) {
           {near && src ? (
             <iframe
               src={src}
-              title={beat.slug}
+              title={part.title}
               loading="lazy"
               allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
               referrerPolicy="strict-origin-when-cross-origin"
@@ -49,36 +55,27 @@ export function Reel({ beat, accent }: Props) {
           ) : (
             <div className="absolute inset-0 grid place-items-center bg-black/40">
               <span className="font-mono text-[11px] text-muted">
-                {beat.video ? "loading" : "clip not published yet"}
+                {part.video ? "Loading" : "Clip not published yet"}
               </span>
             </div>
           )}
         </div>
-        <div className="mt-2 flex items-baseline justify-between font-mono text-[11px] text-muted">
-          <span>{beat.slug}</span>
-          <span>{beat.seconds.toFixed(1)} s</span>
+        <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2 font-mono text-[11px] text-muted">
+          <span>{seconds.toFixed(0)} s</span>
+          {part.caption ? (
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              className="rounded border border-edge px-2 py-0.5 text-muted transition-colors hover:border-muted hover:text-ink"
+            >
+              {open ? "Hide description" : "Show description"}
+            </button>
+          ) : null}
         </div>
-      </div>
-
-      <div className="space-y-5">
-        <div>
-          <div className="font-mono text-[11px] uppercase tracking-widest" style={{ color: accent }}>
-            what is on screen
-          </div>
-          <p className="mt-1 text-sm leading-relaxed text-ink/85">{beat.shows}</p>
-        </div>
-        <div>
-          <div className="font-mono text-[11px] uppercase tracking-widest text-muted">
-            why the beat exists
-          </div>
-          <p className="mt-1 text-sm leading-relaxed text-muted">{beat.why}</p>
-        </div>
-        <blockquote
-          className="border-l-2 pl-4 text-sm leading-relaxed text-ink/75 italic"
-          style={{ borderColor: accent }}
-        >
-          {beat.say}
-        </blockquote>
+        {open ? (
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/80">{part.caption}</p>
+        ) : null}
       </div>
     </section>
   );

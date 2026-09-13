@@ -12,13 +12,16 @@ export const Route = createFileRoute("/topics/fractals/play/")({
 });
 
 const LOCAL = [
-  { id: "ifs", name: "iterated maps", summary: "a point moved by a handful of affine moves" },
-  { id: "lsystem", name: "rewriting systems", summary: "a seed word rewritten, then walked" },
-  { id: "lichtenberg", name: "dielectric breakdown", summary: "the figure a discharge burns" },
-  { id: "dla", name: "wandering particles", summary: "walkers that stick where they touch" },
-  { id: "julia", name: "Julia sets", summary: "the points whose walk never escapes" },
-  { id: "mandelbrot", name: "the Mandelbrot set", summary: "the same test over every constant" },
-  { id: "mandelbulb", name: "the three-dimensional set", summary: "the same rule, one power up" },
+  { id: "ifs", name: "Iterated maps", summary: "A point moved by a handful of affine moves" },
+  { id: "lsystem", name: "Rewriting systems", summary: "A seed word rewritten, then walked" },
+  { id: "lichtenberg", name: "Dielectric breakdown", summary: "The figure a discharge burns" },
+  { id: "dla", name: "Wandering particles", summary: "Walkers that stick where they touch" },
+  { id: "julia", name: "Julia sets", summary: "The points whose walk never escapes" },
+  { id: "mandelbrot", name: "The Mandelbrot set", summary: "The same test over every constant" },
+  { id: "mandelbulb", name: "The three-dimensional set", summary: "The same rule, one power up" },
+  { id: "hurst", name: "A line that remembers: the Hurst exponent", summary: "A random walk whose steps remember, measured the way Hurst measured the Nile, and what that buys a forecast" },
+  { id: "credibility", name: "Trust the group or trust the record: an actuary's Bayes", summary: "A new customer's short record blended with the group's long one, the weight moving as the years arrive" },
+  { id: "tails", name: "Claims with a fractal tail", summary: "Claim sizes that look the same at every scale, and an average that never settles" },
 ];
 
 function PlayIndex() {
@@ -30,9 +33,9 @@ function PlayIndex() {
       <div className="mt-4">
         <PlayTabs />
       </div>
-      <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">pick something to move</h1>
+      <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">Pick something to move</h1>
       <p className="mt-3 max-w-2xl text-sm text-muted">
-        every system carries its equations, its parameters as controls, a colour scheme that can be
+        Every system carries its equations, its parameters as controls, a colour scheme that can be
         changed, and the dimension measured from whatever is on screen.
       </p>
       <div className="mt-10 grid gap-4 sm:grid-cols-2">

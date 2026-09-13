@@ -10,11 +10,11 @@ export function TopicBar({ topic }: { topic: BuiltTopic }) {
     <div className="border-b border-edge pb-3">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <Link to="/topics" className="font-mono text-[11px] text-muted hover:text-ink">
-          topics
+          Topics
         </Link>
         <span className="font-mono text-[11px] text-edge">/</span>
         <span className="font-mono text-sm tracking-wide text-leaf">
-          topic {topic.number} - {topic.title}
+          {topic.number === 0 ? "Start here" : `Topic ${topic.number}`} - {topic.title}
         </span>
       </div>
       <nav className="mt-3 flex flex-wrap gap-1.5">

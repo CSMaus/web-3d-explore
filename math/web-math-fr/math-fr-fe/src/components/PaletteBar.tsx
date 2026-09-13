@@ -6,7 +6,7 @@ export function PaletteBar() {
   const { palette, setPalette } = useLook();
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="font-mono text-xs text-muted">colour</span>
+      <span className="font-mono text-xs text-muted">Colour</span>
       {PALETTES.map((p) => (
         <button
           key={p.id}

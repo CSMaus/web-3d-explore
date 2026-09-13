@@ -3,13 +3,13 @@ import { LSYS_PRESETS, expand, parseRules, rngFrom, turtle } from "../src/system
 import { dbmCreate, dbmStep, dlaCreate, dlaGrow, massDim } from "../src/systems/growth.ts";
 
 const fern = IFS_PRESETS["Barnsley fern"];
-console.log("fern contractions", fern.map((m) => contraction(m).toFixed(3)).join(" "));
+console.log("Fern contractions", fern.map((m) => contraction(m).toFixed(3)).join(" "));
 const run = runGame(fern, { points: 120000, startx: 0, starty: 0, drop: 30 });
 const d = boxDim(run.xs, run.ys, run.kept);
-console.log("fern kept", run.kept, "box dimension", d?.toFixed(3));
+console.log("Fern kept", run.kept, "Box dimension", d?.toFixed(3));
 const tally = new Array(4).fill(0);
 for (let i = 0; i < run.kept; i++) tally[run.who[i]]++;
-console.log("per move share", tally.map((n) => ((n / run.kept) * 100).toFixed(1) + "%").join(" "));
+console.log("Per move share", tally.map((n) => ((n / run.kept) * 100).toFixed(1) + "%").join(" "));
 for (const [name, cfg] of Object.entries(LSYS_PRESETS)) {
   const g = expand(cfg.axiom, parseRules(cfg.rules), cfg.passes, 900000);
   const segs = turtle(g.word, cfg.angle, 0, rngFrom(7));
@@ -34,7 +34,7 @@ for (const eta of [0.6, 1, 2]) {
   while (!st.done && st.order.length < 300) if (!dbmStep(st, eta, 12)) break;
   const { xs, ys } = cells(st.order, st.cols);
   const d = boxDim(xs, ys, st.order.length, { least: 120, cuts: [2, 4, 8, 16] });
-  console.log("breakdown gap  eta", String(eta).padEnd(4), "sites", String(st.order.length).padStart(4), "box d", d ? d.toFixed(3) : "n/a");
+  console.log("Breakdown gap  eta", String(eta).padEnd(4), "sites", String(st.order.length).padStart(4), "Box d", d ? d.toFixed(3) : "n/a");
 }
 {
   const cols = 91;
@@ -50,7 +50,7 @@ for (const eta of [0.6, 1, 2]) {
     const s = ((Math.floor((a + Math.PI) / (Math.PI / 4)) % 8) + 8) % 8;
     sect[s] = Math.max(sect[s], Math.hypot(dx, dy));
   }
-  console.log("Lichtenberg point sites", st.order.length, "reach per sector", sect.map((v) => v.toFixed(0)).join(" "));
+  console.log("Lichtenberg point sites", st.order.length, "Reach per sector", sect.map((v) => v.toFixed(0)).join(" "));
 }
 for (const [size, target] of [[161, 1200], [161, 2500]] as const) {
   const st = dlaCreate(size, 11);
@@ -60,5 +60,5 @@ for (const [size, target] of [[161, 1200], [161, 2500]] as const) {
     if (st.order.length === before) break;
   }
   const md = massDim(st.order, size, SHARES);
-  console.log("wandering particles", String(st.order.length).padStart(4), "reach", st.radius.toFixed(0), "mass d", md ? md.toFixed(3) : "n/a");
+  console.log("Wandering particles", String(st.order.length).padStart(4), "reach", st.radius.toFixed(0), "Mass d", md ? md.toFixed(3) : "n/a");
 }

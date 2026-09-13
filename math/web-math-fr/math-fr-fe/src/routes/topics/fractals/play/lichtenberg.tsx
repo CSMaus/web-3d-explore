@@ -21,7 +21,7 @@ export const Route = createFileRoute("/topics/fractals/play/lichtenberg")({
   component: LichtenbergPage,
 });
 
-const WHERE = ["point source", "plate gap"] as const;
+const WHERE = ["Point source", "Plate gap"] as const;
 
 function LichtenbergPage() {
   const system = Route.useLoaderData();
@@ -116,7 +116,7 @@ function LichtenbergPage() {
       <div className="mt-4">
         <PlayTabs />
       </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "dielectric breakdown"}</h1>
+      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "Dielectric breakdown"}</h1>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
           <section className="rounded border border-edge p-4">
@@ -125,8 +125,8 @@ function LichtenbergPage() {
               <Chips items={[...WHERE]} active={where} onPick={setWhere} />
             </div>
             <p className="mt-3 text-[11px] text-muted">
-              from a point is the Lichtenberg figure: charge injected at one spot in an insulator,
-              branching out in every direction, the burn left in glass or wood. across a gap is the
+              From a point is the Lichtenberg figure: charge injected at one spot in an insulator,
+              branching out in every direction, the burn left in glass or wood. Across a gap is the
               same model with two plates, which is a bolt crossing the gap.
             </p>
           </section>
@@ -134,15 +134,15 @@ function LichtenbergPage() {
           <section className="rounded border border-edge p-4">
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">MODEL</h2>
             <div className="mt-3 space-y-2">
-              <Slider label="roughness" min={0} max={3} step={0.05} value={eta} format={(v) => v.toFixed(2)} onChange={setEta} />
-              <Slider label="grid width" min={61} max={161} step={10} value={cols} format={(v) => String(Math.round(v))} onChange={(v) => setCols(Math.round(v))} />
-              <Slider label="sites" min={40} max={900} step={20} value={sites} format={(v) => String(Math.round(v))} onChange={(v) => setSites(Math.round(v))} />
-              <Slider label="sweeps per site" min={4} max={40} step={1} value={warm} format={(v) => String(Math.round(v))} onChange={(v) => setWarm(Math.round(v))} />
-              <Slider label="seed" min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
+              <Slider label="Roughness" min={0} max={3} step={0.05} value={eta} format={(v) => v.toFixed(2)} onChange={setEta} />
+              <Slider label="Grid width" min={61} max={161} step={10} value={cols} format={(v) => String(Math.round(v))} onChange={(v) => setCols(Math.round(v))} />
+              <Slider label="Sites" min={40} max={900} step={20} value={sites} format={(v) => String(Math.round(v))} onChange={(v) => setSites(Math.round(v))} />
+              <Slider label="Sweeps per site" min={4} max={40} step={1} value={warm} format={(v) => String(Math.round(v))} onChange={(v) => setWarm(Math.round(v))} />
+              <Slider label="Seed" min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
               <PaletteBar />
             </div>
             <p className="mt-3 text-[11px] text-muted">
-              at roughness 0 every edge site is equally likely; raise it and the tips take over.
+              At roughness 0 every edge site is equally likely; raise it and the tips take over.
             </p>
           </section>
 
@@ -156,15 +156,15 @@ function LichtenbergPage() {
           <SaveImage stage={stage} name="lichtenberg" />
           <Readout
             rows={[
-              ["sites lit", tick ? `${tick.order.length.toLocaleString()} of ${sites}` : "starting"],
+              ["Sites lit", tick ? `${tick.order.length.toLocaleString()} of ${sites}` : "starting"],
               ["grid", `${cols} by ${rows}`],
-              ["measured box dimension", dimension ? dimension.toFixed(3) : "-"],
+              ["Measured box dimension", dimension ? dimension.toFixed(3) : "-"],
               [
                 "state",
                 tick?.done
                   ? mode === "point"
-                    ? "a branch reached the edge of the block"
-                    : "the tree reached the far plate"
+                    ? "A branch reached the edge of the block"
+                    : "The tree reached the far plate"
                   : tick?.finished
                     ? "finished"
                     : "growing",

@@ -117,7 +117,7 @@ function IfsPage() {
       <div className="mt-4">
         <PlayTabs />
       </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "iterated maps"}</h1>
+      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "Iterated maps"}</h1>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
           <section className="rounded border border-edge p-4">
@@ -152,7 +152,7 @@ function IfsPage() {
                 />
               ))}
               <Slider
-                label="probability"
+                label="Probability"
                 min={0}
                 max={1}
                 step={0.005}
@@ -165,8 +165,8 @@ function IfsPage() {
                 const s = contraction(m);
                 return (
                   <div key={i} className={s < 1 ? "text-muted" : "text-warn"}>
-                    {`move ${i + 1} shrinks by ${s.toFixed(3)}`}
-                    {s < 1 ? "" : "  - above 1, this one spreads out"}
+                    {`Move ${i + 1} shrinks by ${s.toFixed(3)}`}
+                    {s < 1 ? "" : "  - Above 1, this one spreads out"}
                   </div>
                 );
               })}
@@ -176,8 +176,8 @@ function IfsPage() {
           <section className="rounded border border-edge p-4">
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">EQUATIONS</h2>
             <p className="mt-2 text-[11px] text-muted">
-              each move is coloured to match the points it puts on the picture, so a change to one
-              of its six numbers is a change to the part of the shape in that colour. tap one to
+              Each move is coloured to match the points it puts on the picture, so a change to one
+              of its six numbers is a change to the part of the shape in that colour. Tap one to
               edit it above.
             </p>
             <div className="mt-3">
@@ -195,10 +195,10 @@ function IfsPage() {
           <section className="rounded border border-edge p-4">
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">COLOUR</h2>
             <div className="mt-3 space-y-3">
-              <Chips items={[...MODES]} active={mode} onPick={(m) => setMode(m as Mode)} />
+              <Chips items={MODES.map((m) => m[0].toUpperCase() + m.slice(1))} active={mode[0].toUpperCase() + mode.slice(1)} onPick={(m) => setMode(m.toLowerCase() as Mode)} />
               <PaletteBar />
               <Slider
-                label="points"
+                label="Points"
                 min={2000}
                 max={300000}
                 step={2000}
@@ -207,7 +207,7 @@ function IfsPage() {
                 onChange={(v) => setPoints(Math.round(v))}
               />
               <Slider
-                label="discard"
+                label="Discard"
                 min={0}
                 max={200}
                 step={5}
@@ -230,7 +230,7 @@ function IfsPage() {
             <Frame draw={draw} className="block h-full w-full" />
             {run.escaped ? (
               <p className="absolute inset-x-0 top-1/2 px-8 text-center text-sm text-warn">
-                the point ran away - at least one move stretches instead of shrinking, so there is
+                The point ran away - at least one move stretches instead of shrinking, so there is
                 no attractor to draw
               </p>
             ) : null}
@@ -238,13 +238,13 @@ function IfsPage() {
           <SaveImage stage={stage} name="iterated-maps" />
           <Readout
             rows={[
-              ["points kept", run.kept.toLocaleString()],
-              ["measured box dimension", dimension ? dimension.toFixed(3) : "-"],
+              ["Points kept", run.kept.toLocaleString()],
+              ["Measured box dimension", dimension ? dimension.toFixed(3) : "-"],
               [
-                "grouped by",
+                "Grouped by",
                 mode === "by branch" || mode === "one move"
                   ? `branch, with move ${carrier + 1} as the carrier`
-                  : "the last move used",
+                  : "The last move used",
               ],
               ...maps.map(
                 (_, i) => [`points from move ${i + 1}`, tally[i].toLocaleString()] as [string, string],

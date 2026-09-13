@@ -15,7 +15,7 @@ export const Route = createFileRoute("/topics/fractals/theory")({
   component: TheoryPage,
 });
 
-const HEADING = "the mathematics, all of it";
+const HEADING = "The mathematics, all of it";
 
 function TheoryPage() {
   const theory = Route.useLoaderData();
@@ -23,7 +23,7 @@ function TheoryPage() {
   const items = useMemo(() => {
     if (!theory) return [];
     return [
-      { id: "measuring", label: "how dimension is measured" },
+      { id: "measuring", label: "How dimension is measured" },
       ...theory.systems.map((s) => ({ id: s.id, label: s.name })),
     ];
   }, [theory]);
@@ -36,7 +36,7 @@ function TheoryPage() {
         <TopicBar topic={FRACTALS} />
         <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">{HEADING}</h1>
         <div className="mt-6">
-          <Offline what="this page is nothing but the equations, so it has nothing to show until the backend answers. the play pages draw their fractals without it." />
+          <Offline what="This page is nothing but the equations, so it has nothing to show until the backend answers. The play pages draw their fractals without it." />
         </div>
       </main>
     );
@@ -50,13 +50,13 @@ function TheoryPage() {
         <TopicBar topic={FRACTALS} />
         <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">{HEADING}</h1>
         <p className="mt-3 max-w-2xl text-sm text-muted">
-          every equation the site draws from. each one also sits on the page of the system it
+          Every equation the site draws from. Each one also sits on the page of the system it
           belongs to.
         </p>
 
         <section id="measuring" className="mt-12 scroll-mt-24">
           <h2 className="font-mono text-xs uppercase tracking-widest text-sky">
-            how dimension is measured
+            How dimension is measured
           </h2>
           <div className="mt-4 space-y-6">
             {theory.definitions.map((d, i) => (
@@ -72,7 +72,7 @@ function TheoryPage() {
         </section>
 
         <section className="mt-16">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-sky">the systems</h2>
+          <h2 className="font-mono text-xs uppercase tracking-widest text-sky">The systems</h2>
           <div className="mt-4 space-y-10">
             {theory.systems.map((s, i) => (
               <div key={s.id} id={s.id} className="scroll-mt-24">

@@ -112,23 +112,23 @@ function DlaPage() {
       <div className="mt-4">
         <PlayTabs />
       </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "wandering particles"}</h1>
+      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "Wandering particles"}</h1>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
           <section className="rounded border border-edge p-4">
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">WALK</h2>
             <div className="mt-3 space-y-2">
-              <Slider label="particles" min={200} max={4000} step={100} value={target} format={(v) => String(Math.round(v))} onChange={(v) => setTarget(Math.round(v))} />
-              <Slider label="grid width" min={81} max={201} step={10} value={size} format={(v) => String(Math.round(v) | 1)} onChange={(v) => setSize(Math.round(v) | 1)} />
-              <Slider label="drift limit" min={1.5} max={4} step={0.1} value={kill} format={(v) => `${v.toFixed(1)} x r`} onChange={setKill} />
-              <Slider label="walks shown" min={0} max={6} step={1} value={traced} format={(v) => String(Math.round(v))} onChange={(v) => setTraced(Math.round(v))} />
-              <Slider label="seed" min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
+              <Slider label="Particles" min={200} max={4000} step={100} value={target} format={(v) => String(Math.round(v))} onChange={(v) => setTarget(Math.round(v))} />
+              <Slider label="Grid width" min={81} max={201} step={10} value={size} format={(v) => String(Math.round(v) | 1)} onChange={(v) => setSize(Math.round(v) | 1)} />
+              <Slider label="Drift limit" min={1.5} max={4} step={0.1} value={kill} format={(v) => `${v.toFixed(1)} x r`} onChange={setKill} />
+              <Slider label="Walks shown" min={0} max={6} step={1} value={traced} format={(v) => String(Math.round(v))} onChange={(v) => setTraced(Math.round(v))} />
+              <Slider label="Seed" min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
               <PaletteBar />
             </div>
             <p className="mt-3 text-[11px] text-muted">
-              a particle starts on the ring, steps to one of four neighbours with chance a quarter
-              each, and stops the moment it touches the cluster. let go at is how far it may drift
-              before it is abandoned and another is released. walks kept draws the paths the last
+              A particle starts on the ring, steps to one of four neighbours with chance a quarter
+              each, and stops the moment it touches the cluster. Let go at is how far it may drift
+              before it is abandoned and another is released. Walks kept draws the paths the last
               few particles actually took.
             </p>
           </section>
@@ -143,17 +143,17 @@ function DlaPage() {
           <SaveImage stage={stage} name="wandering-particles" />
           <Readout
             rows={[
-              ["particles stuck", tick ? `${tick.order.length.toLocaleString()} of ${target}` : "starting"],
+              ["Particles stuck", tick ? `${tick.order.length.toLocaleString()} of ${target}` : "starting"],
               ["reach", tick ? `${tick.radius.toFixed(0)} cells of ${size >> 1}` : "-"],
               ["mass-radius dimension", numbers.mass ? numbers.mass.toFixed(3) : "-"],
-              ["box dimension", numbers.box ? numbers.box.toFixed(3) : "-"],
+              ["Box dimension", numbers.box ? numbers.box.toFixed(3) : "-"],
               [
-                "walks drawn",
+                "Walks drawn",
                 tick && tick.tracks.length
                   ? `${tick.tracks.length}, ${numbers.steps.toLocaleString()} steps between them`
                   : "-",
               ],
-              ["state", tick?.done ? "the cluster reached the edge" : tick?.finished ? "finished" : "growing"],
+              ["state", tick?.done ? "The cluster reached the edge" : tick?.finished ? "finished" : "growing"],
             ]}
           />
         </div>

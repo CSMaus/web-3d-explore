@@ -10,7 +10,7 @@ export type Palette = {
 export const PALETTES: Palette[] = [
   {
     id: "ice",
-    name: "crystal ice",
+    name: "Crystal ice",
     back: "#04080f",
     ink: "#eafcff",
     roles: ["#8fe0f5", "#2e97c9", "#f2feff", "#b49be8"],
@@ -18,7 +18,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "leaf",
-    name: "leaf",
+    name: "Leaf",
     back: "#080a0d",
     ink: "#e8e8ea",
     roles: ["#a5e3a0", "#8fd3e8", "#b49be8", "#c75ab0"],
@@ -26,7 +26,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "orchid",
-    name: "orchid",
+    name: "Orchid",
     back: "#0b070f",
     ink: "#f2e8f5",
     roles: ["#b49be8", "#c75ab0", "#8fd3e8", "#f0bee0"],
@@ -34,7 +34,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "moss",
-    name: "moss",
+    name: "Moss",
     back: "#070b08",
     ink: "#e9f2e8",
     roles: ["#a5e3a0", "#63d471", "#c9e86b", "#8fd3e8"],
@@ -42,7 +42,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "spectrum",
-    name: "spectrum",
+    name: "Spectrum",
     back: "#050510",
     ink: "#f4f0ff",
     roles: ["#3fd48a", "#12a8c8", "#7a4ce0", "#f0a8d8"],
@@ -50,7 +50,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "aurora",
-    name: "aurora",
+    name: "Aurora",
     back: "#03100f",
     ink: "#eafff8",
     roles: ["#22c07a", "#7fe8d0", "#c9a8f0", "#4aa8e0"],
@@ -58,7 +58,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "neon",
-    name: "neon",
+    name: "Neon",
     back: "#07030f",
     ink: "#f6eaff",
     roles: ["#c221d8", "#3fd8f0", "#5a12b8", "#eafcff"],
@@ -66,7 +66,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "paper",
-    name: "paper",
+    name: "Paper",
     back: "#f4f1ea",
     ink: "#1b1b1f",
     roles: ["#2f6f4f", "#2b5f8a", "#6b3f8a", "#a03a6b"],

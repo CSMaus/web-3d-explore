@@ -65,7 +65,7 @@ export function Bulb({ className, ...given }: BulbProps) {
     const node = host.current;
     if (!node) return;
 
-    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const still = window.matchMedia("(Prefers-reduced-motion: reduce)").matches;
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({

@@ -99,7 +99,7 @@ function LsystemPage() {
       <div className="mt-4">
         <PlayTabs />
       </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "rewriting systems"}</h1>
+      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "Rewriting systems"}</h1>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
           <section className="rounded border border-edge p-4">
@@ -126,8 +126,8 @@ function LsystemPage() {
                 className="w-full resize-y rounded border border-edge bg-ground px-2 py-1 font-mono text-xs text-ink outline-none focus:border-leaf"
               />
               <p className="text-[11px] text-muted">
-                one rule a line, as symbol = replacement. any capital letter draws a step except X
-                and Y, which only carry the rule along. plus and minus turn, brackets remember and
+                One rule a line, as symbol = replacement. Any capital letter draws a step except X
+                and Y, which only carry the rule along. Plus and minus turn, brackets remember and
                 return to a point.
               </p>
             </div>
@@ -137,7 +137,7 @@ function LsystemPage() {
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">TURTLE</h2>
             <div className="mt-3 space-y-2">
               <Slider
-                label="azimuth"
+                label="Azimuth"
                 min={0}
                 max={120}
                 step={0.5}
@@ -146,7 +146,7 @@ function LsystemPage() {
                 onChange={setAngle}
               />
               <Slider
-                label="passes"
+                label="Passes"
                 min={0}
                 max={14}
                 step={1}
@@ -155,7 +155,7 @@ function LsystemPage() {
                 onChange={(v) => setPasses(Math.round(v))}
               />
               <Slider
-                label="jitter"
+                label="Jitter"
                 min={0}
                 max={0.6}
                 step={0.01}
@@ -164,7 +164,7 @@ function LsystemPage() {
                 onChange={setJitter}
               />
               <Slider
-                label="seed"
+                label="Seed"
                 min={1}
                 max={200}
                 step={1}
@@ -190,15 +190,15 @@ function LsystemPage() {
           <SaveImage stage={stage} name="rewriting" />
           <Readout
             rows={[
-              ["word length", grown.word.length.toLocaleString()],
+              ["Word length", grown.word.length.toLocaleString()],
               ["segments", segs.length.toLocaleString()],
-              ["passes drawn", `${grown.reached} of ${passes}`],
-              ["deepest branch", String(deepest)],
+              ["Passes drawn", `${grown.reached} of ${passes}`],
+              ["Deepest branch", String(deepest)],
             ]}
           />
           {grown.capped ? (
             <p className="text-xs text-warn">
-              the word passed the limit, so it stopped expanding early - lower the passes
+              The word passed the limit, so it stopped expanding early - lower the passes
             </p>
           ) : null}
         </div>

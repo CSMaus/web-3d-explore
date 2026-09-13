@@ -9,41 +9,41 @@ function grow(name: string) {
   return { cfg, word, segs: turtle(word.word, cfg.angle, 0, rngFrom(7)) };
 }
 
-describe("rewriting systems", () => {
-  it("reads one rule a line", () => {
+describe("Rewriting systems", () => {
+  it("Reads one rule a line", () => {
     const rules = parseRules("X = F+X\nF = FF\nnot a rule");
     expect(rules).toEqual({ X: "F+X", F: "FF" });
   });
 
-  it("gives four to the power of the passes for the Koch curve", () => {
+  it("Gives four to the power of the passes for the Koch curve", () => {
     expect(grow("Koch curve").segs.length).toBe(4 ** 4);
   });
 
-  it("gives seven to the power of the passes for the flowsnake", () => {
+  it("Gives seven to the power of the passes for the flowsnake", () => {
     expect(grow("Gosper flowsnake").segs.length).toBe(7 ** 4);
   });
 
-  it("gives three to the power of the passes for the arrowhead", () => {
+  it("Gives three to the power of the passes for the arrowhead", () => {
     expect(grow("Sierpinski arrowhead").segs.length).toBe(3 ** 7);
   });
 
-  it("gives two to the power of the passes for the dragon", () => {
+  it("Gives two to the power of the passes for the dragon", () => {
     expect(grow("dragon").segs.length).toBe(2 ** 11);
   });
 
-  it("branches the plant and leaves X and Y undrawn", () => {
+  it("Branches the plant and leaves X and Y undrawn", () => {
     const { segs } = grow("plant");
     expect(segs.length).toBe(6048);
     expect(Math.max(...segs.map((s) => s.depth))).toBeGreaterThan(0);
   });
 
-  it("stops expanding rather than running away past the cap", () => {
+  it("Stops expanding rather than running away past the cap", () => {
     const grown = expand("F", { F: "FFFF" }, 20, 5000);
     expect(grown.capped).toBe(true);
     expect(grown.reached).toBeLessThan(20);
   });
 
-  it("moves the shape when the wobble is on and repeats with a seed", () => {
+  it("Moves the shape when the wobble is on and repeats with a seed", () => {
     const cfg = LSYS_PRESETS.plant;
     const word = expand(cfg.axiom, parseRules(cfg.rules), 4, CAP).word;
     const still = turtle(word, cfg.angle, 0, rngFrom(7));

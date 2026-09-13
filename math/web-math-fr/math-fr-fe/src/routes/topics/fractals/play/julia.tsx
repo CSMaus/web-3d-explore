@@ -76,7 +76,7 @@ function JuliaPage() {
               </div>
             </div>
             <p className="mt-2 text-[11px] text-muted">
-              the small map is the Mandelbrot set - click it to put c anywhere. inside it the Julia
+              The small map is the Mandelbrot set - click it to put c anywhere. Inside it the Julia
               set holds together in one piece, outside it breaks into dust.
             </p>
           </section>
@@ -84,14 +84,14 @@ function JuliaPage() {
           <section className="rounded border border-edge p-4">
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">VIEW</h2>
             <div className="mt-3 space-y-2">
-              <Slider label="zoom" min={0} max={10} step={0.05} value={zoom} format={(v) => `x${Math.pow(2, v).toFixed(v > 6 ? 0 : 2)}`} onChange={setZoom} />
-              <Slider label="max steps" min={30} max={500} step={10} value={iters} format={(v) => String(Math.round(v))} onChange={(v) => setIters(Math.round(v))} />
-              <Slider label="escape radius" min={2} max={6} step={0.1} value={radius} format={(v) => v.toFixed(1)} onChange={setRadius} />
-              <Slider label="colour offset" min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={setShift} />
+              <Slider label="Zoom" min={0} max={10} step={0.05} value={zoom} format={(v) => `x${Math.pow(2, v).toFixed(v > 6 ? 0 : 2)}`} onChange={setZoom} />
+              <Slider label="Max steps" min={30} max={500} step={10} value={iters} format={(v) => String(Math.round(v))} onChange={(v) => setIters(Math.round(v))} />
+              <Slider label="Escape radius" min={2} max={6} step={0.1} value={radius} format={(v) => v.toFixed(1)} onChange={setRadius} />
+              <Slider label="Colour offset" min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={setShift} />
               <PaletteBar />
             </div>
             <p className="mt-3 text-[11px] text-muted">
-              click the big picture to centre it there. the colour of a point outside is how many
+              Click the big picture to centre it there. The colour of a point outside is how many
               steps it took to pass the escape distance.
             </p>
           </section>
@@ -120,9 +120,9 @@ function JuliaPage() {
           <Readout
             rows={[
               ["c", `${cx.toFixed(3)} ${cy < 0 ? "-" : "+"} ${Math.abs(cy).toFixed(3)}i`],
-              ["half width", span.toFixed(6)],
+              ["Half width", span.toFixed(6)],
               ["centre", `${centre[0].toFixed(4)}, ${centre[1].toFixed(4)}`],
-              ["steps tried", String(iters)],
+              ["Steps tried", String(iters)],
             ]}
           />
         </div>

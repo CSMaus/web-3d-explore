@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 
 const ITEMS = [
-  { to: "/", label: "home" },
-  { to: "/topics", label: "topics" },
-  { to: "/account", label: "account" },
+  { to: "/", label: "Home" },
+  { to: "/topics", label: "Topics" },
+  { to: "/account", label: "Account" },
 ] as const;
 
 export function Menu() {
@@ -27,7 +27,7 @@ export function Menu() {
       )}
     >
       <nav className="mx-auto flex max-w-6xl items-center gap-1 px-6 py-3 font-mono text-[13px]">
-        <span className="mr-auto text-muted">maths</span>
+        <span className="mr-auto text-muted">Maths</span>
         {ITEMS.map((item) => {
           const active = item.to === "/" ? path === "/" : path.startsWith(item.to);
           return (

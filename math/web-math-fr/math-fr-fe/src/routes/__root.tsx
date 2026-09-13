@@ -13,9 +13,9 @@ function Broke({ error }: { error: unknown }) {
     <div className="min-h-full">
       <Menu />
       <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-        <h1 className="font-mono text-sm tracking-wide text-warn">this page did not load</h1>
+        <h1 className="font-mono text-sm tracking-wide text-warn">This page did not load</h1>
         <div className="mt-6">
-          <Offline what={error instanceof Error ? error.message : "the reason was not reported"} />
+          <Offline what={error instanceof Error ? error.message : "The reason was not reported"} />
         </div>
       </main>
     </div>

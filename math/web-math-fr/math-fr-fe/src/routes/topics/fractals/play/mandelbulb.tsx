@@ -50,17 +50,17 @@ function BulbPage() {
       <div className="mt-4">
         <PlayTabs />
       </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "the three-dimensional set"}</h1>
+      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "The three-dimensional set"}</h1>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
           <section className="rounded border border-edge p-4">
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">SOLID</h2>
             <div className="mt-3 space-y-2">
-              <Slider label="power" min={2} max={12} step={1} value={look.power} format={(v) => String(Math.round(v))} onChange={(v) => set("power")(Math.round(v))} />
-              <Slider label="iterations" min={3} max={18} step={1} value={look.inner} format={(v) => String(Math.round(v))} onChange={(v) => set("inner")(Math.round(v))} />
-              <Slider label="zoom" min={0.6} max={3} step={0.02} value={look.zoom} format={(v) => `x${v.toFixed(2)}`} onChange={set("zoom")} />
-              <Slider label="loop time" min={8} max={90} step={1} value={look.period} format={(v) => `${Math.round(v)} s`} onChange={(v) => set("period")(Math.round(v))} />
-              <Slider label="pulses per loop" min={0} max={8} step={1} value={look.pulse} format={(v) => (v === 0 ? "off" : String(Math.round(v)))} onChange={(v) => set("pulse")(Math.round(v))} />
+              <Slider label="Power" min={2} max={12} step={1} value={look.power} format={(v) => String(Math.round(v))} onChange={(v) => set("power")(Math.round(v))} />
+              <Slider label="Iterations" min={3} max={18} step={1} value={look.inner} format={(v) => String(Math.round(v))} onChange={(v) => set("inner")(Math.round(v))} />
+              <Slider label="Zoom" min={0.6} max={3} step={0.02} value={look.zoom} format={(v) => `x${v.toFixed(2)}`} onChange={set("zoom")} />
+              <Slider label="Loop time" min={8} max={90} step={1} value={look.period} format={(v) => `${Math.round(v)} s`} onChange={(v) => set("period")(Math.round(v))} />
+              <Slider label="Pulses per loop" min={0} max={8} step={1} value={look.pulse} format={(v) => (v === 0 ? "off" : String(Math.round(v)))} onChange={(v) => set("pulse")(Math.round(v))} />
               <PaletteBar />
             </div>
             <div className="mt-4 border-t border-edge pt-3">
@@ -78,19 +78,19 @@ function BulbPage() {
                         : "rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-muted"
                     }
                   >
-                    {on ? "auto" : "manual"}
+                    {on ? "Auto" : "Manual"}
                   </button>
                 ))}
               </div>
               {turning ? (
                 <p className="mt-2 text-[11px] text-muted">
-                  the camera turns by one of the solid's folds across the loop, so the last frame is
+                  The camera turns by one of the solid's folds across the loop, so the last frame is
                   the first frame.
                 </p>
               ) : (
                 <div className="mt-2 space-y-2">
                   <Slider
-                    label="azimuth"
+                    label="Azimuth"
                     min={-Math.PI}
                     max={Math.PI}
                     step={0.005}
@@ -99,15 +99,15 @@ function BulbPage() {
                     onChange={(v) => setAim((prev) => ({ ...prev, azimuth: v }))}
                   />
                   <Slider
-                    label="elevation"
-                    min={-1.4}
-                    max={1.4}
-                    step={0.005}
+                    label="Elevation"
+                    min={-Math.PI / 2}
+                    max={Math.PI / 2}
+                    step={Math.PI / 360}
                     value={aim.elevation}
                     format={(v) => `${((v * 180) / Math.PI).toFixed(0)} deg`}
                     onChange={(v) => setAim((prev) => ({ ...prev, elevation: v }))}
                   />
-                  <p className="text-[11px] text-muted">drag the picture to turn it.</p>
+                  <p className="text-[11px] text-muted">Drag the picture to turn it.</p>
                 </div>
               )}
             </div>
@@ -115,11 +115,11 @@ function BulbPage() {
             <div className="mt-4 border-t border-edge pt-3">
               <h3 className="font-mono text-[11px] uppercase tracking-wider text-muted">LIGHT</h3>
               <div className="mt-2 space-y-2">
-                <Slider label="key light" min={0} max={2.6} step={0.02} value={look.keyLight} format={(v) => v.toFixed(2)} onChange={set("keyLight")} />
-                <Slider label="fill" min={0} max={0.8} step={0.01} value={look.fill} format={(v) => v.toFixed(2)} onChange={set("fill")} />
-                <Slider label="shine" min={0} max={2.5} step={0.02} value={look.shine} format={(v) => v.toFixed(2)} onChange={set("shine")} />
-                <Slider label="inner light" min={0} max={2.5} step={0.02} value={look.glow} format={(v) => v.toFixed(2)} onChange={set("glow")} />
-                <Slider label="haze" min={0} max={1.2} step={0.01} value={look.haze} format={(v) => v.toFixed(2)} onChange={set("haze")} />
+                <Slider label="Key light" min={0} max={2.6} step={0.02} value={look.keyLight} format={(v) => v.toFixed(2)} onChange={set("keyLight")} />
+                <Slider label="Fill" min={0} max={0.8} step={0.01} value={look.fill} format={(v) => v.toFixed(2)} onChange={set("fill")} />
+                <Slider label="Shine" min={0} max={2.5} step={0.02} value={look.shine} format={(v) => v.toFixed(2)} onChange={set("shine")} />
+                <Slider label="Inner light" min={0} max={2.5} step={0.02} value={look.glow} format={(v) => v.toFixed(2)} onChange={set("glow")} />
+                <Slider label="Haze" min={0} max={1.2} step={0.01} value={look.haze} format={(v) => v.toFixed(2)} onChange={set("haze")} />
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2 border-t border-edge pt-3">
@@ -128,7 +128,7 @@ function BulbPage() {
                 onClick={() => setAim(AIM)}
                 className="rounded border border-edge px-3 py-1.5 font-mono text-[11px] text-muted hover:border-leaf"
               >
-                reset view
+                Reset view
               </button>
               <button
                 type="button"
@@ -138,13 +138,13 @@ function BulbPage() {
                 }}
                 className="rounded border border-edge px-3 py-1.5 font-mono text-[11px] text-muted hover:border-leaf"
               >
-                reset all
+                Reset all
               </button>
             </div>
             <p className="mt-3 text-[11px] text-muted">
-              the power sets how many folds the solid has about its axis, and the camera turns by
+              The power sets how many folds the solid has about its axis, and the camera turns by
               exactly one of those folds over the loop, so the animation returns to the frame it
-              started on with no fade and no reset. the marching budget and the render scale follow
+              started on with no fade and no reset. The marching budget and the render scale follow
               the frame time, so weak hardware loses sharpness rather than frames.
             </p>
           </section>
@@ -171,7 +171,7 @@ function BulbPage() {
               drag.current = { x: e.clientX, y: e.clientY };
               setAim((prev) => ({
                 azimuth: prev.azimuth - dx * 0.006,
-                elevation: Math.min(1.4, Math.max(-1.4, prev.elevation + dy * 0.006)),
+                elevation: Math.min(Math.PI / 2, Math.max(-Math.PI / 2, prev.elevation + dy * 0.006)),
               }));
             }}
             onPointerUp={() => {
@@ -205,21 +205,21 @@ function BulbPage() {
           <SaveImage stage={stage} name="mandelbulb" />
           <Readout
             rows={[
-              ["folds about the axis", String(look.power)],
-              ["turn over one loop", `${(360 / look.power).toFixed(1)} degrees`],
-              ["rotation mode", turning ? "auto" : "manual"],
+              ["Folds about the axis", String(look.power)],
+              ["Turn over one loop", `${(360 / look.power).toFixed(1)} degrees`],
+              ["Rotation mode", turning ? "auto" : "manual"],
               [
-                "aimed at",
+                "Aimed at",
                 `${((aim.azimuth * 180) / Math.PI).toFixed(0)} by ${((aim.elevation * 180) / Math.PI).toFixed(0)} deg`,
               ],
-              ["loop length", turning ? `${look.period} s` : "-"],
+              ["Loop length", turning ? `${look.period} s` : "-"],
               [
-                "one pulse every",
-                look.pulse ? `${(look.period / look.pulse).toFixed(1)} s` : "no pulse",
+                "One pulse every",
+                look.pulse ? `${(look.period / look.pulse).toFixed(1)} s` : "No pulse",
               ],
-              ["iterations a sample", String(look.inner)],
-              ["key / fill / shine", `${look.keyLight.toFixed(2)} / ${look.fill.toFixed(2)} / ${look.shine.toFixed(2)}`],
-              ["inner light / haze", `${look.glow.toFixed(2)} / ${look.haze.toFixed(2)}`],
+              ["Iterations a sample", String(look.inner)],
+              ["Key / fill / shine", `${look.keyLight.toFixed(2)} / ${look.fill.toFixed(2)} / ${look.shine.toFixed(2)}`],
+              ["Inner light / haze", `${look.glow.toFixed(2)} / ${look.haze.toFixed(2)}`],
             ]}
           />
         </div>

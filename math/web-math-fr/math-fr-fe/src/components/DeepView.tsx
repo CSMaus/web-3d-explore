@@ -3,13 +3,13 @@ import type { Stage, Tile } from "@/lib/deep";
 type Props = { tile: Tile | null; stage: Stage; className?: string };
 
 const WORD: Record<Stage["kind"], string> = {
-  idle: "not started",
-  opening: "opening the connection",
+  idle: "Not started",
+  opening: "Opening the connection",
   working: "rendering",
   done: "finished",
   refused: "refused",
-  busy: "the server is busy",
-  lost: "the connection was lost",
+  busy: "The server is busy",
+  lost: "The connection was lost",
 };
 
 /**
@@ -30,7 +30,7 @@ export function DeepView({ tile, stage, className }: Props) {
       {tile ? (
         <img
           src={`data:image/png;base64,${tile.png}`}
-          alt="the set rendered on the server"
+          alt="The set rendered on the server"
           className="h-full w-full object-contain"
         />
       ) : (

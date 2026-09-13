@@ -51,7 +51,7 @@ export type Beat = {
   why: string;
   say: string;
 };
-export type Part = { number: number; title: string; beats: Beat[] };
+export type Part = { number: number; title: string; video: string; caption: string; beats: Beat[] };
 export type State = "ready" | "writing" | "planned";
 export type Card = {
   slug: string;
@@ -63,6 +63,8 @@ export type Card = {
   beats: number;
   seconds: number;
   systems: number;
+  /** an aside sits beside the reading order rather than in it */
+  aside?: boolean;
 };
 export type Topic = Card & { part_list: Part[] };
 

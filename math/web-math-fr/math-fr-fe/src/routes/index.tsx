@@ -11,7 +11,7 @@ export const Route = createFileRoute("/")({
 const LINES = [
   "# this page is not finished yet...",
   "",
-  'about = """',
+  'About = """',
   "    working...",
   '"""',
 ];
@@ -42,7 +42,7 @@ function Front() {
             to="/topics"
             className="rounded border border-leaf/60 px-3 py-1.5 font-mono text-[12px] text-leaf transition-colors hover:border-leaf"
           >
-            the topics
+            Topics
           </Link>
         </div>
       </div>

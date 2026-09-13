@@ -13,7 +13,7 @@ async function siteAt(path: string) {
   return render(<RouterProvider router={router as never} />);
 }
 
-describe("every page with the backend down", () => {
+describe("Every page with the backend down", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
@@ -23,10 +23,10 @@ describe("every page with the backend down", () => {
   });
 
   const drawn = [
-    ["/topics/fractals/play/ifs", "iterated maps"],
-    ["/topics/fractals/play/lsystem", "rewriting systems"],
-    ["/topics/fractals/play/lichtenberg", "dielectric breakdown"],
-    ["/topics/fractals/play/dla", "wandering particles"],
+    ["/topics/fractals/play/ifs", "Iterated maps"],
+    ["/topics/fractals/play/lsystem", "Rewriting systems"],
+    ["/topics/fractals/play/lichtenberg", "Dielectric breakdown"],
+    ["/topics/fractals/play/dla", "Wandering particles"],
   ] as const;
 
   for (const [path, title] of drawn) {
@@ -34,14 +34,14 @@ describe("every page with the backend down", () => {
       await siteAt(path);
       await waitFor(() => expect(screen.getByRole("heading", { name: title })).toBeTruthy());
       expect(document.querySelector("canvas")).toBeTruthy();
-      expect(screen.getByText(/needs nothing from it/)).toBeTruthy();
+      expect(screen.getByText(/needs nothing from it/i)).toBeTruthy();
     });
   }
 
-  it("the play index lists every system from a local copy", async () => {
+  it("The play index lists every system from a local copy", async () => {
     await siteAt("/topics/fractals/play");
-    await waitFor(() => expect(screen.getByText("pick something to move")).toBeTruthy());
-    for (const name of ["iterated maps", "rewriting systems", "Julia sets"]) {
+    await waitFor(() => expect(screen.getByText("Pick something to move")).toBeTruthy());
+    for (const name of ["Iterated maps", "Rewriting systems", "Julia sets"]) {
       expect(screen.getAllByText(name).length).toBeGreaterThan(0);
     }
     expect(screen.getAllByRole("link", { name: "Mandelbulb 3D" }).length).toBe(1);
@@ -49,32 +49,32 @@ describe("every page with the backend down", () => {
 
   it("/topics/fractals/theory says what is missing instead of failing", async () => {
     await siteAt("/topics/fractals/theory");
-    await waitFor(() => expect(screen.getByText("the backend is not answering")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("The backend is not answering")).toBeTruthy());
   });
 
   it("/topics/fractals/parts says what is missing instead of failing", async () => {
     await siteAt("/topics/fractals/parts");
-    await waitFor(() => expect(screen.getByText("the backend is not answering")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("The backend is not answering")).toBeTruthy());
   });
 
-  it("the series page is named as one section of one topic, not as a lecture", async () => {
+  it("The series page is named as one section of one topic, not as a lecture", async () => {
     await siteAt("/topics/fractals/parts");
     await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "the series, in order" })).toBeTruthy(),
+      expect(screen.getByRole("heading", { name: "The series, in order" })).toBeTruthy(),
     );
-    expect(screen.getByText("topic 1 - fractals")).toBeTruthy();
+    expect(screen.getByText("Topic 1 - Fractals")).toBeTruthy();
     expect(screen.queryByText(/lecture/i)).toBeNull();
   });
 
-  it("the front page needs no backend at all", async () => {
+  it("The front page needs no backend at all", async () => {
     await siteAt("/");
     await waitFor(() =>
-      expect(screen.getByText(/this page is not finished yet/)).toBeTruthy(),
+      expect(screen.getByText(/this page is not finished yet/i)).toBeTruthy(),
     );
   });
 });
 
-describe("the three-dimensional page", () => {
+describe("The three-dimensional page", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
@@ -83,27 +83,27 @@ describe("the three-dimensional page", () => {
     document.cookie = "mathfr_session_consent=accepted; path=/";
   });
 
-  it("offers auto or manual rotation, and both reset buttons", async () => {
+  it("Offers auto or manual rotation, and both reset buttons", async () => {
     await siteAt("/topics/fractals/play/mandelbulb");
     await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "the three-dimensional set" })).toBeTruthy(),
+      expect(screen.getByRole("heading", { name: "The three-dimensional set" })).toBeTruthy(),
     );
-    expect(screen.getByRole("button", { name: "auto" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "manual" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "reset view" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "reset all" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Auto" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Manual" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Reset view" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Reset all" })).toBeTruthy();
   });
 
-  it("shows the turn controls only in manual rotation", async () => {
+  it("Shows the turn controls only in manual rotation", async () => {
     await siteAt("/topics/fractals/play/mandelbulb");
-    await waitFor(() => expect(screen.getByRole("button", { name: "manual" })).toBeTruthy());
-    expect(screen.queryByText("drag the picture to turn it.")).toBeNull();
-    screen.getByRole("button", { name: "manual" }).click();
-    await waitFor(() => expect(screen.getByText("drag the picture to turn it.")).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("button", { name: "Manual" })).toBeTruthy());
+    expect(screen.queryByText("Drag the picture to turn it.")).toBeNull();
+    screen.getByRole("button", { name: "Manual" }).click();
+    await waitFor(() => expect(screen.getByText("Drag the picture to turn it.")).toBeTruthy());
   });
 });
 
-describe("the iterated maps page", () => {
+describe("The iterated maps page", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
@@ -112,31 +112,31 @@ describe("the iterated maps page", () => {
     document.cookie = "mathfr_session_consent=accepted; path=/";
   });
 
-  it("offers colouring by branch and writes every move out", async () => {
+  it("Offers colouring by branch and writes every move out", async () => {
     await siteAt("/topics/fractals/play/ifs");
     await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "iterated maps" })).toBeTruthy(),
+      expect(screen.getByRole("heading", { name: "Iterated maps" })).toBeTruthy(),
     );
-    expect(screen.getByRole("button", { name: "by branch" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "By branch" })).toBeTruthy();
     expect(screen.getByText("EQUATIONS")).toBeTruthy();
     for (const n of [1, 2, 3, 4]) {
       expect(screen.getAllByText(`move ${n}`).length).toBeGreaterThan(0);
     }
-    expect(screen.getByText("carries the whole shape")).toBeTruthy();
+    expect(screen.getByText("Carries the whole shape")).toBeTruthy();
   });
 
-  it("reports which grouping the counts use", async () => {
+  it("Reports which grouping the counts use", async () => {
     await siteAt("/topics/fractals/play/ifs");
-    await waitFor(() => expect(screen.getByText("grouped by")).toBeTruthy());
-    expect(screen.getByText("the last move used")).toBeTruthy();
-    screen.getByRole("button", { name: "by branch" }).click();
+    await waitFor(() => expect(screen.getByText("Grouped by")).toBeTruthy());
+    expect(screen.getByText("The last move used")).toBeTruthy();
+    screen.getByRole("button", { name: "By branch" }).click();
     await waitFor(() =>
-      expect(screen.getByText(/branch, with move \d as the carrier/)).toBeTruthy(),
+      expect(screen.getByText(/branch, with move \d as the carrier/i)).toBeTruthy(),
     );
   });
 });
 
-describe("saving the picture", () => {
+describe("Saving the picture", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
@@ -148,27 +148,27 @@ describe("saving the picture", () => {
   for (const path of ["/topics/fractals/play/ifs", "/topics/fractals/play/lsystem", "/topics/fractals/play/lichtenberg", "/topics/fractals/play/dla"]) {
     it(`${path} offers a save button that reads the canvas`, async () => {
       await siteAt(path);
-      await waitFor(() => expect(screen.getByRole("button", { name: "save image" })).toBeTruthy());
+      await waitFor(() => expect(screen.getByRole("button", { name: "Save image" })).toBeTruthy());
       const canvas = document.querySelector("canvas") as HTMLCanvasElement;
       const asUrl = vi.fn(() => "data:image/png;base64,AA==");
       canvas.toDataURL = asUrl as unknown as typeof canvas.toDataURL;
-      screen.getByRole("button", { name: "save image" }).click();
+      screen.getByRole("button", { name: "Save image" }).click();
       expect(asUrl).toHaveBeenCalled();
-      expect(screen.queryByText("the picture could not be read back")).toBeNull();
+      expect(screen.queryByText("The picture could not be read back")).toBeNull();
     });
   }
 
-  it("says so rather than failing quietly when there is no picture to read", async () => {
+  it("Says so rather than failing quietly when there is no picture to read", async () => {
     await siteAt("/topics/fractals/play/mandelbulb");
-    await waitFor(() => expect(screen.getByRole("button", { name: "save image" })).toBeTruthy());
-    screen.getByRole("button", { name: "save image" }).click();
+    await waitFor(() => expect(screen.getByRole("button", { name: "Save image" })).toBeTruthy());
+    screen.getByRole("button", { name: "Save image" }).click();
     await waitFor(() =>
-      expect(screen.getByText("the picture could not be read back")).toBeTruthy(),
+      expect(screen.getByText("The picture could not be read back")).toBeTruthy(),
     );
   });
 });
 
-describe("the layout of a system page", () => {
+describe("The layout of a system page", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
@@ -190,7 +190,7 @@ describe("the layout of a system page", () => {
     });
   }
 
-  it("names its panels in the same style", async () => {
+  it("Names its panels in the same style", async () => {
     await siteAt("/topics/fractals/play/ifs");
     await waitFor(() => expect(screen.getByText("PRESET")).toBeTruthy());
     for (const name of ["MOVE", "COLOUR", "EQUATIONS", "MATHEMATICS"]) {
@@ -200,21 +200,21 @@ describe("the layout of a system page", () => {
 });
 
 const THEORY = {
-  definitions: [{ id: "box", name: "box counting", tex: "d", note: "a note" }],
+  definitions: [{ id: "box", name: "Box counting", tex: "d", note: "A note" }],
   systems: [
     {
       id: "ifs",
-      name: "iterated maps",
-      summary: "a summary",
-      blocks: [{ label: "move", tex: "x", note: "a note" }],
-      dimension: { label: "dimension", tex: "d", note: "a note" },
+      name: "Iterated maps",
+      summary: "A summary",
+      blocks: [{ label: "Move", tex: "x", note: "A note" }],
+      dimension: { label: "Dimension", tex: "d", note: "A note" },
     },
     {
       id: "julia",
       name: "Julia sets",
-      summary: "a summary",
-      blocks: [{ label: "step", tex: "z", note: "a note" }],
-      dimension: { label: "dimension", tex: "d", note: "a note" },
+      summary: "A summary",
+      blocks: [{ label: "Step", tex: "z", note: "A note" }],
+      dimension: { label: "Dimension", tex: "d", note: "A note" },
     },
   ],
 };
@@ -222,8 +222,8 @@ const THEORY = {
 const TOPIC = {
   slug: "fractals",
   number: 1,
-  title: "fractals",
-  summary: "a summary",
+  title: "Fractals",
+  summary: "A summary",
   state: "ready",
   parts: 2,
   beats: 2,
@@ -232,16 +232,20 @@ const TOPIC = {
   part_list: [
     {
       number: 2,
-      title: "the coastline paradox",
+      title: "The coastline paradox",
+      video: "",
+      caption: "A coastline measured with dividers. The length keeps growing as the opening shrinks.",
       beats: [
-        { slug: "02-coastline", seconds: 61.5, video: "", shows: "a coast", why: "a reason", say: "a line" },
+        { slug: "02-coastline", seconds: 61.5, video: "", shows: "A coast", why: "A reason", say: "A line" },
       ],
     },
     {
       number: 3,
-      title: "box-counting dimension",
+      title: "Box-counting dimension",
+      video: "",
+      caption: "The same coast under a grid. The count grows faster than a line's would.",
       beats: [
-        { slug: "03-box-counting", seconds: 56.9, video: "", shows: "a grid", why: "a reason", say: "a line" },
+        { slug: "03-box-counting", seconds: 56.9, video: "", shows: "A grid", why: "A reason", say: "A line" },
       ],
     },
   ],
@@ -258,17 +262,17 @@ function serve(map: Record<string, unknown>) {
   );
 }
 
-describe("the index beside a long page", () => {
+describe("The index beside a long page", () => {
   beforeEach(() => {
     document.cookie = "mathfr_session_consent=accepted; path=/";
   });
 
-  it("the theory page lists every system and the dimension definitions", async () => {
+  it("The theory page lists every system and the dimension definitions", async () => {
     serve({ "/topics/fractals/equations": THEORY });
     await siteAt("/topics/fractals/theory");
-    await waitFor(() => expect(screen.getByLabelText("on this page")).toBeTruthy());
-    const rail = screen.getByLabelText("on this page");
-    for (const label of ["how dimension is measured", "iterated maps", "Julia sets"]) {
+    await waitFor(() => expect(screen.getByLabelText("On this page")).toBeTruthy());
+    const rail = screen.getByLabelText("On this page");
+    for (const label of ["How dimension is measured", "Iterated maps", "Julia sets"]) {
       expect(rail.textContent).toContain(label);
     }
     expect(rail.querySelector('a[href="#julia"]')).toBeTruthy();
@@ -276,13 +280,13 @@ describe("the index beside a long page", () => {
     expect(rail.textContent).toBeTruthy();
   });
 
-  it("the topic page lists every part", async () => {
+  it("The topic page lists every part", async () => {
     serve({ "/topics/fractals": TOPIC });
     await siteAt("/topics/fractals/parts");
-    await waitFor(() => expect(screen.getByLabelText("on this page")).toBeTruthy());
-    const rail = screen.getByLabelText("on this page");
-    expect(rail.textContent).toContain("2. the coastline paradox");
-    expect(rail.textContent).toContain("3. box-counting dimension");
+    await waitFor(() => expect(screen.getByLabelText("On this page")).toBeTruthy());
+    const rail = screen.getByLabelText("On this page");
+    expect(rail.textContent).toContain("2. The coastline paradox");
+    expect(rail.textContent).toContain("3. Box-counting dimension");
     expect(rail.querySelector('a[href="#part-3"]')).toBeTruthy();
     expect(document.getElementById("part-3")).toBeTruthy();
   });
@@ -294,8 +298,8 @@ describe("the index beside a long page", () => {
     it(`${path} gives the index its own column so it cannot land on the text`, async () => {
       serve(body);
       await siteAt(path);
-      await waitFor(() => expect(screen.getByLabelText("on this page")).toBeTruthy());
-      const rail = screen.getByLabelText("on this page");
+      await waitFor(() => expect(screen.getByLabelText("On this page")).toBeTruthy());
+      const rail = screen.getByLabelText("On this page");
       expect(rail.className).not.toContain("fixed");
       const holder = rail.closest("main");
       expect(holder?.className).toContain("xl:grid");
@@ -304,26 +308,41 @@ describe("the index beside a long page", () => {
     });
   }
 
-  it("the series page calls its sections parts, not topics", async () => {
+  it("Each part is one clip with a short text that opens on request", async () => {
+    serve({ "/topics/fractals": TOPIC });
+    await siteAt("/topics/fractals/parts");
+    await waitFor(() => expect(screen.getAllByText("Clip not published yet").length).toBe(2));
+    expect(screen.queryByText(/a coastline measured with dividers/i)).toBeNull();
+    const buttons = screen.getAllByRole("button", { name: "Show description" });
+    expect(buttons.length).toBe(2);
+    buttons[0].click();
+    await waitFor(() => expect(screen.getByText(/a coastline measured with dividers/i)).toBeTruthy());
+    expect(screen.getByRole("button", { name: "Hide description" })).toBeTruthy();
+    // the beat lines are not on the page
+    expect(screen.queryByText("A line")).toBeNull();
+    expect(screen.queryByText("A reason")).toBeNull();
+  });
+
+  it("The series page calls its sections parts, not topics", async () => {
     serve({ "/topics/fractals": TOPIC });
     await siteAt("/topics/fractals/parts");
     await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "part 2 - the coastline paradox" })).toBeTruthy(),
+      expect(screen.getByRole("heading", { name: "Part 2 - The coastline paradox" })).toBeTruthy(),
     );
-    expect(screen.getByText("topic 1 - fractals")).toBeTruthy();
+    expect(screen.getByText("Topic 1 - Fractals")).toBeTruthy();
   });
 });
 
-describe("the index tracks the page and lands where it says", () => {
+describe("The index tracks the page and lands where it says", () => {
   beforeEach(() => {
     document.cookie = "mathfr_session_consent=accepted; path=/";
   });
 
-  it("every entry is a real anchor with a scroll margin clear of the menu", async () => {
+  it("Every entry is a real anchor with a scroll margin clear of the menu", async () => {
     serve({ "/topics/fractals": TOPIC });
     await siteAt("/topics/fractals/parts");
-    await waitFor(() => expect(screen.getByLabelText("on this page")).toBeTruthy());
-    const rail = screen.getByLabelText("on this page");
+    await waitFor(() => expect(screen.getByLabelText("On this page")).toBeTruthy());
+    const rail = screen.getByLabelText("On this page");
     for (const link of Array.from(rail.querySelectorAll("a"))) {
       const id = link.getAttribute("href")?.slice(1) ?? "";
       const target = document.getElementById(id);
@@ -332,11 +351,11 @@ describe("the index tracks the page and lands where it says", () => {
     }
   });
 
-  it("a click moves the mark straight away rather than waiting for the scroll", async () => {
+  it("A click moves the mark straight away rather than waiting for the scroll", async () => {
     serve({ "/topics/fractals": TOPIC });
     await siteAt("/topics/fractals/parts");
-    await waitFor(() => expect(screen.getByLabelText("on this page")).toBeTruthy());
-    const rail = screen.getByLabelText("on this page");
+    await waitFor(() => expect(screen.getByLabelText("On this page")).toBeTruthy());
+    const rail = screen.getByLabelText("On this page");
     const second = rail.querySelector('a[href="#part-3"]') as HTMLAnchorElement;
     expect(second.getAttribute("aria-current")).toBeNull();
     second.click();
@@ -344,10 +363,10 @@ describe("the index tracks the page and lands where it says", () => {
     expect(rail.querySelector('a[href="#part-2"]')?.getAttribute("aria-current")).toBeNull();
   });
 
-  it("no beat carries the containment that made a jump land in the wrong place", async () => {
+  it("No beat carries the containment that made a jump land in the wrong place", async () => {
     serve({ "/topics/fractals": TOPIC });
     await siteAt("/topics/fractals/parts");
-    await waitFor(() => expect(screen.getByLabelText("on this page")).toBeTruthy());
+    await waitFor(() => expect(screen.getByLabelText("On this page")).toBeTruthy());
     const beats = Array.from(document.querySelectorAll("#part-2 section"));
     expect(beats.length).toBeGreaterThan(0);
     for (const beat of beats) {
@@ -355,11 +374,11 @@ describe("the index tracks the page and lands where it says", () => {
     }
   });
 
-  it("the index is set in a size that can be read", async () => {
+  it("The index is set in a size that can be read", async () => {
     serve({ "/theory": THEORY, "/topics/fractals/equations": THEORY });
     await siteAt("/topics/fractals/theory");
-    await waitFor(() => expect(screen.getByLabelText("on this page")).toBeTruthy());
-    const label = screen.getByLabelText("on this page").querySelector("a span:last-child");
+    await waitFor(() => expect(screen.getByLabelText("On this page")).toBeTruthy());
+    const label = screen.getByLabelText("On this page").querySelector("a span:last-child");
     expect(label?.className).toContain("text-[13px]");
   });
 });

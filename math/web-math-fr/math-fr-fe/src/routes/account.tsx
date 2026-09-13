@@ -36,7 +36,7 @@ function AccountPage() {
       setSecret("");
       refresh();
     } catch (err) {
-      setTrouble(err instanceof Error ? err.message : "that did not work");
+      setTrouble(err instanceof Error ? err.message : "That did not work");
     }
   };
 
@@ -49,22 +49,22 @@ function AccountPage() {
   if (who) {
     return (
       <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-        <h1 className="font-mono text-sm tracking-wide text-leaf">account</h1>
+        <h1 className="font-mono text-sm tracking-wide text-leaf">Account</h1>
         <p className="mt-3 font-mono text-xs text-muted">{who.email}</p>
         <button
           type="button"
           onClick={leave}
           className="mt-4 rounded border border-edge px-3 py-1.5 font-mono text-xs text-muted hover:border-leaf"
         >
-          sign out
+          Sign out
         </button>
         <section className="mt-10">
           <h2 className="font-mono text-xs uppercase tracking-widest text-sky">
-            stored parameter sets
+            Stored parameter sets
           </h2>
           {presets.length === 0 ? (
             <p className="mt-3 text-sm text-muted">
-              nothing kept yet. a picture saved from any play page appears here with its own
+              Nothing kept yet. A picture saved from any play page appears here with its own
               address.
             </p>
           ) : (
@@ -75,7 +75,7 @@ function AccountPage() {
                     <span className="text-ink">{p.title ?? p.slug}</span>
                     <span className="text-muted">{p.system}</span>
                   </div>
-                  <div className="mt-1 font-mono text-[11px] text-muted">/p/{p.slug}</div>
+                  <div className="mt-1 font-mono text-[11px] text-muted">/P/{p.slug}</div>
                 </li>
               ))}
             </ul>
@@ -87,7 +87,7 @@ function AccountPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-      <h1 className="font-mono text-sm tracking-wide text-leaf">account</h1>
+      <h1 className="font-mono text-sm tracking-wide text-leaf">Account</h1>
       <div className="mt-4 flex gap-2">
         {(["login", "signup"] as const).map((m) => (
           <button
@@ -111,7 +111,7 @@ function AccountPage() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="address"
+          placeholder="Address"
           className="w-full rounded border border-edge bg-ground px-3 py-2 font-mono text-xs text-ink outline-none focus:border-leaf"
         />
         <input
@@ -120,7 +120,7 @@ function AccountPage() {
           minLength={10}
           value={secret}
           onChange={(e) => setSecret(e.target.value)}
-          placeholder="at least ten characters"
+          placeholder="At least ten characters"
           className="w-full rounded border border-edge bg-ground px-3 py-2 font-mono text-xs text-ink outline-none focus:border-leaf"
         />
         <button

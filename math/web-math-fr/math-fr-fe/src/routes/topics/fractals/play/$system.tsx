@@ -21,14 +21,14 @@ function PlayOne() {
         <PlayTabs />
       </div>
       <h1 className="mt-4 font-mono text-sm tracking-wide text-leaf">
-        {system?.name ?? "this system"}
+        {system?.name ?? "This system"}
       </h1>
       <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]">
         <div className="space-y-4">
           <section className="rounded border border-edge p-4">
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">CONTROLS</h2>
             <p className="mt-2 text-xs text-muted">
-              the parameters for this system arrive with its own page.
+              The parameters for this system arrive with its own page.
             </p>
             <div className="mt-4">
               <PaletteBar />

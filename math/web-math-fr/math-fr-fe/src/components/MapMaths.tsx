@@ -37,9 +37,9 @@ export function MapMaths({ maps, active, carrier, colourOf, tinted, onPick }: Pr
             )}
           >
             <div className="flex items-baseline justify-between font-mono text-[11px]">
-              <span style={{ color: colour }}>move {i + 1}</span>
+              <span style={{ color: colour }}>Move {i + 1}</span>
               <span className="text-muted">
-                {i === carrier ? "carries the whole shape" : `chance ${m.p.toFixed(3)}`}
+                {i === carrier ? "Carries the whole shape" : `Chance ${m.p.toFixed(3)}`}
               </span>
             </div>
             <div style={{ color: colour }} className="mt-1 text-xs">

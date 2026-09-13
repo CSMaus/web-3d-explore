@@ -15,7 +15,7 @@ export const Route = createFileRoute("/topics/fractals/parts")({
   component: TopicPage,
 });
 
-const HEADING = "the series, in order";
+const HEADING = "The series, in order";
 
 const anchor = (number: number) => `part-${number}`;
 
@@ -35,7 +35,7 @@ function TopicPage() {
         <TopicBar topic={FRACTALS} />
         <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">{HEADING}</h1>
         <div className="mt-6">
-          <Offline what="the beats and the words beside them are served by the backend." />
+          <Offline what="The beats and the words beside them are served by the backend." />
         </div>
       </main>
     );
@@ -61,8 +61,9 @@ function TopicPage() {
           <TopicBar topic={FRACTALS} />
           <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">{HEADING}</h1>
           <p className="mt-3 max-w-2xl text-sm text-muted">
-            {topic.beats} beats across {topic.part_list.length} parts, about {minutes} minutes of
-            picture. each clip holds still while the reasoning for that beat scrolls past it.
+            {topic.part_list.length} clips, one a part, about {minutes} minutes of picture in
+            order. The explanation is in the clips; each has a short text for a reader who cannot
+            hear it.
           </p>
         </header>
 
@@ -77,11 +78,9 @@ function TopicPage() {
                 className="font-mono text-xs uppercase tracking-widest"
                 style={{ color: accentOf(i) }}
               >
-                part {part.number} - {part.title}
+                Part {part.number} - {part.title}
               </h2>
-              {part.beats.map((beat) => (
-                <Reel key={beat.slug} beat={beat} accent={accentOf(i)} />
-              ))}
+              <Reel part={part} accent={accentOf(i)} />
             </section>
           ))}
         </div>
