@@ -40,6 +40,10 @@ select = ["E", "F", "I", "UP", "B", "S", "SIM", "C4", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101"]
+# the content modules hold LaTeX, which cannot be broken across lines without
+# making the formula unreadable in the source. the line limit applies everywhere
+# else, including the code that serves this content.
+"app/content/**" = ["E501"]
 
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = [

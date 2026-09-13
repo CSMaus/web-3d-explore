@@ -2,7 +2,9 @@
   "parts": [
     {
       "number": 2,
-      "title": "the coastline paradox",
+      "title": "The coastline paradox",
+      "video": "",
+      "caption": "A coastline measured with dividers. Every time the opening is halved the total length grows, and it does not stop growing. A smooth curve settles; the coast does not. The rate of growth, read off a log-log line, is a dimension between one and two.",
       "beats": [
         {
           "slug": "02-coastline",
@@ -16,7 +18,9 @@
     },
     {
       "number": 3,
-      "title": "box-counting dimension",
+      "title": "Box-counting dimension",
+      "video": "",
+      "caption": "The same coast under a grid. Count the boxes it touches, halve the box, count again. The count grows faster than a line's would and slower than a filled shape's. The slope of that growth is the box-counting dimension, and it agrees with the dividers.",
       "beats": [
         {
           "slug": "03-box-counting",
@@ -30,7 +34,9 @@
     },
     {
       "number": 4,
-      "title": "the Koch curve as an idealised coastline",
+      "title": "The Koch curve as an idealised coastline",
+      "video": "",
+      "caption": "One segment, one rule: the middle third lifts into a bump. Applied again and again it gives the Koch curve, whose quarters are copies of the whole at a third of the size. Four copies at a third give dimension log 4 over log 3, and a length with no ceiling inside a fixed box.",
       "beats": [
         {
           "slug": "04a-rule",
@@ -76,7 +82,9 @@
     },
     {
       "number": 5,
-      "title": "the Barnsley fern",
+      "title": "The Barnsley fern",
+      "video": "",
+      "caption": "Four moves, each turning, shrinking and shifting the plane. A dot sent through them at random, thousands of times, draws a fern, whatever dot it started from. Each move draws its own part. The fern is what the four moves settle onto, and its dimension can be counted.",
       "beats": [
         {
           "slug": "05a-ifs",
@@ -122,7 +130,9 @@
     },
     {
       "number": 6,
-      "title": "the wider geometric family",
+      "title": "The wider geometric family",
+      "video": "",
+      "caption": "The Cantor set, the Sierpinski triangle and carpet, the dragon, a plant grown from five symbols, the flowsnake and the Menger sponge. Eight objects built by different rules, every one with a place on the same scale of dimension. The dragon turns out to be two moves as well.",
       "beats": [
         {
           "slug": "06a-cantor",
@@ -200,7 +210,9 @@
     },
     {
       "number": 7,
-      "title": "random fractals, lightning and crystal growth",
+      "title": "Random fractals, lightning and crystal growth",
+      "video": "",
+      "caption": "A discharge crosses a gap as a tree, not a line. One rule makes it: the chance a site lights up is set by the field at its tip. A wandering particle that sticks makes the same kind of tree. Supply decides whether growth branches or comes out flat; a random rule never repeats itself.",
       "beats": [
         {
           "slug": "07a-discharge",
@@ -254,7 +266,9 @@
     },
     {
       "number": 8,
-      "title": "complex numbers",
+      "title": "Complex numbers",
+      "video": "",
+      "caption": "Every ordinary number sits on a line; the square root of minus one needs a plane. Adding is laying arrows tip to tail. Multiplying doubles the angle and squares the distance. That one fact is why squaring on its own sends points to zero or to infinity, with a circle in between.",
       "beats": [
         {
           "slug": "08a-point-on-plane",
@@ -308,7 +322,9 @@
     },
     {
       "number": 9,
-      "title": "escape-time dynamics",
+      "title": "Escape-time dynamics",
+      "video": "",
+      "caption": "Square, add c, repeat. Some starting points wander and stay; others cross the circle at two and are gone. The points that stay are a Julia set, one for every c. Run one walk per c instead, from zero, and the values that stay bounded are the Mandelbrot set. Colour by escape time.",
       "beats": [
         {
           "slug": "09a-orbit",
@@ -370,7 +386,9 @@
     },
     {
       "number": 10,
-      "title": "going deeper",
+      "title": "Going deeper",
+      "video": "",
+      "caption": "A c inside the set has a connected Julia set; a c outside has dust. The edge of the set is all the detail there is, and magnifying it a thousand times over does not smooth it. Its box count climbs towards two. Restricted to the real line, the same rule gives the period-doubling picture.",
       "beats": [
         {
           "slug": "10a-connectedness",
@@ -416,7 +434,9 @@
     },
     {
       "number": 11,
-      "title": "the optional deeper layer",
+      "title": "The optional deeper layer",
+      "video": "",
+      "caption": "The optional strand. The counting law gives the dimension with one logarithm; box counting has a range where it holds; the Hausdorff measure has a critical power. The field around a discharge solves Laplace's equation. Why two is the escape bound, and what the two big theorems say.",
       "beats": [
         {
           "slug": "11a-optional-strand",

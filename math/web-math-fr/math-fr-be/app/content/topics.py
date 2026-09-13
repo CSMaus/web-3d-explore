@@ -10,7 +10,7 @@ can show what is coming without pretending it is there.
 
 from dataclasses import dataclass, field
 
-from app.content import fractals
+from app.content import chaos, complex, fractals, networks, primes, tokens
 
 READY = "ready"
 WRITING = "writing"
@@ -27,6 +27,8 @@ class Topic:
     parts: list[dict] = field(default_factory=list)
     systems: list[dict] = field(default_factory=list)
     definitions: list[dict] = field(default_factory=list)
+    # an aside sits beside the reading order rather than in it
+    aside: bool = False
 
     @property
     def beats(self) -> int:
@@ -47,6 +49,7 @@ class Topic:
             "beats": self.beats,
             "seconds": self.seconds,
             "systems": len(self.systems),
+            "aside": self.aside,
         }
 
     def detail(self) -> dict:
@@ -55,11 +58,25 @@ class Topic:
 
 TOPICS: tuple[Topic, ...] = (
     Topic(
+        slug="complex",
+        number=0,
+        title="Imaginary numbers, from nothing",
+        summary=(
+            "The way in, for a reader who has never met i: the number line and the one question "
+            "it cannot answer, a quarter turn, adding as arrows, multiplying as turn and stretch, "
+            "squaring again and again until a Julia set appears, and the exponential going round"
+        ),
+        state=WRITING,
+        parts=complex.PARTS,
+        systems=complex.SYSTEMS,
+        definitions=complex.DEFINITIONS,
+    ),
+    Topic(
         slug="fractals",
         number=1,
-        title="fractals",
+        title="Fractals",
         summary=(
-            "roughness that does not smooth out when you look closer, measured rather than "
+            "Roughness that does not smooth out when you look closer, measured rather than "
             "admired: a dimension that is not a whole number, and the handful of rules that "
             "produce every shape in the series"
         ),
@@ -71,35 +88,58 @@ TOPICS: tuple[Topic, ...] = (
     Topic(
         slug="chaos",
         number=2,
-        title="differential equations, attractors and chaos",
+        title="Differential equations, attractors and chaos",
         summary=(
-            "an equation whose unknown is a function, solved in closed form until that runs "
+            "An equation whose unknown is a function, solved in closed form until that runs "
             "out and numerically after it, the attractor a system settles onto, deterministic "
             "chaos, the route in through period doubling, and the one experiment where the "
             "whole chain was used to do something"
         ),
-        state=PLANNED,
+        state=WRITING,
+        parts=chaos.PARTS,
+        systems=chaos.SYSTEMS,
+        definitions=chaos.DEFINITIONS,
     ),
     Topic(
         slug="networks",
         number=3,
-        title="calculus into a first neural network",
+        title="Calculus into a first neural network",
         summary=(
-            "the perceptron, the neuron it became, a network written out as a system of "
+            "The perceptron, the neuron it became, a network written out as a system of "
             "equations, and every method that trains one, ending on the derivative and the "
             "integral as the two objects all of it was built from"
         ),
-        state=PLANNED,
+        state=WRITING,
+        parts=networks.PARTS,
+        systems=networks.SYSTEMS,
+        definitions=networks.DEFINITIONS,
     ),
     Topic(
         slug="tokens",
         number=4,
-        title="tokens, embeddings and generation",
+        title="Tokens, embeddings and generation",
         summary=(
-            "a string of text turned into numbers, what those numbers come to mean, how "
+            "A string of text turned into numbers, what those numbers come to mean, how "
             "earlier text shapes later text, and how one token at a time becomes a paragraph"
         ),
-        state=PLANNED,
+        state=WRITING,
+        parts=tokens.PARTS,
+        systems=tokens.SYSTEMS,
+        definitions=tokens.DEFINITIONS,
+    ),
+    Topic(
+        slug="primes",
+        number=5,
+        title="An aside: the gaps between primes",
+        summary=(
+            "The gaps between consecutive primes drawn the way a chaotic flow's return map is, "
+            "beside a map that has a rule, to show what chaos is not"
+        ),
+        state=WRITING,
+        parts=primes.PARTS,
+        systems=primes.SYSTEMS,
+        definitions=primes.DEFINITIONS,
+        aside=True,
     ),
 )
 
