@@ -1,10 +1,11 @@
 name: Python application
 
+# a template for an application with two databases and a queue, none of which this repository
+# holds: it has no pyproject at the root, no messages or context database and no redis, so the
+# jobs below cannot run here. the backend of the maths site is checked by backend.yml. it runs
+# by hand only, so that a push is not failed by it
 on:
-  push:
-    branches: ["main", "staging", "qa", "develop", "pilot", "demo"]
-  pull_request:
-    branches: ["main", "staging", "qa", "develop", "pilot", "demo"]
+  workflow_dispatch:
 
 permissions:
   contents: read

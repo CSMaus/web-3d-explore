@@ -32,6 +32,9 @@ export default defineConfig({
     environment: "jsdom",
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
     setupFiles: ["./src/test/setup.ts"],
+    // the page tests render every page of a topic in one test, which takes longer than the
+    // default five seconds on a shared runner
+    testTimeout: 30000,
   },
   // the port is the preferred one; when something else holds it, vite takes the next free
   // port and prints the address it chose
