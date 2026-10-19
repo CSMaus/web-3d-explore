@@ -1,4 +1,13 @@
-export const base = import.meta.env.VITE_API_BASE ?? "http://localhost:1585/api";
+/**
+ * the backend, or its absence. VITE_API_BASE names the api; set to nothing, the
+ * site runs on its own: the content comes from the snapshot the backend wrote
+ * into src/content/snapshot, and everything that needs a server (accounts,
+ * saved parameter sets, the deep zoom socket) is off and says so.
+ */
+export const base: string = import.meta.env.VITE_API_BASE ?? "http://localhost:1585/api";
+
+/** false when the site is built to run without the backend */
+export const HAS_BACKEND = base !== "";
 
 export type Block = { label: string; tex: string; note: string };
 export type Dimension = { label: string; tex: string; note: string };
@@ -23,26 +32,6 @@ export type Preset = {
   created: string;
 };
 
-async function get<T>(path: string): Promise<T> {
-  const res = await fetch(`${base}${path}`, { credentials: "include" });
-  if (!res.ok) throw new Error(`${res.status} on ${path}`);
-  return (await res.json()) as T;
-}
-
-async function send<T>(path: string, body?: unknown): Promise<T> {
-  const res = await fetch(`${base}${path}`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "content-type": "application/json" },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-  if (!res.ok) {
-    const detail = await res.json().catch(() => ({ detail: `${res.status}` }));
-    throw new Error(detail.detail ?? `${res.status}`);
-  }
-  return res.status === 204 ? (undefined as T) : ((await res.json()) as T);
-}
-
 export type Beat = {
   slug: string;
   seconds: number;
@@ -51,7 +40,7 @@ export type Beat = {
   why: string;
   say: string;
 };
-export type Part = { number: number; title: string; video: string; caption: string; beats: Beat[] };
+export type Part = { number: number; title: string; video: string; caption: string; question: string; text: string[]; beats: Beat[] };
 export type State = "ready" | "writing" | "planned";
 export type Card = {
   slug: string;
@@ -68,6 +57,40 @@ export type Card = {
 };
 export type Topic = Card & { part_list: Part[] };
 
+const NO_BACKEND = "This needs the backend, and the site is running without one";
+
+async function get<T>(path: string): Promise<T> {
+  if (!HAS_BACKEND) throw new Error(NO_BACKEND);
+  const res = await fetch(`${base}${path}`, { credentials: "include" });
+  if (!res.ok) throw new Error(`${res.status} on ${path}`);
+  return (await res.json()) as T;
+}
+
+async function send<T>(path: string, body?: unknown): Promise<T> {
+  if (!HAS_BACKEND) throw new Error(NO_BACKEND);
+  const res = await fetch(`${base}${path}`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "content-type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const detail = await res.json().catch(() => ({ detail: `${res.status}` }));
+    throw new Error(detail.detail ?? `${res.status}`);
+  }
+  return res.status === 204 ? (undefined as T) : ((await res.json()) as T);
+}
+
+// the snapshot: one file per content route, loaded only when asked for, so a
+// build with a backend never carries them
+const snapshot = import.meta.glob<{ default: unknown }>("../content/snapshot/*.json");
+
+async function fromSnapshot<T>(name: string): Promise<T | null> {
+  const load = snapshot[`../content/snapshot/${name}.json`];
+  if (!load) return null;
+  return (await load()).default as T;
+}
+
 async function soft<T>(work: Promise<T>): Promise<T | null> {
   try {
     return await work;
@@ -76,13 +99,24 @@ async function soft<T>(work: Promise<T>): Promise<T | null> {
   }
 }
 
+/** content comes from the backend when it answers, and from the snapshot otherwise, so the site reads the same with or without a server */
+async function content<T>(path: string, name: string): Promise<T | null> {
+  const live = HAS_BACKEND ? await soft(get<T>(path)) : null;
+  return live ?? fromSnapshot<T>(name);
+}
+
 export const api = {
-  topics: () => soft(get<Card[]>("/topics")),
-  topic: (slug: string) => soft(get<Topic>(`/topics/${slug}`)),
-  theory: (slug: string) => soft(get<Theory>(`/topics/${slug}/equations`)),
-  system: (slug: string, id: string) => soft(get<System>(`/topics/${slug}/equations/${id}`)),
-  health: () => get<{ status: string }>("/health"),
-  me: () => get<Account | null>("/auth/me"),
+  topics: () => content<Card[]>("/topics", "topics"),
+  topic: (slug: string) => content<Topic>(`/topics/${slug}`, slug),
+  theory: (slug: string) => content<Theory>(`/topics/${slug}/equations`, `${slug}.equations`),
+  system: async (slug: string, id: string) => {
+    const live = HAS_BACKEND ? await soft(get<System>(`/topics/${slug}/equations/${id}`)) : null;
+    if (live) return live;
+    const theory = await fromSnapshot<Theory>(`${slug}.equations`);
+    return theory?.systems.find((s) => s.id === id) ?? null;
+  },
+  health: () => (HAS_BACKEND ? get<{ status: string }>("/health") : Promise.resolve({ status: "frontend only" })),
+  me: () => (HAS_BACKEND ? get<Account | null>("/auth/me") : Promise.resolve(null)),
   signup: (email: string, secret: string, name?: string) =>
     send<Account>("/auth/signup", { email, secret, name: name || null }),
   login: (email: string, secret: string) => send<Account>("/auth/login", { email, secret }),

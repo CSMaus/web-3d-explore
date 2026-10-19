@@ -1,3 +1,7 @@
+// the shader is compiled once when the renderer is made, so an edit here is only seen after a
+// full reload; in development the page reloads itself when this file changes
+if (import.meta.hot) import.meta.hot.accept(() => window.location.reload());
+
 export const vert = /* glsl */ `
 void main() {
   gl_Position = vec4(position.xy, 0.0, 1.0);
@@ -23,6 +27,8 @@ uniform float uFill;
 uniform float uShine;
 uniform float uGlow;
 uniform float uHaze;
+uniform float uContour;
+uniform vec3 uLight;
 
 const int INNER_CAP = 20;
 const int MAX_STEPS = 110;
@@ -99,17 +105,24 @@ void main() {
   bool hit = false;
   float haze = 0.0;
   int used = uSteps;
+  // the closest a ray comes to a surface without touching it, and where: a ray that
+  // grazes a surface and goes on is on an edge, the outline or an inner one
+  float nearMin = 1.0;
+  float nearT = 0.0;
   for (int s = 0; s < MAX_STEPS; s++) {
     if (s >= uSteps) break;
     vec3 p = eye + rd * t;
     float d = bulb(p, escape);
     haze += 0.020 / (1.0 + 30.0 * d * d);
+    float close = d / max(t, 0.2);
+    if (close < nearMin) { nearMin = close; nearT = t; }
     if (d < 0.0009 * t) { hit = true; used = s; break; }
     t += max(d, 0.0007);
     if (t > FAR) break;
   }
 
   vec3 col = uBack;
+  float open = 0.0;
   if (hit) {
     vec3 p = eye + rd * t;
     vec3 n = normalAt(p, 0.0022 * t);
@@ -122,6 +135,7 @@ void main() {
     float lam = max(dot(n, key), 0.0);
 
     float ao = clamp(1.0 - float(used) / float(uSteps) * 1.7, 0.0, 1.0);
+    open = ao;
     float inFold = pow(1.0 - ao, 1.6);
     vec3 hv = normalize(key - rd);
     float tight = pow(max(dot(n, hv), 0.0), 14.0);
@@ -139,9 +153,53 @@ void main() {
     col *= 1.0 - clamp((t - 1.5) * 0.20, 0.0, 0.45);
   }
 
-  col += rampAt(0.50) * haze * uHaze * (0.40 + 0.60 * breath);
+  // nothing is painted behind the body: where the ray misses, only the haze shows,
+  // fading to the page
+  vec3 mist = rampAt(0.72) * haze * uHaze * (0.40 + 0.60 * breath);
+  float alpha = 1.0;
+  if (hit) {
+    col += mist * 0.7;
+  } else {
+    // the glow around the body fades out smoothly into the page: it falls off with the
+    // distance from the body, and is exactly nothing along every edge of the canvas
+    col = mist * 1.4;
+    vec2 e = gl_FragCoord.xy / uSize;
+    float rim = min(min(e.x, 1.0 - e.x), min(e.y, 1.0 - e.y));
+    float fade = smoothstep(0.0, 0.3, rim) * smoothstep(1.15, 0.4, length(uv));
+    alpha = smoothstep(0.02, 0.45, haze * uHaze) * fade;
+  }
+
+  if (uContour > 0.5) {
+    // the contour light runs on the body's real edges: the outline, the inner edges where
+    // a nearer part ends in front of a farther one (a ray grazes the near part and goes
+    // on), and the rims where the surface folds sharply (the normal turns within a short
+    // distance). the edges are thin lines; one short bright piece of light travels along
+    // them round the body in space, so it passes behind the body and comes back
+    // the light runs on the convex edges inside the body: the rims of the lobes, which
+    // stay dark in the solid view, and the steps where a nearer lobe ends in front of a
+    // farther one. the grooves between the lobes, which already glow, are left as they
+    // are, and so is the outline of the whole figure
+    float edge = 0.0;
+    vec3 q = eye + rd * nearT;
+    if (hit) {
+      float graze = 1.0 - smoothstep(0.0012, 0.0045, nearMin);
+      edge = graze * smoothstep(0.05, 0.18, t - nearT);
+      vec3 ph = eye + rd * t;
+      vec3 n1 = normalAt(ph, 0.004 * t);
+      vec3 n2 = normalAt(ph, 0.028 * t);
+      float turn = smoothstep(0.45, 0.85, 1.0 - dot(n1, n2));
+      float rim = turn * smoothstep(0.35, 0.75, open);
+      if (rim > edge) { edge = rim; q = ph; }
+    }
+    float phi = atan(q.y, q.x);
+    float head = pow(0.5 + 0.5 * cos(phi - TAU * uPhase * 6.0), 90.0);
+    float tail = pow(0.5 + 0.5 * cos(phi - TAU * uPhase * 6.0 + 0.22), 20.0) * 0.4;
+    col += uLight * edge * 0.10;
+    col += uLight * edge * (head + tail) * 2.8;
+  }
 
   col = pow(clamp(col, 0.0, 1.0), vec3(0.94));
-  gl_FragColor = vec4(col, 1.0);
+  // premultiplied: the colour is zero wherever the alpha is zero, in every browser
+  gl_FragColor = vec4(col * alpha, alpha);
 }
 `;

@@ -45,7 +45,7 @@ describe("Topic 2, with the backend down", () => {
     await waitFor(() => expect(screen.getByText("Pick something to move")).toBeTruthy());
     const hrefs = Array.from(document.querySelectorAll("main a")).map((a) => a.getAttribute("href"));
     for (const s of SYSTEMS) expect(hrefs).toContain(s.to);
-    expect(SYSTEMS.length).toBe(8);
+    expect(SYSTEMS.length).toBe(7);
   });
 
   it("The play index names each system even with nothing served", async () => {
@@ -99,7 +99,7 @@ describe("Topic 2, with the backend down", () => {
     for (const s of SYSTEMS) {
       const view = await siteAt(s.to);
       await waitFor(() => expect(document.querySelector("main")).toBeTruthy());
-      expect(document.querySelector("main")?.className, s.to).toContain("max-w-6xl");
+      expect(document.querySelector("main")?.dataset.slot, s.to).toBe("page");
       view.unmount();
     }
   });

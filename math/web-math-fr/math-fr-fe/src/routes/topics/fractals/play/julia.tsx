@@ -1,16 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Label, Text, Heading } from "@kit/index";
 import { useRef, useState } from "react";
 import { Equations } from "@/components/Equations";
 import { Escape } from "@/components/Escape";
 import { PaletteBar } from "@/components/PaletteBar";
-import { PlayTabs } from "@/components/PlayTabs";
-import { TopicBar } from "@/components/TopicBar";
 import { Readout } from "@/components/Readout";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/systems";
-import { FRACTALS } from "@/lib/topic";
 import { useLook } from "@/lib/store";
 
 export const Route = createFileRoute("/topics/fractals/play/julia")({
@@ -33,21 +31,17 @@ function JuliaPage() {
   const span = 1.8 / Math.pow(2, zoom);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={FRACTALS} />
-      <div className="mt-4">
-        <PlayTabs />
-      </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "Julia sets"}</h1>
+    <div>
+      <Heading level={1} className="mt-4">{system?.name ?? "Julia sets"}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">CONSTANT C</h2>
+          <section data-slot="panel">
+            <Label>CONSTANT C</Label>
             <div className="mt-3 space-y-2">
               <Slider label="c real" min={-2} max={1} step={0.002} value={cx} onChange={setCx} />
               <Slider label="c imaginary" min={-1.5} max={1.5} step={0.002} value={cy} onChange={setCy} />
             </div>
-            <div className="mt-3 overflow-hidden rounded border border-leaf/40">
+            <div className="mt-3 overflow-hidden rounded border border-selected/40">
               <div className="relative h-[190px] w-full">
                 <Escape
                   kind="mandelbrot"
@@ -75,14 +69,14 @@ function JuliaPage() {
                 />
               </div>
             </div>
-            <p className="mt-2 text-[11px] text-muted">
+            <Text kind="note" as="p" className="mt-2">
               The small map is the Mandelbrot set - click it to put c anywhere. Inside it the Julia
               set holds together in one piece, outside it breaks into dust.
-            </p>
+            </Text>
           </section>
 
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">VIEW</h2>
+          <section data-slot="panel">
+            <Label>VIEW</Label>
             <div className="mt-3 space-y-2">
               <Slider label="Zoom" min={0} max={10} step={0.05} value={zoom} format={(v) => `x${Math.pow(2, v).toFixed(v > 6 ? 0 : 2)}`} onChange={setZoom} />
               <Slider label="Max steps" min={30} max={500} step={10} value={iters} format={(v) => String(Math.round(v))} onChange={(v) => setIters(Math.round(v))} />
@@ -90,17 +84,17 @@ function JuliaPage() {
               <Slider label="Colour offset" min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={setShift} />
               <PaletteBar />
             </div>
-            <p className="mt-3 text-[11px] text-muted">
+            <Text kind="note" as="p" className="mt-3">
               Click the big picture to centre it there. The colour of a point outside is how many
               steps it took to pass the escape distance.
-            </p>
+            </Text>
           </section>
 
           <Equations system={system} />
         </div>
 
         <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
-          <section ref={stage} className="h-[min(620px,calc(100vh-12rem))] overflow-hidden rounded border border-edge">
+          <section ref={stage} data-slot="plot" className="h-[min(620px,calc(100vh-12rem))] overflow-hidden">
             <Escape
               kind="julia"
               cx={cx}
@@ -127,6 +121,6 @@ function JuliaPage() {
           />
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -1,18 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot, type Box } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { FAINT, INK, ONE, SKY, TWO, contours, shadeHeight, ticks } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { HILLS, gradientAt, roll } from "@/systems/calc";
 
@@ -79,24 +78,20 @@ function SlopePage() {
   const fmt = (v: number, d = 3) => (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "Which way is down"}
         job="A landscape seen from above: bright is high, dark is low. A ball is put down somewhere. The job is to get it to the bottom knowing nothing but the ground under its own feet: which way is uphill, and how steeply. It takes a step the other way, and asks again."
         input={
           <div className="space-y-3">
             <Choices options={OPTIONS} value={which} onPick={(id) => { setWhich(id); reset(); }} />
-            <p className="text-[11px] text-muted">{hill.what}</p>
+            <Text kind="note" as="p">{hill.what}</Text>
             <Slider label="Step size" min={0.005} max={0.2} step={0.005} value={rate} format={(v) => v.toFixed(3)} onChange={(v) => { setRate(v); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Click anywhere on the landscape to put the ball there. The step size is how far it
               moves for a given steepness: a steep slope means a long step. Too small and it
               crawls; too big and it leaps across the valley and lands higher than it started.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -117,7 +112,7 @@ function SlopePage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div><div className="h-[400px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[400px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={hill.box}
@@ -144,7 +139,7 @@ function SlopePage() {
                 }}
               />
             </div><Caption>Bright: high.  Dark: low.  Click to place the ball. Rose: uphill from under the ball.  Green: the step it takes, the other way.</Caption></div>
-            <div><div className="h-[150px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={hBox}
@@ -175,24 +170,24 @@ function SlopePage() {
                         : `After ${taken} steps the ground under the ball is flat: the bottom, height ${heightHere.toFixed(4)}. It started at ${startHeight.toFixed(3)}.`
                       : `After ${taken} steps the ball is at height ${heightHere.toFixed(3)}, down from ${startHeight.toFixed(3)}. The slope under it is ${Math.hypot(...g).toFixed(3)}, so the next step is ${stepLen.toFixed(3)} long.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>The ball stands at</dt>
-              <dd className="text-right text-ink/80">({fmt(here[0])}, {fmt(here[1])})</dd>
+              <dd className="text-right text-foreground/80">({fmt(here[0])}, {fmt(here[1])})</dd>
               <dt>Nudge it a hair to the right: height changes by</dt>
-              <dd className="text-right text-ink/80">{fmt(g[0], 4)} per unit</dd>
+              <dd className="text-right text-foreground/80">{fmt(g[0], 4)} per unit</dd>
               <dt>Nudge it a hair up: height changes by</dt>
-              <dd className="text-right text-ink/80">{fmt(g[1], 4)} per unit</dd>
+              <dd className="text-right text-foreground/80">{fmt(g[1], 4)} per unit</dd>
               <dt>Those two together are the uphill arrow; exact</dt>
-              <dd className="text-right text-ink/80">({fmt(exact[0], 4)}, {fmt(exact[1], 4)})</dd>
+              <dd className="text-right text-foreground/80">({fmt(exact[0], 4)}, {fmt(exact[1], 4)})</dd>
               <dt>The step: step size times the arrow, reversed</dt>
-              <dd className="text-right text-ink/80">({fmt(-rate * g[0], 4)}, {fmt(-rate * g[1], 4)})</dd>
+              <dd className="text-right text-foreground/80">({fmt(-rate * g[0], 4)}, {fmt(-rate * g[1], 4)})</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The uphill arrow is the gradient: the first page's ratio, taken once for each
-              direction you could move in. Stepping against it is gradient descent. When a network
+              direction of movement. Stepping against it is gradient descent. When a network
               learns, the landscape is how wrong it is, the directions are its own numbers, and
               there are thousands of them instead of two. The picture is this one.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -202,6 +197,6 @@ function SlopePage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

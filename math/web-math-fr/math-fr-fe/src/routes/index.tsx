@@ -1,51 +1,58 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Suspense, lazy } from "react";
-import { PaletteBar } from "@/components/PaletteBar";
-
-const Bulb = lazy(() => import("@/components/Bulb").then((m) => ({ default: m.Bulb })));
+import { useTranslation } from "react-i18next";
+import { Badge, Button, Heading, Page, Panel, Separator, Text } from "@kit/index";
+import { FrontHero } from "@/components/FrontHero";
+import { api, type Card } from "@/lib/api";
+import { BUILT, builtAt } from "@/lib/topic";
 
 export const Route = createFileRoute("/")({
+  loader: () => api.topics(),
   component: Front,
 });
 
-const LINES = [
-  "# this page is not finished yet...",
-  "",
-  'About = """',
-  "    working...",
-  '"""',
-];
+/** the topics as the front page knows them without the backend: title and where to open. */
+const LOCAL: Card[] = Object.values(BUILT)
+  .filter((t) => t.slug !== "primes")
+  .map((t) => ({ slug: t.slug, number: t.number, title: t.title, summary: "", state: "writing", parts: 0, beats: 0, seconds: 0, systems: 0 }));
 
 function Front() {
+  const { t } = useTranslation();
+  const topics = (Route.useLoaderData() ?? LOCAL).filter((c) => !c.aside).sort((a, b) => a.number - b.number);
+
   return (
-    <main className="relative h-dvh w-full overflow-hidden">
-      <Suspense fallback={<div className="absolute inset-0 bg-ground" />}>
-        <Bulb className="absolute inset-0 h-full w-full" />
-      </Suspense>
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ground/70 via-transparent to-ground/85" />
-      <div className="relative z-10 flex h-full items-center px-6">
-        <div className="mx-auto w-full max-w-6xl">
-          <pre className="font-mono text-[13px] leading-relaxed text-muted sm:text-sm">
-            {LINES.map((line, i) => (
-              <div key={i}>
-                {line.startsWith("#") ? <span className="text-leaf">{line}</span> : line}
-                {line === "" ? "\u00a0" : null}
-              </div>
-            ))}
-          </pre>
-        </div>
-      </div>
-      <div className="absolute inset-x-0 bottom-0 z-10 px-6 pb-6">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4">
-          <PaletteBar />
-          <Link
-            to="/topics"
-            className="rounded border border-leaf/60 px-3 py-1.5 font-mono text-[12px] text-leaf transition-colors hover:border-leaf"
-          >
-            Topics
-          </Link>
-        </div>
-      </div>
-    </main>
+    <Page className="pt-32">
+      <FrontHero />
+      <Separator className="mt-16" />
+
+      <section className="mt-20">
+        <Heading level={2}>{t("front.topicsHeading")}</Heading>
+        <Text kind="intro" as="p" className="mt-3 max-w-2xl">{t("front.topicsLede")}</Text>
+        <ol className="mt-8 grid gap-4 md:grid-cols-2">
+          {topics.map((topic) => {
+            const built = builtAt(topic.slug);
+            return (
+              <li key={topic.slug}>
+                <Panel className="h-full">
+                  <div className="flex items-start justify-between gap-3">
+                    <div data-text="itemTitle">
+                      {topic.number === 0 ? "Start here" : `Topic ${topic.number}`} · {topic.title}
+                    </div>
+                    <Badge variant="outline">{t(`state.${topic.state}`)}</Badge>
+                  </div>
+                  {topic.summary ? <Text kind="intro" as="p" className="mt-2">{topic.summary}</Text> : null}
+                  {built ? (
+                    <div className="mt-4">
+                      <Button variant="outline" asChild>
+                        <Link to={built.landing}>{t("front.openTopic")}</Link>
+                      </Button>
+                    </div>
+                  ) : null}
+                </Panel>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+    </Page>
   );
 }

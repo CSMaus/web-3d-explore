@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Input, Button, Text, Heading, Page } from "@kit/index";
 import { useEffect, useState } from "react";
-import { api, type Account, type Preset } from "@/lib/api";
+import { api, HAS_BACKEND, type Account, type Preset } from "@/lib/api";
 
 export const Route = createFileRoute("/account")({
   component: AccountPage,
@@ -46,91 +47,91 @@ function AccountPage() {
     setPresets([]);
   };
 
+  if (!HAS_BACKEND) {
+    return (
+      <Page className="pb-24">
+        <Heading level={1}>Account</Heading>
+        <Text kind="intro" as="p" className="mt-3 max-w-xl">Accounts and saved parameter sets need the backend, and this copy of the site runs without one.</Text>
+      </Page>
+    );
+  }
+
   if (who) {
     return (
-      <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-        <h1 className="font-mono text-sm tracking-wide text-leaf">Account</h1>
-        <p className="mt-3 font-mono text-xs text-muted">{who.email}</p>
-        <button
+      <Page className="pb-24">
+        <Heading level={1}>Account</Heading>
+        <Text kind="caption" as="p" className="mt-3">{who.email}</Text>
+        <Button variant="outline" size="sm" className="mt-4"
           type="button"
           onClick={leave}
-          className="mt-4 rounded border border-edge px-3 py-1.5 font-mono text-xs text-muted hover:border-leaf"
         >
           Sign out
-        </button>
+        </Button>
         <section className="mt-10">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-sky">
+          <Heading level={2}>
             Stored parameter sets
-          </h2>
+          </Heading>
           {presets.length === 0 ? (
-            <p className="mt-3 text-sm text-muted">
+            <Text kind="intro" as="p" className="mt-3">
               Nothing kept yet. A picture saved from any play page appears here with its own
               address.
-            </p>
+            </Text>
           ) : (
             <ul className="mt-3 space-y-2">
               {presets.map((p) => (
-                <li key={p.slug} className="rounded border border-edge px-3 py-2">
-                  <div className="flex items-baseline justify-between font-mono text-xs">
-                    <span className="text-ink">{p.title ?? p.slug}</span>
-                    <span className="text-muted">{p.system}</span>
+                <li key={p.slug} className="rounded border border-border px-3 py-2">
+                  <div data-text="caption" className="flex items-baseline justify-between">
+                    <span className="text-foreground">{p.title ?? p.slug}</span>
+                    <span className="text-muted-foreground">{p.system}</span>
                   </div>
-                  <div className="mt-1 font-mono text-[11px] text-muted">/P/{p.slug}</div>
+                  <div data-text="caption" className="mt-1">/P/{p.slug}</div>
                 </li>
               ))}
             </ul>
           )}
         </section>
-      </main>
+      </Page>
     );
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-      <h1 className="font-mono text-sm tracking-wide text-leaf">Account</h1>
+    <Page className="pb-24">
+      <Heading level={1}>Account</Heading>
       <div className="mt-4 flex gap-2">
         {(["login", "signup"] as const).map((m) => (
-          <button
+          <Button variant="outline" size="sm"
             key={m}
             type="button"
             onClick={() => setMode(m)}
             aria-pressed={mode === m}
-            className={
-              mode === m
-                ? "rounded border border-leaf px-3 py-1 font-mono text-xs text-leaf"
-                : "rounded border border-edge px-3 py-1 font-mono text-xs text-muted"
-            }
           >
             {m}
-          </button>
+          </Button>
         ))}
       </div>
       <form onSubmit={submit} className="mt-5 space-y-3">
-        <input
+        <Input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Address"
-          className="w-full rounded border border-edge bg-ground px-3 py-2 font-mono text-xs text-ink outline-none focus:border-leaf"
         />
-        <input
+        <Input
           type="password"
           required
           minLength={10}
           value={secret}
           onChange={(e) => setSecret(e.target.value)}
           placeholder="At least ten characters"
-          className="w-full rounded border border-edge bg-ground px-3 py-2 font-mono text-xs text-ink outline-none focus:border-leaf"
         />
-        <button
+        <Button variant="outline" size="sm" className="w-full"
           type="submit"
-          className="w-full rounded border border-leaf px-3 py-2 font-mono text-xs text-leaf"
         >
           {mode}
-        </button>
+        </Button>
       </form>
-      {trouble ? <p className="mt-3 text-xs text-warn">{trouble}</p> : null}
-    </main>
+      {trouble ? <Text kind="warning" as="p" className="mt-3">{trouble}</Text> : null}
+    </Page>
   );
 }

@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { frag, vert } from "@/gl/bulb.glsl";
+import type { Palette } from "@/lib/palettes";
 import { useLook } from "@/lib/store";
 
 const PERIOD_MS = 42000;
-const SCALE_MIN = 0.4;
-const SCALE_MAX = 0.85;
+const SCALE_MIN = 0.65;
+const SCALE_MAX = 1;
+const RATIO_CAP = 2;
 const STEPS_FIXED = 110;
 const TARGET_MS = 22;
 const TAU = Math.PI * 2;
@@ -25,6 +27,12 @@ export type BulbProps = {
   turning?: boolean;
   azimuth?: number;
   elevation?: number;
+  /** the solid body as always, or only its sharp edges as lines with a light running along them */
+  view?: "solid" | "contour";
+  /** a palette given in code; otherwise the one in the shared store */
+  palette?: Palette;
+  /** the colour of the travelling light in the contour view, as hex */
+  light?: string;
 };
 
 const DEFAULTS = {
@@ -33,11 +41,11 @@ const DEFAULTS = {
   zoom: 1,
   period: PERIOD_MS,
   pulse: 0,
-  keyLight: 0,
-  fill: 0.26,
+  keyLight: 0.26,
+  fill: 0.8,
   shine: 0,
-  glow: 1.78,
-  haze: 0.5,
+  glow: 2.5,
+  haze: 1.2,
   turning: true,
   azimuth: 0,
   elevation: 0.45,
@@ -48,11 +56,11 @@ function toVec(hex: string) {
   return new THREE.Vector3(c.r, c.g, c.b);
 }
 
-export function Bulb({ className, ...given }: BulbProps) {
+export function Bulb({ className, view = "solid", palette, light = "#9fe3ff", ...given }: BulbProps) {
   const host = useRef<HTMLDivElement | null>(null);
-  const ramp = useLook((s) => s.palette.ramp);
-  const back = useLook((s) => s.palette.back);
-  const settings = { ...DEFAULTS, ...given, ramp, back };
+  const stored = useLook((s) => s.palette);
+  const chosen = palette ?? stored;
+  const settings = { ...DEFAULTS, ...given, ramp: chosen.ramp, back: chosen.back, light, contour: view === "contour" ? 1 : 0 };
   const latest = useRef(settings);
   const dirty = useRef(true);
 
@@ -70,15 +78,18 @@ export function Bulb({ className, ...given }: BulbProps) {
     try {
       renderer = new THREE.WebGLRenderer({
         antialias: false,
+        alpha: true,
+        premultipliedAlpha: true,
         powerPreference: "high-performance",
         preserveDrawingBuffer: true,
       });
     } catch {
       return;
     }
+    renderer.setClearColor(0x000000, 0);
 
-    let scale = SCALE_MIN + 0.2;
-    const ratio = () => Math.min(window.devicePixelRatio, 1.5) * scale;
+    let scale = SCALE_MAX;
+    const ratio = () => Math.min(window.devicePixelRatio, RATIO_CAP) * scale;
     renderer.setPixelRatio(ratio());
     node.appendChild(renderer.domElement);
     renderer.domElement.style.width = "100%";
@@ -102,6 +113,8 @@ export function Bulb({ className, ...given }: BulbProps) {
       uShine: { value: DEFAULTS.shine },
       uGlow: { value: DEFAULTS.glow },
       uHaze: { value: DEFAULTS.haze },
+      uContour: { value: 0 },
+      uLight: { value: new THREE.Vector3(1, 1, 1) },
     };
 
     const scene = new THREE.Scene();
@@ -174,6 +187,8 @@ export function Bulb({ className, ...given }: BulbProps) {
       uniforms.uShine.value = p.shine;
       uniforms.uGlow.value = p.glow;
       uniforms.uHaze.value = p.haze;
+      uniforms.uContour.value = p.contour;
+      uniforms.uLight.value.copy(toVec(p.light));
       p.ramp.slice(0, 5).forEach((hex, i) => uniforms.uRamp.value[i].copy(toVec(hex)));
       uniforms.uBack.value.copy(toVec(p.back));
 

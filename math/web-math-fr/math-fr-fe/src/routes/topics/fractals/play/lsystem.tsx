@@ -1,17 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Label, Input, Textarea, Text, Heading } from "@kit/index";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Chips } from "@/components/Chips";
 import { Equations } from "@/components/Equations";
 import { Frame } from "@/components/Frame";
 import { PaletteBar } from "@/components/PaletteBar";
-import { PlayTabs } from "@/components/PlayTabs";
-import { TopicBar } from "@/components/TopicBar";
 import { Readout } from "@/components/Readout";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/systems";
-import { FRACTALS } from "@/lib/topic";
 import { useLook } from "@/lib/store";
 import { LSYS_PRESETS, expand, parseRules, rngFrom, turtle } from "@/systems/lsystem";
 
@@ -94,47 +92,43 @@ function LsystemPage() {
   const deepest = segs.reduce((a, s) => Math.max(a, s.depth), 0);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={FRACTALS} />
-      <div className="mt-4">
-        <PlayTabs />
-      </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "Rewriting systems"}</h1>
+    <div>
+      <Heading level={1} className="mt-4">{system?.name ?? "Rewriting systems"}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">PRESET</h2>
+          <section data-slot="panel">
+            <Label>PRESET</Label>
             <div className="mt-3">
               <Chips items={Object.keys(LSYS_PRESETS)} active={preset} onPick={pickPreset} />
             </div>
           </section>
 
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">AXIOM AND RULES</h2>
+          <section data-slot="panel">
+            <Label>AXIOM AND RULES</Label>
             <div className="mt-3 space-y-2">
-              <input
+              <Input
                 value={axiom}
                 onChange={(e) => setAxiom(e.target.value)}
                 spellCheck={false}
-                className="w-full rounded border border-edge bg-ground px-2 py-1 font-mono text-xs text-ink outline-none focus:border-leaf"
+                aria-label="Axiom, the starting string"
               />
-              <textarea
+              <Textarea
                 value={rules}
                 onChange={(e) => setRules(e.target.value)}
                 spellCheck={false}
                 rows={3}
-                className="w-full resize-y rounded border border-edge bg-ground px-2 py-1 font-mono text-xs text-ink outline-none focus:border-leaf"
+                aria-label="Rules, one a line"
               />
-              <p className="text-[11px] text-muted">
+              <Text kind="note" as="p">
                 One rule a line, as symbol = replacement. Any capital letter draws a step except X
                 and Y, which only carry the rule along. Plus and minus turn, brackets remember and
                 return to a point.
-              </p>
+              </Text>
             </div>
           </section>
 
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">TURTLE</h2>
+          <section data-slot="panel">
+            <Label>TURTLE</Label>
             <div className="mt-3 space-y-2">
               <Slider
                 label="Azimuth"
@@ -182,7 +176,8 @@ function LsystemPage() {
         <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
           <section
             ref={stage}
-            className="h-[min(620px,calc(100vh-12rem))] overflow-hidden rounded border border-edge"
+            data-slot="plot"
+            className="h-[min(620px,calc(100vh-12rem))] overflow-hidden"
             style={{ background: palette.back }}
           >
             <Frame draw={draw} className="block h-full w-full" />
@@ -197,12 +192,12 @@ function LsystemPage() {
             ]}
           />
           {grown.capped ? (
-            <p className="text-xs text-warn">
+            <Text kind="warning" as="p">
               The word passed the limit, so it stopped expanding early - lower the passes
-            </p>
+            </Text>
           ) : null}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

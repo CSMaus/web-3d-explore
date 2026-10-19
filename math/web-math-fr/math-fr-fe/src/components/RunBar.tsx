@@ -1,3 +1,4 @@
+import { Button } from "@kit/index";
 import { Slider } from "@/components/Slider";
 
 type Props = {
@@ -46,47 +47,25 @@ export function RunBar({
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          onClick={onToggle}
-          className={
-            running
-              ? "rounded border border-warn px-3 py-1.5 font-mono text-[11px] text-warn"
-              : "rounded border border-leaf px-3 py-1.5 font-mono text-[11px] text-leaf"
-          }
-        >
+        <Button onClick={onToggle} variant={running ? "destructive" : "default"}>
           {running ? "Pause" : done ? "Run again" : "Run"}
-        </button>
-        <button
-          type="button"
-          onClick={() => onStep(1)}
-          disabled={done}
-          className="rounded border border-edge px-3 py-1.5 font-mono text-[11px] text-muted hover:border-leaf disabled:opacity-40"
-        >
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => onStep(1)} disabled={done}>
           One step
-        </button>
-        <button
-          type="button"
-          onClick={() => onStep(10)}
-          disabled={done}
-          className="rounded border border-edge px-3 py-1.5 font-mono text-[11px] text-muted hover:border-leaf disabled:opacity-40"
-        >
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => onStep(10)} disabled={done}>
           Ten steps
-        </button>
-        <button
-          type="button"
-          onClick={onReset}
-          className="rounded border border-edge px-3 py-1.5 font-mono text-[11px] text-muted hover:border-leaf"
-        >
+        </Button>
+        <Button variant="outline" size="sm" onClick={onReset}>
           Reset
-        </button>
-        <span className="ml-auto font-mono text-[11px] text-muted">
+        </Button>
+        <span data-text="caption" className="ml-auto">
           {fmt(count)} / {fmt(limit)} {what}
-          {done ? <span className="text-leaf"> done</span> : null}
+          {done ? <span className="text-selected"> done</span> : null}
         </span>
       </div>
-      <div className="mt-2 h-0.5 w-full overflow-hidden rounded bg-edge">
-        <div className="h-full bg-leaf transition-[width]" style={{ width: `${fraction * 100}%` }} />
+      <div className="mt-2 h-0.5 w-full overflow-hidden rounded bg-border">
+        <div className="h-full bg-selected transition-[width]" style={{ width: `${fraction * 100}%` }} />
       </div>
       <div className="mt-3 space-y-2">
         {onLimit && limitRange ? (

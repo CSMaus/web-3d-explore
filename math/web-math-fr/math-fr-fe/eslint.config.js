@@ -5,7 +5,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", "src/routeTree.gen.ts"] },
+  { ignores: ["dist", "storybook-static", "src/routeTree.gen.ts"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
@@ -23,7 +23,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["src/routes/**/*.tsx"],
+    files: ["src/routes/**/*.tsx", "src/**/*.stories.tsx", ".storybook/**/*.tsx"],
     rules: { "react-refresh/only-export-components": "off" },
   },
 );

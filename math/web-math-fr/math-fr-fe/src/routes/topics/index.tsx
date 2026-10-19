@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { Button, Text, Heading, Page } from "@kit/index";
 import { Offline } from "@/components/Offline";
 import { api, type Card } from "@/lib/api";
 import { useRise } from "@/lib/reveal";
@@ -19,12 +20,12 @@ function TopicsPage() {
   const topics = Route.useLoaderData();
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-      <h1 className="font-mono text-sm tracking-wide text-leaf">The topics</h1>
-      <p className="mt-3 max-w-2xl text-sm text-muted">
+    <Page className="pb-24">
+      <Heading level={1}>The topics</Heading>
+      <Text kind="intro" as="p" className="mt-3 max-w-2xl">
         One subject a topic, in reading order. Each is a series of short clips with the reasoning
-        beside them, a set of pages to move the thing yourself, and every equation it rests on.
-      </p>
+        beside them, a set of pages where the thing is moved by hand, and every equation it rests on.
+      </Text>
 
       {!topics ? (
         <div className="mt-8">
@@ -38,11 +39,11 @@ function TopicsPage() {
             ))}
           </ol>
           {topics.some((t) => t.aside) ? (
-            <section className="mt-14 max-w-4xl border-t border-edge pt-6">
-              <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted">Asides</h2>
-              <p className="mt-2 max-w-2xl text-xs text-muted">
+            <section className="mt-14 max-w-4xl border-t border-border pt-6">
+              <Heading level={2}>Asides</Heading>
+              <Text kind="note" as="p" className="mt-2 max-w-2xl">
                 Short pages beside the reading order, not in it. Each answers one question that came up.
-              </p>
+              </Text>
               <ol className="mt-4 space-y-3">
                 {topics.filter((t) => t.aside).map((topic, i) => (
                   <Aside key={topic.slug} topic={topic} delay={i * 70} />
@@ -52,7 +53,7 @@ function TopicsPage() {
           ) : null}
         </>
       )}
-    </main>
+    </Page>
   );
 }
 
@@ -61,18 +62,15 @@ function Aside({ topic, delay }: { topic: Card; delay: number }) {
   const built = builtAt(topic.slug);
   return (
     <li ref={ref} className="rise">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded border border-edge/60 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded border border-border/60 px-4 py-3">
         <div className="min-w-0">
-          <div className="font-mono text-xs text-ink/80">{topic.title}</div>
-          <p className="mt-1 text-xs leading-relaxed text-muted">{topic.summary}</p>
+          <div data-text="caption">{topic.title}</div>
+          <Text kind="note" as="p" className="mt-1">{topic.summary}</Text>
         </div>
         {built ? (
-          <Link
-            to={built.landing}
-            className="shrink-0 rounded border border-leaf px-3 py-1.5 font-mono text-[11px] text-leaf transition-colors hover:bg-leaf/10"
-          >
-            Open the aside
-          </Link>
+          <Button variant="outline" className="shrink-0" asChild>
+            <Link to={built.landing}>Open the aside</Link>
+          </Button>
         ) : null}
       </div>
     </li>
@@ -96,21 +94,21 @@ function Tile({ topic, delay }: { topic: Card; delay: number }) {
   const body = (
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <span className="font-mono text-sm text-ink">
+        <span data-text="itemTitle">
           {topic.number === 0 ? "Start here" : `Topic ${topic.number}`} - {topic.title}
         </span>
         <span
           className={
             ready
-              ? "font-mono text-[11px] text-leaf"
-              : "font-mono text-[11px] text-muted"
+              ? "font-mono text-[11px] text-selected"
+              : "font-mono text-[11px] text-muted-foreground"
           }
         >
           {WORD[topic.state]}
         </span>
       </div>
-      <p className="mt-2 text-xs leading-relaxed text-muted">{topic.summary}</p>
-      <div className="mt-3 font-mono text-[11px] text-muted">{what}</div>
+      <Text kind="note" as="p" className="mt-2">{topic.summary}</Text>
+      <div data-text="caption" className="mt-3">{what}</div>
     </>
   );
 
@@ -119,12 +117,12 @@ function Tile({ topic, delay }: { topic: Card; delay: number }) {
       {built ? (
         <Link
           to={built.landing}
-          className="block rounded border border-edge p-4 transition-colors hover:border-leaf"
+          className="block rounded border border-border p-4 transition-colors hover:border-selected"
         >
           {body}
         </Link>
       ) : (
-        <div className="rounded border border-edge/60 p-4 opacity-70">{body}</div>
+        <div className="rounded border border-border/60 p-4 opacity-70">{body}</div>
       )}
     </li>
   );

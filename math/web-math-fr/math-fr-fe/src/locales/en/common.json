@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "learn": "Learn",
+    "topics": "Topics",
+    "play": "Play",
+    "about": "About",
+    "projects": "Projects",
+    "contact": "Contact",
+    "search": "Search",
+    "language": "Language",
+    "login": "Log in",
+    "donate": "Donate",
+    "kit": "Kit",
+    "skip": "Skip to content",
+    "site": "Site",
+    "light": "Light",
+    "theme": "Theme",
+    "top": "Back to top",
+    "menu": "Menu",
+    "hideMenu": "Hide menu",
+    "showMenu": "Show menu",
+    "closeMenu": "Close",
+    "dark": "Dark",
+    "case": "Case"
+  },
+  "front": {
+    "eyebrow": "A closer look at math",
+    "title1": "See the idea,",
+    "title2": "understand why",
+    "lede": "Explore beautiful concepts through interactive experiments, visual stories, and notes that keep only what matters.",
+    "start": "Start with fractals",
+    "browse": "Browse all topics",
+    "tag1": "No prerequisites",
+    "tag2": "At any pace",
+    "tag3": "Free to explore",
+    "bulb": "Mandelbulb",
+    "bulbMeta": "rotating, drawn live",
+    "solid": "Solid",
+    "contour": "Contour light",
+    "open": "Open the page",
+    "observation": "Observation 01 / Fractals",
+    "new": "New: the network pages of topic 3",
+    "scroll": "Scroll to discover",
+    "topicsHeading": "The topics",
+    "topicsLede": "One subject a topic, in reading order. Each is a series of short clips with the reasoning beside them, a set of pages where the thing is moved by hand, and every equation it rests on.",
+    "openTopic": "Open the topic"
+  },
+  "learn": {
+    "heading": "Learn",
+    "lede": "The series of every topic, in reading order: short clips, one a part, with the reasoning beside each.",
+    "open": "Open the series"
+  },
+  "play": {
+    "heading": "Play",
+    "lede": "Every page on the site that moves, by topic. Each has the same three parts: what goes in, run, what came out."
+  },
+  "about": {
+    "heading": "About",
+    "lede": "Who makes this, and what for."
+  },
+  "projects": {
+    "heading": "Projects",
+    "lede": "What is being built, one page each.",
+    "open": "Open the project",
+    "back": "All projects"
+  },
+  "contact": {
+    "heading": "Contact",
+    "lede": "How to get in touch.",
+    "none": "The ways to get in touch are being added."
+  },
+  "search": {
+    "heading": "Search",
+    "placeholder": "Search the whole site",
+    "hint": "Pages, topics, series and every interactive page. Press Escape to close.",
+    "empty": "Nothing on the site matches that.",
+    "results": "{{count}} result",
+    "results_plural": "{{count}} results",
+    "close": "Close"
+  },
+  "state": {
+    "ready": "Ready",
+    "writing": "Being written",
+    "planned": "Planned"
+  },
+  "consent": {
+    "text": "This site keeps one cookie to hold a signed-in session, and records the network address of each request with the page it asked for. Addresses are kept for a limited period and then removed. The clips are played through an external player on its cookie-free domain, so nothing is set by it before playback starts.",
+    "accept": "Accept",
+    "decline": "Decline"
+  }
+}

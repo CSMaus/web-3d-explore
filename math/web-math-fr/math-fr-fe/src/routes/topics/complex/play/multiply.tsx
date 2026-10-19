@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Equations } from "@/components/Equations";
@@ -12,7 +13,6 @@ import { TOPIC } from "@/lib/complex";
 import { INK, MUTED, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { abs, fromPolar, mul, show, turns, type C } from "@/systems/complex";
-import { ComplexFrame } from "./-shared";
 
 export const Route = createFileRoute("/topics/complex/play/multiply")({
   loader: () => api.system(TOPIC, "multiply"),
@@ -47,16 +47,16 @@ function MultiplyPage() {
   const deg = (t: number) => `${(t * 360).toFixed(0)} deg`;
 
   return (
-    <ComplexFrame>
+    <>
       <TaskPage
-        title={system?.name ?? "Multiplying: turn and stretch"}
+        title={system?.name ?? "Complex numbers: multiplying"}
         job="Multiply two arrows and the answer has the two lengths multiplied and the two angles added. Nothing else. The job is to watch it happen in two moves: z is first turned by w's angle, then stretched by w's length, and it lands on the product. Drag either tip and run it again."
         input={
-          <p className="text-[11px] text-muted">
-            Green is z, rose is w. Drag either tip. Put w on the up axis at length one, which is i,
+          <Text kind="note" as="p">
+            Green is z, rose is w. Drag either tip. Put w on the up axis at length one, which is 𝑖,
             and the move is a quarter turn with no stretch: the last page's definition, read from
             this page's rule.
-          </p>
+          </Text>
         }
         run={
           <RunBar
@@ -76,7 +76,7 @@ function MultiplyPage() {
         }
         picture={
           <section ref={stage}>
-            <div className="h-[min(480px,calc(100vh-20rem))] overflow-hidden rounded border border-edge">
+            <div data-slot="plot" className="h-[min(480px,calc(100vh-20rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={BOX}
@@ -138,11 +138,11 @@ function MultiplyPage() {
                 ["The four terms", `(${z[0]}·${w[0]} - ${z[1]}·${w[1]}) + (${z[0]}·${w[1]} + ${z[1]}·${w[0]})i = ${show(product)}`],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
-              The minus in the along part comes from i times i being minus one. That one fact,
+            <Text kind="note" as="p" className="pt-1">
+              The minus in the along part comes from 𝑖 times 𝑖 being minus one. That one fact,
               multiplied out, is the whole turn-and-stretch picture. Squaring is multiplying a number
               by itself: the angle doubles and the length squares, which is the next page.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -152,6 +152,6 @@ function MultiplyPage() {
           </>
         }
       />
-    </ComplexFrame>
+    </>
   );
 }

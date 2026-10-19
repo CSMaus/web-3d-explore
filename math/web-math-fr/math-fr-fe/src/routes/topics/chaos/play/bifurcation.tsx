@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Label, Button, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
-import { ChaosTabs } from "@/components/ChaosTabs";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
 import { PaletteBar } from "@/components/PaletteBar";
@@ -11,9 +11,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { CHAOS, TOPIC } from "@/lib/chaos";
+import { TOPIC } from "@/lib/chaos";
 import { INK, MUTED, plate, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
@@ -147,27 +146,23 @@ function BifurcationPage() {
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={CHAOS} />
-      <div className="mt-4">
-        <ChaosTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "The bifurcation diagram"}
         job="A bifurcation diagram is a map of everything a system can settle into as one knob is turned: the knob along the bottom, the long-run values above it. It shows at a glance where one answer splits into two, then four, then into chaos, and the same picture appears for many different rules. The last page fixed r and iterated. This one turns r up slowly, one column at a time, and above each value plots only what the number still visits once the approach is thrown away. One value, then two, then four, then a smear. The job is to watch that happen and to find where each doubling lands."
         input={
           <div className="space-y-3">
             <Choices options={NAMES} value={name} onPick={(id) => { setName(id); if (!isFlow(id)) { setFrom(FAMILY[id].full[0]); setTo(FAMILY[id].full[1]); } setPicked(null); setKnobPick(null); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               What the diagram is of. The two maps take one number to the next, as on the last
               page; the knob is r. The two systems are the Lorenz and Rossler pages, with one of
               their knobs turned and everything else held: above each value of the knob, one dot
               for each pass of the attractor. The same picture, drawn for four different rules.
-            </p>
+            </Text>
             {flow ? (
-              <p className="text-[11px] text-muted">
+              <Text kind="note" as="p">
                 {`For the ${flow.label} the knob runs from ${flow.range[0]} to ${flow.range[1]} with ${flow.held} held, and the number read off each pass is ${flow.reads}. Click any column to see what the attractor visits there.`}
-              </p>
+              </Text>
             ) : null}
             {!flow ? (<>
             <Slider label="r from" min={spec.full[0]} max={spec.full[1]} step={0.0005} value={from} format={(v) => v.toFixed(4)} onChange={(v) => { setFrom(Math.min(v, to - 0.001)); reset(); }} />
@@ -175,22 +170,22 @@ function BifurcationPage() {
             <Slider label="Columns" min={200} max={1600} step={50} value={columns} format={(v) => String(Math.round(v))} onChange={(v) => { setColumns(Math.round(v)); reset(); }} />
             <Slider label="Points a column" min={40} max={400} step={10} value={keep} format={(v) => String(Math.round(v))} onChange={(v) => { setKeep(Math.round(v)); reset(); }} />
             <div className="flex flex-wrap gap-2">
-              <button type="button" onClick={() => setWithExponent((v) => !v)} aria-pressed={withExponent} className={withExponent ? "rounded border border-leaf px-2.5 py-1 font-mono text-[11px] text-leaf" : "rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-muted"}>
+              <Button variant="outline" size="sm" type="button" onClick={() => setWithExponent((v) => !v)} aria-pressed={withExponent}>
                 Exponent panel
-              </button>
+              </Button>
               {found.points.length > 3 ? (
-                <button type="button" onClick={() => { const last = found.points[found.points.length - 1]; setFrom(found.points[2]); setTo(last + (last - found.points[2]) * 0.08); reset(); }} className="rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-leaf">
+                <Button variant="outline" size="sm" type="button" onClick={() => { const last = found.points[found.points.length - 1]; setFrom(found.points[2]); setTo(last + (last - found.points[2]) * 0.08); reset(); }}>
                   Zoom to the cascade
-                </button>
+                </Button>
               ) : null}
-              <button type="button" onClick={() => { setFrom(spec.full[0]); setTo(spec.full[1]); reset(); }} className="rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-leaf">
+              <Button variant="outline" size="sm" type="button" onClick={() => { setFrom(spec.full[0]); setTo(spec.full[1]); reset(); }}>
                 Reset range
-              </button>
+              </Button>
             </div>
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Click any column of the diagram to see that r's cobweb below it. Drag to move the
               range once it is narrower than the whole.
-            </p>
+            </Text>
             </>) : null}
             <PaletteBar />
           </div>
@@ -212,10 +207,10 @@ function BifurcationPage() {
           />
         }
         more={flow ? null : (
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">THE CASCADE</h2>
-            <div className="mt-2 font-mono text-[10px] leading-relaxed">
-              <div className="flex text-muted">
+          <section data-slot="panel">
+            <Label>THE CASCADE</Label>
+            <div data-text="caption" className="mt-2">
+              <div className="flex text-muted-foreground">
                 <span className="w-12">Period</span>
                 <span className="w-24">Superstable r</span>
                 <span className="w-20">Gap</span>
@@ -223,23 +218,23 @@ function BifurcationPage() {
               </div>
               {found.points.map((p, i) => (
                 <div key={i} className="flex">
-                  <span className="w-12 text-muted">{Math.pow(2, i)}</span>
-                  <span className="w-24 text-ink/80">{p.toFixed(6)}</span>
-                  <span className="w-20 text-muted">{i ? found.gaps[i - 1].toFixed(6) : "-"}</span>
-                  <span style={{ color: i >= 2 ? accent : undefined }} className={i >= 2 ? "" : "text-muted"}>{i >= 2 ? found.ratios[i - 2].toFixed(4) : "-"}</span>
+                  <span className="w-12 text-muted-foreground">{Math.pow(2, i)}</span>
+                  <span className="w-24 text-foreground/80">{p.toFixed(6)}</span>
+                  <span className="w-20 text-muted-foreground">{i ? found.gaps[i - 1].toFixed(6) : "-"}</span>
+                  <span style={{ color: i >= 2 ? accent : undefined }} className={i >= 2 ? "" : "text-muted-foreground"}>{i >= 2 ? found.ratios[i - 2].toFixed(4) : "-"}</span>
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-[11px] text-muted">
+            <Text kind="note" as="p" className="mt-3">
               Each r is found by bisection on the condition that the critical point returns to itself
               after that many steps. The ratio of successive gaps approaches Feigenbaum's constant,
               {" "}{DELTA.toFixed(6)}, And it is the same number for both families.
-            </p>
+            </Text>
           </section>
         )}
         picture={flow ? (
           <section ref={stage} className="space-y-2">
-            <div><div className="h-[min(320px,calc(100vh-34rem))] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[min(320px,calc(100vh-34rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={sweepBox}
@@ -261,7 +256,7 @@ function BifurcationPage() {
                 }}
               />
             </div><Caption>{`The ${flow.label}, ${flow.held} held. Along the bottom: ${flow.knob}. Above each value: ${flow.reads}, after the approach is thrown away. One dot is a steady state, a few a cycle, a smear the attractor, with windows in it where a cycle comes back. Click a column to look at it.`}</Caption></div>
-            <div><div className="h-[170px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[170px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={{ x0: 0, x1: Math.max(10, knobCol?.values.length ?? 10), y0: sweepBox.y0, y1: sweepBox.y1 }}
@@ -277,7 +272,7 @@ function BifurcationPage() {
           </section>
         ) : (
           <section ref={stage} className="space-y-2">
-            <div><div className="h-[min(300px,calc(100vh-34rem))] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[min(300px,calc(100vh-34rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={box}
@@ -306,7 +301,7 @@ function BifurcationPage() {
               />
             </div><Caption>Above each r: what the number still visits after 1200 steps. Click a column for its cobweb.</Caption></div>
             {withExponent ? (
-              <div><div className="h-[170px] overflow-hidden rounded border border-edge">
+              <div><div data-slot="plot" className="h-[170px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={lyapBox}
@@ -327,7 +322,7 @@ function BifurcationPage() {
                 />
               </div><Caption>The exponent along r. Below zero: a cycle. Zero: a doubling. Above: the smear. A dip in the smear is a periodic window; to the floor, a superstable cycle.</Caption></div>
             ) : null}
-            <div><div className="h-[170px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[170px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={{ x0: -0.02, x1: 1.02, y0: -0.02, y1: 1.02 }}
@@ -381,14 +376,14 @@ function BifurcationPage() {
                 ["Orbits computed", `${columns} columns of ${keep} points, after 1200 discarded`],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The doublings crowd together: each gap is about 4.669 times shorter than the one
               before, and that number does not depend on the rule. Switch to the sine family and it
               is the same. Past the accumulation point the number settles on nothing, except in
               windows where a cycle returns for a while. Pick the Lorenz or Rossler system above
               and the same picture is drawn for a flow: the route into chaos does not care what
               the system is.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -398,6 +393,6 @@ function BifurcationPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

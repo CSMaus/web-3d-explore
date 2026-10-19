@@ -1,17 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Label, Text, Heading } from "@kit/index";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Chips } from "@/components/Chips";
 import { Equations } from "@/components/Equations";
 import { Frame } from "@/components/Frame";
 import { PaletteBar } from "@/components/PaletteBar";
-import { PlayTabs } from "@/components/PlayTabs";
-import { TopicBar } from "@/components/TopicBar";
 import { Readout } from "@/components/Readout";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/systems";
-import { FRACTALS } from "@/lib/topic";
 import { useGrower } from "@/lib/grower";
 import { useLook } from "@/lib/store";
 import { boxDim } from "@/systems/ifs";
@@ -111,28 +109,24 @@ function LichtenbergPage() {
   }, [tick]);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={FRACTALS} />
-      <div className="mt-4">
-        <PlayTabs />
-      </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "Dielectric breakdown"}</h1>
+    <div>
+      <Heading level={1} className="mt-4">{system?.name ?? "Dielectric breakdown"}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">SOURCE</h2>
+          <section data-slot="panel">
+            <Label>SOURCE</Label>
             <div className="mt-3">
               <Chips items={[...WHERE]} active={where} onPick={setWhere} />
             </div>
-            <p className="mt-3 text-[11px] text-muted">
+            <Text kind="note" as="p" className="mt-3">
               From a point is the Lichtenberg figure: charge injected at one spot in an insulator,
               branching out in every direction, the burn left in glass or wood. Across a gap is the
               same model with two plates, which is a bolt crossing the gap.
-            </p>
+            </Text>
           </section>
 
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">MODEL</h2>
+          <section data-slot="panel">
+            <Label>MODEL</Label>
             <div className="mt-3 space-y-2">
               <Slider label="Roughness" min={0} max={3} step={0.05} value={eta} format={(v) => v.toFixed(2)} onChange={setEta} />
               <Slider label="Grid width" min={61} max={161} step={10} value={cols} format={(v) => String(Math.round(v))} onChange={(v) => setCols(Math.round(v))} />
@@ -141,16 +135,16 @@ function LichtenbergPage() {
               <Slider label="Seed" min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
               <PaletteBar />
             </div>
-            <p className="mt-3 text-[11px] text-muted">
+            <Text kind="note" as="p" className="mt-3">
               At roughness 0 every edge site is equally likely; raise it and the tips take over.
-            </p>
+            </Text>
           </section>
 
           <Equations system={system} />
         </div>
 
         <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
-          <section ref={stage} className="h-[min(620px,calc(100vh-12rem))] overflow-hidden rounded border border-edge" style={{ background: palette.back }}>
+          <section ref={stage} data-slot="plot" className="h-[min(620px,calc(100vh-12rem))] overflow-hidden" style={{ background: palette.back }}>
             <Frame draw={draw} className="block h-full w-full" />
           </section>
           <SaveImage stage={stage} name="lichtenberg" />
@@ -173,6 +167,6 @@ function LichtenbergPage() {
           />
         </div>
       </div>
-    </main>
+    </div>
   );
 }

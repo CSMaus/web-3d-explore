@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import re
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
@@ -19,9 +20,12 @@ FOREIGN = 1008
 
 
 def allowed(origin: str | None) -> bool:
-    if not settings.socket_origins:
+    if not settings.socket_origins and not settings.socket.origin_regex:
         return True
-    return origin in settings.socket_origins
+    if origin in settings.socket_origins:
+        return True
+    pattern = settings.socket.origin_regex
+    return bool(pattern and origin and re.fullmatch(pattern, origin))
 
 
 def asked(body: dict) -> dict:

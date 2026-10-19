@@ -1,0 +1,13 @@
+{
+ "slug": "chaos",
+ "number": 2,
+ "title": "Differential equations, attractors and chaos",
+ "summary": "An equation whose unknown is a function, solved in closed form until that runs out and numerically after it, the attractor a system settles onto, deterministic chaos, the route in through period doubling, and the one experiment where the whole chain was used to do something",
+ "state": "writing",
+ "parts": 0,
+ "beats": 0,
+ "seconds": 0,
+ "systems": 8,
+ "aside": false,
+ "part_list": []
+}

@@ -1,21 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot, type Box } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, TWO, boxOf, drawNet, layout, shadePlane, ticks } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { dataset } from "@/systems/learn";
-import { ACTS, agree, backward, clone, forward, gradFlat, loss, make, numerical, predict, type Net } from "@/systems/net";
+import { ACTS, agree, backward, clone, forward, gradFlat, loss, make, numerical, params, predict, work as passes, type Net } from "@/systems/net";
 
 export const Route = createFileRoute("/topics/networks/play/blame")({
   loader: () => api.system(TOPIC, "blame"),
@@ -157,7 +156,7 @@ function BlamePage() {
       case 2:
         return `the last unit weighs those three answers and squashes: ${t.pass.a[2][0].toFixed(3)}. it wanted ${y[0]}.`;
       case 3:
-        return `the miss is ${t.miss.toFixed(3)}: the answer minus what it wanted. through the squash's own slope that becomes a blame of ${t.dOut[0].toFixed(3)} on the last unit. ${t.miss > 0 ? "rose means: your answer was too high." : "green means: your answer was too low."}`;
+        return `the miss is ${t.miss.toFixed(3)}: the answer minus what it wanted. through the squash's own slope that becomes a blame of ${t.dOut[0].toFixed(3)} on the last unit. ${t.miss > 0 ? "rose means: the answer was too high." : "green means: the answer was too low."}`;
       case 4:
         return `the blame flows back along the wires. each middle unit gets a share in proportion to its weight into the last unit, times its own squash's slope: ${t.dHid.map((d) => d.toFixed(3)).join(", ")}. unit ${strongest + 1} carries the most, because its wire to the output is the strongest and it was not saturated.`;
       default:
@@ -166,11 +165,7 @@ function BlamePage() {
   })();
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "The correction, one dot at a time"}
         job="The last two pages moved every number downhill and did not say how the downhill was found. This page does one correction slowly, on the four dots of exclusive or: a dot goes forward through the network, the miss is measured at the end, and the blame for it flows back along the same wires. Each number then moves by the share of the blame that reached it."
@@ -178,11 +173,11 @@ function BlamePage() {
           <div className="space-y-3">
             <Choices options={PICKS} value={pick} onPick={(id) => { setPick(id); restart(); }} />
             <Slider label="Step size" min={0.1} max={5} step={0.1} value={rate} format={(v) => v.toFixed(1)} onChange={setRate} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               One step here is one of six moments, not one correction. Six steps make one
               correction on one dot. Run it fast and the plane at the right learns exclusive or,
               which one line could not do.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -207,7 +202,7 @@ function BlamePage() {
         picture={
           <section ref={stage} className="space-y-2">
             <div className="grid gap-2 lg:grid-cols-[1fr_260px]">
-              <div><div className="h-[380px] overflow-hidden rounded border border-edge">
+              <div><div data-slot="plot" className="h-[380px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -256,7 +251,7 @@ function BlamePage() {
                 />
               </div><Caption>{phase < 0 ? "Six moments, in order:" : `Moment ${phase + 1} of 6: ${PHASES[phase]}`}. {phase === 4 ? "Circles now show blame" : "Circle shows blame"}</Caption></div>
               <div className="space-y-2">
-                <div><div className="h-[230px] overflow-hidden rounded border border-edge">
+                <div><div data-slot="plot" className="h-[230px] overflow-hidden">
                   <Plot
                     className="h-full w-full"
                     box={box}
@@ -274,7 +269,7 @@ function BlamePage() {
                     }}
                   />
                 </div><Caption>The four dots and the answer so far</Caption></div>
-                <div><div className="h-[142px] overflow-hidden rounded border border-edge">
+                <div><div data-slot="plot" className="h-[142px] overflow-hidden">
                   <Plot
                     className="h-full w-full"
                     box={histBox}
@@ -293,29 +288,35 @@ function BlamePage() {
         result={
           <div className="space-y-2">
             <Verdict>{words}</Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>The dot, and what it wants</dt>
-              <dd className="text-right text-ink/80">({x[0]}, {x[1]}) Wants {y[0]}</dd>
+              <dd className="text-right text-foreground/80">({x[0]}, {x[1]}) Wants {y[0]}</dd>
               <dt>The network's answer for it</dt>
-              <dd className="text-right text-ink/80">{t.pass.a[2][0].toFixed(4)}</dd>
+              <dd className="text-right text-foreground/80">{t.pass.a[2][0].toFixed(4)}</dd>
               <dt>Blame at the output</dt>
-              <dd className="text-right text-ink/80">{t.dOut[0].toFixed(4)}</dd>
+              <dd className="text-right text-foreground/80">{t.dOut[0].toFixed(4)}</dd>
               <dt>Blame reaching the three middle units</dt>
-              <dd className="text-right text-ink/80">{t.dHid.map((d) => d.toFixed(3)).join(", ")}</dd>
+              <dd className="text-right text-foreground/80">{t.dHid.map((d) => d.toFixed(3)).join(", ")}</dd>
               <dt>Largest move any weight makes this correction</dt>
-              <dd className="text-right text-ink/80">{Math.max(...t.change.flat(2).map(Math.abs)).toFixed(4)}</dd>
+              <dd className="text-right text-foreground/80">{Math.max(...t.change.flat(2).map(Math.abs)).toFixed(4)}</dd>
               <dt>The same slopes by nudging each number by hand, worst disagreement</dt>
-              <dd className="text-right text-ink/80">{check.toExponential(1)}</dd>
+              <dd className="text-right text-foreground/80">{check.toExponential(1)}</dd>
               <dt>How wrong over all four dots</dt>
-              <dd className="text-right text-ink/80">{loss(view.net, data, "mse").toFixed(5)}</dd>
+              <dd className="text-right text-foreground/80">{loss(view.net, data, "mse").toFixed(5)}</dd>
+              <dt>Slopes needed, one per number in the network</dt>
+              <dd className="text-right text-foreground/80">{params(shown.net).total}</dd>
+              <dt>Work to get them all by one pass back, in forward passes</dt>
+              <dd className="text-right text-foreground/80">about {1 + passes(shown.net).ratio}</dd>
+              <dt>Work to get them all by nudging each number, in forward passes</dt>
+              <dd className="text-right text-foreground/80">{2 * params(shown.net).total}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The blame at a unit is the slope from the first page: how much the miss changes when
               that unit's total changes a hair. Passing it back through a wire multiplies by the
               wire's weight; passing it through a squash multiplies by the squash's slope there.
               That is the chain rule, and it gives every one of the thirteen slopes from one pass
               back, instead of thirteen separate nudges. The last line above is the two agreeing.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -325,6 +326,6 @@ function BlamePage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

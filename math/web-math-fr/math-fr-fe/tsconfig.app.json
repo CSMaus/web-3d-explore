@@ -15,7 +15,16 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
-    "paths": { "@/*": ["./src/*"] }
+    "paths": {
+      "@/*": ["./src/*"],
+      "@kit/*": ["../ui-kit/src/*"],
+      "react": ["./node_modules/@types/react"],
+      "react/*": ["./node_modules/@types/react/*"],
+      "react-dom": ["./node_modules/@types/react-dom"],
+      "radix-ui": ["./node_modules/radix-ui"],
+      "cn": ["./node_modules/cn"],
+      "class-variance-authority": ["./node_modules/class-variance-authority"]
+    }
   },
   "include": ["src"]
 }

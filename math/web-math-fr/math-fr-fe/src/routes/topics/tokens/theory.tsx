@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text, Heading } from "@kit/index";
 import { useMemo } from "react";
 import { Offline } from "@/components/Offline";
-import { TopicBar } from "@/components/TopicBar";
-import { Rail } from "@/components/Rail";
+import { RailIndex } from "@/components/RailIndex";
 import { Tex } from "@/components/Tex";
 import { api } from "@/lib/api";
-import { TOKENS, TOPIC } from "@/lib/tokens";
+import { TOPIC } from "@/lib/tokens";
 import { useHere } from "@/lib/here";
 import { useRise } from "@/lib/reveal";
 
@@ -31,70 +31,68 @@ function TheoryPage() {
 
   if (!theory) {
     return (
-      <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-        <TopicBar topic={TOKENS} />
-        <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">{HEADING}</h1>
+      <div>
+        <Heading level={1} className="mt-6">{HEADING}</Heading>
         <div className="mt-6">
           <Offline what="This page is nothing but the equations, so it has nothing to show until the backend answers. The play pages draw their pictures without it." />
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-[45vh] xl:grid xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-8">
-      <Rail className="hidden xl:block" items={items} here={here} onPick={go} />
+    <div className="pb-[45vh]">
+      <RailIndex items={items} here={here} onPick={go} />
 
       <div className="min-w-0">
-        <TopicBar topic={TOKENS} />
-        <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">{HEADING}</h1>
-        <p className="mt-3 max-w-2xl text-sm text-muted">
+        <Heading level={1} className="mt-6">{HEADING}</Heading>
+        <Text kind="intro" as="p" className="mt-3 max-w-2xl">
           Every equation this topic rests on. Each one also sits on the page of the system it
           belongs to, and every number quoted in a note was measured by the code rather than
           copied from a reference.
-        </p>
+        </Text>
 
         <section id="measuring" className="mt-12 scroll-mt-24">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-sky">
+          <Heading level={2}>
             The shared machinery
-          </h2>
+          </Heading>
           <div className="mt-4 space-y-6">
             {theory.definitions.map((d, i) => (
               <Card key={d.id} delay={i * 70}>
-                <div className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                <div data-text="label">
                   {d.name}
                 </div>
                 <Tex tex={d.tex} block />
-                <p className="text-xs text-muted">{d.note}</p>
+                <Text kind="note" as="p">{d.note}</Text>
               </Card>
             ))}
           </div>
         </section>
 
         <section className="mt-16">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-sky">The systems</h2>
+          <Heading level={2}>The systems</Heading>
           <div className="mt-4 space-y-10">
             {theory.systems.map((s, i) => (
               <div key={s.id} id={s.id} className="scroll-mt-24">
                 <Card delay={i * 60}>
-                  <div className="font-mono text-sm text-ink">{s.name}</div>
-                  <p className="mt-1 text-xs text-muted">{s.summary}</p>
+                  <div data-text="itemTitle">{s.name}</div>
+                  <Text kind="note" as="p" className="mt-1">{s.summary}</Text>
                   <div className="mt-4 space-y-4">
                     {s.blocks.map((b) => (
                       <div key={b.label}>
-                        <div className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                        <div data-text="label">
                           {b.label}
                         </div>
                         <Tex tex={b.tex} block />
-                        <div className="text-xs text-muted">{b.note}</div>
+                        <div data-text="note">{b.note}</div>
                       </div>
                     ))}
-                    <div className="border-t border-edge pt-3">
-                      <div className="font-mono text-[11px] uppercase tracking-wider text-leaf">
+                    <div className="border-t border-border pt-3">
+                      <div data-text="label">
                         {s.dimension.label}
                       </div>
                       <Tex tex={s.dimension.tex} block />
-                      <div className="text-xs text-muted">{s.dimension.note}</div>
+                      <div data-text="note">{s.dimension.note}</div>
                     </div>
                   </div>
                 </Card>
@@ -103,14 +101,14 @@ function TheoryPage() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 
 function Card({ children, delay }: { children: React.ReactNode; delay: number }) {
   const ref = useRise<HTMLDivElement>(delay);
   return (
-    <div ref={ref} className="rise rounded border border-edge p-4">
+    <div ref={ref} data-slot="panel" className="rise">
       {children}
     </div>
   );

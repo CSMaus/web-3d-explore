@@ -1,18 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot, type Box, type Pen } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, TWO, plate, ticks } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { MOTIONS, secondSlope, slopeBetween, trace } from "@/systems/calc";
 
@@ -78,24 +77,20 @@ function Rate2Page() {
   const trend = Math.abs(exactAccel) < 0.05 ? "Holding steady" : exactAccel > 0 ? "Getting faster" : "Getting slower";
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "Is it speeding up or slowing down"}
         job="The same car. Last page the job was its speed. This time the job is whether the speed itself is rising or falling, and by how much a second: the acceleration. It comes from the speed exactly the way the speed came from the position."
         input={
           <div className="space-y-3">
             <Choices options={OPTIONS} value={motion} onPick={(id) => { setMotion(id); reset(); }} />
-            <p className="text-[11px] text-muted">{m.what}</p>
+            <Text kind="note" as="p">{m.what}</Text>
             <Slider label="The gap" min={0.05} max={3} step={0.05} value={gap} format={(v) => `${v.toFixed(2)} s`} onChange={setGap} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               The acceleration is read from two speeds this far apart, and each of those speeds is
               read from two positions this far apart. So it is a change of a change. A wide gap
               blurs it twice over; pinch it down and the ring settles on the dot.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -116,7 +111,7 @@ function Rate2Page() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div><div className="h-[120px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[120px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={roadBox}
@@ -135,7 +130,7 @@ function Rate2Page() {
                 }}
               />
             </div><Caption>{started ? `Speed ${speed.toFixed(1)} m/s` : "Green arrow: the speed"}. {started ? `Acceleration ${exactAccel.toFixed(2)} m/s each second` : "Rose arrow: how the speed is changing"}</Caption></div>
-            <div className="h-[150px] overflow-hidden rounded border border-edge">
+            <div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot className="h-full w-full" box={posBox} deps={[posTrace, t, posBox]} draw={(pen) => {
                 ticks(pen);
                 curve(pen, posTrace, ONE, "#243a2c");
@@ -143,7 +138,7 @@ function Rate2Page() {
                 plate(pen, "Where the car is", posBox.x0 + 0.3, posBox.y1 - (posBox.y1 - posBox.y0) * 0.1, MUTED);
               }} />
             </div>
-            <div><div className="h-[150px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot className="h-full w-full" box={spdBox} deps={[spdTrace, t, gap, spdBox]} draw={(pen) => {
                 ticks(pen);
                 curve(pen, spdTrace, SKY, "#20323a");
@@ -156,14 +151,14 @@ function Rate2Page() {
                 pen.dot(t, speed, 5, INK);
               }} />
             </div><Caption>The speed. Its steepness is the acceleration.</Caption></div>
-            <div><div className="h-[150px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot className="h-full w-full" box={accBox} deps={[accTrace, t, accel, accBox]} draw={(pen) => {
                 ticks(pen);
                 curve(pen, accTrace, TWO, "#3a2033");
                 pen.dot(t, exactAccel, 4.5, TWO);
                 pen.ring(t, accel, 6, INK, 2);
               }} />
-            </div><Caption>The acceleration. Above zero: speeding up. Below: slowing down. Ring: from the gap you set.  Dot: exact.</Caption></div>
+            </div><Caption>The acceleration. Above zero: speeding up. Below: slowing down. Ring: from the gap set above.  Dot: exact.</Caption></div>
           </section>
         }
         result={
@@ -173,21 +168,21 @@ function Rate2Page() {
                 ? "Press run. The green arrow will be the speed and the rose arrow the change in it. Watch the rose arrow point backwards whenever the green one is shrinking."
                 : `At ${t.toFixed(1)} s the car is ${trend}: its speed is ${speed.toFixed(2)} m/s and changing by ${exactAccel.toFixed(2)} m/s every second. From two speeds ${gap.toFixed(2)} s apart the change comes out as ${accel.toFixed(2)}, ${Math.abs(accel - exactAccel) < 0.08 * Math.max(0.5, Math.abs(exactAccel)) ? "which is right" : "which is off: the gap is too wide for a speed that swings this fast"}.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Speed a little before</dt>
-              <dd className="text-right text-ink/80">{slopeBetween(m.at, t - gap / 2, gap).toFixed(3)} M/s</dd>
+              <dd className="text-right text-foreground/80">{slopeBetween(m.at, t - gap / 2, gap).toFixed(3)} M/s</dd>
               <dt>Speed a little after</dt>
-              <dd className="text-right text-ink/80">{slopeBetween(m.at, t + gap / 2, gap).toFixed(3)} M/s</dd>
+              <dd className="text-right text-foreground/80">{slopeBetween(m.at, t + gap / 2, gap).toFixed(3)} M/s</dd>
               <dt>The difference, divided by the gap</dt>
-              <dd className="text-right text-ink/80">{accel.toFixed(3)} M/s each second</dd>
+              <dd className="text-right text-foreground/80">{accel.toFixed(3)} M/s each second</dd>
               <dt>Exact</dt>
-              <dd className="text-right text-ink/80">{exactAccel.toFixed(3)}</dd>
+              <dd className="text-right text-foreground/80">{exactAccel.toFixed(3)}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               Position, speed, acceleration: each is the steepness of the one before. The same
               ratio, applied twice. A network's training uses exactly this ratio, once, on a
               different kind of curve: how wrong it is, against each of its own numbers.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -197,7 +192,7 @@ function Rate2Page() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }
 

@@ -1,3 +1,5 @@
+import { Heading } from "@kit/index";
+
 /**
  * the four things a reader needs before a single control means anything: what
  * goes in, what the picture is, what moving things does, and what the result
@@ -16,20 +18,20 @@ export type OrientText = {
 
 const ROWS: [keyof OrientText, string][] = [
   ["input", "What goes in"],
-  ["picture", "What you are looking at"],
+  ["picture", "What is on screen"],
   ["move", "What to move"],
-  ["means", "What it tells you"],
+  ["means", "What it says"],
 ];
 
 export function Orient({ text }: { text: OrientText }) {
   return (
-    <section className="rounded border border-sky/30 bg-sky/[0.03] p-4">
-      <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">START HERE</h2>
+    <section className="rounded border border-secondary/30 bg-secondary/[0.03] p-4">
+      <Heading level={2}>START HERE</Heading>
       <dl className="mt-3 space-y-2.5">
         {ROWS.map(([key, label]) => (
           <div key={key}>
-            <dt className="font-mono text-[10px] uppercase tracking-wider text-muted">{label}</dt>
-            <dd className="mt-0.5 text-[12px] leading-relaxed text-ink/80">{text[key]}</dd>
+            <dt data-text="label">{label}</dt>
+            <dd data-text="body" className="mt-0.5">{text[key]}</dd>
           </div>
         ))}
       </dl>

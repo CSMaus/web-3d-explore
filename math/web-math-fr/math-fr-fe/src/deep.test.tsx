@@ -78,18 +78,23 @@ function serveSystem() {
   );
 }
 
-/** the zoom slider is the only range on this page that runs to 22. */
-function zoomSlider(): HTMLInputElement {
-  const all = Array.from(document.querySelectorAll<HTMLInputElement>('input[type="range"]'));
-  const found = all.find((i) => i.max === "22");
+/** the zoom slider is the only slider on this page that runs to 22. */
+function zoomSlider(): HTMLElement {
+  const all = Array.from(document.querySelectorAll<HTMLElement>('[role="slider"]'));
+  const found = all.find((i) => i.getAttribute("aria-valuemax") === "22");
   if (!found) throw new Error("no zoom slider on the page");
   return found;
 }
 
+// the slider is driven by its keys: home, then a page key per half unit, since
+// the zoom's step is 0.05 and a page key moves ten steps. one press per act,
+// because the slider is controlled and only re-reads its value after a render
+const press = (key: string) => act(async () => fireEvent.keyDown(zoomSlider(), { key }));
 const zoomTo = async (times: number) => {
-  await act(async () => {
-    fireEvent.change(zoomSlider(), { target: { value: String(times) } });
-  });
+  const min = Number(zoomSlider().getAttribute("aria-valuemin") ?? "0");
+  zoomSlider().focus();
+  await press("Home");
+  for (let i = 0; i < Math.round((times - min) * 2); i++) await press("PageUp");
 };
 
 describe("The deep-zoom socket on the Mandelbrot page", () => {

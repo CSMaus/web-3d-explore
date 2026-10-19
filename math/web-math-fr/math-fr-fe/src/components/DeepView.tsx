@@ -35,11 +35,11 @@ export function DeepView({ tile, stage, className }: Props) {
         />
       ) : (
         <div className="grid h-full w-full place-items-center">
-          <span className="font-mono text-[11px] text-muted">{note}</span>
+          <span data-text="caption">{note}</span>
         </div>
       )}
       {tile ? (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-baseline justify-between bg-ground/70 px-2 py-1 font-mono text-[10px] text-muted">
+        <div data-text="caption" className="pointer-events-none absolute inset-x-0 bottom-0 flex items-baseline justify-between bg-background/70 px-2 py-1">
           <span>{note}</span>
           <span>
             {tile.width} by {tile.height}

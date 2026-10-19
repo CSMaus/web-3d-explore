@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Choices } from "@/components/Choices";
@@ -9,10 +10,9 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { INK, ONE, SKY, TWO, ticks } from "@/lib/draw";
-import { PRIMES, TOPIC } from "@/lib/primes";
+import { TOPIC } from "@/lib/primes";
 import { useRunner } from "@/lib/runner";
 import { logistic, orbit } from "@/systems/maps";
 import { firstPrimes, gaps, histogram, predictability, returnPairs, shuffled } from "@/systems/primes";
@@ -68,8 +68,7 @@ function GapsPage() {
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={PRIMES} />
+    <div>
       <TaskPage
         title={system?.name ?? "The gaps between primes, as a return map"}
         job="The primes look patternless, and so does a chaotic sequence. This page tells them apart with the picture the Rossler page used: each gap between consecutive primes plotted against the next. A sequence that follows a rule, however sensitive, lands on a curve. Beside it, for comparison, a sequence that really has a rule, or the same gaps with their order destroyed."
@@ -77,12 +76,12 @@ function GapsPage() {
           <div className="space-y-3">
             <Slider label="Primes" min={200} max={20000} step={200} value={count} format={(v) => v.toLocaleString("en")} onChange={(v) => { setCount(Math.round(v)); reset(); }} />
             <Choices options={RIVALS} value={rival} onPick={setRival} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               The left picture is always the real primes, found by a sieve as the run goes. The
-              right picture is a comparison of your choice: the logistic map at r = 4, which is
+              right picture is the chosen comparison: the logistic map at r = 4, which is
               chaotic and follows a rule, or the real gaps again with their order shuffled, to
               test whether the order in which the gaps come carries anything.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -105,7 +104,7 @@ function GapsPage() {
           <section ref={stage} className="space-y-2">
             <div className="grid gap-2 lg:grid-cols-2">
               <div>
-                <div className="h-[300px] overflow-hidden rounded border border-edge">
+                <div data-slot="plot" className="h-[300px] overflow-hidden">
                   <Plot
                     className="h-full w-full"
                     box={box}
@@ -125,7 +124,7 @@ function GapsPage() {
                 <Caption>The real primes. Along the bottom: a gap between two consecutive primes. Up: the gap that comes right after it. One dot a pair, {pairs.length.toLocaleString("en")} so far. Every dot sits on a grid of even numbers, and no curve runs through them.</Caption>
               </div>
               <div>
-                <div className="h-[300px] overflow-hidden rounded border border-edge">
+                <div data-slot="plot" className="h-[300px] overflow-hidden">
                   <Plot
                     className="h-full w-full"
                     box={rivalBox}
@@ -146,7 +145,7 @@ function GapsPage() {
               </div>
             </div>
             <div>
-              <div className="h-[150px] overflow-hidden rounded border border-edge">
+              <div data-slot="plot" className="h-[150px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={{ x0: 0, x1: top, y0: 0, y1: histTop }}
@@ -184,12 +183,12 @@ function GapsPage() {
                 ["The same for the comparison", rival === "logistic" ? "0 per cent: a rule" : `${(rhoRival.ratio * 100).toFixed(1)} per cent`],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               Chaos is a rule with a positive exponent: the Lorenz page followed two starts a hair
               apart along the same rule and watched them part. The primes offer no rule to follow
               and no start to nudge, so neither an exponent nor a return map applies. Looking random
               and being chaotic are different things, and this picture is the test.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -199,6 +198,6 @@ function GapsPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

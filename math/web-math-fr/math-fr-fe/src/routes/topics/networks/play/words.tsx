@@ -1,17 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Input, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { HEADS, attend, sequence } from "@/systems/shapes";
 
@@ -55,34 +54,30 @@ function WordsPage() {
   const evenness = row ? Math.max(...row) : 0;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "The same job on words"}
         job="A sentence, one word a position. For each word the job is to decide which other words to draw meaning from, and how much. Every word asks a question, every word offers an answer key, and the match between a question and a key, squashed so the matches add to one, is how much that word listens to that one. The questions and keys are made by weights; here they are wired by hand so what they do can be seen."
         input={
           <div className="space-y-3">
             <label className="block">
-              <span className="text-xs text-muted">The sentence</span>
-              <input
+              <span data-text="note">The sentence</span>
+              <Input
                 value={text}
                 onChange={(e) => {
                   setText(e.target.value);
                   reset();
                 }}
-                className="mt-1 w-full rounded border border-edge bg-transparent px-2 py-1.5 font-mono text-[12px] text-ink outline-none focus:border-leaf"
+                className="mt-1"
               />
             </label>
             <Choices options={HEAD_OPTIONS} value={head} onPick={(id) => { setHead(id); reset(); }} />
-            <p className="text-[11px] text-muted">{HEADS[head].what}</p>
+            <Text kind="note" as="p">{HEADS[head].what}</Text>
             <Choices options={MASKS} value={mask} onPick={(id) => { setMask(id); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               A model that writes text one word at a time may only look back, because the words
               ahead do not exist yet. One that reads a finished sentence may look both ways.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -103,7 +98,7 @@ function WordsPage() {
           />
         }
         picture={
-          <section ref={stage} className="space-y-1"><div className="h-[520px] overflow-hidden rounded border border-edge">
+          <section ref={stage} className="space-y-1"><div data-slot="plot" className="h-[520px] overflow-hidden">
             <Plot
               className="h-full w-full"
               box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -191,22 +186,22 @@ function WordsPage() {
                     : `Word ${at}, "${tokens[at - 1]}", listens ${(evenness * 100).toFixed(0)} % to "${tokens[top]}" at position ${top + 1}${head === "previous" && top === at - 2 ? ": The word just before it, as this head was wired to do" : head === "first" && top === 0 ? ": The first word, as this head was wired to do" : head === "same" && tokens[top] === tokens[at - 1] && top !== at - 1 ? ": An earlier copy of the same word" : head === "same" && top === at - 1 ? ": Itself, since there is no earlier copy of it" : ""}.${mask === "back" && at === 1 ? " The first word has nothing behind it, so it can only listen to itself." : ""}`}
             </Verdict>
             {row ? (
-              <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+              <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
                 {row.map((v, j) => (v > 0.005 ? (
                   <FragmentRow key={j} label={`"${tokens[j]}", position ${j + 1}:`} value={`${(v * 100).toFixed(1)} %`} />
                 ) : null))}
                 <dt>Adds up to</dt>
-                <dd className="text-right text-ink/80">{(row.reduce((a, b) => a + b, 0) * 100).toFixed(0)} %</dd>
+                <dd className="text-right text-foreground/80">{(row.reduce((a, b) => a + b, 0) * 100).toFixed(0)} %</dd>
                 <dt>Numbers in this head's wiring</dt>
-                <dd className="text-right text-ink/80">{3 * width * width}</dd>
+                <dd className="text-right text-foreground/80">{3 * width * width}</dd>
               </dl>
             ) : null}
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               This is one head of attention. A transformer is many heads at once, each with its
               own questions and keys, stacked in layers, with the small networks from earlier
               pages between them. What a word carries out of a layer is the words it listened
               to, weighed as the table shows, and nothing else.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -216,7 +211,7 @@ function WordsPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }
 
@@ -224,7 +219,7 @@ function FragmentRow({ label, value }: { label: string; value: string }) {
   return (
     <>
       <dt>Listens to {label}</dt>
-      <dd className="text-right text-ink/80">{value}</dd>
+      <dd className="text-right text-foreground/80">{value}</dd>
     </>
   );
 }

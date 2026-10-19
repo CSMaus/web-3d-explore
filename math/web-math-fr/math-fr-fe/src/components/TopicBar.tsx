@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { TabLink } from "@/components/TabLink";
 import type { BuiltTopic } from "@/lib/topic";
 
 /**
@@ -7,26 +8,21 @@ import type { BuiltTopic } from "@/lib/topic";
  */
 export function TopicBar({ topic }: { topic: BuiltTopic }) {
   return (
-    <div className="border-b border-edge pb-3">
+    <div className="border-b border-border pb-3">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <Link to="/topics" className="font-mono text-[11px] text-muted hover:text-ink">
+        <Link to="/topics" data-text="crumb">
           Topics
         </Link>
-        <span className="font-mono text-[11px] text-edge">/</span>
-        <span className="font-mono text-sm tracking-wide text-leaf">
+        <span data-text="crumb">/</span>
+        <span data-text="topic">
           {topic.number === 0 ? "Start here" : `Topic ${topic.number}`} - {topic.title}
         </span>
       </div>
-      <nav className="mt-3 flex flex-wrap gap-1.5">
+      <nav className="mt-3 flex flex-wrap gap-1.5" aria-label="Sections of the topic">
         {topic.sections.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className="rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-muted"
-            activeProps={{ className: "border-leaf text-leaf" }}
-          >
+          <TabLink key={item.to} to={item.to}>
             {item.label}
-          </Link>
+          </TabLink>
         ))}
       </nav>
     </div>

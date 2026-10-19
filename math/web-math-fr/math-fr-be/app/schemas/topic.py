@@ -17,6 +17,10 @@ class Part(BaseModel):
     video: str = ""
     # a short stand-in for the voice-over, for a reader who cannot hear it
     caption: str = ""
+    # the reading text beside the clip: the question the part answers, then its
+    # paragraphs, one a beat, in the order the clip makes them
+    question: str = ""
+    text: list[str] = []
     beats: list[Beat]
 
 

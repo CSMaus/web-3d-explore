@@ -28,11 +28,15 @@ const TITLES: Record<string, string> = {
   accumulate: "Adding it back up",
   growth: "The thing that grows by how much there is",
   slope: "Which way is down",
-  line: "Draw the line yourself",
+  line: "Draw the line by hand",
+  nudge: "A small change, and what it does",
   unit: "Inside one unit",
   layers: "Many units, one answer",
+  any: "Any curve at all",
   learn: "How it learns, and how fast",
   blame: "The correction, one dot at a time",
+  slow: "Starting sure and wrong",
+  fade: "The first layer learns last",
   pictures: "The same job on a picture",
   sequence: "The same job on a sequence",
   words: "The same job on words",
@@ -50,14 +54,15 @@ describe("Topic 3, with the backend down", () => {
     });
   }
 
-  it("All thirteen pages are reachable from the tab bar, in three named groups", async () => {
+  it("All seventeen pages are reachable from the tab bar, in four named groups", async () => {
     await siteAt("/topics/networks/play");
-    await waitFor(() => expect(screen.getByText("Thirteen pages, one job")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Seventeen pages, one job")).toBeTruthy());
     const hrefs = Array.from(document.querySelectorAll("main a")).map((a) => a.getAttribute("href"));
     for (const s of SYSTEMS) expect(hrefs).toContain(s.to);
-    expect(SYSTEMS.length).toBe(13);
-    for (const group of GROUPS) expect(screen.getByText(group)).toBeTruthy();
-    expect(GROUPS.length).toBe(3);
+    expect(SYSTEMS.length).toBe(17);
+    // once on the page, once as a heading in the rail
+    for (const group of GROUPS) expect(screen.getAllByText(group).length).toBeGreaterThan(0);
+    expect(GROUPS.length).toBe(4);
   });
 
   it("Every page carries the topic bar and the same page width", async () => {
@@ -72,7 +77,7 @@ describe("Topic 3, with the backend down", () => {
       expect(hrefs, s.to).toContain("/topics/networks/parts");
       expect(hrefs, s.to).toContain("/topics/networks/play");
       expect(hrefs, s.to).toContain("/topics/networks/theory");
-      expect(document.querySelector("main")?.className, s.to).toContain("max-w-6xl");
+      expect(document.querySelector("main")?.dataset.slot, s.to).toBe("page");
       view.unmount();
     }
   });
@@ -89,7 +94,7 @@ describe("Topic 3, with the backend down", () => {
 
   it("The bare address goes to the pages, since no clip is filmed", async () => {
     await siteAt("/topics/networks");
-    await waitFor(() => expect(screen.getByText("Thirteen pages, one job")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Seventeen pages, one job")).toBeTruthy());
   });
 
   it("The series page lists the eighteen steps and marks the capstone", async () => {
@@ -155,7 +160,7 @@ describe("Topic 3, what a step changes", () => {
 
   it("The line page counts what your line gets wrong before the machine runs", async () => {
     await siteAt("/topics/networks/play/line");
-    await waitFor(() => expect(screen.getByText(/your line puts \d+ of 60 dots on the wrong side/i)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/the hand-drawn line puts \d+ of 60 dots on the wrong side/i)).toBeTruthy());
     expect(screen.getByText("The machine has not started. Press run.")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
     await waitFor(() => expect(screen.getByText(/the machine's line has none wrong after 2 corrections/i)).toBeTruthy());
@@ -176,7 +181,7 @@ describe("Topic 3, what a step changes", () => {
     fireEvent.click(one);
     await waitFor(() => expect(screen.getByText(/the miss is .*: the answer minus what it wanted/i)).toBeTruthy());
     fireEvent.click(one);
-    await waitFor(() => expect(screen.getByText(/the blame flows back along the wires/i)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/the blame flows back along the wires/i, { selector: '[data-slot="verdict"]' })).toBeTruthy());
     fireEvent.click(one);
     await waitFor(() => expect(screen.getByText(/every weight moves/i)).toBeTruthy());
     // the blame agrees with nudging each number by hand

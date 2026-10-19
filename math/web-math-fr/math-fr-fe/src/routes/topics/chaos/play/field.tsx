@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
-import { ChaosTabs } from "@/components/ChaosTabs";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
 import { PaletteBar } from "@/components/PaletteBar";
@@ -11,9 +11,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { CHAOS, TOPIC } from "@/lib/chaos";
+import { TOPIC } from "@/lib/chaos";
 import { INK, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
@@ -105,27 +104,23 @@ function FieldPage() {
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={CHAOS} />
-      <div className="mt-4">
-        <ChaosTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "One equation, and its field"}
         job="An equation that says, at every state and time, how fast the state is changing, and nothing else. Drawn as short strokes it is a field, and a solution is any curve that follows the strokes. The job is to pick a start, step along the strokes, and see how far the stepping drifts from the true curve, which for these three equations is known exactly."
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); setStart(KIND[id].start); reset(); }} />
-            <p className="text-[11px] text-muted">{spec.what}.</p>
+            <Text kind="note" as="p">{spec.what}.</Text>
             <Slider label="Rate k" min={0.1} max={3} step={0.01} value={rate} format={(v) => v.toFixed(2)} onChange={(v) => { setRate(v); reset(); }} />
             <Slider label="Start x0" min={0.02} max={2} step={0.01} value={start} format={(v) => v.toFixed(2)} onChange={(v) => { setStart(v); reset(); }} />
             <Choices options={METHODS} value={how} onPick={(id) => { setHow(id); reset(); }} />
             <Slider label="Step h" min={0.05} max={1} step={0.05} value={step} format={(v) => v.toFixed(2)} onChange={(v) => { setStep(v); reset(); }} />
             <Slider label="Curves shown" min={0} max={21} step={1} value={curves} format={(v) => String(Math.round(v))} onChange={(v) => setCurves(Math.round(v))} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Click the picture to choose the start. Euler reads the stroke where it stands and
               walks straight along it for one step; the other two look ahead inside the step first.
-            </p>
+            </Text>
             <PaletteBar />
           </div>
         }
@@ -147,7 +142,7 @@ function FieldPage() {
           />
         }
         picture={
-          <section ref={stage} className="space-y-1"><div className="h-[min(520px,calc(100vh-18rem))] overflow-hidden rounded border border-edge">
+          <section ref={stage} className="space-y-1"><div data-slot="plot" className="h-[min(520px,calc(100vh-18rem))] overflow-hidden">
             <Plot
               className="h-full w-full"
               box={box}
@@ -221,11 +216,11 @@ function FieldPage() {
                 ["Error per step, on average", (worst / (count - 1)).toExponential(2)],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               Halve the step and Euler's error halves; halve it for Runge-Kutta and the error falls
               sixteenfold. The next page measures that on an equation whose answer comes back to
               its start exactly.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -235,6 +230,6 @@ function FieldPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

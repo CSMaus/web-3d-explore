@@ -60,7 +60,7 @@ TOPICS: tuple[Topic, ...] = (
     Topic(
         slug="complex",
         number=0,
-        title="Imaginary numbers, from nothing",
+        title="Imaginary numbers",
         summary=(
             "The way in, for a reader who has never met i: the number line and the one question "
             "it cannot answer, a quarter turn, adding as arrows, multiplying as turn and stretch, "

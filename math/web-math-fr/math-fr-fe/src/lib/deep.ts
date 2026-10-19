@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { base } from "@/lib/api";
+import { base, HAS_BACKEND } from "@/lib/api";
 
 export type Ask = {
   cx: number;
@@ -37,6 +37,7 @@ export type Stage =
 
 /** the socket address, derived from wherever the api itself lives. */
 export function socketUrl(): string {
+  if (!HAS_BACKEND) throw new Error("The deep zoom needs the backend, and the site is running without one");
   const at = base.replace(/\/+$/, "");
   if (/^https?:/i.test(at)) return `${at.replace(/^http/i, "ws")}/deep`;
   const scheme = window.location.protocol === "https:" ? "wss:" : "ws:";

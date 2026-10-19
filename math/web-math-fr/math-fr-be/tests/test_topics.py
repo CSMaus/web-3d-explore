@@ -58,7 +58,7 @@ def test_a_topic_being_written_has_its_mathematics_and_no_clips(client: TestClie
 
 def test_a_topic_with_networks_in_it_carries_its_mathematics(client: TestClient):
     card = next(t for t in client.get("/api/topics").json() if t["slug"] == "networks")
-    assert card["systems"] == 13
+    assert card["systems"] == 17
     assert card["parts"] == 0
     body = client.get("/api/topics/networks/equations").json()
     assert len(body["definitions"]) == 5
@@ -69,10 +69,14 @@ def test_a_topic_with_networks_in_it_carries_its_mathematics(client: TestClient)
         "growth",
         "slope",
         "line",
+        "nudge",
         "unit",
         "layers",
+        "any",
         "learn",
         "blame",
+        "slow",
+        "fade",
         "pictures",
         "sequence",
         "words",
@@ -157,19 +161,29 @@ def test_the_tokens_topic_carries_its_fourteen_systems(client: TestClient):
 
 def test_the_fractals_topic_carries_the_whole_series(client: TestClient):
     body = client.get("/api/topics/fractals").json()
-    assert body["beats"] == 53
-    assert len(body["part_list"]) == 10
+    assert body["beats"] == 57
+    assert len(body["part_list"]) == 11
     assert body["seconds"] > 1000
-    assert body["part_list"][0]["beats"][0]["slug"] == "02-coastline"
+    assert body["part_list"][0]["beats"][0]["slug"] == "01a-directions"
+    assert body["part_list"][1]["beats"][0]["slug"] == "02-coastline"
 
 
-def test_every_part_has_one_clip_and_a_short_caption(client: TestClient):
+def test_every_part_has_one_clip_and_its_reading_text(client: TestClient):
+    """the text beside a clip is a question and its answer in paragraphs, one a
+    beat, written to the site's writing standard: no reader addressed, no
+    summary in place of reasons."""
     body = client.get("/api/topics/fractals").json()
     for part in body["part_list"]:
         assert "video" in part
-        words = len(part["caption"].split())
-        # a stand-in for the voice-over, not an essay
-        assert 20 <= words <= 60, (part["number"], words)
+        assert part["question"].endswith("?") or part["number"] == 11, part["number"]
+        assert len(part["text"]) >= 6, part["number"]
+        joined = " " + " ".join(part["text"]).lower() + " "
+        # the imaginary unit is written i, so the first person is checked by its capital
+        for word in (" you ", " your ", " we ", " our "):
+            assert word not in joined, (part["number"], word)
+        assert " I " not in " " + " ".join(part["text"]) + " ", part["number"]
+        for paragraph in part["text"]:
+            assert 8 <= len(paragraph.split()) <= 140, (part["number"], len(paragraph.split()))
 
 
 def test_every_beat_has_words(client: TestClient):

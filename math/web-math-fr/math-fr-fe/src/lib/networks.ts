@@ -7,17 +7,19 @@ export const NETWORKS = {
     { to: "/topics/networks/parts", label: "Parts" },
     { to: "/topics/networks/play", label: "Play" },
     { to: "/topics/networks/theory", label: "Mathematics" },
+    { to: "/topics/networks/uses", label: "Applications" },
   ],
 } as const;
 
 export const TOPIC = "networks";
 
 /**
- * thirteen pages in reading order, in three groups. the first group is the
+ * seventeen pages in reading order, in four groups. the first group is the
  * calculus as things that move, the second is one job learned by a network
- * page after page, the third is the same job on pictures, sequences and words.
- * every page has the same three parts in the same places: what goes in, run,
- * what came out.
+ * page after page with the reasons for each part shown, the third is where
+ * the learning stalls and why, the fourth is the same job on pictures,
+ * sequences and words. every page has the same three parts in the same
+ * places: what goes in, run, what came out.
  */
 export const SYSTEMS = [
   { id: "rate", to: "/topics/networks/play/rate", label: "How fast", group: "The calculus" },
@@ -26,16 +28,20 @@ export const SYSTEMS = [
   { id: "growth", to: "/topics/networks/play/growth", label: "Growth", group: "The calculus" },
   { id: "slope", to: "/topics/networks/play/slope", label: "A hill", group: "The calculus" },
   { id: "line", to: "/topics/networks/play/line", label: "Draw the line", group: "One job" },
+  { id: "nudge", to: "/topics/networks/play/nudge", label: "A small change", group: "One job" },
   { id: "unit", to: "/topics/networks/play/unit", label: "Inside one unit", group: "One job" },
   { id: "layers", to: "/topics/networks/play/layers", label: "Many units", group: "One job" },
+  { id: "any", to: "/topics/networks/play/any", label: "Any curve", group: "One job" },
   { id: "learn", to: "/topics/networks/play/learn", label: "How it learns", group: "One job" },
   { id: "blame", to: "/topics/networks/play/blame", label: "The correction", group: "One job" },
+  { id: "slow", to: "/topics/networks/play/slow", label: "A bad start", group: "Where it stalls" },
+  { id: "fade", to: "/topics/networks/play/fade", label: "The first layer", group: "Where it stalls" },
   { id: "pictures", to: "/topics/networks/play/pictures", label: "On pictures", group: "The same job on" },
   { id: "sequence", to: "/topics/networks/play/sequence", label: "On a sequence", group: "The same job on" },
   { id: "words", to: "/topics/networks/play/words", label: "On words", group: "The same job on" },
 ] as const;
 
-export const GROUPS = ["The calculus", "One job", "The same job on"] as const;
+export const GROUPS = ["The calculus", "One job", "Where it stalls", "The same job on"] as const;
 
 export type NetRoute = (typeof SYSTEMS)[number]["to"];
 

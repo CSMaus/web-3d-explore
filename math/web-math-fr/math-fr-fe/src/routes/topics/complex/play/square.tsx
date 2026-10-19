@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Choices } from "@/components/Choices";
@@ -7,14 +8,12 @@ import { Plot, type Box } from "@/components/Plot";
 import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
-import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/complex";
 import { INK, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { abs, orbit, show, turns, type C } from "@/systems/complex";
-import { ComplexFrame } from "./-shared";
 
 export const Route = createFileRoute("/topics/complex/play/square")({
   loader: () => api.system(TOPIC, "square"),
@@ -36,7 +35,6 @@ function SquarePage() {
   const stage = useRef<HTMLElement | null>(null);
   const [start, setStart] = useState<C>([0.9, 0.35]);
   const [shift, setShift] = useState("none");
-  const [depth, setDepth] = useState(30);
   const [tick, setTick] = useState(0);
   const [perFrame, setPerFrame] = useState(0.15);
 
@@ -52,11 +50,14 @@ function SquarePage() {
       for (let i = 0; i < GRID; i++) {
         const x = BOX.x0 + ((i + 0.5) / GRID) * (BOX.x1 - BOX.x0);
         const y = BOX.y1 - ((j + 0.5) / GRID) * (BOX.y1 - BOX.y0);
-        out.push(orbit([x, y], c, depth).left ?? -1);
+        out.push(orbit([x, y], c, MOST).left ?? -1);
       }
     }
     return out;
-  }, [c, depth]);
+  }, [c]);
+  // how many of the starts have left after the squarings done so far
+  const gone = useMemo(() => field.filter((t) => t > 0 && t <= n).length, [field, n]);
+  const share = Math.round((100 * gone) / field.length);
   const reset = () => {
     runner.reset();
     setTick(0);
@@ -64,20 +65,20 @@ function SquarePage() {
   const left = path.left;
 
   return (
-    <ComplexFrame>
+    <>
       <TaskPage
-        title={system?.name ?? "Squaring, again and again"}
-        job="Squaring a number multiplies it by itself: the angle doubles and the length squares. Do that again and again and one of three things happens: a start inside the unit circle falls to zero, a start outside runs off to infinity, a start on the circle stays on it. Then add a small shift after every squaring, and the line between falling and running stops being a circle. The job is to follow one start and to see the whole map of which starts stay."
+        title={system?.name ?? "Julia set"}
+        job="Squaring a number multiplies it by itself: the angle doubles and the length squares. Do that again and again and one of three things happens: a start inside the unit circle falls to zero, a start outside runs off to infinity, a start on the circle stays on it. Then add a small shift after every squaring, and the line between falling and running stops being a circle. The job is to follow one start, and to watch every start at once: after each squaring the ones that have left are coloured, and what stays dark is the Julia set."
         input={
           <div className="space-y-3">
             <Choices options={SHIFTS} value={shift} onPick={(id) => { setShift(id); reset(); }} />
-            <Slider label="Map depth" min={5} max={60} step={1} value={depth} format={(v) => `${Math.round(v)} squarings`} onChange={(v) => setDepth(Math.round(v))} />
-            <p className="text-[11px] text-muted">
-              Click anywhere to choose the start. The background shows every start at once: dark
-              where it has not left after the map's depth, brighter the sooner it left. With no shift
-              the dark region is the unit disc. With a shift it is a Julia set, and the fractals
-              topic draws these in full.
-            </p>
+            <Text kind="note" as="p">
+              Click anywhere to choose the start. Every start on the picture begins dark. Press run:
+              each squaring is done to the chosen start and to every other start at once, and a start
+              that has left is coloured, brighter the sooner it left. What is still dark after many
+              squarings is the set of starts that never leave: a disc with no shift, a Julia set with
+              one. The fractals topic draws these in full.
+            </Text>
           </div>
         }
         run={
@@ -99,7 +100,7 @@ function SquarePage() {
         }
         picture={
           <section ref={stage}>
-            <div className="h-[min(500px,calc(100vh-20rem))] overflow-hidden rounded border border-edge">
+            <div data-slot="plot" className="h-[min(500px,calc(100vh-20rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={BOX}
@@ -121,8 +122,9 @@ function SquarePage() {
                       const px = pen.px(x);
                       const py = pen.py(y);
                       if (x < v.x0 - 1 || x > v.x1 + 1) continue;
-                      const shade = t < 0 ? 0 : Math.min(1, 0.25 + 0.75 * (1 - t / depth));
-                      pen.ctx.fillStyle = t < 0 ? "#111a24" : `rgba(143,211,232,${(0.15 + 0.5 * shade).toFixed(3)})`;
+                      const left = t > 0 && t <= n;
+                      const shade = left ? Math.min(1, 0.25 + 0.75 * (1 - t / MOST)) : 0;
+                      pen.ctx.fillStyle = left ? `rgba(143,211,232,${(0.15 + 0.5 * shade).toFixed(3)})` : "#111a24";
                       pen.ctx.fillRect(px, py, cw * (v.x1 - v.x0 > 0 ? (BOX.x1 - BOX.x0) / (v.x1 - v.x0) : 1) + 1, ch * ((BOX.y1 - BOX.y0) / (v.y1 - v.y0)) + 1);
                     }
                   }
@@ -142,7 +144,7 @@ function SquarePage() {
                 }}
               />
             </div>
-            <Caption>Sky ring: the start. White: where the number is now. Green: the path so far. Blue circle: length one. Dark red circle: length two, past which a number never comes back. Background: every start, dark if it has not left after {depth} squarings, brighter the sooner it left.{shift !== "none" ? " Rose dot: the shift c." : ""}</Caption>
+            <Caption>Sky ring: the start. White: where the number is now. Green: the path so far. Blue circle: length one. Dark red circle: length two, past which a number never comes back. Background: every start at once, dark while it has not left after the {n} squarings done so far, coloured once it has, brighter the sooner.{shift !== "none" ? " Rose dot: the shift c." : ""}</Caption>
           </section>
         }
         result={
@@ -156,6 +158,11 @@ function SquarePage() {
                     ? `After ${n} squarings the number is at ${show(z)}, length ${abs(z).toFixed(4)}, angle ${(turns(z) * 360).toFixed(0)} deg. ${abs(start) < 1 ? "The length squares each time, so it is falling to zero: this start stays." : abs(start) > 1 ? "The length is growing and will pass two." : "On the circle the length is one, squared is one: it stays on the circle, turning by a doubling angle each time."}`
                     : `After ${n} squarings and shifts the number is at ${show(z)}, length ${abs(z).toFixed(3)}. It has not passed two${n === MOST ? ", after the whole run: this start stays, and it is one of the dark points on the map" : ""}.`}
             </Verdict>
+            <Text kind="note" as="p">
+              {n === 0
+                ? "Every start on the picture is dark: nothing has been squared yet."
+                : `${share} per cent of the starts have left after ${n} squaring${n === 1 ? "" : "s"}; the dark that remains is the set taking shape.`}
+            </Text>
             <Readout
               rows={[
                 ["Start", show(start)],
@@ -166,11 +173,11 @@ function SquarePage() {
                 ["Squarings so far", `${n} of ${MOST}`],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The map of which starts stay is a Julia set when there is a shift. The fractals topic
               draws it at full resolution, and the Mandelbrot set is the same question asked of the
               shift instead of the start. Both are this page, done for every point at once.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -180,7 +187,7 @@ function SquarePage() {
           </>
         }
       />
-    </ComplexFrame>
+    </>
   );
 }
 

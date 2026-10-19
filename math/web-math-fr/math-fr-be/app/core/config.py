@@ -8,6 +8,9 @@ class AppConfig(BaseModel):
     title: str = "math-fr backend"
     api_prefix: str = "/api"
     cors_origins: str = "http://localhost:1263"
+    # the dev server moves to the next free port when its own is taken, so any
+    # local port is allowed as well; empty disables the pattern
+    cors_origin_regex: str = r"^https?://localhost(:\d+)?$"
 
 
 class LogConfig(BaseModel):
@@ -52,6 +55,7 @@ class LimitConfig(BaseModel):
 
 class SocketConfig(BaseModel):
     origins: str = "http://localhost:1263"
+    origin_regex: str = r"^https?://localhost(:\d+)?$"
     # capacity is allocated for as long as a connection is open, whether or not
     # it is computing, so both of these are cost settings as much as they are
     # protections. a deep render takes a few seconds; sixty four at once on one

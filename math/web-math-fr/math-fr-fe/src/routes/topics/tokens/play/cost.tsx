@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Textarea, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Equations } from "@/components/Equations";
 import { Plot } from "@/components/Plot";
@@ -15,7 +16,7 @@ import { VOCAB } from "@/lib/tiny";
 import { TOPIC } from "@/lib/tokens";
 import { encode } from "@/systems/bpe";
 import { SAMPLES, chars } from "@/systems/text";
-import { FIELD, TokenFrame } from "./-shared";
+import { Input } from "@kit/index";
 
 export const Route = createFileRoute("/topics/tokens/play/cost")({
   loader: () => api.system(TOPIC, "cost"),
@@ -54,24 +55,24 @@ function CostPage() {
   };
 
   return (
-    <TokenFrame>
+    <>
       <TaskPage
         title={system?.name ?? "What a token costs"}
         job="One sentence, the same meaning, in eleven scripts, all cut by the one vocabulary built two pages ago from English text. The job is to count what each costs in tokens, because tokens are what is billed, what fills the window, and what the attention cost grows with the square of."
         input={
           <div className="space-y-3">
             <Slider label="A window of" min={16} max={512} step={16} value={window} format={(v) => `${Math.round(v)} tokens`} onChange={(v) => setWindow(Math.round(v))} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               A model can attend over only so many tokens at once. The result panel says how many
               copies of each sentence fit in this window.
-            </p>
+            </Text>
             <label className="block">
-              <span className="text-xs text-muted">A number, cut</span>
-              <input value={number} onChange={(e) => setNumber(e.target.value)} className={FIELD} />
+              <span data-text="note">A number, cut</span>
+              <Input value={number} onChange={(e) => setNumber(e.target.value)} className="mt-1" />
             </label>
             <label className="block">
-              <span className="text-xs text-muted">Code, cut</span>
-              <textarea value={code} onChange={(e) => setCode(e.target.value)} rows={2} className={FIELD} />
+              <span data-text="note">Code, cut</span>
+              <Textarea value={code} onChange={(e) => setCode(e.target.value)} rows={2} className="mt-1" />
             </label>
           </div>
         }
@@ -94,7 +95,7 @@ function CostPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div><div className="h-[330px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[330px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -124,18 +125,18 @@ function CostPage() {
               />
             </div><Caption>Green: characters.  Rose: tokens under the English-trained vocabulary.  One row a script.</Caption></div>
             {current ? (
-              <div className="rounded border border-edge p-3">
-                <div className="font-mono text-[11px] text-muted">{current.label}: {current.count} tokens for {current.chars} characters</div>
+              <div className="rounded border border-border p-3">
+                <div data-text="caption">{current.label}: {current.count} tokens for {current.chars} characters</div>
                 <div className="mt-2"><TokenRow tokens={current.tokens} size="sm" /></div>
               </div>
             ) : null}
             <div className="grid gap-2 lg:grid-cols-2">
-              <div className="rounded border border-edge p-3">
-                <div className="font-mono text-[11px] text-muted">The number: {numberTokens.length} tokens. Where does each digit go?</div>
+              <div className="rounded border border-border p-3">
+                <div data-text="caption">The number: {numberTokens.length} tokens. Where does each digit go?</div>
                 <div className="mt-2"><TokenRow tokens={numberTokens} size="sm" /></div>
               </div>
-              <div className="rounded border border-edge p-3">
-                <div className="font-mono text-[11px] text-muted">The code: {codeTokens.length} tokens. Every run of spaces is its own cost.</div>
+              <div className="rounded border border-border p-3">
+                <div data-text="caption">The code: {codeTokens.length} tokens. Every run of spaces is its own cost.</div>
                 <div className="mt-2"><TokenRow tokens={codeTokens} size="sm" /></div>
               </div>
             </div>
@@ -150,19 +151,19 @@ function CostPage() {
                   ? `English: ${current!.count} tokens for ${current!.chars} characters, ${current!.ratio.toFixed(2)} tokens a character. The vocabulary was built on English, so almost every word is one token.`
                   : `${current!.label}: ${current!.count} tokens for ${current!.chars} characters, ${current!.ratio.toFixed(2)} tokens a character, ${(current!.ratio / english.ratio).toFixed(1)} times the English rate. ${current!.ratio >= 1 ? "More tokens than characters: every character is several bytes and the vocabulary has no symbol for any of them, so it falls back to bytes." : "The vocabulary has some of these pieces from shared letters, and none of the words."} in a window of ${window} tokens this sentence fits ${fits(current!.count)} time${fits(current!.count) === 1 ? "" : "s"}; the English one fits ${fits(english.count)}.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               {shown.map((r) => (
                 <Row key={r.id} label={`${r.label}, tokens a character`} value={`${r.ratio.toFixed(2)}  (x${(r.ratio / english.ratio).toFixed(1)})`} />
               ))}
               {current ? <Row label={`Attention cost for ${current.label}, tokens squared`} value={(current.count * current.count).toLocaleString("en")} /> : null}
               <Row label="The number, digits kept together" value={numberTokens.some((t) => /^\s?\d{2,}$/.test(t.text)) ? "some" : "none"} />
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               A real vocabulary is trained on many languages and the gap is smaller, but it is never
               zero, and it always favours whatever the training text had most of. The number is cut
               wherever the merges happened to fall, so place value can sit across a token boundary;
               the last page comes back to that.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -172,7 +173,7 @@ function CostPage() {
           </>
         }
       />
-    </TokenFrame>
+    </>
   );
 }
 
@@ -180,7 +181,7 @@ function Row({ label, value }: { label: string; value: string }) {
   return (
     <>
       <dt>{label}</dt>
-      <dd className="text-right text-ink/80">{value}</dd>
+      <dd className="text-right text-foreground/80">{value}</dd>
     </>
   );
 }

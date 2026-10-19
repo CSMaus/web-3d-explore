@@ -1,18 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot, type Box } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { FAINT, INK, ONE, SKY, TWO, plate, ticks } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { MOTIONS, accumulate, strips, trace } from "@/systems/calc";
 
@@ -67,23 +66,19 @@ function AccumulatePage() {
   const finalError = Math.abs(totals[count] - (m.at(T_END) - m.at(0)));
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "Adding it back up"}
-        job="This time you are given only the speed, second by second, and the job is to say how far the car has gone. The only tool is the obvious one: for each short stretch of time, speed times duration is distance, and the stretches add up."
+        job="This time only the speed is given, second by second, and the job is to say how far the car has gone. The only tool is the obvious one: for each short stretch of time, speed times duration is distance, and the stretches add up."
         input={
           <div className="space-y-3">
             <Choices options={OPTIONS} value={motion} onPick={(id) => { setMotion(id); reset(); }} />
-            <p className="text-[11px] text-muted">{m.what}</p>
+            <Text kind="note" as="p">{m.what}</Text>
             <Slider label="Slices" min={2} max={96} step={1} value={count} format={(v) => String(Math.round(v))} onChange={(v) => { setCount(Math.round(v)); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               How many slices the twelve seconds are cut into. Inside each slice the speed is
               taken as constant, which is a lie that gets smaller as the slices get thinner.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -105,7 +100,7 @@ function AccumulatePage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div><div className="h-[260px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[260px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={spdBox}
@@ -134,7 +129,7 @@ function AccumulatePage() {
                 }}
               />
             </div><Caption>The speed. Each rectangle is one slice: speed times duration, a distance.</Caption></div>
-            <div><div className="h-[260px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[260px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={posBox}
@@ -165,22 +160,22 @@ function AccumulatePage() {
                 ? "Press run. One slice at a time, a rectangle of speed times duration goes in, and the running total climbs."
                 : `After ${shown} of ${count} slices, ${tNow.toFixed(1)} s in, the slices add up to ${added.toFixed(2)} m. The car had really gone ${truth.toFixed(2)} m. The total is off by ${Math.abs(added - truth).toFixed(3)} m${Math.abs(added - truth) < 0.02 * Math.max(1, Math.abs(truth)) ? ", which is close enough to call right" : ": the slices are too fat for a speed that changes this much inside one of them"}.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Each slice lasts</dt>
-              <dd className="text-right text-ink/80">{(T_END / count).toFixed(3)} s</dd>
+              <dd className="text-right text-foreground/80">{(T_END / count).toFixed(3)} s</dd>
               <dt>All {count} slices together</dt>
-              <dd className="text-right text-ink/80">{totals[count].toFixed(3)} m</dd>
+              <dd className="text-right text-foreground/80">{totals[count].toFixed(3)} m</dd>
               <dt>The true distance over twelve seconds</dt>
-              <dd className="text-right text-ink/80">{(m.at(T_END) - m.at(0)).toFixed(3)} m</dd>
+              <dd className="text-right text-foreground/80">{(m.at(T_END) - m.at(0)).toFixed(3)} m</dd>
               <dt>The error with {count} slices</dt>
-              <dd className="text-right text-ink/80">{finalError.toExponential(2)} m</dd>
+              <dd className="text-right text-foreground/80">{finalError.toExponential(2)} m</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               Double the slices and the error falls by about four. That is the integral: the sum,
-              with the slices made as thin as you like. And the green staircase, once smooth, is
+              with the slices made as thin as wanted. And the green staircase, once smooth, is
               the position curve from the first page: adding up a rate gives back the thing whose
               rate it was.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -190,6 +185,6 @@ function AccumulatePage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

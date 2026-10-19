@@ -1,5 +1,7 @@
 import { cleanup } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
+// the interface reads its strings through the catalogue, so every test gets it
+import "@/i18n";
 
 afterEach(() => {
   cleanup();

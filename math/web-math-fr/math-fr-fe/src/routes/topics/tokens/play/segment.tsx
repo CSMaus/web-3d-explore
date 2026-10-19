@@ -1,17 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TokenRow, visible } from "@/components/Tokens";
+import { TokenRow } from "@/components/Tokens";
+import { visible } from "@/lib/tokenText";
 import { api } from "@/lib/api";
 import { useRunner } from "@/lib/runner";
 import { TOPIC } from "@/lib/tokens";
 import { CORPUS, decode, encode, pretokenise, roundTrip, tokenText, train } from "@/systems/bpe";
 import { chars } from "@/systems/text";
-import { FIELD, TokenFrame } from "./-shared";
+import { Input } from "@kit/index";
 
 export const Route = createFileRoute("/topics/tokens/play/segment")({
   loader: () => api.system(TOPIC, "segment"),
@@ -64,22 +66,22 @@ function SegmentPage() {
   };
 
   return (
-    <TokenFrame>
+    <>
       <TaskPage
         title={system?.name ?? "Cutting a sentence"}
         job="A new sentence, one the vocabulary has never seen. The job is to cut it into tokens: replay the merges from the last page, in order, and stop when the list runs out. The same sentence under four vocabularies of different size, so the cut is seen to belong to the vocabulary and not to the language."
         input={
           <div className="space-y-3">
             <label className="block">
-              <span className="text-xs text-muted">The sentence</span>
-              <input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className={FIELD} />
+              <span data-text="note">The sentence</span>
+              <Input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className="mt-1" />
             </label>
             <Choices options={SIZES} value={size} onPick={(id) => { setSize(id); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Every vocabulary was built from the same text on the last page; they differ only in how
               many merges were made. A word that never appeared there stays in pieces however many
               merges are made.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -101,27 +103,27 @@ function SegmentPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div className="min-h-[170px] rounded border border-edge p-4">
-              <div className="font-mono text-[11px] text-muted">
+            <div className="min-h-[170px] rounded border border-border p-4">
+              <div data-text="caption">
                 {at === 0 ? "The sentence as bytes, before any merge" : `After replaying ${at} merges: ${tokens.length} tokens${changed ? `, and this one joined ${before.length - tokens.length} pair${before.length - tokens.length === 1 ? "" : "s"}` : ", this merge touched nothing here"}`}
               </div>
               <div className="mt-3">
                 <TokenRow tokens={tokens} ids={at >= most} />
               </div>
               {merge ? (
-                <div className="mt-3 font-mono text-[11px] text-muted">
-                  Merge {at}: {visible(tokenText(vocab, merge.a))} + {visible(tokenText(vocab, merge.b))} → <span className="text-ink">{visible(tokenText(vocab, merge.into))}</span>
+                <div data-text="caption" className="mt-3">
+                  Merge {at}: {visible(tokenText(vocab, merge.a))} + {visible(tokenText(vocab, merge.b))} → <span className="text-foreground">{visible(tokenText(vocab, merge.into))}</span>
                 </div>
               ) : null}
             </div>
-            <div className="rounded border border-edge p-4">
-              <div className="font-mono text-[11px] text-muted">The same sentence under each vocabulary, fully cut</div>
+            <div className="rounded border border-border p-4">
+              <div data-text="caption">The same sentence under each vocabulary, fully cut</div>
               <div className="mt-3 space-y-2">
                 {SIZES.map((s) => {
                   const t = encode(vocabs[s.id], text);
                   return (
                     <div key={s.id} className="grid grid-cols-[110px_1fr] items-start gap-3">
-                      <span className={`pt-1 font-mono text-[11px] ${s.id === size ? "text-leaf" : "text-muted"}`}>{s.label}: {t.length} tokens</span>
+                      <span className={`pt-1 font-mono text-[11px] ${s.id === size ? "text-selected" : "text-muted-foreground"}`}>{s.label}: {t.length} tokens</span>
                       <TokenRow tokens={t} size="sm" />
                     </div>
                   );
@@ -139,24 +141,24 @@ function SegmentPage() {
                   ? `${tokens.length} tokens after ${at} merges. The pieces are joining in the order the vocabulary learned them: common pairs first, whole common words later.`
                   : `${final.length} tokens for ${nChars} characters under this vocabulary. ${worst.count > 1 ? `The word "${worst.word.trim()}" is ${worst.count} pieces${worst.known ? "" : " because it never appears in the text the vocabulary was built from, so no merge ever covered it"}.` : "Every word is a single token."} decoding the ${final.length} ids gives back ${trip.exact ? "exactly the sentence, byte for byte" : "something different"}.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Characters</dt>
-              <dd className="text-right text-ink/80">{nChars}</dd>
+              <dd className="text-right text-foreground/80">{nChars}</dd>
               <dt>Tokens under {size} merges</dt>
-              <dd className="text-right text-ink/80">{final.length}</dd>
+              <dd className="text-right text-foreground/80">{final.length}</dd>
               <dt>The ids the model will receive, and nothing else</dt>
-              <dd className="text-right text-ink/80">{final.map((t) => t.id).join(" ")}</dd>
+              <dd className="text-right text-foreground/80">{final.map((t) => t.id).join(" ")}</dd>
               <dt>Words in more than one piece</dt>
-              <dd className="text-right text-ink/80">{pieces.filter((p) => p.count > 1).map((p) => `${p.word.trim()} (${p.count})`).join(", ") || "None"}</dd>
+              <dd className="text-right text-foreground/80">{pieces.filter((p) => p.count > 1).map((p) => `${p.word.trim()} (${p.count})`).join(", ") || "None"}</dd>
               <dt>Decoded back</dt>
-              <dd className="text-right text-ink/80">{JSON.stringify(decode(vocab, final.map((t) => t.id)))}</dd>
+              <dd className="text-right text-foreground/80">{JSON.stringify(decode(vocab, final.map((t) => t.id)))}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The space travels inside the token: ␣cat and cat are different tokens with different
               ids, which is why a word at the start of a line and the same word after a space are
               not the same thing to a model. The way back is a concatenation of bytes, and with a
               byte alphabet it is exact.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -166,6 +168,6 @@ function SegmentPage() {
           </>
         }
       />
-    </TokenFrame>
+    </>
   );
 }

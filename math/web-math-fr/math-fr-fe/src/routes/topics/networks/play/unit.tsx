@@ -1,18 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { FAINT, INK, MUTED, ONE, SKY, TWO, boxOf, classColour, shadePlane, ticks } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { FAINT, GROUND, INK, MUTED, ONE, SKY, TWO, boxOf, classColour, shadePlane, ticks } from "@/lib/draw";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { SETS, dataset, type SetKind } from "@/systems/learn";
 import { ACTS, backward, clone, loss, make, predict, type Act, type Net } from "@/systems/net";
@@ -106,14 +105,10 @@ function UnitPage() {
   const squash = ACTS[act];
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "Inside one unit"}
-        job="The same dots, the same line. This page opens the machine that draws it. One unit takes the two coordinates of a dot, multiplies each by a weight, adds a bias, and squashes the total to a number between zero and one. That number is its answer: green or rose. The three numbers are yours to move by hand, and then to hand over."
+        job="The same dots, the same line. This page opens the machine that draws it. One unit takes the two coordinates of a dot, multiplies each by a weight, adds a bias, and squashes the total to a number between zero and one. That number is its answer: green or rose. The three numbers are moved by hand first, and then handed over."
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); restart(); }} />
@@ -122,11 +117,11 @@ function UnitPage() {
             <Slider label="Weight on y" min={-4} max={4} step={0.05} value={w2} format={(v) => v.toFixed(2)} onChange={(v) => setParam(1, v)} />
             <Slider label="Bias" min={-4} max={4} step={0.05} value={b} format={(v) => v.toFixed(2)} onChange={(v) => setParam(2, v)} />
             <Slider label="Step size" min={0.05} max={4} step={0.05} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Move the three sliders and watch the colours on the plane move with them. Click a
-              dot to see its own numbers go through the unit. Then press run: the unit takes the
-              sliders from you and moves them itself, downhill on how wrong it is.
-            </p>
+              dot to see its own numbers go through the unit. Then press run: the unit takes
+              over the sliders and moves them itself, downhill on how wrong it is.
+            </Text>
           </div>
         }
         run={
@@ -149,7 +144,7 @@ function UnitPage() {
         }
         picture={
           <section ref={stage} className="grid gap-2 lg:grid-cols-[1fr_300px]">
-            <div><div className="h-[420px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[420px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={box}
@@ -183,7 +178,7 @@ function UnitPage() {
                 }}
               />
             </div><Caption>The plane, coloured by the unit's answer White ring: wrong.  Sky ring: the dot shown at right</Caption></div>
-            <div><div className="h-[420px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[420px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -225,9 +220,9 @@ function UnitPage() {
                   wire(inX, y1, sumX, sumY, w1, `x ${w1.toFixed(2)}`);
                   wire(inX, y2, sumX, sumY, w2, `x ${w2.toFixed(2)}`);
                   wire(sumX, sumY, outX, sumY, 1, "squash");
-                  circle(inX, y1, probe[0].toFixed(2), "#0e1116", SKY);
-                  circle(inX, y2, probe[1].toFixed(2), "#0e1116", SKY);
-                  circle(sumX, sumY, z.toFixed(2), "#0e1116", INK);
+                  circle(inX, y1, probe[0].toFixed(2), GROUND, SKY);
+                  circle(inX, y2, probe[1].toFixed(2), GROUND, SKY);
+                  circle(sumX, sumY, z.toFixed(2), GROUND, INK);
                   circle(outX, sumY, a.toFixed(2), classColour(toUnit(a)), INK);
                   ctx.fillStyle = MUTED;
                   ctx.textAlign = "center";
@@ -287,22 +282,22 @@ function UnitPage() {
                     ? `After ${steps} steps the unit still has ${wrong} of ${data.X.length} wrong. Its boundary is a straight line and the shape it needs is a circle. More units, next page.`
                     : `The unit gets ${wrong} of ${data.X.length} dots wrong${steps > 0 ? ` after ${steps} steps` : ""}. How wrong, as one number: ${total.toFixed(4)}.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>The ringed dot: {probe[0].toFixed(2)} times {w1.toFixed(2)} plus {probe[1].toFixed(2)} times {w2.toFixed(2)} plus {b.toFixed(2)}</dt>
-              <dd className="text-right text-ink/80">{z.toFixed(3)}</dd>
+              <dd className="text-right text-foreground/80">{z.toFixed(3)}</dd>
               <dt>Squashed</dt>
-              <dd className="text-right text-ink/80">{a.toFixed(3)}, So {toUnit(a) > 0.5 ? "green" : "rose"}</dd>
+              <dd className="text-right text-foreground/80">{a.toFixed(3)}, So {toUnit(a) > 0.5 ? "green" : "rose"}</dd>
               <dt>How wrong over all dots (average squared miss)</dt>
-              <dd className="text-right text-ink/80">{total.toFixed(5)}</dd>
+              <dd className="text-right text-foreground/80">{total.toFixed(5)}</dd>
               <dt>Numbers the unit can change</dt>
-              <dd className="text-right text-ink/80">3</dd>
+              <dd className="text-right text-foreground/80">3</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The line from the last page is where the total is exactly zero, so the squash gives
               one half: neither colour. The squash is what the perceptron did not have. Its
               answer changes smoothly with the sliders, so how wrong it is has a slope, and the
               hill page's ball can roll down it. Each run step is one roll step, on three numbers.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -312,7 +307,7 @@ function UnitPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }
 

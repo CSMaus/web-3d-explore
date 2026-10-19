@@ -1,10 +1,59 @@
 {
   "parts": [
     {
+      "number": 1,
+      "title": "Dimension of ordinary shapes",
+      "video": "",
+      "caption": "A point, a line, a square, a cube: each needs one more direction than the last, and that count, 0, 1, 2, 3, is the dimension. Double a shape and its content multiplies by 2 to that power: 2, 4, 8. A shape built from three copies of itself at double size gives 3 = 2 to the d, and d lands at 1.585, between the whole numbers. A ruler shrinking on a smooth curve settles on a length; on a jagged one it never does.",
+      "question": "What does the dimension of a shape count?",
+      "text": [
+        "Before anything is rough, the ordinary shapes. A point needs no direction to build it. Pull it along one direction and it is a line; pull the line along a second and it is a square; pull the square along a third and it is a solid cube. The count of directions it took, 0, 1, 2, 3, is the dimension. Nothing else is meant by the word.",
+        "The same number shows up in a second way. Double the side of a picture and it needs four times the paper; double a cube and it needs eight times the material. Lay rulers along the directions and double one direction at a time: the line's length goes to 2, the square's area to 2 and then 4, the cube's volume to 2, 4, 8. Each doubling multiplies the content once per direction, so the content of a shape scaled by s is s to the power d, and d is the dimension again.",
+        "Now a fourth shape joins the row: a square cut into four quarters with one quarter removed, and the same cut repeated inside the three that remain. Double it and the doubled shape holds exactly three copies of the original, not four. So 3 = 2 to the d. The neighbours give 2 = 2 to the 1 and 4 = 2 to the 2, which traps the answer: 1 < d < 2. Counting directions fails for the first time.",
+        "The logarithm is the operation that reads an exponent off: d = log 3 / log 2, which is 1.585. Put the four values on a number line and three sit on 1, 2 and 3 while the fourth lands between 1 and 2. A dimension does not have to be a whole number. That is the whole of what the series rests on.",
+        "One more thing is needed before a coast can be measured. Take a ruler to a smooth curve and shrink it step by step: the measured length moves a little and then settles. Take the same ruler to a jagged curve and the measured length climbs with every smaller ruler and never settles. The next part puts that ruler on the coast of Britain.",
+        "The takeaway: dimension is a count of directions, which is also the power the content grows by when the shape is scaled, and a shape made of copies of itself can carry a power that is not a whole number."
+      ],
+      "beats": [
+        {
+          "slug": "01a-directions",
+          "seconds": 16.5,
+          "video": "",
+          "shows": "a blank canvas with one point at the centre and no axes. gold arrows grow one at a time, and each new arrow pulls the object into the next: the point into a line, the line into a square, the square into a solid shaded cube. a count ticks up beside them, 0, 1, 2, 3, as the directions arrive. at the end the arrows settle into rulers lying along the directions.",
+          "why": "the pull along a new direction is the teaching moment: dimension is seen as how many independent directions were needed to build the object, before any formula. the arrows becoming rulers hands the idea to the next beat, since a ruler measures along a direction.",
+          "say": "Start with a point. It took no direction at all to make. Pull it along one direction and there is a line. Pull the line along a second direction and there is a square. Pull the square along a third and there is a cube. Count the directions it took: none, one, two, three. That count is the dimension, and for now it is the only thing the word means."
+        },
+        {
+          "slug": "01b-scaling",
+          "seconds": 50.3,
+          "video": "",
+          "shows": "a flat picture and a solid cube as everyday anchors: doubling the picture's side needs four times the paper, doubling the cube eight times the material. then the line, square and cube in a row, rulers along their directions with the counts 1, 2, 3 standing above, and a content readout under each starting at 1. a same-sized copy slides out of each shape and merges into the bigger body one direction at a time, so the content multiplies once per ruler: 2; 2 then 4; 2, 4, 8. the forms 2 = 2 to the 1, 4 = 2 to the 2, 8 = 2 to the 3 land with each exponent flown down from the count, and content = s to the d is written large. shrinking replays the same equation with s = one half.",
+          "why": "the law is felt on paper and material before it is named. one multiplication per direction, replayed faster from shape to shape, makes the exponent the count of directions seen in the first beat; scaling up and scaling down are one formula.",
+          "say": "Double the side of a picture and it needs four times the paper. Double a cube and it needs eight times the material. Here is why. Lay a ruler along each direction a shape has, and double one direction at a time. The line: its length goes to two. The square: two, then four. The cube: two, four, eight. The content multiplies once for every direction. So doubling a shape multiplies its content by two to the power of its dimension, and halving it divides by the same. One formula, and the dimension is the exponent."
+        },
+        {
+          "slug": "01c-measure",
+          "seconds": 31,
+          "video": "",
+          "shows": "the formula content = s to the d at the top with s = 2 beneath it. the line, square and cube in a row below, each doubling with its content 2, 4, 8, its dimension 1, 2, 3 and its instance written under its column. a fourth column joins: a square cut into four quarters with one removed and the cut repeated inside the other three. a ghost of its doubled size appears, the original slides into one corner and two copies fill two more, and the fourth quarter stays empty, so the doubled shape holds three copies. 3 = 2 to the d writes itself with the dimension unknown; the neighbours' 2 < 3 < 4 becomes 1 < d < 2; then d = log 3 / log 2 near 1.585, and the four values drop onto a number line, 1.585 landing between 1 and 2.",
+          "why": "the fourth column gets exactly the same doubling as the first three, so the misfit is carried by the numbers alone: the exponent is trapped between whole numbers and counting fails for the first time. the logarithm is introduced as the operation that reads an exponent, nothing more.",
+          "say": "The same doubling, now on a fourth shape: a square with one quarter cut out, and the cut repeated inside the rest. Double it. The doubled shape holds three copies of the original, not four. So three equals two to the power d. Two to the one is two, two to the two is four, and three sits between them: d is between one and two. Counting directions cannot say what it is. The logarithm can, because reading an exponent is what a logarithm does: d is log three over log two, about one point five eight five. Put it on a number line and it lands between one and two. A dimension does not have to be a whole number."
+        },
+        {
+          "slug": "01d-settle",
+          "seconds": 21.6,
+          "video": "",
+          "shows": "two panels side by side, a smooth curve on the left and a jagged curve on the right, each with a ruler, and under each a small plot of measured length against ruler size with both axes labelled. the rulers shrink through several steps. on the left the measured length flattens quickly and its plot levels off; on the right the measured length keeps climbing and its plot rises without levelling.",
+          "why": "the contrast between settling and climbing is the whole point: it is the behaviour the coastline paradox turns into a number in the next part, and it is shown here on two bare curves so that nothing about coasts is needed to see it.",
+          "say": "One more thing before a coast. Take a ruler to a smooth curve and shrink it, step by step. The measured length moves a little, then settles. Now the same ruler on a jagged curve. The length climbs. Shrink the ruler again, and it climbs again. It never settles. Hold on to that, because the next part puts the ruler on the coast of Britain."
+        }
+      ]
+    },
+    {
       "number": 2,
       "title": "The coastline paradox",
       "video": "",
-      "caption": "A coastline measured with dividers. Every time the opening is halved the total length grows, and it does not stop growing. A smooth curve settles; the coast does not. The rate of growth, read off a log-log line, is a dimension between one and two.",
+      "caption": "Measure a coastline by walking a pair of dividers along it and counting the steps. With a wide opening the dividers step over every small bay, so the total is short. Halve the opening and the bays start to count: the total grows. Halve it again and it grows again, and it never stops growing. A smooth curve measured the same way settles on one length. How fast the coast's total grows as the opening shrinks is a number between one and two: its dimension.",
       "beats": [
         {
           "slug": "02-coastline",
@@ -14,13 +63,24 @@
           "why": "the paradox has to be met as a measurement rather than a riddle: the chords are visible, the skipping is visible, and the total climbs every time the opening narrows. the smooth arc is the control that rules out \"this is just what measuring does\". the plot turns the climb into one number, and the three coasts show that number ordering them exactly as the eye does.",
           "say": "Set a pair of dividers to a fixed opening and walk them along the coast. Count the steps, and there is a length. But watch what the wide opening does - it steps straight over every bay smaller than itself. So halve it, and walk again. Twenty-three steps became fifty-four, and the total went up. Halve it again. And again. The coast is not getting longer; the measurement is. Now do exactly the same to a smooth curve. It settles, quickly, on a length - that is what measuring is supposed to do. The coast never settles. Put every opening and every total on one plot, both logarithmic, and the points fall on a straight line. Subtract its slope from one and what comes out is a dimension: one point two three. Not one, which a line would give. Not two, which a filled patch would give. And the same measurement on three coasts puts them in exactly the order the eye does - the fjords at one point four one, Britain at one point two three, and the near-straight Atlantic coast of Portugal at one point one nine."
         }
+      ],
+      "question": "How long is the coast of Britain?",
+      "text": [
+        "It sounds like a question with an answer. Look it up and the numbers disagree by hundreds of miles, and none of them is a mistake. Here is why.",
+        "Take a pair of dividers, the two-legged compass used on charts, and set the legs some distance apart. Walk them along the coastline, tip to tip, and count the steps. Steps times the opening: that is a length. It is how coastlines are measured on maps, and it seems as honest as measuring can be.",
+        "Now watch what the wide opening actually does. Each step is a straight line from one tip to the next, and the coast between the tips is not straight. Every bay smaller than the opening is skipped. The measurement is not wrong. It is a measurement of a smoother coast than the real one.",
+        "So halve the opening and walk again. The steps now fit into bays the old ones stepped over. On screen, 23 steps become 54, and the total climbs from 17.7 to 20.7. Halve again: 128 steps, total 24.7. Again: 29.0. Again: 33.4. The coast is not getting longer. The measurement is finding coast that was there all along.",
+        "The natural objection is that this is just what measuring does: measure anything more finely and the number changes a little. So do the same to a smooth curve, the arc drawn beside the coast, with the same openings. Its total moves for a step or two and then settles. That is what having a length looks like. The coast never settles. Every halving adds about the same fraction again, without end.",
+        "A number that never settles cannot be the answer, but the way it fails to settle can. Put each opening and each total on a plot where both axes are logarithmic, so that halving is the same distance every time. The five points fall on a straight line. The slope of that line says how fast the total grows as the opening shrinks, and one minus the slope comes out as 1.23.",
+        "For a smooth line that number is exactly 1. For a filled patch of the map it would be 2. The coast sits between: more than a line, less than an area. That in-between number is its dimension, and it is the one thing about the coast that does not depend on the size of the dividers.",
+        "The same measurement on three coasts gives 1.41 for the fjords of Norway, 1.23 for Britain, and 1.19 for the near-straight Atlantic coast of Portugal. That is exactly the order the eye puts them in, from most ragged to smoothest. The eye was measuring dimension all along."
       ]
     },
     {
       "number": 3,
       "title": "Box-counting dimension",
       "video": "",
-      "caption": "The same coast under a grid. Count the boxes it touches, halve the box, count again. The count grows faster than a line's would and slower than a filled shape's. The slope of that growth is the box-counting dimension, and it agrees with the dividers.",
+      "caption": "Instead of walking along the coast, lay a grid over it and count the squares the coast passes through. Halve the squares and count again. A straight line would need exactly twice as many; a filled patch four times as many. The coast needs about two and a third times as many, every time. That rate of growth is the box-counting dimension, and it comes out the same as the dividers gave, 1.23, by a method that shares nothing with them.",
       "beats": [
         {
           "slug": "03-box-counting",
@@ -30,13 +90,23 @@
           "why": "counting boxes needs only a shape and a grid, so it works where walking does not. it has to be checked twice before it can be trusted: against the other method on the same coast, and against shapes whose dimension is already known. the ordinary-shape counts are exact rather than sampled, so the whole numbers come out exact.",
           "say": "Forget walking along it. Drop a grid over the whole coast and ask one question of each box: does any coast run through it? Thirty boxes at this size. Halve the box - seventy-three. Halve again - a hundred and seventy-three. Each halving more than doubles the count, and if this were a plain line it would exactly double. Sizes against counts, both logarithmic, and the slope is one point two three - the same answer the divider walk gave, by a method that shares nothing with it. Before trusting it further, try it where the answer is known. A line four across needs four boxes. A square four across needs sixteen. A cube, sixty-four. The slopes come out one, two and three exactly. And when the rule is known, no counting is needed at all: four copies, each a third of the size, and the logarithm reads the dimension straight off."
         }
+      ],
+      "question": "How is something measured when it is not a line?",
+      "text": [
+        "The dividers only work on a curve, because they walk along it. Most of what comes later in this series is not a curve: a fern, a sponge, the edge of a cloud of dots. The same coast serves to find a method that does not need to walk anywhere.",
+        "Lay a grid over the whole coast and ask one question of each square: does any coast run through it? Shade the squares that say yes and count them. At the first size there are 30. The magnified window shows the test up close: a square counts if the coast touches it at all, however little.",
+        "Now halve the squares and count again: 73. Halve again: 173. Then 396, then 908. The interesting thing is not the count but how it grows. Cover a straight line with squares half the size and exactly twice as many are needed. Cover a filled patch and exactly four times as many are needed. The coast needs about two and a third times as many, every time the square is halved, and it keeps doing so.",
+        "Sizes against counts on the same logarithmic plot as before, and again the points fall on a straight line. Its slope is 1.228. The dividers gave 1.232. Two methods that share nothing, one walking, one counting, land on the same number to two decimal places. That agreement is what makes the number believable rather than an accident of one method.",
+        "A method still has to be checked where the answer is already known. A line cut 2, 4 and 8 across needs 2, 4 and 8 squares. A square needs 4, 16 and 64. A cube needs 8, 64 and 512. The slopes come out 1.000, 2.000 and 3.000, exactly. The method returns the whole numbers where whole numbers are right, so its fraction for the coast is not an artefact.",
+        "One more thing the coast cannot show but a built curve can. When the rule that makes a shape is known, there is no need to count at all. The Koch curve, next in the series, is four copies of itself each a third of the size, and its dimension is read straight off those two numbers: the logarithm of 4 divided by the logarithm of 3.",
+        "Dimension, then, is how the count of boxes grows as the boxes shrink. It works on anything that can be drawn, and it is the ruler used on everything that follows."
       ]
     },
     {
       "number": 4,
       "title": "The Koch curve as an idealised coastline",
       "video": "",
-      "caption": "One segment, one rule: the middle third lifts into a bump. Applied again and again it gives the Koch curve, whose quarters are copies of the whole at a third of the size. Four copies at a third give dimension log 4 over log 3, and a length with no ceiling inside a fixed box.",
+      "caption": "One rule on one segment: lift its middle third into a bump. Now apply the same rule to each of the four pieces, then to each of the sixteen, without end. The finished curve is made of four copies of itself, each a third of the size. Four copies at a third is the pair of numbers the dimension is read from: log 4 over log 3, about 1.26. Its length grows without limit while it never leaves a fixed box.",
       "beats": [
         {
           "slug": "04a-rule",
@@ -78,13 +148,23 @@
           "why": "the two behaviours on screen at once, so that unbounded boundary and finite interior stop sounding like a contradiction.",
           "say": "The same rule, now on all three sides of a triangle. The perimeter climbs the way it did before - nine, thirteen, seventeen, and on past fifty-five, with no ceiling. The area does not. One, then one and a third, then one point four eight, one point five five, one point five nine - each pass adds less than the last, and the points flatten onto eight fifths. A finite area, held inside a boundary of no finite length."
         }
+      ],
+      "question": "What if a coast followed one exact rule?",
+      "text": [
+        "A real coast is measured, never known exactly. The next object is built instead, from one stated rule, so that the same kind of roughness can be computed rather than measured.",
+        "Start with a single segment. The rule: lift its middle third into a bump. One piece becomes four, each a third as long. Now apply the same rule to all four pieces, then to all sixteen, then to all sixty-four. The readouts count 4, 16, 64, 256 pieces, of length 1/3, 1/9, 1/27, 1/81. Magnify any stretch of the finished curve and the same rule is sitting there at the smaller scale.",
+        "Cut the finished curve into its four quarters. Lift one out, turn it, magnify it three times: it lands exactly on the curve one pass earlier. So does the next quarter, and the next, and the last. Four copies, each a third of the width, and every quarter splits into four again, without end. On the coast this self-similarity was a resemblance; here it is exact.",
+        "Those two numbers are all the dimension needs. Four copies at a third: the logarithm of 4 over the logarithm of 3, which is 1.262. On the scale from 1 to 2 it sits at 1.262, and the coast measured earlier sits at 1.232. A curve invented from one rule lands almost where a real coast lands. The roughness of coasts is the kind of roughness a rule can make.",
+        "Now the length. Every pass multiplies it by four thirds: 7.47, then 9.96, 13.27, 17.70, 23.60, and on without a ceiling. Yet the curve never leaves the grey rectangle drawn around it. A length that grows without bound inside a box that does not change is exactly what the dividers were reporting on the coast.",
+        "Apply the rule to all three sides of a triangle and the same two facts appear together. The perimeter climbs 9.87, 13.16, 17.55, 23.40, 31.20, 41.60, 55.47, with no limit. The area does the opposite: 1.000, 1.333, 1.481, 1.547, 1.577, 1.590, 1.595, each pass adding less than the last, flattening onto eight fifths of the starting triangle.",
+        "A boundary with no finite length can enclose a finite area. That is what the coastline paradox was, said in one sentence."
       ]
     },
     {
       "number": 5,
       "title": "The Barnsley fern",
       "video": "",
-      "caption": "Four moves, each turning, shrinking and shifting the plane. A dot sent through them at random, thousands of times, draws a fern, whatever dot it started from. Each move draws its own part. The fern is what the four moves settle onto, and its dimension can be counted.",
+      "caption": "Four moves, each one a rule for sending a point somewhere else: shrink, turn, shift. Take any dot, pick a move at random, apply it, and repeat thousands of times. The dots fill in a fern, whatever dot the walk started from. Each move draws one part: the stem, the next frond up, the two lowest leaflets. The fern is the one shape the four moves leave unchanged, which is why nothing else can come out.",
       "beats": [
         {
           "slug": "05a-ifs",
@@ -126,13 +206,25 @@
           "why": "the first time box counting is run on something not built by a clean cutting rule. the method has to work on a scattered point cloud, and every count in the table has its own picture behind it.",
           "say": "Lay a grid over the fern and count only the boxes it touches. Eighteen. Halve the box and count again - sixty-one. Then a hundred and ninety-six, seven hundred and twelve, and on to eight and a half thousand at the finest. Each halving multiplies the count by about three and a third, and the logarithm of that ratio is the dimension: one point seven eight. A shape drawn by four moves, sitting between a line and a filled square."
         }
+      ],
+      "question": "Can a few numbers draw a fern?",
+      "text": [
+        "The Koch curve was made by replacing pieces. The fern is made by something simpler still: a handful of moves, each of which takes a point and puts it somewhere else.",
+        "A move is six numbers. The new x is a times the old x plus b times the old y plus e; the new y is c times x plus d times y plus f. Four of the six turn and stretch the plane, the last two shift it. The fern uses four moves. Watch what each one does to the whole region the plant can occupy: the first flattens it to the stem, the second shrinks it a little and lifts it one frond up, the last two tip it into the left and the right leaflet.",
+        "Now send those four pieces through the same four moves again. Sixteen pieces, then sixty-four, then two hundred and fifty-six, and the shape has stopped changing. Nothing chose that shape. It is what the four moves leave alone.",
+        "The clip then does the same thing one dot at a time, which is how the fern is actually drawn. Pick a move at random, the second one 85 times in a hundred, apply it to the dot, and plot where it lands. Multiply, add, and there is the new point. Again. Ninety thousand times.",
+        "The objection here is that the shape was hidden in the starting dot. Three panels answer it: three different starts, one of them nowhere near a fern, the same sequence of moves in all three. They fill in identically. Where the dot began leaves no trace in the shape.",
+        "Colour every dot by the move that drew it and each move has its own part. The first drew the stem and only 864 dots out of ninety thousand. The second drew 76,602 of them, because it is chosen most often and because it places a copy of the whole fern one frond up the stalk. That second move is why a frond, magnified, is the whole fern again. The last two placed the leaflets, 6,324 and 6,210 dots.",
+        "To see that the moves and not the start make the shape, begin from a circle drawn well away from any fern. Four moves give four smaller circles; again, sixteen; again, sixty-four; again, two hundred and fifty-six, and the widest piece has shrunk from 4.19 to 2.20. The pieces have settled onto the fern. Start from a square instead and the same fern arrives. A shape that every start settles onto is called an attractor, and the fern is the attractor of these four moves.",
+        "Finally the ruler from the earlier parts. Boxes over the fern: 18 at the coarsest size, then 61, 196, 712, 2,481, 8,451. On the logarithmic plot the slope is 1.779, and the fern takes its place on the scale between the Koch curve and a filled square.",
+        "Four moves, six numbers each: twenty-four numbers, and a fern."
       ]
     },
     {
       "number": 6,
       "title": "The wider geometric family",
       "video": "",
-      "caption": "The Cantor set, the Sierpinski triangle and carpet, the dragon, a plant grown from five symbols, the flowsnake and the Menger sponge. Eight objects built by different rules, every one with a place on the same scale of dimension. The dragon turns out to be two moves as well.",
+      "caption": "Different rules, one measurement. The Cantor set removes middle thirds until only dust is left, and lands below one, between a point and a line. The Sierpinski triangle and carpet, the dragon, a plant grown from five symbols, the flowsnake and the Menger sponge each keep a stated fraction of themselves at a stated scale, and each is placed on the same scale of dimension by the same two numbers: how many copies, how much smaller.",
       "beats": [
         {
           "slug": "06a-cantor",
@@ -206,13 +298,26 @@
           "why": "the dragon curve reads as a Julia set to the eye, and the resemblance is real but not what it looks like. both are limit sets of a system of two maps applied over and over. they are not the same object: the dragon's maps are affine, so straight lines stay straight and the shape tiles the plane, while the square root bends the plane and the edge curls instead. saying only the first half would be misleading; saying neither leaves the viewer with a false impression they arrived at themselves.",
           "say": "The dragon is not built by folding, in the end - it is what two moves settle onto. Apply the first to the whole curve and it lands exactly on the left half. Apply the second and it lands on the right. Two copies, each shrunk by nought point seven one and turned, and together they are the original. Same machinery as the fern, which needed four. Start from a square somewhere else entirely and put it through the two moves over and over - the widest piece shrinks by seven-tenths every pass, and it settles on the dragon. Now, this looks like a Julia set, and there is a real reason. A Julia set is a two-move attractor too: its moves are the two square roots of z minus c. But the dragon's moves keep straight lines straight, so it tiles the plane, while the square root bends them, so the edge curls. The dragon is not a Julia set, and no Julia set is a dragon curve."
         }
+      ],
+      "question": "How many shapes does one idea cover?",
+      "text": [
+        "Everything so far was made of copies of itself at a smaller scale. This part runs the same two questions, how many copies and how much smaller, across eight objects built by different rules, and puts every answer on one scale.",
+        "Take a segment and remove its middle third. Two pieces remain. Remove the middle third of each, and again, six times. The pieces count 2, 4, 8, up to 64, and shrink to 1/729. Two copies at a third: the logarithm of 2 over the logarithm of 3, about 0.631. Less than a line, more than a point. The scale from the earlier parts now has a mark below 1, and dimension is seen to be a position on a continuum, not a count of directions.",
+        "Take a filled triangle and cut out the upside-down triangle in its middle. Three half-size triangles remain, and each loses its own middle, five passes. Three copies at one half: 1.585. That number already appeared in the very first topic, on the shape that would not settle on a whole number.",
+        "Take a filled square under a three-by-three grid and cut out the centre cell. Eight squares remain, and every one loses its own centre. Eight copies at a third: 1.893. Keeping eight ninths of the area lands much nearer to 2 than keeping three quarters did.",
+        "Fold a strip of paper in half and open the fold to a right angle: that is the first dragon. Fold twelve times and the curve fills a jagged region. Four copies of it, each turned one more quarter turn, tile the plane with no gaps. A curve that tiles the plane has dimension 2.",
+        "A plant grows from five symbols read along a path: draw forward, turn left, turn right, remember this point, go back to it. One rewriting rule with a fixed turn of 25 degrees, applied six times, turns a single upright segment into a branching plant. This one carries no dimension number, and the reason matters: its rule has no single scale factor, so the two questions have no single answer.",
+        "A path of seven segments; each segment replaced by that same path at 0.378 of the size, which is one over the square root of seven. Then 7, 49, 343, 2,401, 16,807 segments, and the curve has filled a hexagonal island. Seven copies at one over root seven: dimension 2 again, reached by a different road.",
+        "A solid cube cut into 27. Take out the six face centres and the one hidden in the middle: 20 remain. Repeat inside each: 400. Twenty copies at a third: 2.727. More than a surface, less than a solid, and the first object in the series with a dimension above 2.",
+        "Eight thumbnails in a row, and each drops onto the scale from 0 to 3: 0.631, 1.262, 1.585, 1.779, 1.893, 2.000 shared by the dragon and the flowsnake, and 2.727. Eight rules, one measurement.",
+        "One last turn. The dragon, folded from paper, is also the attractor of exactly two moves, written out in coordinates on screen: each shrinks by 0.707, one turns 45 degrees and the other 135. A square put through the two moves eight times settles onto the dragon, exactly as the circle settled onto the fern. Two ways of making a shape turn out to be one."
       ]
     },
     {
       "number": 7,
       "title": "Random fractals, lightning and crystal growth",
       "video": "",
-      "caption": "A discharge crosses a gap as a tree, not a line. One rule makes it: the chance a site lights up is set by the field at its tip. A wandering particle that sticks makes the same kind of tree. Supply decides whether growth branches or comes out flat; a random rule never repeats itself.",
+      "caption": "A spark crossing a gap does not go straight. It forks, and the forks fork, into a tree. One rule makes the tree: the chance that a spot lights up next is set by the strength of the field there, largest at the tips. A particle wandering at random and sticking where it touches grows the same kind of tree. The randomness means no two runs match, yet the dimension measured from them is the same.",
       "beats": [
         {
           "slug": "07a-discharge",
@@ -262,13 +367,25 @@
           "why": "three points that only make sense together: the same look can come from opposite mechanisms; randomness in the fern is a sampling method while randomness in the discharge is the object itself; and the amount of roughness is a dial with a number attached.",
           "say": "A plant grown by a fixed rule, and a discharge grown by a random one - and they look like relatives. But run the fern again and it is the same fern; run the discharge again and it is never the same bolt. The randomness is the shape, not a flaw in it. And it has a setting: turn one number, and the branching thins from a bush to a channel, with the dimension following it down."
         }
+      ],
+      "question": "Can randomness make a fractal?",
+      "text": [
+        "Every shape so far came from a fixed rule and came out the same every time. Lightning does not. Yet a bolt magnified shows forks inside forks, the mark of everything in this series. This part asks how a random process can have a dimension.",
+        "Two plates and a gap. A discharge crosses it, not as a line but as a tree: it forks, and the forks fork, and it reaches the far plate by way of the tree. Magnify any one fork and there are smaller forks inside it.",
+        "The rule that makes the tree is one line. Around a lit site there is a field, strongest right at the tip. The chance that a neighbouring site lights up next is proportional to the field there. So the tip is likely and the flank is not, but not impossible. That one weighted choice, made hundreds of times, is the whole tree. The model is called dielectric breakdown.",
+        "A second random rule, with no field and no plates. A particle takes one step at a time to one of four neighbours, each with chance one in four, and stops the moment it touches what is already there. Watch one arrive: sixty steps of wandering, then it sticks. Another. Another. Then a thousand, and arms spread out, because the arms shield the inside and new arrivals stick to the outside. This is diffusion-limited aggregation, and it grows the same kind of tree.",
+        "To measure it, draw rings of radius r from the seed and count the particles inside each: 49, 124, 260, 518, 816. If the count grows like r to some power d, then on the logarithmic plot the points lie on a line of slope d. They do, and the slope is 1.629. Large clusters settle near 1.71.",
+        "The same rule with three different random seeds gives three different trees that all look alike: a Lichtenberg figure burned into an insulator, metal grown on an electrode, a mineral dendrite creeping through rock. Snowflake dendrites grow the same way.",
+        "A question the pictures raise: why do some things grow as branches and others as flat-faced blocks, when both add one particle at a time? The answer is measured. Around a square block, the supply reaching a corner is 0.186 and the supply reaching the middle of a face is 0.060, so a corner is fed 3.11 times as much. Growth runs at the speed of supply, so corners run ahead of faces unless something smooths them back.",
+        "Set a fixed rule beside a random one: the plant comes out the same every time, the bolt never does. Then one number, the roughness, is moved: at 0.6 the cluster is densely bushy, at 1.0 branched, at 2.0 nearly a single channel, and the measured dimensions are 1.603, 1.471 and 1.208.",
+        "Randomness lives in the details. The dimension does not depend on them."
       ]
     },
     {
       "number": 8,
       "title": "Complex numbers",
       "video": "",
-      "caption": "Every ordinary number sits on a line; the square root of minus one needs a plane. Adding is laying arrows tip to tail. Multiplying doubles the angle and squares the distance. That one fact is why squaring on its own sends points to zero or to infinity, with a circle in between.",
+      "caption": "Every ordinary number has a place on a line, and no number on that line squares to minus one. Invent one that does, and it needs a direction of its own: a plane instead of a line. Adding two of these numbers lays two arrows tip to tail. Multiplying them turns and stretches. Squaring doubles the angle and squares the distance, so a point just inside the circle of radius one falls inward and a point just outside runs away.",
       "beats": [
         {
           "slug": "08a-point-on-plane",
@@ -318,13 +435,24 @@
           "why": "topic 9 previously opened with the rule z becomes z times z + c already fixed, and nothing anywhere said where it came from. this beat answers that. squaring alone is shown to be too simple to be interesting - three outcomes and a circular boundary - and the shift is shown to be the smallest thing that can be added to break that, built from the two operations the topic has already taught.",
           "say": "Take squaring on its own and apply it over and over. Start inside this circle and the point falls to zero. Start on it and it stays. Start outside and it runs away. Three outcomes, and the border between them is exactly the circle - perfectly smooth, dimension one, nothing to say about it. So add one thing: after every squaring, shift by a fixed number c. Watch a single step done twice over - square, which doubles the angle and squares the length, then slide by c. Again. The point wanders and never escapes. Now run that test on every starting point at once and keep the ones that stay bounded - and the border is no longer a circle. Look closer and it stays rough at every magnification. And notice what went into it: a turn and stretch, and a slide. Both from earlier in this topic. Nothing else."
         }
+      ],
+      "question": "Where does the Mandelbrot set come from, and why does it need a number that squares to minus one?",
+      "text": [
+        "The last three parts of the series are about one picture. To get there, one new kind of number is needed, and it is worth building it from nothing.",
+        "Every ordinary number has a place on a line. Walk 1.5 along it and square: 2.25. Walk -1.5 and square: 2.25 again, the same place. Every square lands on the right of zero. Mark -1 on the line: nothing on the line reaches it by squaring.",
+        "So invent one. Call it i, and let i times i be -1. It cannot sit anywhere on the line, since the line is spoken for, so give it a direction of its own: straight up. Every number is now a point on a plane, a real part along the line and an imaginary part up.",
+        "Adding two of these numbers is laying two arrows tip to tail. The clip does it twice, and the rule that follows is just adding the parts.",
+        "Multiplying is done in full, one line at a time: the two factors, the four terms of the expansion, the line where i times i becomes -1 and turns the last term negative, the collected answer 0.796 + 1.692i, placed on the plane where the algebra says. Then the same answer is read a second way: the angles of the two arrows have added, and their lengths have multiplied. Multiplying is a turn and a stretch.",
+        "Every point, then, has a distance from the centre and an angle. Squaring a number doubles its angle and squares its distance: a point at 32 degrees lands at 64. Square a point just outside the circle of radius one over and over and it marches away. Square a point just inside and it spirals in to the centre.",
+        "Squaring on its own has only three outcomes: fall to zero, stay on the circle, run away, and the edge between them is the circle itself, which is smooth. Now add one fixed number c after every squaring. Each step is two moves, a square and a shift, and the walk no longer settles into any of the three. It wanders, and for the right c it wanders without ever escaping.",
+        "That is the entire rule behind the picture: square, shift, repeat. The next part asks it of every point at once."
       ]
     },
     {
       "number": 9,
       "title": "Escape-time dynamics",
       "video": "",
-      "caption": "Square, add c, repeat. Some starting points wander and stay; others cross the circle at two and are gone. The points that stay are a Julia set, one for every c. Run one walk per c instead, from zero, and the values that stay bounded are the Mandelbrot set. Colour by escape time.",
+      "caption": "Square the number, add a fixed number c, and repeat. Some starting points wander for ever and stay near; others cross the circle of radius two and are gone for good. The points that stay form a Julia set, a different one for every c. Now fix the start at zero instead and vary c: the values of c whose walk stays bounded form the Mandelbrot set. Points that escape are coloured by how many steps it took.",
       "beats": [
         {
           "slug": "09a-orbit",
@@ -382,13 +510,24 @@
           "why": "to show that nothing in the previous six beats depended on the particular rule. change the rule and the same machinery produces a different object with the same kind of boundary. naming both and writing both rules is what keeps this from being a slideshow.",
           "say": "Nothing so far depended on squaring and adding. Here is Newton's method looking for the cube roots of one - colour each starting point by which root it ends up at, and the borders between the three are fractal. And here is the burning ship: exactly the earlier rule, except that the two parts of z are made positive before squaring. One absolute value, and this is what comes out. Wherever two outcomes meet, the boundary between them is fractal."
         }
+      ],
+      "question": "Which points stay?",
+      "text": [
+        "The rule from the last part, z becomes z times z plus c, applied over and over. Everything in this part is one question asked of a starting point: does its walk stay, or does it leave?",
+        "Fix c and mark it on the plane. Put a starting point through the rule ten times. It hops around with a fading trail, and three readouts follow it: the step, the value of z, and its distance from the centre. On the plot beside, that distance stays well below the dashed line at 2.",
+        "Draw the circle of radius 2 and try two starts. The first crosses the circle, its distance running 1.30, 1.81, 4.19, and it is gone for good: once a walk is outside that circle it only ever grows, which the optional part proves. The second wanders inside and stays. One picture, both fates.",
+        "Now six starting points for the same c, one at a time, each with a written verdict. Three stay. Three leave, after 5, 2 and 1 steps. Then the test is run on every point in the frame at once, and the ones that stay fill in as a solid body covering 17 per cent of the frame. That body is the Julia set for this c.",
+        "Move c, and the shape moves with it. Five values are visited. While the marker for c sits inside a certain region of the plane, the Julia set holds together in one piece; once the marker crosses out, it shatters into dust.",
+        "That region is the other picture. Instead of one c and every start, take every c and one start, zero. The values of c whose walk from zero stays bounded fill in as the Mandelbrot set. Two doorway points are marked on it: one inside, which opened to a connected Julia set, one outside, which opened to dust.",
+        "The colours come last and they are a count. Three points outside the set are marked with how many steps each took to leave: 3, 9 and 23, the later ones closer to the edge. A colour is assigned to each count, and the whole outside is coloured that way. The banded picture is a map of patience: how long each point took to go.",
+        "Two other rules, the same idea. On the left, Newton's method for the equation z cubed equals 1, coloured by which of the three roots the walk falls into. On the right, the burning ship, the same square and shift with the two parts of z made positive first. Every such picture is a question asked of every point."
       ]
     },
     {
       "number": 10,
       "title": "Going deeper",
       "video": "",
-      "caption": "A c inside the set has a connected Julia set; a c outside has dust. The edge of the set is all the detail there is, and magnifying it a thousand times over does not smooth it. Its box count climbs towards two. Restricted to the real line, the same rule gives the period-doubling picture.",
+      "caption": "A c chosen inside the Mandelbrot set gives a Julia set in one piece; a c outside gives scattered dust. All the detail of the set sits on its edge: magnify the edge a thousand times and it is as intricate as before. Counting boxes along that edge gives a dimension that climbs toward two as the boxes shrink. Along the real axis, the same rule gives the period-doubling picture that chaos is entered through.",
       "beats": [
         {
           "slug": "10a-connectedness",
@@ -430,13 +569,22 @@
           "why": "to show that the bulbs are not decoration - each marks a doubling of the period - and to demonstrate it by alignment rather than assert it.",
           "say": "Restrict the same rule to the real line and plot where it settles. The picture underneath lines up with the one above: every neck between the bulbs sits exactly on a splitting point. Each bulb is one doubling of the period - the route to chaos, sitting inside this picture."
         }
+      ],
+      "question": "How deep does the edge go?",
+      "text": [
+        "Three claims about the Mandelbrot set, each checked on screen, and one that cannot be.",
+        "First, what the set records. Take a c inside it and the Julia set above is connected. Take a c outside and the Julia set is dust. A second pair, the same answer. The Mandelbrot set is a map of which Julia sets hold together.",
+        "Second, where the detail is. Dim the interior and the far outside and only a bright band remains, along the edge. All the structure of the set lives on its boundary, and a marker travels that boundary exactly.",
+        "Third, how far the detail goes. Pick a point on the edge and magnify in seven stages, each growing out of the last, to 1,074 times. Spirals and filaments appear at every stage, and the last frame is as structured as the first. On the coast the roughness ran out at the size of a grain of sand. Here it does not run out.",
+        "Now the ruler, and its limit. Count boxes along the edge at three picture resolutions: 256 across gives 0.919, 512 gives 1.055, 1,024 gives 1.114. The number climbs every time the picture gets finer. The proved value is 2: the edge of the Mandelbrot set is as rough as a curve can be, filling area like a surface. No picture can reach that number, because every picture stops at its pixels, so the honest thing is to show the climb and state the theorem beside it.",
+        "Last, a connection forward. Crop the set to a band around its real axis and draw beneath it, on the same horizontal scale, the bifurcation diagram of the same rule restricted to real numbers. Gold lines at -0.75 and -1.25 run through both: the necks between the bulbs above land exactly on the points where the branches split below. The bulbs are period doublings, and the doublings are the route into chaos, which is the next topic."
       ]
     },
     {
       "number": 11,
       "title": "The optional deeper layer",
       "video": "",
-      "caption": "The optional strand. The counting law gives the dimension with one logarithm; box counting has a range where it holds; the Hausdorff measure has a critical power. The field around a discharge solves Laplace's equation. Why two is the escape bound, and what the two big theorems say.",
+      "caption": "The optional layer, for a reader who wants the reasons. Why one logarithm gives the dimension when the rule is known. Why box counting is trusted only over a range of box sizes. What the Hausdorff measure is and why it jumps at one critical power. Why the field around a discharge is found by solving Laplace's equation. Why two is the escape bound, and what the two big theorems about the Mandelbrot set state.",
       "beats": [
         {
           "slug": "11a-optional-strand",
@@ -502,6 +650,17 @@
           "why": "to end the strand honestly. the two deepest facts are stated plainly, their proof ideas made concrete, and the boundary of what has been shown is marked rather than blurred.",
           "say": "Two results, stated plainly. The set is connected - the argument maps its outside smoothly onto the outside of a disk. And its edge has dimension two, as rough as a curve is capable of being. Both proofs are beyond this series. What they mean is not."
         }
+      ],
+      "question": "For a reader who wants the reasons",
+      "text": [
+        "This part is optional. The series is complete without it, and nothing later assumes it. It holds the reasons behind five things that were shown and not proved.",
+        "The dimension formula. Content equals inverse scale to the power d, written for the Koch curve as 4 equals 3 to the d, and for the Sierpinski triangle as 3 equals 2 to the d. Taking logarithms brings the exponent down; dividing isolates it. Each rewrite stays on screen with the step that produced it named beside it, and the two examples come out as 1.262 and 1.585.",
+        "Why a measurement has a range. Box counting on the Koch curve over three ranges of box size gives three slopes: 1.2924 over the coarsest, 1.2735 over the middle, 1.2520 over the finest, against the exact 1.2619. The finer the boxes, the closer, and a fit is only trusted over the range where its points lie on a line.",
+        "What dimension is, more carefully. Cover the Koch curve by 64 pieces of size one twenty-seventh and add up the piece sizes raised to a power p. At p equal to 1 the sum climbs as the construction deepens; at 1.6 and 2.0 it falls away to nothing; at 1.2619 it stays flat. The one power where the sum neither grows nor vanishes is the Hausdorff dimension, and it agrees with the counting.",
+        "Where the lightning's field comes from. Outside a growing cluster the field solves Laplace's equation, and the growth rule is chance proportional to the field's gradient raised to a power. That power is the roughness moved in the random part: 0.6, 1.0 and 2.0 gave 1.603, 1.471 and 1.208.",
+        "Why two is the escape bound. Suppose the size of z exceeds 2 while the size of c is at most 2. Then the size of z squared plus c is at least the size of z squared minus the size of c, which is at least the size of z squared minus 2, which exceeds the size of z. So once past the circle, every step grows, and the sizes traced on the logarithmic axis do exactly that.",
+        "Why the two pictures are one. The walk that starts at zero stays bounded exactly when the Julia set for that c holds together. The same c is marked in both pictures with the walk traced across the first.",
+        "Two theorems, stated with the idea of each proof and marked as proved in full elsewhere. The Mandelbrot set is connected: the outside of the set can be mapped onto the outside of a disk. Its edge has dimension 2: the edge is as rough as a curve can be."
       ]
     }
   ]

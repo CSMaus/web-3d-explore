@@ -25,6 +25,7 @@ import {
   type OptKind,
 } from "../src/systems/net.ts";
 import { dataset, perceptron } from "../src/systems/learn.ts";
+import { CURVES, fade, gap, logit, nudge, slowdown, staircase, stepsTo } from "../src/systems/depth.ts";
 
 const f = (n: number, d = 4) => n.toFixed(d);
 const row = (a: string, b: string, c = "") => console.log(`  ${a.padEnd(30)} ${b.padStart(14)}   ${c}`);
@@ -209,3 +210,26 @@ console.log("\nDESCENT ON A SURFACE WITH A KNOWN MINIMUM");
   row("Stable while", "Rate < 2/8 = 0.25", "Twice the reciprocal of the sharpest curvature");
 }
 console.log("");
+
+console.log("\nTHE REASONS BEHIND THE PAGES, measured");
+{
+  const data = dataset("split", 60, 3);
+  const w = [0.6, 0.4];
+  const near = data.X.reduce((best, p) => (Math.abs(w[0] * p[0] + w[1] * p[1]) < Math.abs(w[0] * best[0] + w[1] * best[1]) ? p : best), data.X[0]);
+  const z0 = w[0] * near[0] + w[1] * near[1];
+  const out = nudge(w, 0, near, data, 0.01 * -Math.sign(z0) * Math.sign(near[0]), 300);
+  const moves = out.smooth.slice(1).map((a, i) => Math.abs(a - out.smooth[i]));
+  row("Smooth unit, largest move per nudge", Math.max(...moves).toExponential(2), "Every nudge moves it");
+  row("Hard unit, nudges before the jump", String(out.flipAt - 1), "Then one jump of 1, then nothing");
+  for (const [n, s] of [[8, 60], [32, 60], [64, 60], [64, 400]] as [number, number][]) {
+    row(`Staircase, ${n} units at steepness ${s}`, gap(staircase(CURVES.bump.f, n, s), CURVES.bump.f).worst.toFixed(4), "Worst gap to the bump");
+  }
+  const slow = slowdown(logit(0.98), 0.15, 2000);
+  row("Sure and wrong, squared miss", String(stepsTo(slow.mse, 0, 0.1)), "Steps to within 0.1 of the answer");
+  row("Sure and wrong, cross entropy", String(stepsTo(slow.ce, 0, 0.1)), "Steps to within 0.1 of the answer");
+  const rings = dataset("rings", 60, 3);
+  const sizes = [2, 6, 6, 6, 6, 6, 1];
+  for (const [act, init] of [["sigmoid", "uniform"], ["tanh", "xavier"], ["relu", "he"]] as [Act, Init][]) {
+    row(`Six layers, ${act} + ${init}`, fade(make(sizes, act, "sigmoid", init, 4), rings).ratio.toExponential(2), "Blame at the last layer over the first");
+  }
+}

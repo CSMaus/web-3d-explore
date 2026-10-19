@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text, Heading } from "@kit/index";
 import { Link } from "@tanstack/react-router";
 import { Offline } from "@/components/Offline";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { CHAOS, TOPIC } from "@/lib/chaos";
+import { TOPIC } from "@/lib/chaos";
 
 export const Route = createFileRoute("/topics/chaos/parts")({
   loader: () => api.topic(TOPIC),
@@ -41,9 +41,8 @@ function ChaosParts() {
   const made = topic?.part_list.length ?? 0;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-      <TopicBar topic={CHAOS} />
-      <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">The series, in order</h1>
+    <div>
+      <Heading level={1} className="mt-6">The series, in order</Heading>
 
       {!topic ? (
         <div className="mt-6 max-w-2xl">
@@ -51,20 +50,20 @@ function ChaosParts() {
         </div>
       ) : null}
 
-      <p className="mt-3 max-w-2xl text-sm text-muted">
+      <Text kind="intro" as="p" className="mt-3 max-w-2xl">
         {made === 0
           ? "No clip is made yet. The twenty-two steps below are the order they will be built in, and every one of them already has its mathematics on the play pages."
           : `${made} of ${STEPS.length} steps have clips.`}
-      </p>
+      </Text>
 
-      <p className="mt-3 max-w-2xl text-sm text-muted">
+      <Text kind="intro" as="p" className="mt-3 max-w-2xl">
         Steps 17 to 19 are the fractal block, which is{" "}
-        <Link to="/topics/fractals/parts" className="text-leaf hover:underline">
+        <Link to="/topics/fractals/parts" className="text-selected hover:underline">
           Topic 1
         </Link>
         . It was built first and out of order, and it stands alone, so this topic keeps it by
         reference rather than repeating it.
-      </p>
+      </Text>
 
       <ol className="mt-10 max-w-3xl space-y-1">
         {STEPS.map((title, i) => {
@@ -72,19 +71,19 @@ function ChaosParts() {
           return (
             <li
               key={title}
-              className="flex gap-3 border-t border-edge py-2.5 font-mono text-[12px]"
+              data-text="caption" className="flex gap-3 border-t border-border py-2.5"
             >
-              <span className="w-8 shrink-0 text-muted">{i + 1}</span>
-              <span className={borrowed ? "text-sky" : "text-ink/80"}>{title}</span>
+              <span className="w-8 shrink-0 text-muted-foreground">{i + 1}</span>
+              <span className={borrowed ? "text-secondary" : "text-foreground/80"}>{title}</span>
               {borrowed ? (
-                <span className="ml-auto shrink-0 text-[10px] text-muted">From topic 1</span>
+                <span data-text="note" className="ml-auto shrink-0">From topic 1</span>
               ) : (
-                <span className="ml-auto shrink-0 text-[10px] text-muted">Not built</span>
+                <span data-text="note" className="ml-auto shrink-0">Not built</span>
               )}
             </li>
           );
         })}
       </ol>
-    </main>
+    </div>
   );
 }

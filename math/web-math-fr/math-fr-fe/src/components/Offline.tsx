@@ -1,10 +1,12 @@
+import { Text } from "@kit/index";
+
 export function Offline({ what }: { what: string }) {
   return (
-    <div className="rounded border border-warn/40 bg-warn/5 p-4">
-      <p className="font-mono text-xs text-warn">The backend is not answering</p>
-      <p className="mt-2 text-xs text-muted">{what}</p>
-      <pre className="mt-3 overflow-x-auto rounded border border-edge bg-ground p-3 font-mono text-[11px] text-muted">
-        {"Cd math-fr-be\ndocker compose up -d --build"}
+    <div className="rounded border border-destructive/40 bg-destructive/5 p-4">
+      <Text kind="warning" as="p">The backend is not answering</Text>
+      <Text kind="note" as="p" className="mt-2">{what}</Text>
+      <pre data-text="caption" className="mt-3 overflow-x-auto rounded border border-border bg-background p-3">
+        {"cd math-fr-be\ndocker compose up -d --build"}
       </pre>
     </div>
   );

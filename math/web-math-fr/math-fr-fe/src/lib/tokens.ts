@@ -7,6 +7,7 @@ export const TOKENS = {
     { to: "/topics/tokens/parts", label: "Parts" },
     { to: "/topics/tokens/play", label: "Play" },
     { to: "/topics/tokens/theory", label: "Mathematics" },
+    { to: "/topics/tokens/uses", label: "Applications" },
   ],
 } as const;
 

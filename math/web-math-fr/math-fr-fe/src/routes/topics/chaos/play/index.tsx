@@ -1,8 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { ChaosTabs } from "@/components/ChaosTabs";
-import { TopicBar } from "@/components/TopicBar";
+import { Text, Heading } from "@kit/index";
 import { api } from "@/lib/api";
-import { CHAOS, TOPIC, routeOf, type ChaosRoute } from "@/lib/chaos";
+import { TOPIC, routeOf, type ChaosRoute, SYSTEMS } from "@/lib/chaos";
 import { useRise } from "@/lib/reveal";
 
 export const Route = createFileRoute("/topics/chaos/play/")({
@@ -51,34 +50,25 @@ const LOCAL: { id: string; name: string; summary: string }[] = [
     name: "The bifurcation diagram",
     summary: "Every parameter on one axis and every value the orbit visits above it",
   },
-  {
-    id: "control",
-    name: "Chaos in a heart, and the experiment that steadied it",
-    summary: "A rabbit heart made irregular by a drug and steadied by nudges timed from its return map, repeated on the model that explained it",
-  },
 ];
 
 function ChaosIndex() {
   const theory = Route.useLoaderData();
-  const items = theory?.systems.length ? theory.systems : LOCAL;
+  const items = (theory?.systems.length ? theory.systems : LOCAL).filter((s) => SYSTEMS.some((p) => p.id === s.id));
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-      <TopicBar topic={CHAOS} />
-      <div className="mt-4">
-        <ChaosTabs />
-      </div>
-      <h1 className="mt-4 font-mono text-sm tracking-wide text-leaf">Pick something to move</h1>
-      <p className="mt-3 max-w-2xl text-sm text-muted">
+    <div>
+      <Heading level={1} className="mt-4">Pick something to move</Heading>
+      <Text kind="intro" as="p" className="mt-3 max-w-2xl">
         Every system carries its equations, its parameters as controls, and the numbers measured
         from whatever is on screen. Nothing here is a stated result: the exponents, the dimensions
-        and Feigenbaum's constant are all computed in the browser as you watch.
-      </p>
+        and Feigenbaum's constant are all computed in the browser as they appear.
+      </Text>
       {!theory ? (
-        <p className="mt-3 text-[11px] text-muted">
+        <Text kind="note" as="p" className="mt-3">
           The descriptions come from the backend, which is not answering; this page needs nothing
           from it and neither does any of the mathematics.
-        </p>
+        </Text>
       ) : null}
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -86,7 +76,7 @@ function ChaosIndex() {
           <Tile key={s.id} to={routeOf(s.id)} name={s.name} summary={s.summary} delay={i * 60} />
         ))}
       </div>
-    </main>
+    </div>
   );
 }
 
@@ -106,10 +96,10 @@ function Tile({
     <div ref={ref} className="rise">
       <Link
         to={to}
-        className="block rounded border border-edge p-4 transition-colors hover:border-leaf"
+        className="block rounded border border-border p-4 transition-colors hover:border-selected"
       >
-        <div className="font-mono text-sm text-ink">{name}</div>
-        <p className="mt-1 text-xs leading-relaxed text-muted">{summary}</p>
+        <div data-text="itemTitle">{name}</div>
+        <Text kind="note" as="p" className="mt-1">{summary}</Text>
       </Link>
     </div>
   );

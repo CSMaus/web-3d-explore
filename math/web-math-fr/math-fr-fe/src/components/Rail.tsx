@@ -35,7 +35,7 @@ export function Rail({ items, here, onPick, className }: Props) {
       <ol className="space-y-2.5">
         {items.map((item) => {
           const on = item.id === here;
-          const tint = item.accent ?? "var(--color-leaf)";
+          const tint = item.accent ?? "var(--c-selected)";
           return (
             <li key={item.id}>
               <a
@@ -49,7 +49,7 @@ export function Rail({ items, here, onPick, className }: Props) {
                   style={{ width: on ? 26 : 12, background: on ? tint : "#3a4048" }}
                 />
                 <span
-                  className="font-mono text-[13px] leading-snug transition-colors duration-300"
+                  data-text="caption" className="transition-colors duration-300"
                   style={{ color: on ? tint : "#6d737d" }}
                 >
                   {item.label}

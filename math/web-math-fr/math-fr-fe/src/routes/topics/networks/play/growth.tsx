@@ -1,17 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot, type Box } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, TWO, plate, ticks } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { grow, slopeBetween, timeToReach, trace } from "@/systems/calc";
 
@@ -59,11 +58,7 @@ function GrowthPage() {
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "The thing that grows by how much there is"}
         job="Money at interest, a population with room, a rumour. What all three share: how fast it grows depends on how much there already is. The job is to watch that one rule play out, and to say when it will reach a target."
@@ -72,10 +67,10 @@ function GrowthPage() {
             <Slider label="Start with" min={10} max={500} step={10} value={start} format={(v) => String(Math.round(v))} onChange={(v) => { setStart(v); reset(); }} />
             <Slider label="Rate" min={-0.3} max={0.5} step={0.01} value={rate} format={(v) => `${(v * 100).toFixed(0)} % a year`} onChange={(v) => { setRate(v); reset(); }} />
             <Slider label="Target" min={10} max={5000} step={10} value={target} format={(v) => String(Math.round(v))} onChange={setTarget} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               The rate is the fraction of what there is that gets added each year. A negative
               rate is decay: the same rule, taking away a fraction of what is left.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -96,7 +91,7 @@ function GrowthPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div><div className="h-[340px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[340px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={box}
@@ -128,7 +123,7 @@ function GrowthPage() {
                 }}
               />
             </div><Caption>Green: grows by a fixed fraction of itself.  Dim blue: grows by a fixed amount. Sky: the steepness right now.  Ticks: each doubling.</Caption></div>
-            <div><div className="h-[150px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={ratioBox}
@@ -148,30 +143,30 @@ function GrowthPage() {
           <div className="space-y-2">
             <Verdict good={started && value >= target ? true : undefined}>
               {!started
-                ? "Press run and the years pass. The green curve is what you have; the sky line is how fast it is growing at that moment."
+                ? "Press run and the years pass. The green curve is the amount; the sky line is how fast it is growing at that moment."
                 : value >= target
                   ? `${t.toFixed(1)} years in, it is at ${value.toFixed(0)}: past the target. The exact moment was ${reach.toFixed(2)} years, and that is what a logarithm is: the question of when, asked of a growth like this.`
                   : `${t.toFixed(1)} years in, there is ${value.toFixed(0)}, and it is growing by ${slope.toFixed(1)} a year. That is ${((slope / value) * 100).toFixed(1)} % of itself, the same as at every other moment. ${Number.isFinite(reach) && reach > 0 ? `At this rate the target of ${target} is reached at ${reach.toFixed(1)} years.` : "At this rate the target is never reached."}`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Amount now</dt>
-              <dd className="text-right text-ink/80">{value.toFixed(2)}</dd>
+              <dd className="text-right text-foreground/80">{value.toFixed(2)}</dd>
               <dt>Growing at</dt>
-              <dd className="text-right text-ink/80">{slope.toFixed(3)} A year</dd>
+              <dd className="text-right text-foreground/80">{slope.toFixed(3)} A year</dd>
               <dt>Growth divided by amount</dt>
-              <dd className="text-right text-ink/80">{(slope / value).toFixed(4)}</dd>
-              <dt>The rate you set</dt>
-              <dd className="text-right text-ink/80">{rate.toFixed(4)}</dd>
+              <dd className="text-right text-foreground/80">{(slope / value).toFixed(4)}</dd>
+              <dt>The rate set above</dt>
+              <dd className="text-right text-foreground/80">{rate.toFixed(4)}</dd>
               <dt>{rate > 0 ? "Time to double" : "Time to halve"}</dt>
-              <dd className="text-right text-ink/80">{rate !== 0 ? (Math.LN2 / Math.abs(rate)).toFixed(2) : "Never"} years</dd>
+              <dd className="text-right text-foreground/80">{rate !== 0 ? (Math.LN2 / Math.abs(rate)).toFixed(2) : "Never"} years</dd>
               <dt>The straight-line rival by now</dt>
-              <dd className="text-right text-ink/80">{straight.toFixed(1)}</dd>
+              <dd className="text-right text-foreground/80">{straight.toFixed(1)}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               A curve whose steepness is always a fixed fraction of its height is the exponential.
               The fixed fraction is the rate. Every squashing curve inside a network, and the way
               a training step size shrinks, is built from this one shape.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -181,6 +176,6 @@ function GrowthPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

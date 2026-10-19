@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Label, Button, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
-import { ChaosTabs } from "@/components/ChaosTabs";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
 import { PaletteBar } from "@/components/PaletteBar";
@@ -12,9 +12,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { CHAOS, TOPIC } from "@/lib/chaos";
+import { TOPIC } from "@/lib/chaos";
 
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
@@ -108,24 +107,20 @@ function PhasePage() {
   const spreading = nowPoints.some((p, i) => Math.hypot(p[0], p[1]) > 1.5 * Math.hypot(seeds[i][0], seeds[i][1]) && !stableRest);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={CHAOS} />
-      <div className="mt-4">
-        <ChaosTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "Two unknowns, and the phase plane"}
         job="Two quantities that change each other, drawn as one point: the whole state at one instant is one dot, and the clock is not an axis. The strokes are the rule. The job is to release a few states, let them all run, and see where they go: to rest, round a closed loop, or onto one loop from every side."
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); setKnob(KIND[id].knob.at); setSeeds([[(KIND[id].box.x1 * 2) / 3, 0], [KIND[id].box.x1 / 5, KIND[id].box.y1 / 4]]); reset(); }} />
-            <p className="text-[11px] text-muted">{spec.note}</p>
+            <Text kind="note" as="p">{spec.note}</Text>
             <Slider label={spec.knob.label} min={spec.knob.min} max={spec.knob.max} step={spec.knob.step} value={knob} format={(v) => v.toFixed(2)} onChange={(v) => { setKnob(v); reset(); }} />
             <Slider label="How long" min={4} max={80} step={1} value={span} format={(v) => `${Math.round(v)} time units`} onChange={(v) => { setSpan(Math.round(v)); reset(); }} />
             <div className="flex flex-wrap gap-2">
-              <button type="button" onClick={() => { setSeeds([]); reset(); }} className="rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-leaf">Clear the states</button>
+              <Button variant="outline" size="sm" type="button" onClick={() => { setSeeds([]); reset(); }}>Clear the states</Button>
             </div>
-            <p className="text-[11px] text-muted">Click anywhere on the picture to release a state there. Up to twelve run at once.</p>
+            <Text kind="note" as="p">Click anywhere on the picture to release a state there. Up to twelve run at once.</Text>
             <PaletteBar />
           </div>
         }
@@ -146,29 +141,29 @@ function PhasePage() {
           />
         }
         more={
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">REST POINTS</h2>
+          <section data-slot="panel">
+            <Label>REST POINTS</Label>
             {rest.length === 0 ? (
-              <p className="mt-2 text-[11px] text-muted">None in view.</p>
+              <Text kind="note" as="p" className="mt-2">None in view.</Text>
             ) : (
               <div className="mt-2 space-y-2">
                 {rest.map((r, i) => (
-                  <div key={i} className="font-mono text-[11px]">
+                  <div key={i} data-text="caption">
                     <div style={{ color: KINDCOLOUR[r.kind] }}>{r.kind}</div>
-                    <div className="text-muted">At ({r.at[0].toFixed(3)}, {r.at[1].toFixed(3)}); Eigenvalues {r.eigen.map((e) => (e.im ? `${e.re.toFixed(3)} ${e.im > 0 ? "+" : "-"} ${Math.abs(e.im).toFixed(3)}i` : e.re.toFixed(3))).join(", ")}</div>
+                    <div className="text-muted-foreground">At ({r.at[0].toFixed(3)}, {r.at[1].toFixed(3)}); Eigenvalues {r.eigen.map((e) => (e.im ? `${e.re.toFixed(3)} ${e.im > 0 ? "+" : "-"} ${Math.abs(e.im).toFixed(3)}i` : e.re.toFixed(3))).join(", ")}</div>
                   </div>
                 ))}
               </div>
             )}
-            <p className="mt-3 text-[11px] text-muted">
+            <Text kind="note" as="p" className="mt-3">
               Found by Newton on the rule itself, then classified from the two eigenvalues of the
               Jacobian there. An eigenvalue on the imaginary axis is reported as such rather than
               rounded into a neighbour, because that is the case the linear picture cannot decide.
-            </p>
+            </Text>
           </section>
         }
         picture={
-          <section ref={stage} className="space-y-1"><div className="h-[min(560px,calc(100vh-16rem))] overflow-hidden rounded border border-edge">
+          <section ref={stage} className="space-y-1"><div data-slot="plot" className="h-[min(560px,calc(100vh-16rem))] overflow-hidden">
             <Plot
               className="h-full w-full"
               box={box}
@@ -238,12 +233,12 @@ function PhasePage() {
                 ["Time run", `${t.toFixed(2)} of ${span}, at a step of ${DT}`],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The divergence is the calculus page's rate applied to area: negative means a patch of
               starting states shrinks as it flows, which is what lets many starts end on one thing.
               In two dimensions that thing is a point or a loop. Three dimensions allow a third kind,
               which the next two pages are.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -253,6 +248,6 @@ function PhasePage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

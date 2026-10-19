@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Equations } from "@/components/Equations";
@@ -13,7 +14,6 @@ import { TOPIC } from "@/lib/complex";
 import { INK, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { show, spin } from "@/systems/complex";
-import { ComplexFrame } from "./-shared";
 
 export const Route = createFileRoute("/topics/complex/play/round")({
   loader: () => api.system(TOPIC, "round"),
@@ -43,17 +43,17 @@ function RoundPage() {
   };
 
   return (
-    <ComplexFrame>
+    <>
       <TaskPage
-        title={system?.name ?? "The exponential goes round"}
+        title={system?.name ?? "Euler's formula"}
         job="Topic 3 had a curve that grows by a fixed fraction of itself: the exponential. Give it an imaginary rate and it cannot grow, because its rate of change is its position turned a quarter, always sideways and never outward. So it goes round the unit circle at a steady pace. The job is to run the angle and watch the point go round, with its two shadows drawn as waves beside it."
         input={
           <div className="space-y-3">
             <Slider label="Turns" min={0.5} max={3} step={0.5} value={turnsTotal} format={(v) => `${v} turn${v === 1 ? "" : "s"}`} onChange={(v) => { setTurnsTotal(v); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               The angle is in radians: a full turn is two pi, about 6.28. Half a turn, pi, lands on
               minus one, and the page pauses to say so.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -75,7 +75,7 @@ function RoundPage() {
         picture={
           <section ref={stage} className="grid gap-2 lg:grid-cols-[320px_1fr]">
             <div>
-              <div className="h-[320px] overflow-hidden rounded border border-edge">
+              <div data-slot="plot" className="h-[320px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={CIRCLE}
@@ -98,10 +98,10 @@ function RoundPage() {
                   }}
                 />
               </div>
-              <Caption>The unit circle. White: e to the i theta at the angle so far. Sky: its shadow on the along axis, the cosine. Rose: its shadow on the up axis, the sine.</Caption>
+              <Caption>The unit circle. White: e to the 𝑖 theta at the angle so far. Sky: its shadow on the along axis, the cosine. Rose: its shadow on the up axis, the sine.</Caption>
             </div>
             <div>
-              <div className="h-[320px] overflow-hidden rounded border border-edge">
+              <div data-slot="plot" className="h-[320px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={waveBox}
@@ -134,24 +134,24 @@ function RoundPage() {
               {at === 0
                 ? "The angle is zero and the point is at 1. Press run and the angle grows at a steady rate."
                 : nearPi
-                  ? `The angle is pi, half a turn, and the point is at ${show(z)}: minus one. That is the famous line, e to the i pi equals minus one, and it says nothing more than that half a turn lands opposite where it started.`
+                  ? `The angle is pi, half a turn, and the point is at ${show(z)}: minus one. That is the famous line, e to the 𝑖 pi equals minus one, and it says nothing more than that half a turn lands opposite where it started.`
                   : `At angle ${theta.toFixed(2)} the point is at ${show(z)}: cosine ${z[0].toFixed(3)} along, sine ${z[1].toFixed(3)} up, length exactly one. The rate of change points sideways, so the point neither grows nor shrinks; it goes round.`}
             </Verdict>
             <Readout
               rows={[
                 ["Angle, radians", theta.toFixed(4)],
                 ["Angle, turns", (theta / (2 * Math.PI)).toFixed(4)],
-                ["e to the i theta", show(z, 4)],
+                ["e to the 𝑖 theta", show(z, 4)],
                 ["Cosine, the along shadow", z[0].toFixed(4)],
                 ["Sine, the up shadow", z[1].toFixed(4)],
                 ["Length, always", Math.hypot(z[0], z[1]).toFixed(6)],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
-              Multiplying by e to the i theta is a turn by theta with no stretch: the last two pages,
+            <Text kind="note" as="p" className="pt-1">
+              Multiplying by e to the 𝑖 theta is a turn by theta with no stretch: the last two pages,
               written as one formula. The position vectors of topic 4 are this at many speeds at
               once, and the swing on topic 2's phase plane is the along shadow of exactly this motion.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -161,6 +161,6 @@ function RoundPage() {
           </>
         }
       />
-    </ComplexFrame>
+    </>
   );
 }

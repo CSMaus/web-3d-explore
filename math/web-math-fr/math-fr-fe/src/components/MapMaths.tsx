@@ -1,4 +1,5 @@
 import { Tex } from "@/components/Tex";
+import { Swatch } from "@kit/index";
 import { cn } from "@/lib/cn";
 import type { Map2 } from "@/systems/ifs";
 
@@ -33,16 +34,19 @@ export function MapMaths({ maps, active, carrier, colourOf, tinted, onPick }: Pr
             aria-pressed={i === active}
             className={cn(
               "block w-full rounded border px-3 py-2 text-left transition-colors",
-              i === active ? "border-leaf" : "border-edge hover:border-muted",
+              i === active ? "border-selected" : "border-border hover:border-muted-foreground",
             )}
           >
-            <div className="flex items-baseline justify-between font-mono text-[11px]">
-              <span style={{ color: colour }}>Move {i + 1}</span>
-              <span className="text-muted">
+            <div data-text="caption" className="flex items-baseline justify-between">
+              <span>
+                {colour ? <Swatch colour={colour} /> : null}
+                Move {i + 1}
+              </span>
+              <span className="text-muted-foreground">
                 {i === carrier ? "Carries the whole shape" : `Chance ${m.p.toFixed(3)}`}
               </span>
             </div>
-            <div style={{ color: colour }} className="mt-1 text-xs">
+            <div data-text="note" className="mt-1">
               <Tex tex={row("x'", m.a, m.b, m.e)} block />
               <Tex tex={row("y'", m.c, m.d, m.f)} block />
             </div>

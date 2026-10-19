@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
-import { ChaosTabs } from "@/components/ChaosTabs";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
 import { PaletteBar } from "@/components/PaletteBar";
@@ -11,9 +11,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { CHAOS, TOPIC } from "@/lib/chaos";
+import { TOPIC } from "@/lib/chaos";
 import { FAINT, INK, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
@@ -75,11 +74,7 @@ function LogisticPage() {
   const preset = PRESETS.find((p) => Number(p.id) === r)?.id ?? "";
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={CHAOS} />
-      <div className="mt-4">
-        <ChaosTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "The logistic map"}
         job="The logistic map is the simplest model of a population that grows when small and is held back when crowded: next year's number is r times this year's, times the room left. It is the standard first example of a plain rule producing chaos, and every later idea in this topic can be seen in it. One number between zero and one, and one rule: multiply it by r and by one minus itself, and that is the next number. The job is to apply the rule again and again and say where the number ends up. On the left, iteration as a picture: up to the curve, across to the diagonal, repeat. On the right, the same numbers in order."
@@ -89,12 +84,12 @@ function LogisticPage() {
             <Slider label="r" min={0.5} max={4} step={0.001} value={r} format={(v) => v.toFixed(3)} onChange={(v) => { setR(v); reset(); }} />
             <Slider label="Start x0" min={0.01} max={0.99} step={0.005} value={x0} format={(v) => v.toFixed(3)} onChange={(v) => { setX0(v); reset(); }} />
             <Slider label="Iterate" min={1} max={8} step={1} value={iterate} format={(v) => `f applied ${Math.round(v)}x`} onChange={(v) => { setIterate(Math.round(v)); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Click on the left picture to choose the start. Iterate draws the rule composed with
               itself: a two-cycle of the rule is a fixed point of the rule applied twice, which is
               why doubling is mechanical. A second start, one millionth away, runs faintly beside
               the first on the right.
-            </p>
+            </Text>
             <PaletteBar />
           </div>
         }
@@ -117,7 +112,7 @@ function LogisticPage() {
         }
         picture={
           <section ref={stage} className="grid gap-2 lg:grid-cols-[1fr_1fr]">
-            <div><div className="h-[min(440px,calc(100vh-22rem))] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[min(440px,calc(100vh-22rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={UNIT}
@@ -146,7 +141,7 @@ function LogisticPage() {
                 }}
               />
             </div><Caption>{iterate === 1 ? "The rule f(x) = r x (1 - x), and the diagonal" : `f applied ${iterate} times, and the diagonal`}. Up to the curve, across to the diagonal: one step</Caption></div>
-            <div><div className="h-[min(440px,calc(100vh-22rem))] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[min(440px,calc(100vh-22rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={seriesBox}
@@ -193,12 +188,12 @@ function LogisticPage() {
                 ["Gap between the two starts now", n > 0 ? gapNow.toExponential(2) : TWIN.toExponential(0)],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               A stable fixed point pulls the steps in because the curve is shallower than the
               diagonal there. Steepen it past one and the point repels; a two-cycle takes over and
               is stable in turn, until it doubles. The next page turns r up slowly and records what
               the number settles on at every value.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -208,6 +203,6 @@ function LogisticPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

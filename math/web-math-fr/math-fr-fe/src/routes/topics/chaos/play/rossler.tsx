@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Aim } from "@/components/Aim";
-import { ChaosTabs } from "@/components/ChaosTabs";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
 import { Orbit3 } from "@/components/Orbit3";
@@ -13,9 +13,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { CHAOS, TOPIC } from "@/lib/chaos";
+import { TOPIC } from "@/lib/chaos";
 import { INK, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
@@ -46,6 +45,8 @@ function distinct(values: number[], tol: number) {
   for (const v of values) if (!seen.some((s) => Math.abs(s - v) < tol)) seen.push(v);
   return seen.length;
 }
+
+const CR: [number, number] = [2, 18];
 
 function RosslerPage() {
   const system = Route.useLoaderData();
@@ -87,7 +88,6 @@ function RosslerPage() {
     setShown(0);
   };
   // the diagram over c with a and b held: x at each crossing of the plane, one dot above its c
-  const CR: [number, number] = [2, 18];
   const sweep = useMemo(
     () => orbitDiagram((c) => rossler(look.a, look.b, c), CR[0], CR[1], 320, [1, 1, 1], 0.01, 4000, 8000, crossing(1, 0, 0)),
     [look.a, look.b],
@@ -117,11 +117,7 @@ function RosslerPage() {
   }, [cuts]);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={CHAOS} />
-      <div className="mt-4">
-        <ChaosTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "The Rossler system"}
         job="Rossler built this system in 1976 to be the plainest flow that is still chaotic, and it is the usual test case for every method that studies an attractor: the exponent, the dimension, the section. A flow in three dimensions with one non-linear term. The job is to reduce it to something a person can read: put a plane through it, record only where the orbit pierces the plane, and plot each crossing against the next. A three-dimensional flow becomes a map on a line, and the map is the one the next two pages are about."
@@ -131,10 +127,10 @@ function RosslerPage() {
             <Slider label="a" min={0.05} max={0.55} step={0.005} value={look.a} format={(v) => v.toFixed(3)} onChange={(v) => { set("a")(v); reset(); }} />
             <Slider label="b" min={0.05} max={2} step={0.01} value={look.b} format={(v) => v.toFixed(2)} onChange={(v) => { set("b")(v); reset(); }} />
             <Slider label="c" min={2} max={18} step={0.05} value={look.c} format={(v) => v.toFixed(2)} onChange={(v) => { set("c")(v); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Walk c up through the presets: a single loop, then a doubled one, then four, then the
               attractor. The same doubling the logistic map does, met here in a flow.
-            </p>
+            </Text>
             <PaletteBar />
           </div>
         }
@@ -173,7 +169,7 @@ function RosslerPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div className="h-[min(380px,calc(100vh-26rem))] overflow-hidden rounded border border-edge">
+            <div data-slot="plot" className="h-[min(380px,calc(100vh-26rem))] overflow-hidden">
               <Orbit3
                 className="h-full w-full"
                 paths={[path]}
@@ -193,7 +189,7 @@ function RosslerPage() {
                 onZoom={(z) => setLook((was) => ({ ...was, zoom: z }))}
               />
             </div>
-            <div><div className="h-[180px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[180px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={sweepBox}
@@ -217,7 +213,7 @@ function RosslerPage() {
               />
             </div><Caption>The flow's bifurcation diagram: c along the bottom, x at each crossing above. Click to set c. A cycle is one point, doubled is two, then four, then the smear.</Caption></div>
             <div className="grid gap-2 lg:grid-cols-2">
-              <div><div className="h-[200px] overflow-hidden rounded border border-edge">
+              <div><div data-slot="plot" className="h-[200px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={sectionBox}
@@ -234,7 +230,7 @@ function RosslerPage() {
                   }}
                 />
               </div><Caption>{`The plane y = 0, crossed upward: ${seen.length} times so far`}</Caption></div>
-              <div><div className="h-[200px] overflow-hidden rounded border border-edge">
+              <div><div data-slot="plot" className="h-[200px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={returnBox}
@@ -280,12 +276,12 @@ function RosslerPage() {
                 ["Crossings in the whole run", String(cuts.length)],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The section removes one dimension and the clock at once: a periodic orbit is a finite
               set of points on it, and the attractor is a dust along a curve. Plotting each crossing
               against the next turns the flow into a map, and that map has the shape of the
               logistic one.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -295,6 +291,6 @@ function RosslerPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

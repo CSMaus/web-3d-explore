@@ -1,17 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Button, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { INK, MUTED, ONE, SKY, heatGrid } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { KERNELS, PICTURES, convolve, dot, patch, pool, type Grid } from "@/systems/shapes";
 
@@ -98,27 +97,23 @@ function PicturesPage() {
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "The same job on a picture"}
         job="A small picture, twelve by twelve. The job is to say which of five shapes it is, and to keep saying so when it is drawn a pixel to one side. A unit wired to every pixel would learn the shape in one place only. Instead, one tiny three by three pattern is slid over the whole picture, the strongest responses are kept, and what is left is compared with the five shapes."
         input={
           <div className="space-y-3">
             <Choices options={SHAPES} value={drawnFrom} onPick={(id) => { setCells(PICTURES[id].make(N)); setDrawnFrom(id); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Or draw: click any square of the picture to turn it on or off.
-            </p>
+            </Text>
             <div className="flex flex-wrap gap-1.5">
-              <button type="button" onClick={() => { setCells((g) => shifted(g, 0, 1)); reset(); }} className="rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-muted">Shift right</button>
-              <button type="button" onClick={() => { setCells((g) => shifted(g, 1, 0)); reset(); }} className="rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-muted">Shift down</button>
-              <button type="button" onClick={() => { setCells((g) => shifted(g, -1, -1)); reset(); }} className="rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-muted">Shift up and left</button>
+              <Button variant="outline" size="sm" type="button" onClick={() => { setCells((g) => shifted(g, 0, 1)); reset(); }}>Shift right</Button>
+              <Button variant="outline" size="sm" type="button" onClick={() => { setCells((g) => shifted(g, 1, 0)); reset(); }}>Shift down</Button>
+              <Button variant="outline" size="sm" type="button" onClick={() => { setCells((g) => shifted(g, -1, -1)); reset(); }}>Shift up and left</Button>
             </div>
             <Choices options={FILTERS} value={filter} onPick={(id) => { setFilter(id); reset(); }} />
-            <p className="text-[11px] text-muted">{KERNELS[filter].what}. The same nine numbers are used at every position.</p>
+            <Text kind="note" as="p">{KERNELS[filter].what}. The same nine numbers are used at every position.</Text>
           </div>
         }
         run={
@@ -139,7 +134,7 @@ function PicturesPage() {
           />
         }
         picture={
-          <section ref={stage} className="space-y-1"><div className="h-[480px] overflow-hidden rounded border border-edge">
+          <section ref={stage} className="space-y-1"><div data-slot="plot" className="h-[480px] overflow-hidden">
             <Plot
               className="h-full w-full"
               box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -222,22 +217,22 @@ function PicturesPage() {
                     ? `The map is complete: ${SLIDE} numbers from ${conv.weights} weights. Now each block of two by two keeps only its largest, which throws away exactly where inside the block the fit was: ${pooled.length * pooled.length} numbers left.`
                     : `The picture is nearest to ${ranked[0].label}, at distance ${ranked[0].d.toFixed(1)}; the next nearest is ${ranked[1].label} at ${ranked[1].d.toFixed(1)}.${drawnFrom !== "yours" && ranked[0].id !== drawnFrom ? ` That is wrong: it was ${PICTURES[drawnFrom].label}. This pattern does not tell those two apart; try another.` : ""} shift the picture by a pixel and run again: the answer should hold.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Weights in the sliding pattern</dt>
-              <dd className="text-right text-ink/80">{conv.weights}</dd>
+              <dd className="text-right text-foreground/80">{conv.weights}</dd>
               <dt>Weights a unit wired to every pixel would need, for the same map</dt>
-              <dd className="text-right text-ink/80">{conv.denseWeights.toLocaleString("en")}</dd>
+              <dd className="text-right text-foreground/80">{conv.denseWeights.toLocaleString("en")}</dd>
               <dt>Multiply-adds to make the map</dt>
-              <dd className="text-right text-ink/80">{conv.work.toLocaleString("en")}</dd>
+              <dd className="text-right text-foreground/80">{conv.work.toLocaleString("en")}</dd>
               <dt>Numbers after pooling</dt>
-              <dd className="text-right text-ink/80">{pooled.length * pooled.length}</dd>
+              <dd className="text-right text-foreground/80">{pooled.length * pooled.length}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               This is a convolutional network with the learning left out: the nine numbers in the
               pattern are the weights a real one would learn, by the same blame flowing back as on
               the last page. What the picture shows is why the shape can move and still be found:
               the same pattern looks everywhere, and pooling forgets exactly where it fitted.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -247,7 +242,7 @@ function PicturesPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }
 

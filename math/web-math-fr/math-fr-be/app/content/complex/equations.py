@@ -36,7 +36,7 @@ SYSTEMS = [
     },
     {
         "id": "turn",
-        "name": "A quarter turn, called i",
+        "name": "What 𝑖 is",
         "summary": (
             "minus one is a half turn about zero; so half of that is a quarter turn, and a number "
             "that turns by a quarter is what i is. done twice it is a half turn, which is minus one"
@@ -50,7 +50,7 @@ SYSTEMS = [
             {
                 "label": "Going round",
                 "tex": r"1,\ i,\ -1,\ -i,\ 1,\ \ldots",
-                "note": "the page multiplies by i again and again and the arrow turns a quarter each time, back where it started after four",
+                "note": "the page multiplies by 𝑖 again and again and the arrow turns a quarter each time, back where it started after four",
             },
             {
                 "label": "A second axis",
@@ -66,7 +66,7 @@ SYSTEMS = [
     },
     {
         "id": "add",
-        "name": "Adding: arrows tip to tail",
+        "name": "Complex numbers: adding",
         "summary": (
             "each number an arrow from zero; to add two, put the second arrow's tail on the first "
             "one's tip. the parts add separately and never mix"
@@ -96,7 +96,7 @@ SYSTEMS = [
     },
     {
         "id": "multiply",
-        "name": "Multiplying: turn and stretch",
+        "name": "Complex numbers: multiplying",
         "summary": (
             "to multiply two arrows, add their angles and multiply their lengths. the page turns "
             "and stretches one arrow into the product while the reader watches"
@@ -105,7 +105,7 @@ SYSTEMS = [
             {
                 "label": "The four terms",
                 "tex": r"(a + b\,i)(c + d\,i) = (ac - bd) + (ad + bc)\,i",
-                "note": "multiply out as with any two brackets; the one term with i times i in it is minus one, which is where the minus in ac minus bd comes from",
+                "note": "multiply out as with any two brackets; the one term with 𝑖 times 𝑖 in it is minus one, which is where the minus in ac minus bd comes from",
             },
             {
                 "label": "What that is, as a picture",
@@ -115,7 +115,7 @@ SYSTEMS = [
             {
                 "label": "Multiplying by i again",
                 "tex": r"|i| = 1, \qquad \angle i = \tfrac{1}{4} \text{ turn}",
-                "note": "so times i is a quarter turn with no stretch, which is the last page's definition read from this page's rule",
+                "note": "so times 𝑖 is a quarter turn with no stretch, which is the last page's definition read from this page's rule",
             },
         ],
         "dimension": {
@@ -126,7 +126,7 @@ SYSTEMS = [
     },
     {
         "id": "square",
-        "name": "Squaring, again and again",
+        "name": "Julia set",
         "summary": (
             "squaring doubles the angle and squares the length. do it again and again and a start "
             "inside the unit circle falls to zero, outside it runs away, on it stays. add a constant "
@@ -157,7 +157,7 @@ SYSTEMS = [
     },
     {
         "id": "round",
-        "name": "The exponential goes round",
+        "name": "Euler's formula",
         "summary": (
             "the growth curve from topic 3, given an imaginary rate, does not grow: it goes round "
             "the unit circle at a steady pace, and its two shadows are the cosine and the sine"
@@ -187,7 +187,7 @@ SYSTEMS = [
     },
     {
         "id": "quaternions",
-        "name": "Beyond i: turns in space, and where they are used",
+        "name": "Quaternions",
         "summary": (
             "Hamilton's numbers with three imaginary units, a unit one being a turn in space; two "
             "turns in a different order land differently, so the numbers do not commute"

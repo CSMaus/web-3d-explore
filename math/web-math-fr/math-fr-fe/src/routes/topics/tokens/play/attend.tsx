@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
@@ -8,7 +9,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TokenRow, visible } from "@/components/Tokens";
+import { TokenRow } from "@/components/Tokens";
+import { visible } from "@/lib/tokenText";
 import { api } from "@/lib/api";
 import { INK, MUTED, ONE, TWO, mix } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
@@ -16,7 +18,7 @@ import { MODEL_STEPS, VOCAB, WIDTH, useTiny } from "@/lib/tiny";
 import { TOPIC } from "@/lib/tokens";
 import { encode } from "@/systems/bpe";
 import { forward, paramCount } from "@/systems/lm";
-import { FIELD, TokenFrame } from "./-shared";
+import { Input } from "@kit/index";
 
 export const Route = createFileRoute("/topics/tokens/play/attend")({
   loader: () => api.system(TOPIC, "attend"),
@@ -52,12 +54,11 @@ function AttendPage() {
   const [perFrame, setPerFrame] = useState(0.03);
 
   const tokens = useMemo(() => encode(VOCAB, text).slice(0, 12), [text]);
-  const ids = tokens.map((t) => t.id);
+  const ids = useMemo(() => tokens.map((t) => t.id), [tokens]);
   const n = ids.length;
   const runner = useRunner((k) => setDone(k), { perFrame, stopAt: STAGES.length });
   const at = Math.min(done, STAGES.length);
-  const key = ids.join(",");
-  const pass = useMemo(() => forward(store.model, ids, mask === "causal"), [store.model, store.version, key, mask]);
+  const pass = useMemo(() => forward(store.model, ids, mask === "causal"), [store.model, ids, mask]);
   const count = paramCount(store.model);
   const last = n - 1;
   const row = pass.weights[last];
@@ -70,23 +71,23 @@ function AttendPage() {
   };
 
   return (
-    <TokenFrame>
+    <>
       <TaskPage
         title={system?.name ?? "Attention, with the numbers"}
         job="Every position gets a new vector that is a weighted average of the vectors at all positions. That is the whole mechanism; everything else is how the weights are computed. The job is to compute them, on a real prompt, through the small model this topic trains, in six moments."
         input={
           <div className="space-y-3">
             <label className="block">
-              <span className="text-xs text-muted">The prompt</span>
-              <input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className={FIELD} />
+              <span data-text="note">The prompt</span>
+              <Input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className="mt-1" />
             </label>
             <Choices options={MASKS} value={mask} onPick={(id) => { setMask(id); reset(); }} />
             <Slider label="A sequence of" min={10} max={8000} step={10} value={length} format={(v) => `${Math.round(v)} tokens`} onChange={(v) => setLength(Math.round(v))} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               The slider does not change the picture. It is for the cost line in the result: the
               score matrix has one entry per pair of positions, so its size is the length squared.
-            </p>
-            {!trained ? <p className="text-[11px] text-warn">The model is still training in the background ({store.model.steps} of {MODEL_STEPS} steps); the weights below settle as it finishes.</p> : null}
+            </Text>
+            {!trained ? <Text kind="warning" as="p">The model is still training in the background ({store.model.steps} of {MODEL_STEPS} steps); the weights below settle as it finishes.</Text> : null}
           </div>
         }
         run={
@@ -108,10 +109,10 @@ function AttendPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div className="rounded border border-edge p-2">
+            <div className="rounded border border-border p-2">
               <TokenRow tokens={tokens} ids size="sm" mark={at >= 5 ? last : null} />
             </div>
-            <div><div className="h-[470px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[470px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -183,27 +184,27 @@ function AttendPage() {
                   ? STAGES[at - 1] + (at === 3 ? ` There are ${n} by ${n} = ${n * n} scores, one per pair of positions.` : at === 4 ? (mask === "causal" ? ` ${(n * (n - 1)) / 2} of the ${n * n} entries are gone: the future.` : " The mask is off, so every position sees every other, which a model that writes text one token at a time cannot do.") : "")
                   : `${visible(tokens[last].text)} listens ${(row[top] * 100).toFixed(0)} % to ${visible(tokens[top].text)} at position ${top + 1}${row.filter((v) => v > 0.1).length > 1 ? ` And ${row.map((v, j) => [v, j] as [number, number]).filter(([v, j]) => v > 0.1 && j !== top).map(([v, j]) => `${(v * 100).toFixed(0)} % to ${visible(tokens[j].text)}`).join(", ")}` : ""}. ${at === 6 ? "Its new vector is those weights applied to the values, added to what it had. That is the only way earlier tokens reach later ones, and it is recomputed at every position." : "The row adds to one."}`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Positions, so rows in every grid</dt>
-              <dd className="text-right text-ink/80">{n}</dd>
+              <dd className="text-right text-foreground/80">{n}</dd>
               <dt>Scores for this prompt</dt>
-              <dd className="text-right text-ink/80">{n} x {n} = {n * n}</dd>
+              <dd className="text-right text-foreground/80">{n} x {n} = {n * n}</dd>
               <dt>Scores for a sequence of {length.toLocaleString("en")}</dt>
-              <dd className="text-right text-ink/80">{(length * length).toLocaleString("en")}</dd>
+              <dd className="text-right text-foreground/80">{(length * length).toLocaleString("en")}</dd>
               <dt>The last row adds to</dt>
-              <dd className="text-right text-ink/80">{row.reduce((a, b) => a + b, 0).toFixed(6)}</dd>
+              <dd className="text-right text-foreground/80">{row.reduce((a, b) => a + b, 0).toFixed(6)}</dd>
               <dt>Numbers in the three projections</dt>
-              <dd className="text-right text-ink/80">3 x {WIDTH} x {WIDTH} = {count.attention}</dd>
+              <dd className="text-right text-foreground/80">3 x {WIDTH} x {WIDTH} = {count.attention}</dd>
               <dt>Numbers in the whole model</dt>
-              <dd className="text-right text-ink/80">{count.total.toLocaleString("en")} (Table {count.table.toLocaleString("en")}, Positions {count.positions}, Attention {count.attention})</dd>
+              <dd className="text-right text-foreground/80">{count.total.toLocaleString("en")} (Table {count.table.toLocaleString("en")}, Positions {count.positions}, Attention {count.attention})</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               A full model has many heads doing this at once on slices of the width, a small
               network after each one, and the pair stacked many times deep; this one has one head
               and one layer. The division by the square root of the width keeps the scores from
               growing with the width, which would drive every row to a single one and zeros. The
               mask is why training on whole texts matches writing one token at a time.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -213,7 +214,7 @@ function AttendPage() {
           </>
         }
       />
-    </TokenFrame>
+    </>
   );
 }
 

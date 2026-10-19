@@ -1,18 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot, type Box } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, TWO, boxOf, classColour, drawNet, layout, plate, shadePlane, ticks } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { SETS, dataset, type SetKind } from "@/systems/learn";
 import { ACTS, backward, clone, forward, loss, make, params, predict, type Act, type Net } from "@/systems/net";
@@ -94,27 +93,23 @@ function LayersPage() {
   const stuck = view.steps > 1500 && view.history.length > 40 && view.history[view.history.length - 1][1] > view.history[view.history.length - 40][1] * 0.98;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "Many units, one answer"}
         job="The dots one line cannot separate. Put several units side by side, each drawing its own line, and one more unit after them that weighs their answers. That is a network. The job is the same as before: every dot on its own colour. Watch what each unit alone sees, and what the last one makes of it."
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); restart(); }} />
-            <p className="text-[11px] text-muted">{SETS[kind].note}</p>
+            <Text kind="note" as="p">{SETS[kind].note}</Text>
             <Choices options={SQUASHES} value={act} onPick={(id) => { setAct(id); restart(hidden, id); }} />
             <Slider label="Units in the middle" min={1} max={8} step={1} value={hidden} format={(v) => String(Math.round(v))} onChange={(v) => { setHidden(Math.round(v)); restart(Math.round(v)); }} />
             <Slider label="Step size" min={0.02} max={2} step={0.02} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
             <Slider label="Starting numbers" min={1} max={20} step={1} value={seed} format={(v) => `set ${Math.round(v)}`} onChange={(v) => { setSeed(Math.round(v)); restart(hidden, act, Math.round(v)); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               The network starts from small random numbers. One unit in the middle is the last
               page again: a single line. Try one, then three, then eight. Click on the plane to
               send a point through the network and see every unit's answer to it.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -138,7 +133,7 @@ function LayersPage() {
         picture={
           <section ref={stage} className="space-y-2">
             <div className="grid gap-2 lg:grid-cols-[1fr_300px]">
-              <div><div className="h-[340px] overflow-hidden rounded border border-edge">
+              <div><div data-slot="plot" className="h-[340px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={box}
@@ -159,7 +154,7 @@ function LayersPage() {
                   }}
                 />
               </div><Caption>The network's answer everywhere.  Ring: a dot it gets wrong</Caption></div>
-              <div><div className="h-[340px] overflow-hidden rounded border border-edge">
+              <div><div data-slot="plot" className="h-[340px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -179,7 +174,7 @@ function LayersPage() {
                 />
               </div><Caption>{probe ? "Each circle: that unit's answer to the ringed point" : "Click the plane to send a point through"}</Caption></div>
             </div>
-            <div className="h-[130px] overflow-hidden rounded border border-edge">
+            <div data-slot="plot" className="h-[130px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -211,7 +206,7 @@ function LayersPage() {
                 }}
               />
             </div>
-            <div className="h-[120px] overflow-hidden rounded border border-edge">
+            <div data-slot="plot" className="h-[120px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={histBox}
@@ -239,30 +234,30 @@ function LayersPage() {
                       : `After ${view.steps} steps it still has ${wrong} wrong and has stopped improving. It has settled in a dip that is not the bottom: with ${hidden} units it is possible to be stuck. Try a different set of starting numbers, or more units.`
                     : `After ${view.steps} steps it has ${wrong} of ${data.X.length} wrong. How wrong: ${total.toFixed(4)}, ${view.history.length > 10 && total < view.history[view.history.length - 10][1] ? "falling" : "not falling right now"}.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Units: two in, {hidden} in the middle, one out</dt>
-              <dd className="text-right text-ink/80">{count.total} numbers to learn</dd>
+              <dd className="text-right text-foreground/80">{count.total} numbers to learn</dd>
               <dt>Of which weights</dt>
-              <dd className="text-right text-ink/80">{count.weights}</dd>
+              <dd className="text-right text-foreground/80">{count.weights}</dd>
               <dt>And biases</dt>
-              <dd className="text-right text-ink/80">{count.biases}</dd>
+              <dd className="text-right text-foreground/80">{count.biases}</dd>
               <dt>How wrong (average squared miss)</dt>
-              <dd className="text-right text-ink/80">{total.toFixed(5)}</dd>
+              <dd className="text-right text-foreground/80">{total.toFixed(5)}</dd>
               {probeValues ? (
                 <>
                   <dt>The ringed point, through the middle</dt>
-                  <dd className="text-right text-ink/80">{probeValues[1].map((v) => v.toFixed(2)).join(", ")}</dd>
+                  <dd className="text-right text-foreground/80">{probeValues[1].map((v) => v.toFixed(2)).join(", ")}</dd>
                   <dt>And out</dt>
-                  <dd className="text-right text-ink/80">{probeValues[2][0].toFixed(3)}</dd>
+                  <dd className="text-right text-foreground/80">{probeValues[2][0].toFixed(3)}</dd>
                 </>
               ) : null}
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               Each step is the hill page's ball, rolling on {count.total} numbers at once: for
               every number, how wrong changes when that number moves a hair, and a step the other
               way. The next page is about how those {count.total} slopes are found without
               nudging each number by hand.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -272,6 +267,6 @@ function LayersPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

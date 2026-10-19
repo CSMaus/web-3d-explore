@@ -1,18 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, TWO } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { rng } from "@/systems/net";
 import { FORGETFUL, REMEMBER, runCell, runPlain, type CellWeights } from "@/systems/shapes";
@@ -61,11 +60,7 @@ function SequencePage() {
   const drift = now ? Math.abs(now.cell - setAt1) : 0;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "The same job on a sequence"}
         job="Numbers arrive one at a time. At the end, the job is to say what the first one was. A unit that feeds its own answer back to itself can carry something forward, but each new number overwrites it. A cell with gates decides, at every step, how much to keep, how much to let in, and how much to show. Watch the two side by side."
@@ -75,12 +70,12 @@ function SequencePage() {
             <Slider label="Then how many" min={2} max={16} step={1} value={length} format={(v) => `${Math.round(v)} steps`} onChange={(v) => { setLength(Math.round(v)); reset(); }} />
             <Choices options={RESTS} value={rest} onPick={(id) => { setRest(id); reset(); }} />
             <Choices options={WIRINGS} value={wiring} onPick={(id) => { setWiring(id); reset(); }} />
-            <p className="text-[11px] text-muted">{w.what}.</p>
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">{w.what}.</Text>
+            <Text kind="note" as="p">
               The first number is positive because this cell's gates are set by hand and read
               the sign of what they hold. A trained cell has as many units as it needs and no
               such limit.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -101,7 +96,7 @@ function SequencePage() {
           />
         }
         picture={
-          <section ref={stage} className="space-y-1"><div className="h-[500px] overflow-hidden rounded border border-edge">
+          <section ref={stage} className="space-y-1"><div data-slot="plot" className="h-[500px] overflow-hidden">
             <Plot
               className="h-full w-full"
               box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -197,24 +192,24 @@ function SequencePage() {
                     ? `Step ${at}. The gated memory is ${now!.cell.toFixed(3)}, set at step 1 and moved by ${drift.toFixed(4)} since: the forget gate is ${now!.forget.toFixed(2)} and the input gate has been ${now!.input.toFixed(2)} since step 2, so nothing new gets in and nothing old leaks out. The plain loop's state is ${plain[at - 1].toFixed(3)}, which is about the last few numbers. Asked for the first number, the gated cell can answer. The plain loop cannot.`
                     : `Step ${at}. With the forget gate at ${now!.forget.toFixed(2)} the memory is emptied every step and refilled with the newest number: ${now!.cell.toFixed(3)}. The first number is gone from both. The gates are the same machinery either way; what they are set to is what training decides.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>The first number</dt>
-              <dd className="text-right text-ink/80">{first.toFixed(3)}</dd>
+              <dd className="text-right text-foreground/80">{first.toFixed(3)}</dd>
               <dt>What the gated memory held after step 1</dt>
-              <dd className="text-right text-ink/80">{setAt1.toFixed(4)}</dd>
+              <dd className="text-right text-foreground/80">{setAt1.toFixed(4)}</dd>
               <dt>What it holds now</dt>
-              <dd className="text-right text-ink/80">{now ? now.cell.toFixed(4) : "-"}</dd>
+              <dd className="text-right text-foreground/80">{now ? now.cell.toFixed(4) : "-"}</dd>
               <dt>The plain loop's state now</dt>
-              <dd className="text-right text-ink/80">{at > 0 ? plain[at - 1].toFixed(4) : "-"}</dd>
+              <dd className="text-right text-foreground/80">{at > 0 ? plain[at - 1].toFixed(4) : "-"}</dd>
               <dt>Numbers in this cell's wiring</dt>
-              <dd className="text-right text-ink/80">12</dd>
+              <dd className="text-right text-foreground/80">12</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The memory is added to, not replaced: kept part plus let-in part. That one plus sign
               is why a value can cross many steps unharmed, and why blame can flow back across
               them without shrinking to nothing at each squash. This is a long short-term memory
               cell, with its gates set by hand so the mechanism is visible.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -224,6 +219,6 @@ function SequencePage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

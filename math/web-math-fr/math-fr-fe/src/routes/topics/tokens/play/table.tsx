@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
@@ -8,7 +9,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TokenRow, visible } from "@/components/Tokens";
+import { TokenRow } from "@/components/Tokens";
+import { visible } from "@/lib/tokenText";
 import { api } from "@/lib/api";
 import { INK, MUTED, ONE, SKY, TWO, mix } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
@@ -16,7 +18,7 @@ import { USED, VOCAB, text as tokenText, useTiny } from "@/lib/tiny";
 import { TOPIC } from "@/lib/tokens";
 import { encode } from "@/systems/bpe";
 import { rng } from "@/systems/net";
-import { FIELD, TokenFrame } from "./-shared";
+import { Input } from "@kit/index";
 
 export const Route = createFileRoute("/topics/tokens/play/table")({
   loader: () => api.system(TOPIC, "table"),
@@ -59,7 +61,7 @@ function TablePage() {
   const table = useMemo(() => {
     const next = rng(11);
     return rows.map((id) => Array.from({ length: width }, (_, d) => (source === "trained" && store.model.steps > 0 ? store.model.E[id][d] ?? 0 : next() * 1.6 - 0.8)));
-  }, [rows, width, source, store.model, store.version]);
+  }, [rows, width, source, store.model]);
   const rowOf = (id: number) => rows.indexOf(id);
   const current = at > 0 ? tokens[at - 1] : null;
 
@@ -69,7 +71,7 @@ function TablePage() {
   };
 
   return (
-    <TokenFrame>
+    <>
       <TaskPage
         title={system?.name ?? "From a number to a vector"}
         job="The model receives integers, and an integer is not something a layer can multiply usefully: token 271 is not more than token 40 in any sense. The job is to turn each id into a list of numbers a network can work with. One honest way, one cheap way, and the discovery that they are the same."
@@ -77,16 +79,16 @@ function TablePage() {
           <div className="space-y-3">
             <Choices options={INPUTS} value={which} onPick={(id) => { setWhich(id); setText(INPUTS.find((i) => i.id === id)!.text); reset(); }} />
             <label className="block">
-              <span className="text-xs text-muted">Or type</span>
-              <input value={text} onChange={(e) => { setText(e.target.value); setWhich(""); reset(); }} className={FIELD} />
+              <span data-text="note">Or type</span>
+              <Input value={text} onChange={(e) => { setText(e.target.value); setWhich(""); reset(); }} className="mt-1" />
             </label>
             <Slider label="Width" min={2} max={16} step={1} value={width} format={(v) => `${Math.round(v)} numbers`} onChange={(v) => { setWidth(Math.round(v)); reset(); }} />
             <Choices options={SOURCES} value={source} onPick={setSource} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               The width is a constant of the architecture, chosen once. The table's rows start as
               random numbers that mean nothing; the trained rows are the shared model's, once the
               later pages have trained it.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -108,10 +110,10 @@ function TablePage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div className="rounded border border-edge p-3">
+            <div className="rounded border border-border p-3">
               <TokenRow tokens={tokens} ids mark={at > 0 ? at - 1 : null} dimFrom={at} />
             </div>
-            <div><div className="h-[420px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[420px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -201,25 +203,25 @@ function TablePage() {
                 ? `${tokens.length} tokens are waiting. Press run: each id becomes a vector ${width} wide by picking one row of the table.`
                 : `Token ${at}, ${visible(current!.text)}, id ${current!.id}: as a one-hot vector it is ${V} zeros with a single one at position ${current!.id}. Multiplying that by the table selects row ${current!.id} and nothing else, so the lookup is that multiplication, done cheaply. The network now holds ${at} rows of ${width} numbers.${at === tokens.length ? ` A longer input would add rows; nothing could make a row wider.` : ""}`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Vocabulary size, so one-hot length and table rows</dt>
-              <dd className="text-right text-ink/80">{V}</dd>
+              <dd className="text-right text-foreground/80">{V}</dd>
               <dt>Width, chosen once</dt>
-              <dd className="text-right text-ink/80">{width}</dd>
+              <dd className="text-right text-foreground/80">{width}</dd>
               <dt>Numbers in the table, all of them trainable</dt>
-              <dd className="text-right text-ink/80">{(V * width).toLocaleString("en")}</dd>
+              <dd className="text-right text-foreground/80">{(V * width).toLocaleString("en")}</dd>
               <dt>Distance between any two distinct one-hot vectors</dt>
-              <dd className="text-right text-ink/80">{Math.SQRT2.toFixed(4)}, Always</dd>
+              <dd className="text-right text-foreground/80">{Math.SQRT2.toFixed(4)}, Always</dd>
               <dt>The input's shape</dt>
-              <dd className="text-right text-ink/80">{tokens.length} by {width}</dd>
+              <dd className="text-right text-foreground/80">{tokens.length} by {width}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               Every pair of one-hot vectors is exactly as far apart as every other, so that form
               carries the identity of a token and nothing more. The table's rows can be anywhere,
               and where training puts them is the next page. The question of why a token's vector
               has a fixed length is answered here: the width is a constant and the lookup is by id,
               so nothing about one vector depends on the sentence around it or how long it is.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -229,6 +231,6 @@ function TablePage() {
           </>
         }
       />
-    </TokenFrame>
+    </>
   );
 }

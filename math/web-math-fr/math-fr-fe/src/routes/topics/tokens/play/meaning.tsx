@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
@@ -7,14 +8,13 @@ import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { visible } from "@/components/Tokens";
+import { visible } from "@/lib/tokenText";
 import { api } from "@/lib/api";
 import { FAINT, MUTED, ONE, SKY, plate, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { SKIP_STEPS, USED, countOf, resetSkip, stepSkip, text as tokenText, tokenIds, useTiny } from "@/lib/tiny";
 import { TOPIC } from "@/lib/tokens";
 import { nearest, project2 } from "@/systems/lm";
-import { TokenFrame } from "./-shared";
 
 export const Route = createFileRoute("/topics/tokens/play/meaning")({
   loader: () => api.system(TOPIC, "meaning"),
@@ -43,7 +43,7 @@ function MeaningPage() {
   const sg = store.skip;
   const steps = sg.steps;
   const shown = useMemo(() => USED.slice(0, 40), []);
-  const proj = useMemo(() => project2(shown.map((i) => sg.E[i])), [sg, steps, shown]);
+  const proj = useMemo(() => project2(shown.map((i) => sg.E[i])), [sg, shown]);
   const box = useMemo<Box>(() => {
     const xs = proj.points.map((p) => p[0]);
     const ys = proj.points.map((p) => p[1]);
@@ -51,7 +51,7 @@ function MeaningPage() {
     return { x0: Math.min(...xs) - pad, x1: Math.max(...xs) + pad, y0: Math.min(...ys) - pad, y1: Math.max(...ys) + pad };
   }, [proj]);
   const id = tokenIds(probe)[0];
-  const near = useMemo(() => nearest(sg.E, id, 5, (i) => USED.includes(i)), [sg, steps, id]);
+  const near = useMemo(() => nearest(sg.E, id, 5, (i) => USED.includes(i)), [sg, id]);
   const histBox = useMemo<Box>(() => ({ x0: 0, x1: Math.max(1000, steps), y0: 0, y1: Math.max(1, ...store.skipHistory.map((p) => p[1])) * 1.1 }), [steps, store.skipHistory]);
   const rare = useMemo(() => USED.slice(-1)[0], []);
   const frequent = USED[0];
@@ -66,21 +66,21 @@ function MeaningPage() {
   const catDog = near.length ? nearest(sg.E, cat, 200, (i) => i === dog)[0]?.cos ?? 0 : 0;
 
   return (
-    <TokenFrame>
+    <>
       <TaskPage
         title={system?.name ?? "Where the meaning comes from"}
         job="The table's rows are random. The job is to give them meaning, and there is only one place meaning can come from: a loss. Here the loss is a small one of its own: from a token's row, predict the tokens that occur near it in the text, and push apart the ones that do not. Watch the rows move, and watch which words end up near which."
         input={
           <div className="space-y-3">
             <Choices options={PROBES} value={probe} onPick={setProbe} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               The ringed token is the one whose nearest neighbours are listed. The map is a flat
               picture of vectors with eight numbers each; the next page says how much it hides.
-            </p>
-            <p className="text-[11px] text-muted">
+            </Text>
+            <Text kind="note" as="p">
               This is skip-gram with negative sampling, run on the text from the vocabulary page.
               Each step looks at one token and one neighbour, and moves one row of the table.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -106,7 +106,7 @@ function MeaningPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div><div className="h-[420px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[420px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={box}
@@ -127,7 +127,7 @@ function MeaningPage() {
                 }}
               />
             </div><Caption>{`The forty commonest tokens, their vectors flattened to two axes (${(proj.kept * 100).toFixed(0)} % of the spread kept)`}. Green: the chosen token.  Sky: its five nearest by cosine.</Caption></div>
-            <div><div className="h-[130px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[130px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={histBox}
@@ -148,23 +148,23 @@ function MeaningPage() {
                 ? `Nothing trained: the rows are random, so the nearest tokens to ${visible(probe)} are whichever happened to land nearby: ${near.map((n) => visible(tokenText(n.id))).join(", ")}. Press run.`
                 : `After ${steps.toLocaleString("en")} steps the nearest tokens to ${visible(probe)} are ${near.map((n) => `${visible(tokenText(n.id))} (${n.cos.toFixed(2)})`).join(", ")}. Cat and dog now sit at cosine ${catDog.toFixed(2)}${catDog > 0.6 ? ": They occur in the same places in the text, so the loss pushed their rows together" : "; More steps will bring them together, because they occur in the same places in the text"}.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Times the row for {visible(tokenText(frequent))} was moved</dt>
-              <dd className="text-right text-ink/80">{sg.touched[frequent]} (It occurs {countOf(frequent)} times in the text)</dd>
+              <dd className="text-right text-foreground/80">{sg.touched[frequent]} (It occurs {countOf(frequent)} times in the text)</dd>
               <dt>Times the row for {visible(tokenText(rare))} was moved</dt>
-              <dd className="text-right text-ink/80">{sg.touched[rare]} (It occurs {countOf(rare)} time{countOf(rare) === 1 ? "" : "s"})</dd>
+              <dd className="text-right text-foreground/80">{sg.touched[rare]} (It occurs {countOf(rare)} time{countOf(rare) === 1 ? "" : "s"})</dd>
               <dt>Rows never moved at all</dt>
-              <dd className="text-right text-ink/80">{sg.touched.filter((t) => t === 0).length} of {sg.touched.length}</dd>
+              <dd className="text-right text-foreground/80">{sg.touched.filter((t) => t === 0).length} of {sg.touched.length}</dd>
               <dt>How wrong, smoothed</dt>
-              <dd className="text-right text-ink/80">{sg.loss.toFixed(3)}</dd>
+              <dd className="text-right text-foreground/80">{sg.loss.toFixed(3)}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               A step moves only the rows of the tokens it looked at. A common token's row is moved
               thousands of times and a rare one's a handful, and a token that never occurs keeps its
               random row for ever. The premise underneath is that tokens found in the same places
               mean similar things; it gives a word with two meanings one row between them, which is
               what the later pages fix.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -174,7 +174,7 @@ function MeaningPage() {
           </>
         }
       />
-    </TokenFrame>
+    </>
   );
 }
 

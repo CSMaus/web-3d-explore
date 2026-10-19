@@ -92,8 +92,7 @@ describe("the opening topic's pages", () => {
     for (const s of SYSTEMS) {
       const view = await siteAt(s.to);
       await waitFor(() => expect(screen.getByRole("button", { name: /^Run( again)?$/ })).toBeTruthy());
-      // the quaternion page draws through webgl, which the test browser does not have
-      if (s.id !== "quaternions") expect(document.querySelectorAll("main canvas").length).toBeGreaterThan(0);
+      expect(document.querySelectorAll("main canvas").length).toBeGreaterThan(0);
       expect(screen.getByRole("button", { name: "Ten steps" })).toBeTruthy();
       expect(screen.getByRole("button", { name: "Reset" })).toBeTruthy();
       view.unmount();
@@ -106,26 +105,27 @@ describe("the opening topic's pages", () => {
     const square = screen.getByRole("button", { name: /square/i });
     fireEvent.click(square);
     for (let i = 0; i < 13; i++) fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
-    await waitFor(() => expect(screen.getByText(/below zero/i)).toBeTruthy());
+    // the equations' note says the same thing, so the verdict is asked for by its slot
+    await waitFor(() => expect(screen.getByText(/below zero/i, { selector: '[data-slot="verdict"]' })).toBeTruthy());
   });
 
   it("the quarter turn page says i times i is minus one after two turns", async () => {
     await siteAt("/topics/complex/play/turn");
-    await waitFor(() => expect(screen.getByRole("heading", { name: "A quarter turn, called i" })).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "What 𝑖 is" })).toBeTruthy());
     for (let i = 0; i < 40; i++) fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
     await waitFor(() => expect(screen.getByText(/i times i is minus one|times i four times is times one|round again/i)).toBeTruthy());
   });
 
   it("the exponential page pauses on minus one at pi", async () => {
     await siteAt("/topics/complex/play/round");
-    await waitFor(() => expect(screen.getByRole("heading", { name: "The exponential goes round" })).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Euler's formula" })).toBeTruthy());
     for (let i = 0; i < 12; i++) fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
-    await waitFor(() => expect(screen.getByText(/e to the i pi equals minus one/i)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/e to the 𝑖 pi equals minus one/i)).toBeTruthy());
   });
 
-  it("the index shows six pages and the parts page says no series", async () => {
+  it("the index shows the seven play pages and the parts page says no series", async () => {
     let view = await siteAt("/topics/complex/play");
-    await waitFor(() => expect(screen.getByText("Seven pages, from nothing")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("The pages, in order")).toBeTruthy());
     const pages = Array.from(document.querySelectorAll("main a")).filter((a) => /\/topics\/complex\/play\/[a-z]+$/.test(a.getAttribute("href") ?? ""));
     expect(new Set(pages.map((a) => a.getAttribute("href"))).size).toBe(7);
     view.unmount();

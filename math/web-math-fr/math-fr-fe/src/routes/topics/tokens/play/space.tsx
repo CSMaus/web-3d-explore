@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
@@ -7,7 +8,7 @@ import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { visible } from "@/components/Tokens";
+import { visible } from "@/lib/tokenText";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, TWO, plate, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
@@ -15,7 +16,6 @@ import { SKIP_STEPS, USED, text as tokenText, tokenIds, useTiny } from "@/lib/ti
 import { TOPIC } from "@/lib/tokens";
 import { centre, cosine, distance, nearest, project2 } from "@/systems/lm";
 import { rng } from "@/systems/net";
-import { TokenFrame } from "./-shared";
 
 export const Route = createFileRoute("/topics/tokens/play/space")({
   loader: () => api.system(TOPIC, "space"),
@@ -36,14 +36,15 @@ function SpacePage() {
   const [pairsSeen, setPairs] = useState(0);
   const [perFrame, setPerFrame] = useState(2);
 
-  const E = store.skip.E;
+  const sg = store.skip;
+  const E = sg.E;
   const steps = store.skip.steps;
   const ready = steps >= SKIP_STEPS;
-  const ids = { a: tokenIds(a)[0], b: tokenIds(b)[0], c: tokenIds(c)[0] };
+  const ids = useMemo(() => ({ a: tokenIds(a)[0], b: tokenIds(b)[0], c: tokenIds(c)[0] }), [a, b, c]);
   const cos = cosine(E[ids.a], E[ids.b]);
   const dist = distance(E[ids.a], E[ids.b]);
   const shown = useMemo(() => USED.slice(0, 40), []);
-  const proj = useMemo(() => project2(shown.map((i) => E[i])), [E, steps, shown]);
+  const proj = useMemo(() => project2(shown.map((i) => sg.E[i])), [sg, shown]);
   const box = useMemo<Box>(() => {
     const xs = proj.points.map((p) => p[0]);
     const ys = proj.points.map((p) => p[1]);
@@ -56,7 +57,7 @@ function SpacePage() {
   const runner = useRunner((n) => setPairs(n), { perFrame, stopAt: 3000 });
   const hist = useMemo(() => {
     const next = rng(21);
-    const centred = centre(USED.map((i) => E[i])).rows;
+    const centred = centre(USED.map((i) => sg.E[i])).rows;
     const raw = new Array(BINS).fill(0);
     const cen = new Array(BINS).fill(0);
     let rawSum = 0;
@@ -65,7 +66,7 @@ function SpacePage() {
       const i = Math.floor(next() * USED.length);
       let j = Math.floor(next() * USED.length);
       if (j === i) j = (j + 1) % USED.length;
-      const r = cosine(E[USED[i]], E[USED[j]]);
+      const r = cosine(sg.E[USED[i]], sg.E[USED[j]]);
       const q = cosine(centred[i], centred[j]);
       raw[Math.min(BINS - 1, Math.floor(((r + 1) / 2) * BINS))] += 1;
       cen[Math.min(BINS - 1, Math.floor(((q + 1) / 2) * BINS))] += 1;
@@ -73,15 +74,15 @@ function SpacePage() {
       cenSum += q;
     }
     return { raw, cen, rawMean: pairsSeen ? rawSum / pairsSeen : 0, cenMean: pairsSeen ? cenSum / pairsSeen : 0 };
-  }, [E, steps, pairsSeen]);
+  }, [sg, pairsSeen]);
 
   // the analogy: a - b + c, and where the expected answer ranks
   const analogy = useMemo(() => {
-    const target = E[ids.a].map((v, d) => v - E[ids.b][d] + E[ids.c][d]);
-    const list = USED.filter((i) => ![ids.a, ids.b, ids.c].includes(i)).map((i) => ({ id: i, cos: cosine(target, E[i]) })).sort((x, y) => y.cos - x.cos);
-    const withHeld = USED.map((i) => ({ id: i, cos: cosine(target, E[i]) })).sort((x, y) => y.cos - x.cos);
+    const target = sg.E[ids.a].map((v, d) => v - sg.E[ids.b][d] + sg.E[ids.c][d]);
+    const list = USED.filter((i) => ![ids.a, ids.b, ids.c].includes(i)).map((i) => ({ id: i, cos: cosine(target, sg.E[i]) })).sort((x, y) => y.cos - x.cos);
+    const withHeld = USED.map((i) => ({ id: i, cos: cosine(target, sg.E[i]) })).sort((x, y) => y.cos - x.cos);
     return { list: list.slice(0, 4), honest: withHeld.slice(0, 4) };
-  }, [E, steps, ids.a, ids.b, ids.c]);
+  }, [sg, ids]);
 
   const reset = () => {
     runner.reset();
@@ -89,18 +90,18 @@ function SpacePage() {
   };
 
   return (
-    <TokenFrame>
+    <>
       <TaskPage
         title={system?.name ?? "Measuring the space"}
         job="The rows now carry something. The job is to say what, with measurements rather than impressions: how close two tokens are, in two different senses; how much a flat picture of the space lies; whether a direction carries a relation; and how narrow the cone all the vectors sit in."
         input={
           <div className="space-y-3">
-            <div className="text-[11px] text-muted">Two tokens to compare</div>
+            <div data-text="note">Two tokens to compare</div>
             <Choices options={PICKS} value={a} onPick={setA} />
             <Choices options={PICKS} value={b} onPick={setB} />
-            <div className="text-[11px] text-muted">The analogy: first minus second plus this</div>
+            <div data-text="note">The analogy: first minus second plus this</div>
             <Choices options={PICKS} value={c} onPick={setC} />
-            {!ready ? <p className="text-[11px] text-warn">The vectors are still training ({steps.toLocaleString("en")} of {SKIP_STEPS.toLocaleString("en")} steps); the numbers below move until that finishes.</p> : null}
+            {!ready ? <Text kind="warning" as="p">The vectors are still training ({steps.toLocaleString("en")} of {SKIP_STEPS.toLocaleString("en")} steps); the numbers below move until that finishes.</Text> : null}
           </div>
         }
         run={
@@ -122,7 +123,7 @@ function SpacePage() {
         picture={
           <section ref={stage} className="space-y-2">
             <div className="grid gap-2 lg:grid-cols-2">
-              <div><div className="h-[300px] overflow-hidden rounded border border-edge">
+              <div><div data-slot="plot" className="h-[300px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={box}
@@ -147,7 +148,7 @@ function SpacePage() {
                   }}
                 />
               </div><Caption>{`Flat picture: ${(proj.kept * 100).toFixed(0)} % of the spread kept`}. White: second to first.  Sky: same arrow, from the third</Caption></div>
-              <div><div className="h-[300px] overflow-hidden rounded border border-edge">
+              <div><div data-slot="plot" className="h-[300px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={{ x0: -1, x1: 1, y0: 0, y1: 1 }}
@@ -170,12 +171,12 @@ function SpacePage() {
                 />
               </div><Caption>Cosine of random pairs: -1 left, 1 right. {`Rose: raw, mean ${hist.rawMean.toFixed(2)}.  Sky: centred, mean ${hist.cenMean.toFixed(2)}`}</Caption></div>
             </div>
-            <div className="rounded border border-edge p-3 font-mono text-[11px]">
-              <div className="text-muted">The analogy {visible(a)} − {visible(b)} + {visible(c)} = ?</div>
-              <div className="mt-1 text-ink/80">
+            <div data-text="caption" className="rounded border border-border p-3">
+              <div className="text-muted-foreground">The analogy {visible(a)} − {visible(b)} + {visible(c)} = ?</div>
+              <div className="mt-1 text-foreground/80">
                 Nearest, with the three inputs excluded by hand as is usual: {analogy.list.map((n) => `${visible(tokenText(n.id))} (${n.cos.toFixed(2)})`).join(", ")}
               </div>
-              <div className="mt-1 text-ink/80">
+              <div className="mt-1 text-foreground/80">
                 Nearest, with nothing excluded: {analogy.honest.map((n) => `${visible(tokenText(n.id))} (${n.cos.toFixed(2)})`).join(", ")}
               </div>
             </div>
@@ -187,27 +188,27 @@ function SpacePage() {
               {visible(a)} and {visible(b)}: Cosine {cos.toFixed(3)}, Distance {dist.toFixed(3)}. In the flat picture they are {flatDist.toFixed(2)} apart, which is {flatDist < dist * 0.8 ? "closer than they really are" : "about as far as they really are"}; The picture keeps {(proj.kept * 100).toFixed(0)} per cent of the spread and hides the rest.
               {pairsSeen > 0 ? ` Over ${pairsSeen} random pairs the raw cosines average ${hist.rawMean.toFixed(2)}: the vectors lean one way together, a cone rather than a cloud. Take the average vector away and the same pairs average ${hist.cenMean.toFixed(2)}.` : " Press run to measure the cone."}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Cosine: the angle between them, blind to length</dt>
-              <dd className="text-right text-ink/80">{cos.toFixed(4)}</dd>
+              <dd className="text-right text-foreground/80">{cos.toFixed(4)}</dd>
               <dt>Distance: how far apart, which grows with length</dt>
-              <dd className="text-right text-ink/80">{dist.toFixed(4)}</dd>
+              <dd className="text-right text-foreground/80">{dist.toFixed(4)}</dd>
               <dt>Length of {visible(a)}, Length of {visible(b)}</dt>
-              <dd className="text-right text-ink/80">{Math.hypot(...E[ids.a]).toFixed(2)}, {Math.hypot(...E[ids.b]).toFixed(2)}</dd>
+              <dd className="text-right text-foreground/80">{Math.hypot(...E[ids.a]).toFixed(2)}, {Math.hypot(...E[ids.b]).toFixed(2)}</dd>
               <dt>Nearest to {visible(a)} by cosine</dt>
-              <dd className="text-right text-ink/80">{nearest(E, ids.a, 3, (i) => USED.includes(i)).map((n) => visible(tokenText(n.id))).join(", ")}</dd>
+              <dd className="text-right text-foreground/80">{nearest(E, ids.a, 3, (i) => USED.includes(i)).map((n) => visible(tokenText(n.id))).join(", ")}</dd>
               <dt>The analogy's usual answer</dt>
-              <dd className="text-right text-ink/80">{analogy.list[0] ? visible(tokenText(analogy.list[0].id)) : "-"}</dd>
+              <dd className="text-right text-foreground/80">{analogy.list[0] ? visible(tokenText(analogy.list[0].id)) : "-"}</dd>
               <dt>The honest answer, nothing excluded</dt>
-              <dd className="text-right text-ink/80">{analogy.honest[0] ? visible(tokenText(analogy.honest[0].id)) : "-"}</dd>
+              <dd className="text-right text-foreground/80">{analogy.honest[0] ? visible(tokenText(analogy.honest[0].id)) : "-"}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The famous arithmetic works when the inputs are removed from the candidates by hand,
               which is what every demonstration of it does. With nothing removed the answer is
               usually one of the inputs. On a text this small it barely works either way, and on a
               large one it works for curated examples. No axis of this space was given a meaning;
               a direction that seems to mean something was found afterwards.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -217,6 +218,6 @@ function SpacePage() {
           </>
         }
       />
-    </TokenFrame>
+    </>
   );
 }

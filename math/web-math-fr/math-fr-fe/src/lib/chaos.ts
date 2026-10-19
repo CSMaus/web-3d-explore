@@ -9,6 +9,7 @@ export const CHAOS = {
     { to: "/topics/chaos/parts", label: "Parts" },
     { to: "/topics/chaos/play", label: "Play" },
     { to: "/topics/chaos/theory", label: "Mathematics" },
+    { to: "/topics/chaos/uses", label: "Applications" },
   ],
 } as const;
 
@@ -22,7 +23,6 @@ export const SYSTEMS = [
   { id: "rossler", to: "/topics/chaos/play/rossler", label: "Rossler" },
   { id: "logistic", to: "/topics/chaos/play/logistic", label: "Logistic map" },
   { id: "bifurcation", to: "/topics/chaos/play/bifurcation", label: "Bifurcation" },
-  { id: "control", to: "/topics/chaos/play/control", label: "The heart" },
 ] as const;
 
 export type ChaosRoute = (typeof SYSTEMS)[number]["to"];

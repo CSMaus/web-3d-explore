@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { retone } from "@/lib/draw";
 
 export type Box = { x0: number; x1: number; y0: number; y1: number };
 /** what a page draws with: world coordinates in, device pixels out. */
@@ -94,6 +95,7 @@ export function Plot({ box, draw, className, onPick, onDrag, onRelease, onWheel,
       }
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       ctx.clearRect(0, 0, w, h);
+      retone();
       const shown = latest.current.equal
         ? squared(latest.current.box, w, h)
         : latest.current.box;
@@ -103,7 +105,13 @@ export function Plot({ box, draw, className, onPick, onDrag, onRelease, onWheel,
     paint();
     const watch = new ResizeObserver(paint);
     watch.observe(canvas);
-    return () => watch.disconnect();
+    // the theme builder changes the page's colours under a live page and
+    // announces it, so every picture repaints in the new colours
+    window.addEventListener("retone", paint);
+    return () => {
+      watch.disconnect();
+      window.removeEventListener("retone", paint);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 

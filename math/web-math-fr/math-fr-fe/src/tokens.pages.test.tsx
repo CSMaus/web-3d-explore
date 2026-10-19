@@ -56,7 +56,7 @@ describe("Topic 4, with the backend down", () => {
       const hrefs = Array.from(document.querySelectorAll("main a")).map((a) => a.getAttribute("href"));
       expect(hrefs, s.to).toContain("/topics/tokens/parts");
       expect(hrefs, s.to).toContain("/topics/tokens/theory");
-      expect(document.querySelector("main")?.className, s.to).toContain("max-w-6xl");
+      expect(document.querySelector("main")?.dataset.slot, s.to).toBe("page");
       const order = Array.from(document.querySelectorAll("main h2")).map((h) => h.textContent);
       expect(order.indexOf("WHAT GOES IN"), s.to).toBeLessThan(order.indexOf("RUN"));
       expect(order.indexOf("RUN"), s.to).toBeLessThan(order.indexOf("WHAT CAME OUT"));
@@ -158,7 +158,7 @@ describe("Topic 4, what a step changes", () => {
 
   it("The sampling page generates under two rules side by side", async () => {
     await siteAt("/topics/tokens/play/sample");
-    await waitFor(() => expect(screen.getByText(/press run to generate under your rule and under greedy/i)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/press run to generate under the rule and under greedy/i)).toBeTruthy());
     fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
     await waitFor(() => expect(screen.getByText(/10 tokens under each rule/i)).toBeTruthy());
   });

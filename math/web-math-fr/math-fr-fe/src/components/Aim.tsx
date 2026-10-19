@@ -1,4 +1,5 @@
 import { Slider } from "@/components/Slider";
+import { Label, Button, Text } from "@kit/index";
 
 type Props = {
   turning: boolean;
@@ -18,31 +19,25 @@ type Props = {
  */
 export function Aim({ turning, onTurning, azimuth, elevation, onAim, period, onPeriod, onReset }: Props) {
   return (
-    <section className="rounded border border-edge p-4">
-      <h3 className="font-mono text-[11px] uppercase tracking-wider text-muted">ROTATION MODE</h3>
+    <section data-slot="panel">
+      <Label>ROTATION MODE</Label>
       <div className="mt-2 flex flex-wrap gap-1.5">
         {[true, false].map((on) => (
-          <button
+          <Button variant="outline" size="sm"
             key={String(on)}
             type="button"
             onClick={() => onTurning(on)}
             aria-pressed={turning === on}
-            className={
-              turning === on
-                ? "rounded border border-leaf px-2.5 py-1 font-mono text-[11px] text-leaf"
-                : "rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-muted"
-            }
           >
             {on ? "Auto" : "Manual"}
-          </button>
+          </Button>
         ))}
-        <button
+        <Button variant="outline" size="sm"
           type="button"
           onClick={onReset}
-          className="rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-leaf"
         >
           Reset view
-        </button>
+        </Button>
       </div>
       {turning ? (
         <div className="mt-3">
@@ -54,10 +49,10 @@ export function Aim({ turning, onTurning, azimuth, elevation, onAim, period, onP
           <Slider label="Elevation" min={-Math.PI / 2} max={Math.PI / 2} step={Math.PI / 360} value={elevation} format={(v) => `${((v * 180) / Math.PI).toFixed(0)} deg`} onChange={(v) => onAim(azimuth, v)} />
         </div>
       )}
-      <p className="mt-3 text-[11px] text-muted">
+      <Text kind="note" as="p" className="mt-3">
         Drag the picture to turn it, in either mode; the wheel brings it closer. Dragging switches
         to manual.
-      </p>
+      </Text>
     </section>
   );
 }

@@ -1,7 +1,8 @@
 import { RouterProvider, createMemoryHistory, createRouter } from "@tanstack/react-router";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { routeTree } from "@/routeTree.gen";
+import common from "@/locales/en/common.json";
 
 const CARDS = [
   {
@@ -136,14 +137,14 @@ describe("The topic index", () => {
     expect(screen.getAllByText(/things to move, and every equation. no clip filmed yet/i).length).toBe(3);
   });
 
-  it("Says what is missing when the backend is down, and still names the way in", async () => {
+  it("Lists the topics from the snapshot when the backend is down", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(() => Promise.reject(new Error("connection refused"))),
     );
     await siteAt("/topics");
-    await waitFor(() => expect(screen.getByText("The backend is not answering")).toBeTruthy());
-    expect(screen.getByText(/\/topics\/fractals/i)).toBeTruthy();
+    await waitFor(() => expect(screen.getByText("Topic 1 - Fractals")).toBeTruthy());
+    expect(screen.queryByText("The backend is not answering")).toBeNull();
   });
 });
 
@@ -159,13 +160,15 @@ describe("Navigation between and inside topics", () => {
   it("The top bar moves between topics, not inside one", async () => {
     await siteAt("/topics");
     const bar = document.querySelector("header nav");
-    const labels = Array.from(bar?.querySelectorAll("a") ?? []).map((a) => a.textContent);
-    expect(labels).toEqual(["Home", "Topics", "Account"]);
+    const labels = Array.from(bar?.querySelectorAll('[data-slot="topbar-link"]') ?? []).map((a) => a.textContent);
+    expect(labels.filter((l) => l !== "Kit")).toEqual(["Learn", "Topics", "Play", "About", "Projects", "Contact"]);
+    // the kit preview's link is a development tool and is there only in development
+    expect(labels.includes("Kit")).toBe(import.meta.env.DEV);
     expect(labels).not.toContain("play");
     expect(labels).not.toContain("theory");
   });
 
-  it("Every page inside the topic carries the topic bar and its three sections", async () => {
+  it("Every page inside the topic carries the topic bar and its four sections", async () => {
     for (const path of [
       "/topics/fractals/parts",
       "/topics/fractals/theory",
@@ -181,18 +184,62 @@ describe("Navigation between and inside topics", () => {
       expect(hrefs).toContain("/topics/fractals/parts");
       expect(hrefs).toContain("/topics/fractals/play");
       expect(hrefs).toContain("/topics/fractals/theory");
+      expect(hrefs).toContain("/topics/fractals/uses");
       expect(hrefs).toContain("/topics");
       view.unmount();
     }
   });
 
+  it("Every written application piece renders with its question, its limits and its sources", async () => {
+    for (const [path, question] of [
+      ["/topics/fractals/uses/actuarial", "How does anyone put a price on a fire that has not happened?"],
+      ["/topics/chaos/uses/weather", "Why does the forecast say 70 per cent?"],
+      ["/topics/complex/uses/current", "Why does a motor draw more current than the work it does?"],
+      ["/topics/networks/uses/proteins", "How does a string of letters become a shape?"],
+      ["/topics/tokens/uses/spam", "How does a mailbox know which mail to throw away?"],
+    ] as const) {
+      const view = await siteAt(path);
+      await waitFor(() => expect(screen.getByRole("heading", { name: question })).toBeTruthy(), { timeout: 4000 });
+      expect(screen.getByText("What this does not say")).toBeTruthy();
+      expect(screen.getByText("Sources")).toBeTruthy();
+      expect(document.querySelectorAll('a[data-slot="link"][target="_blank"]').length).toBeGreaterThan(2);
+      view.unmount();
+    }
+  });
+
+  it("The insurance piece carries the reader's experiment and runs it", async () => {
+    await siteAt("/topics/fractals/uses/actuarial");
+    await waitFor(() => expect(screen.getByRole("button", { name: "Run a thousand insurers" })).toBeTruthy(), { timeout: 4000 });
+    fireEvent.click(screen.getByRole("button", { name: "Run a thousand insurers" }));
+    await waitFor(() => expect(screen.getByText(/insurers were ruined within 30 years/)).toBeTruthy(), { timeout: 20000 });
+  }, 30000);
+
+  it("The applications live under their own section, and the old play addresses arrive there", async () => {
+    let view = await siteAt("/topics/fractals/uses");
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Applications" })).toBeTruthy());
+    expect(screen.getByText("Claims with a fractal tail")).toBeTruthy();
+    expect(screen.getByText("How does anyone put a price on a fire that has not happened?")).toBeTruthy();
+    // every application of this topic is now written, so none is marked as coming
+    expect(screen.getAllByText("Ready").length).toBeGreaterThan(3);
+    expect(screen.queryByText("Being written")).toBeNull();
+    view.unmount();
+    view = await siteAt("/topics/fractals/play/tails");
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Claims with a fractal tail" })).toBeTruthy(), { timeout: 4000 });
+    expect(Array.from(document.querySelectorAll("main a")).map((a) => a.getAttribute("href"))).toContain("/topics/fractals/uses");
+    view.unmount();
+    view = await siteAt("/topics/fractals/play");
+    await waitFor(() => expect(screen.getAllByText(/Iterated maps/).length).toBeGreaterThan(0));
+    expect(screen.queryByText("Claims with a fractal tail")).toBeNull();
+    view.unmount();
+  });
+
   it("The front page offers a way into the topics", async () => {
     await siteAt("/");
-    await waitFor(() => expect(screen.getByText(/this page is not finished yet/i)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(common.front.title1)).toBeTruthy());
     // the menu bar carries one of the same name, so this is scoped to the page
     const link = document.querySelector('main a[href="/topics"]');
     expect(link).toBeTruthy();
-    expect(link?.textContent).toBe("Topics");
+    expect(link?.textContent).toBe(common.front.browse);
   });
 
   it("A topic with no section named goes to its series", async () => {
@@ -227,8 +274,7 @@ describe("The page frame", () => {
     for (const path of everywhere) {
       const view = await siteAt(path);
       const main = document.querySelector("main");
-      expect(main?.className, path).toContain("max-w-6xl");
-      expect(main?.className, path).toContain("px-6");
+      expect(main?.dataset.slot, path).toBe("page");
       view.unmount();
     }
   });
@@ -244,11 +290,11 @@ describe("The menu bar and the page agree on where the left edge is", () => {
 
   it("Both use the same maximum width and the same padding", async () => {
     await siteAt("/topics");
-    const bar = document.querySelector("header nav");
+    // the bar is the kit's, which takes its width and gutters from the theme's
+    // page values; the page body carries the same width by class
+    const bar = document.querySelector('header [data-slot="topbar-inner"]');
     const main = document.querySelector("main");
-    for (const token of ["max-w-6xl", "px-6"]) {
-      expect(bar?.className).toContain(token);
-      expect(main?.className).toContain(token);
-    }
+    expect(bar).toBeTruthy();
+    expect(main?.dataset.slot).toBe("page");
   });
 });

@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Heading, Swatch, Text } from "@kit/index";
 import { useCallback } from "react";
 import { Offline } from "@/components/Offline";
-import { TopicBar } from "@/components/TopicBar";
-import { Rail } from "@/components/Rail";
+import { RailIndex } from "@/components/RailIndex";
 import { Reel } from "@/components/Reel";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/systems";
-import { FRACTALS } from "@/lib/topic";
 import { useHere } from "@/lib/here";
 import { useLook } from "@/lib/store";
 
@@ -31,22 +30,20 @@ function TopicPage() {
 
   if (!topic) {
     return (
-      <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-        <TopicBar topic={FRACTALS} />
-        <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">{HEADING}</h1>
+      <div>
+        <Heading level={1} className="mt-6">{HEADING}</Heading>
         <div className="mt-6">
           <Offline what="The beats and the words beside them are served by the backend." />
         </div>
-      </main>
+      </div>
     );
   }
 
   const minutes = Math.round(topic.seconds / 60);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-24 xl:grid xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-8">
-      <Rail
-        className="hidden xl:block"
+    <div className="pb-24">
+      <RailIndex
         here={here}
         onPick={go}
         items={topic.part_list.map((part, i) => ({
@@ -58,13 +55,12 @@ function TopicPage() {
 
       <div className="min-w-0">
         <header>
-          <TopicBar topic={FRACTALS} />
-          <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">{HEADING}</h1>
-          <p className="mt-3 max-w-2xl text-sm text-muted">
+          <Heading level={1} className="mt-6">{HEADING}</Heading>
+          <Text kind="intro" as="p" className="mt-3 max-w-2xl">
             {topic.part_list.length} clips, one a part, about {minutes} minutes of picture in
-            order. The explanation is in the clips; each has a short text for a reader who cannot
-            hear it.
-          </p>
+            order. Beside each clip is the reasoning of the part, written out to be read with the
+            clip or instead of it.
+          </Text>
         </header>
 
         <div className="mt-4">
@@ -72,19 +68,17 @@ function TopicPage() {
             <section
               key={part.number}
               id={anchor(part.number)}
-              className="scroll-mt-24 border-t border-edge pt-10"
+              className="scroll-mt-24 border-t border-border pt-10"
             >
-              <h2
-                className="font-mono text-xs uppercase tracking-widest"
-                style={{ color: accentOf(i) }}
-              >
+              <Heading level={2}>
+                <Swatch colour={accentOf(i)} />
                 Part {part.number} - {part.title}
-              </h2>
+              </Heading>
               <Reel part={part} accent={accentOf(i)} />
             </section>
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

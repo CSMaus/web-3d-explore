@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
@@ -7,7 +8,8 @@ import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TokenRow, visible } from "@/components/Tokens";
+import { TokenRow } from "@/components/Tokens";
+import { visible } from "@/lib/tokenText";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
@@ -15,7 +17,7 @@ import { IDS, MODEL_STEPS, VOCAB, WIDTH, resetModel, stepModel, text as tokenTex
 import { TOPIC } from "@/lib/tokens";
 import { CORPUS, encode } from "@/systems/bpe";
 import { dot, forward, perplexity } from "@/systems/lm";
-import { FIELD, TokenFrame } from "./-shared";
+import { Input } from "@kit/index";
 
 export const Route = createFileRoute("/topics/tokens/play/predict")({
   loader: () => api.system(TOPIC, "predict"),
@@ -59,9 +61,8 @@ function PredictPage() {
   const model = store.model;
   const steps = model.steps;
   const tokens = useMemo(() => encode(VOCAB, text).slice(0, 12), [text]);
-  const ids = tokens.map((t) => t.id);
-  const key = ids.join(",");
-  const pass = useMemo(() => forward(model, ids), [model, store.version, key]);
+  const ids = useMemo(() => tokens.map((t) => t.id), [tokens]);
+  const pass = useMemo(() => forward(model, ids), [model, ids]);
   const last = ids.length - 1;
   const probs = pass.probs[last];
   const logits = pass.logits[last];
@@ -80,7 +81,7 @@ function PredictPage() {
   };
 
   return (
-    <TokenFrame>
+    <>
       <TaskPage
         title={system?.name ?? "The next token"}
         job="The stream turns one vector per position into another vector per position. The only thing left is to turn the last of them into a statement about what comes next: one score per vocabulary entry, softmaxed into a distribution, read as a ranked list. The job is to watch that list sharpen as the model trains, and to score it against what the text actually said."
@@ -88,14 +89,14 @@ function PredictPage() {
           <div className="space-y-3">
             <Choices options={PROMPTS} value={pick} onPick={(id) => { setPick(id); setText(PROMPTS.find((p) => p.id === id)!.text); }} />
             <label className="block">
-              <span className="text-xs text-muted">Or type a prompt</span>
-              <input value={text} onChange={(e) => { setText(e.target.value); setPick(""); }} className={FIELD} />
+              <span data-text="note">Or type a prompt</span>
+              <Input value={text} onChange={(e) => { setText(e.target.value); setPick(""); }} className="mt-1" />
             </label>
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Run trains the shared model by predicting the next token at every position of the
               text from the vocabulary page. The same trained model is used on the pages after this
               one, and starting again resets it everywhere.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -121,10 +122,10 @@ function PredictPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div className="rounded border border-edge p-2">
+            <div className="rounded border border-border p-2">
               <TokenRow tokens={tokens} size="sm" mark={last} />
             </div>
-            <div><div className="h-[330px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[330px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -150,7 +151,7 @@ function PredictPage() {
                 }}
               />
             </div><Caption>{`The twelve most likely next tokens, of ${VOCAB.bytes.length}. Green: the one the text actually had.`}</Caption></div>
-            <div><div className="h-[120px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[120px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={histBox}
@@ -171,27 +172,27 @@ function PredictPage() {
                 ? `Untrained: every one of the ${VOCAB.bytes.length} tokens is about equally likely, so the top one has ${(shown[0].p * 100).toFixed(1)} % and the perplexity is ${perplexity(model.loss || Math.log(VOCAB.bytes.length)).toFixed(0)}: as good as guessing among ${VOCAB.bytes.length}. Press run.`
                 : `After ${steps} steps the model gives ${visible(tokenText(shown[0].id))} ${(shown[0].p * 100).toFixed(0)} %, then ${visible(tokenText(shown[1].id))} ${(shown[1].p * 100).toFixed(0)} % and ${visible(tokenText(shown[2].id))} ${(shown[2].p * 100).toFixed(0)} %; the top three hold ${(inTop * 100).toFixed(0)} % and the other ${VOCAB.bytes.length - 3} tokens share the rest. ${truth === null ? "This prompt is not in the text, so there is no right answer to score against." : `In the text this prompt was followed by ${visible(tokenText(truth))}, which the model ranks ${truthRank + 1}${truthRank === 0 ? "St" : truthRank === 1 ? "Nd" : truthRank === 2 ? "Rd" : "Th"}: its loss on this one prediction is ${lossHere!.toFixed(2)}.`}`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Output width, one score a vocabulary entry</dt>
-              <dd className="text-right text-ink/80">{VOCAB.bytes.length}</dd>
+              <dd className="text-right text-foreground/80">{VOCAB.bytes.length}</dd>
               <dt>The score for {visible(tokenText(shown[0].id))}: Last vector dotted with its own table row</dt>
-              <dd className="text-right text-ink/80">{dot(pass.h[last], model.E[shown[0].id]).toFixed(3)} = {shown[0].z.toFixed(3)}</dd>
+              <dd className="text-right text-foreground/80">{dot(pass.h[last], model.E[shown[0].id]).toFixed(3)} = {shown[0].z.toFixed(3)}</dd>
               <dt>Numbers saved by tying the output to the table</dt>
-              <dd className="text-right text-ink/80">{(VOCAB.bytes.length * WIDTH).toLocaleString("en")}</dd>
+              <dd className="text-right text-foreground/80">{(VOCAB.bytes.length * WIDTH).toLocaleString("en")}</dd>
               <dt>Average loss over the text, smoothed</dt>
-              <dd className="text-right text-ink/80">{model.loss.toFixed(3)}</dd>
+              <dd className="text-right text-foreground/80">{model.loss.toFixed(3)}</dd>
               <dt>Perplexity: as if choosing among this many</dt>
-              <dd className="text-right text-ink/80">{perplexity(model.loss || Math.log(VOCAB.bytes.length)).toFixed(1)}</dd>
+              <dd className="text-right text-foreground/80">{perplexity(model.loss || Math.log(VOCAB.bytes.length)).toFixed(1)}</dd>
               <dt>Text the model is trained on</dt>
-              <dd className="text-right text-ink/80">{IDS.length} tokens, {CORPUS.split(/\s+/).length} words</dd>
+              <dd className="text-right text-foreground/80">{IDS.length} tokens, {CORPUS.split(/\s+/).length} words</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The training loss is the cross entropy from topic 3, against the token that actually
               followed, at every position of the text at once. The output layer is the table again,
               transposed: a score is how well the running vector lines up with a token's own row,
               which closes the loop back to the lookup page. The model knows this one text and
               nothing else, and that is exactly what the pages after this one show.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -201,7 +202,7 @@ function PredictPage() {
           </>
         }
       />
-    </TokenFrame>
+    </>
   );
 }
 

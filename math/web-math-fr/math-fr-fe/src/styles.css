@@ -1,36 +1,20 @@
-@import "tailwindcss";
+@import "../../ui-kit/src/index.css";
 @import "katex/dist/katex.min.css";
+@source "../../ui-kit/src";
 
-@theme {
-  --color-ground: #0e1116;
-  --color-ink: #e8e8ea;
-  --color-muted: #7c828c;
-  --color-edge: #23262c;
-  --color-leaf: #a5e3a0;
-  --color-sky: #8fd3e8;
-  --color-violet: #b49be8;
-  --color-rose: #c75ab0;
-  --color-warn: #ff6b6b;
-  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-}
-
-:root {
-  color-scheme: dark;
-  --accent: var(--color-leaf);
-}
-
-html,
-body,
-#root {
+html {
   height: 100%;
 }
 
-body {
-  margin: 0;
-  background: var(--color-ground);
-  color: var(--color-ink);
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+body,
+#root {
+  min-height: 100%;
+}
+
+html.still .rise {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 .rise {

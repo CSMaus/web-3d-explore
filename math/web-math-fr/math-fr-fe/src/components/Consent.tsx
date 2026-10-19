@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Text, Banner, Button } from "@kit/index";
 
 const KEY = "mathfr_session_consent";
 
@@ -13,6 +15,7 @@ function writeChoice(value: string) {
 }
 
 export function Consent() {
+  const { t } = useTranslation();
   const [choice, setChoice] = useState<string | null>(() => readChoice());
 
   if (choice !== null) return null;
@@ -23,31 +26,16 @@ export function Consent() {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-edge bg-ground/95 backdrop-blur">
-      <div className="mx-auto flex max-w-4xl flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center">
-        <p className="text-xs leading-relaxed text-muted">
-          This site keeps one cookie to hold a signed-in session, and records the network address
-          of each request with the page it asked for. Addresses are kept for a limited period and
-          then removed. The clips are played through an external player on its cookie-free domain,
-          so nothing is set by it before playback starts.
-        </p>
+    <Banner role="region" aria-label={t("consent.accept")} className="z-[60]">
+      <div className="mx-auto flex max-w-4xl flex-col gap-3 sm:flex-row sm:items-center">
+        <Text kind="note" as="p">{t("consent.text")}</Text>
         <div className="flex shrink-0 gap-2">
-          <button
-            type="button"
-            onClick={() => decide("accepted")}
-            className="rounded border border-leaf px-3 py-1.5 font-mono text-xs text-leaf"
-          >
-            Accept
-          </button>
-          <button
-            type="button"
-            onClick={() => decide("declined")}
-            className="rounded border border-edge px-3 py-1.5 font-mono text-xs text-muted"
-          >
-            Decline
-          </button>
+          <Button onClick={() => decide("accepted")}>{t("consent.accept")}</Button>
+          <Button variant="outline" size="sm" onClick={() => decide("declined")}>
+            {t("consent.decline")}
+          </Button>
         </div>
       </div>
-    </div>
+    </Banner>
   );
 }

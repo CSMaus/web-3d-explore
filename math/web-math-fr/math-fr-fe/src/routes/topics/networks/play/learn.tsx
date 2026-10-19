@@ -1,18 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Label, Button, Text } from "@kit/index";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot, type Box } from "@/components/Plot";
 import { Caption } from "@/components/Caption";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, TWO, boxOf, contours, plate, shadeHeight, shadePlane, ticks } from "@/lib/draw";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { SETS, dataset, type SetKind } from "@/systems/learn";
 import {
@@ -200,25 +199,21 @@ function LearnPage() {
   const late = view.history.length > 30 ? view.history[view.history.length - 30][1] : Infinity;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "How it learns, and how fast"}
-        job="The same network on the same dots, with the learning itself as the thing to look at. Every step: measure how wrong, find which way is down for each number, move. What you choose is how big the move is, how many dots to look at before each move, and which of the standard tricks to add. Runs you finish stay on the chart, so they can be compared."
+        job="The same network on the same dots, with the learning itself as the thing to look at. Every step: measure how wrong, find which way is down for each number, move. The choices are how big the move is, how many dots to look at before each move, and which of the standard tricks to add. Finished runs stay on the chart, so they can be compared."
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); setKept([]); restart(false); }} />
             <Choices options={METHODS} value={method} onPick={(id) => { setMethod(id); if (view.steps > 0) restart(); }} />
-            <p className="text-[11px] text-muted">{OPTS[method].label}: Fixes {OPTS[method].fixes}.</p>
+            <Text kind="note" as="p">{OPTS[method].label}: Fixes {OPTS[method].fixes}.</Text>
             <Choices options={BATCHES} value={batch} onPick={(id) => { setBatch(id); if (view.steps > 0) restart(); }} />
             <Slider label="Step size" min={0.01} max={3} step={0.01} value={rate} format={(v) => v.toFixed(2)} onChange={(v) => { setRate(v); if (view.steps > 0) restart(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Changing a setting after a run has begun ends that run and keeps its curve. A step
               size above about two blows up on this problem, and that is worth seeing once.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -240,31 +235,30 @@ function LearnPage() {
           />
         }
         more={
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted">OR SKIP THE STEPS</h2>
-            <p className="mt-2 text-[11px] text-muted">
+          <section data-slot="panel">
+            <Label>OR SKIP THE STEPS</Label>
+            <Text kind="note" as="p" className="mt-2">
               Take the squashes away and the whole network is one straight line. For a straight
               line there is a formula: the best one, in one calculation, no steps at all.
-            </p>
-            <button
+            </Text>
+            <Button variant="outline" size="sm" className="mt-3"
               type="button"
               onClick={() => setOneShot((v) => !v)}
-              className={oneShot ? "mt-3 rounded border border-leaf px-3 py-1.5 font-mono text-[11px] text-leaf" : "mt-3 rounded border border-edge px-3 py-1.5 font-mono text-[11px] text-muted hover:border-leaf"}
             >
               {oneShot ? "Hide the one-shot line" : "Show the one-shot line"}
-            </button>
+            </Button>
             {oneShot ? (
-              <p className="mt-2 text-[11px] text-ink/80">
+              <Text kind="note" as="p" className="mt-2">
                 The white dashed line is that answer. It gets {straightWrong} of {data.X.length} dots wrong, and
                 no amount of stepping can improve it: it is already the best line there is.
                 {straightWrong > 0 ? " The dots need a bend, and bends have no formula. Hence the steps." : ""}
-              </p>
+              </Text>
             ) : null}
           </section>
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div><div className="h-[220px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[220px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={histBox}
@@ -279,7 +273,7 @@ function LearnPage() {
               />
             </div><Caption>How wrong, against steps.  Green: this run.  Dim: earlier runs</Caption></div>
             <div className="grid gap-2 lg:grid-cols-2">
-              <div className="h-[300px] overflow-hidden rounded border border-edge">
+              <div data-slot="plot" className="h-[300px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={box}
@@ -307,7 +301,7 @@ function LearnPage() {
                   }}
                 />
               </div>
-              <div><div className="h-[300px] overflow-hidden rounded border border-edge">
+              <div><div data-slot="plot" className="h-[300px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={hillBox}
@@ -340,22 +334,22 @@ function LearnPage() {
                     ? `Done: every dot right after ${view.steps} steps with ${OPTS[method].label}${batch !== "all" ? `, Looking at ${batch} dot${batch === "1" ? "" : "s"} at a time` : ""}. How wrong: ${total.toFixed(4)}.`
                     : `After ${view.steps} steps, ${wrong} of ${data.X.length} wrong, how wrong ${total.toFixed(4)}, ${total < late * 0.97 ? "still falling" : "no longer falling much"}.${batch !== "all" ? " The curve is jagged because each step sees only a few dots, so its idea of downhill is noisy. It is also cheaper per step." : ""}`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Method</dt>
-              <dd className="text-right text-ink/80">{OPTS[method].label}</dd>
+              <dd className="text-right text-foreground/80">{OPTS[method].label}</dd>
               <dt>Dots looked at before each move</dt>
-              <dd className="text-right text-ink/80">{batch === "all" ? data.X.length : batch}</dd>
+              <dd className="text-right text-foreground/80">{batch === "all" ? data.X.length : batch}</dd>
               <dt>Numbers being moved</dt>
-              <dd className="text-right text-ink/80">{flatten(net).length}</dd>
+              <dd className="text-right text-foreground/80">{flatten(net).length}</dd>
               <dt>Runs kept on the chart</dt>
-              <dd className="text-right text-ink/80">{kept.length}</dd>
+              <dd className="text-right text-foreground/80">{kept.length}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               Plain descent is the ball. Momentum lets it keep rolling so it does not bounce across
               a narrow valley. Adam gives every number its own step size, shrunk where the slope
               has been steep. None of them changes where the bottom is; they change how the ball
               gets there. Try the same problem with each, and read the chart.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -365,6 +359,6 @@ function LearnPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

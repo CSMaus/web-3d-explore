@@ -11,6 +11,7 @@ node_modules/
 
 # build output
 dist/
+storybook-static/
 dist-ssr/
 build/
 *.tsbuildinfo

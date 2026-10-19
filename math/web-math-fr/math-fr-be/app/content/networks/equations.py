@@ -1,7 +1,8 @@
 """
-the thirteen play pages of topic 3, with the mathematics each one moves. the
+the seventeen play pages of topic 3, with the mathematics each one moves. the
 order is the reading order: the calculus as things that move, one job learned
-by a network page after page, and the same job on a picture, a sequence and a
+by a network page after page with the reason for each part shown, where the
+learning stalls and why, and the same job on a picture, a sequence and a
 sentence. the notes say what the page shows, not what a textbook proves.
 """
 
@@ -173,7 +174,7 @@ SYSTEMS = [
     },
     {
         "id": "line",
-        "name": "Draw the line yourself",
+        "name": "Draw the line by hand",
         "summary": (
             "Two colours of dots. The reader draws the dividing line, then Rosenblatt's perceptron "
             "tries, one correction at a time, and hits the wall it hit in 1969"
@@ -209,6 +210,42 @@ SYSTEMS = [
             "label": "What the reader can check by hand",
             "tex": r"\text{wrong} = \min\left(\#\{\text{side} \neq y\},\ \#\{\text{side} = y\}\right)",
             "note": "Either side of a hand-drawn line may be either colour, so the count is the smaller of the two readings",
+        },
+    },
+    {
+        "id": "nudge",
+        "name": "A small change, and what it does",
+        "summary": (
+            "One weight moved by the same small amount, again and again, on a hard unit and a "
+            "smooth one that share the numbers. One answer creeps, the other jumps or does "
+            "nothing. The reason every method after the perceptron needs the smooth one"
+        ),
+        "blocks": [
+            {
+                "label": "The two units on the same three numbers",
+                "tex": r"\hat{y} = \big[\,w_1 x + w_2 y + b > 0\,\big], \qquad a = \sigma(w_1 x + w_2 y + b)",
+                "note": "The perceptron's hard yes-or-no, and the same total put through the squash instead",
+            },
+            {
+                "label": "One nudge",
+                "tex": r"w_1 \leftarrow w_1 + \epsilon",
+                "note": "The page's slider is epsilon. Nothing else changes",
+            },
+            {
+                "label": "What the smooth answer does",
+                "tex": r"\Delta a \approx \sigma'(z)\,x\,\epsilon",
+                "note": "The slope of the squash at this dot's total, times the dot's x, times the nudge. Small, and the same every time, so the direction to move is readable",
+            },
+            {
+                "label": "What the hard answer does",
+                "tex": r"\Delta \hat{y} \in \{0, \pm 1\}",
+                "note": "Nothing until the total crosses zero, then a jump of one. No slope anywhere, so no direction",
+            },
+        ],
+        "dimension": {
+            "label": "Why descent needs the smooth one",
+            "tex": r"\frac{\partial L}{\partial w_1} = (a - y)\,\sigma'(z)\,x",
+            "note": "How wrong changes with a weight only because sigma has a slope. For a step, the same expression is zero everywhere and undefined at the jump",
         },
     },
     {
@@ -279,6 +316,42 @@ SYSTEMS = [
             "label": "Starting numbers",
             "tex": r"\operatorname{Var}(w) = \frac{2}{n_{\mathrm{in}} + n_{\mathrm{out}}}",
             "note": "Xavier's rule, so the first answers are neither all one half nor all saturated. The slider on the page picks a different draw from the same rule",
+        },
+    },
+    {
+        "id": "any",
+        "name": "Any curve at all",
+        "summary": (
+            "One input, one row of squashing units and one output, with each unit set to be one "
+            "step of a staircase that follows a chosen curve. More units, or steeper ones, and "
+            "it follows as closely as wanted. What a network can draw, before any learning"
+        ),
+        "blocks": [
+            {
+                "label": "One hidden unit is one step",
+                "tex": r"h_k(x) = \sigma\big(s\,(x - c_k)\big), \qquad c_k = \frac{k}{n+1}",
+                "note": "The weight into the unit is the steepness s and its bias is minus s times the place c_k. As s grows the squash becomes a sharp step at c_k",
+            },
+            {
+                "label": "The output adds the steps up",
+                "tex": r"\hat{f}(x) = b + \sum_{k=1}^{n} r_k\,h_k(x)",
+                "note": "The output weight r_k is the rise of step k: the target at the middle of one interval minus the target at the middle of the one before. The bias b is the target on the first interval",
+            },
+            {
+                "label": "How close",
+                "tex": r"\max_{x \in [0,1]} \big|\hat{f}(x) - f(x)\big|",
+                "note": "The page's worst gap, measured on 401 points of the input",
+            },
+            {
+                "label": "The theorem behind the page",
+                "tex": r"\forall\, \varepsilon > 0\ \ \exists\, n, s:\quad \max_x \big|\hat{f}(x) - f(x)\big| < \varepsilon",
+                "note": "For any continuous f. The universal approximation theorem, shown here by building the network rather than by proof; the same construction goes through in any number of inputs",
+            },
+        ],
+        "dimension": {
+            "label": "Numbers in the network",
+            "tex": r"P = 2n + n + 1 = 3n + 1",
+            "note": "Two per hidden unit on the way in, one each on the way out, and the output bias. The page counts them from the network",
         },
     },
     {
@@ -354,6 +427,78 @@ SYSTEMS = [
             "label": "The cost",
             "tex": r"\text{backward} \approx 2 \times \text{forward}",
             "note": "Thirteen slopes from one pass back, instead of thirteen separate nudges each needing two forward passes",
+        },
+    },
+    {
+        "id": "slow",
+        "name": "Starting sure and wrong",
+        "summary": (
+            "One unit that starts almost certain of the wrong answer, trained twice with the same "
+            "descent: on the squared miss and on cross entropy. The first barely moves for a long "
+            "while. The reason the cost for a yes-or-no answer is chosen the way it is"
+        ),
+        "blocks": [
+            {
+                "label": "The unit",
+                "tex": r"a = \sigma(w x + b), \qquad x = 1,\quad y = 0",
+                "note": "One input, one weight, one bias, and the right answer is zero. The start slider sets the first answer a",
+            },
+            {
+                "label": "The squared miss, and the move it asks for",
+                "tex": r"L = \tfrac{1}{2}(a - y)^2, \qquad \frac{\partial L}{\partial w} = (a - y)\,\sigma'(z)\,x",
+                "note": "The move carries the slope of the squash, which is at most a quarter and near zero far out on the flat, exactly where a sure and wrong unit sits",
+            },
+            {
+                "label": "Cross entropy, and the move it asks for",
+                "tex": r"L = -\big[\,y \ln a + (1 - y)\ln(1 - a)\,\big], \qquad \frac{\partial L}{\partial w} = (a - y)\,x",
+                "note": "The slope of the squash cancels: the cost's own slope with respect to a is (a - y) over a(1 - a), and the squash's slope is a(1 - a). What is left is the miss",
+            },
+            {
+                "label": "The slope out on the flat",
+                "tex": r"\sigma'(z) = a\,(1 - a)",
+                "note": "At a first answer of 0.98 this is 0.0196, so the squared miss moves the numbers fifty times less than the miss alone would",
+            },
+        ],
+        "dimension": {
+            "label": "Steps to admit the mistake",
+            "tex": r"t_{\text{squared}} \gg t_{\text{cross entropy}}",
+            "note": "The page counts the steps each copy takes to come within 0.1 of the right answer, from the same start with the same step size",
+        },
+    },
+    {
+        "id": "fade",
+        "name": "The first layer learns last",
+        "summary": (
+            "Many layers stacked on the ring inside a ring, and the blame measured as it flows "
+            "back through them. It fades at every squash, so the layer that sees the dots moves "
+            "least. The vanishing gradient, and the two fixes that are on the page"
+        ),
+        "blocks": [
+            {
+                "label": "The blame, one layer back",
+                "tex": r"\delta^{(l)} = \big(W^{(l+1)\top}\delta^{(l+1)}\big) \odot g'\!\big(z^{(l)}\big)",
+                "note": "The correction page's rule, once per layer: multiply by the weights, then by the slope of the squash at each unit",
+            },
+            {
+                "label": "What one layer multiplies by",
+                "tex": r"\big|\delta^{(l)}\big| \lesssim \big\|W^{(l+1)}\big\|\,\max g'\,\big|\delta^{(l+1)}\big|, \qquad \max \sigma' = \tfrac{1}{4}",
+                "note": "With small weights and a squash to 0..1, each layer back shrinks the blame by a factor of four or more, and the factors multiply",
+            },
+            {
+                "label": "What the bars measure",
+                "tex": r"\left\|\frac{\partial L}{\partial W^{(l)}}\right\|_{\mathrm{rms}}",
+                "note": "The root mean square of the slopes on one layer's weights: how far that layer will move on the next step",
+            },
+            {
+                "label": "The two fixes on the page",
+                "tex": r"\mathrm{relu}'(z) = 1 \ \ (z > 0), \qquad \operatorname{Var}(w) = \frac{2}{n_{\mathrm{in}}}",
+                "note": "A squash whose slope is exactly one wherever it is on, and a start sized so the signal keeps its size through each layer. Skip connections are the third fix and are not on the page",
+            },
+        ],
+        "dimension": {
+            "label": "Last over first",
+            "tex": r"\frac{\|\partial L / \partial W^{(L)}\|}{\|\partial L / \partial W^{(1)}\|}",
+            "note": "The ratio the page reports. Above a hundred the first layer is as good as frozen and learns last, if at all",
         },
     },
     {

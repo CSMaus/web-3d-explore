@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text, Heading } from "@kit/index";
 import { Offline } from "@/components/Offline";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 
 export const Route = createFileRoute("/topics/networks/parts")({
   loader: () => api.topic(TOPIC),
@@ -15,15 +15,15 @@ const STEPS = [
   "Neuron, the modern generalisation of the perceptron",
   "Fully-connected network, composition of neurons into layers",
   "Parameters of the network, weights and biases as tunable values",
-  "Weight initialisation, common schemes and what each preserves",
   "Network as a system of equations, every variable written out explicitly",
   "Same network compressed to matrix form",
+  "Loss function, what gets measured",
   "Solving the system, analytic route",
   "Solving the system, numerical route motivation",
-  "Loss function, what gets measured",
   "Activation function, what keeps the network differentiable end to end",
   "Gradient descent",
   "Backpropagation",
+  "Weight initialisation, common schemes and what each preserves",
   "Brief survey of other numerical methods",
   "Stochastic gradient descent",
   "Differential equations in neural networks",
@@ -36,9 +36,8 @@ function NetParts() {
   const made = topic?.part_list.length ?? 0;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-24">
-      <TopicBar topic={NETWORKS} />
-      <h1 className="mt-6 font-mono text-sm tracking-wide text-leaf">The series, in order</h1>
+    <div>
+      <Heading level={1} className="mt-6">The series, in order</Heading>
 
       {!topic ? (
         <div className="mt-6 max-w-2xl">
@@ -46,17 +45,17 @@ function NetParts() {
         </div>
       ) : null}
 
-      <p className="mt-3 max-w-2xl text-sm text-muted">
+      <Text kind="intro" as="p" className="mt-3 max-w-2xl">
         {made === 0
           ? "No clip is made yet. The eighteen steps below are the order they will be built in, and every one of them already has its mathematics on the play pages."
           : `${made} of ${STEPS.length} steps have clips.`}
-      </p>
+      </Text>
 
-      <p className="mt-3 max-w-2xl text-sm text-muted">
+      <Text kind="intro" as="p" className="mt-3 max-w-2xl">
         The two closing steps are the capstone: every algorithm before them leans on the word
         derivative as if it were obvious, and those two make it obvious in retrospect. Topic 4
         rests on this one, which is why they sit together in the reading order.
-      </p>
+      </Text>
 
       <ol className="mt-10 max-w-3xl space-y-1">
         {STEPS.map((title, i) => {
@@ -64,19 +63,19 @@ function NetParts() {
           return (
             <li
               key={title}
-              className="flex gap-3 border-t border-edge py-2.5 font-mono text-[12px]"
+              data-text="caption" className="flex gap-3 border-t border-border py-2.5"
             >
-              <span className="w-8 shrink-0 text-muted">{i + 1}</span>
-              <span className={borrowed ? "text-sky" : "text-ink/80"}>{title}</span>
+              <span className="w-8 shrink-0 text-muted-foreground">{i + 1}</span>
+              <span className={borrowed ? "text-secondary" : "text-foreground/80"}>{title}</span>
               {borrowed ? (
-                <span className="ml-auto shrink-0 text-[10px] text-muted">The capstone</span>
+                <span data-text="note" className="ml-auto shrink-0">The capstone</span>
               ) : (
-                <span className="ml-auto shrink-0 text-[10px] text-muted">Not built</span>
+                <span data-text="note" className="ml-auto shrink-0">Not built</span>
               )}
             </li>
           );
         })}
       </ol>
-    </main>
+    </div>
   );
 }

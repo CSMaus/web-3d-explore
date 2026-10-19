@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Choices } from "@/components/Choices";
@@ -13,7 +14,6 @@ import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/complex";
 import { INK, MUTED, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
-import { ComplexFrame } from "./-shared";
 
 export const Route = createFileRoute("/topics/complex/play/line")({
   loader: () => api.system(TOPIC, "line"),
@@ -53,7 +53,7 @@ function LinePage() {
   const started = at > 0;
 
   return (
-    <ComplexFrame>
+    <>
       <TaskPage
         title={system?.name ?? "Numbers on a line, and the one question they cannot answer"}
         job="Every ordinary number is a place on a line: zero in the middle, more to the right, less to the left. Adding slides the whole line along. Multiplying stretches it, and multiplying by a negative number flips it round through zero. The job is to watch those three, then to try every number on the line against one question: which number, times itself, gives minus one?"
@@ -63,13 +63,13 @@ function LinePage() {
             {move !== "square" ? (
               <Slider label={move === "add" ? "Add" : "Multiply by"} min={-3} max={3} step={0.1} value={k} format={(v) => v.toFixed(1)} onChange={(v) => { setK(v); reset(); }} />
             ) : null}
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               {move === "add"
                 ? "Every mark on the line moves the same distance the same way. Nothing changes shape."
                 : move === "times"
                   ? "Every distance from zero is multiplied. A negative number sends the right side to the left: the line turns over through zero."
                   : "A number is tried, from minus three to three, and its square is drawn above it. The question is whether the square ever reaches minus one."}
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -91,7 +91,7 @@ function LinePage() {
         picture={
           <section ref={stage} className="space-y-2">
             <div>
-              <div className="h-[170px] overflow-hidden rounded border border-edge">
+              <div data-slot="plot" className="h-[170px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={LINE}
@@ -129,7 +129,7 @@ function LinePage() {
             </div>
             {move === "square" ? (
               <div>
-                <div className="h-[260px] overflow-hidden rounded border border-edge">
+                <div data-slot="plot" className="h-[260px] overflow-hidden">
                   <Plot
                     className="h-full w-full"
                     box={curveBox}
@@ -170,11 +170,11 @@ function LinePage() {
                 ["Numbers tried", move === "square" ? `${at} of ${TRIES}` : "-"],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               Times minus one is a flip: the whole line turned round through zero. The question
               asks for a number that, applied twice, is a flip. Half a flip is not a stretch and
               not a slide, so nothing on the line can be it. It is a turn, and a turn needs room.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -184,6 +184,6 @@ function LinePage() {
           </>
         }
       />
-    </ComplexFrame>
+    </>
   );
 }

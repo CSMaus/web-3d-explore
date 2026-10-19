@@ -1,0 +1,74 @@
+[
+ {
+  "slug": "complex",
+  "number": 0,
+  "title": "Imaginary numbers",
+  "summary": "The way in, for a reader who has never met i: the number line and the one question it cannot answer, a quarter turn, adding as arrows, multiplying as turn and stretch, squaring again and again until a Julia set appears, and the exponential going round",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 7,
+  "aside": false
+ },
+ {
+  "slug": "fractals",
+  "number": 1,
+  "title": "Fractals",
+  "summary": "Roughness that does not smooth out when you look closer, measured rather than admired: a dimension that is not a whole number, and the handful of rules that produce every shape in the series",
+  "state": "ready",
+  "parts": 11,
+  "beats": 57,
+  "seconds": 1309.9,
+  "systems": 10,
+  "aside": false
+ },
+ {
+  "slug": "chaos",
+  "number": 2,
+  "title": "Differential equations, attractors and chaos",
+  "summary": "An equation whose unknown is a function, solved in closed form until that runs out and numerically after it, the attractor a system settles onto, deterministic chaos, the route in through period doubling, and the one experiment where the whole chain was used to do something",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 8,
+  "aside": false
+ },
+ {
+  "slug": "networks",
+  "number": 3,
+  "title": "Calculus into a first neural network",
+  "summary": "The perceptron, the neuron it became, a network written out as a system of equations, and every method that trains one, ending on the derivative and the integral as the two objects all of it was built from",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 17,
+  "aside": false
+ },
+ {
+  "slug": "tokens",
+  "number": 4,
+  "title": "Tokens, embeddings and generation",
+  "summary": "A string of text turned into numbers, what those numbers come to mean, how earlier text shapes later text, and how one token at a time becomes a paragraph",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 14,
+  "aside": false
+ },
+ {
+  "slug": "primes",
+  "number": 5,
+  "title": "An aside: the gaps between primes",
+  "summary": "The gaps between consecutive primes drawn the way a chaotic flow's return map is, beside a map that has a rule, to show what chaos is not",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 1,
+  "aside": true
+ }
+]

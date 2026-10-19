@@ -1,0 +1,26 @@
+{
+  "name": "test-warm",
+  "scheme": "light",
+  "colours": {
+    "ground": "#f6efe4",
+    "ink": "#2a241c",
+    "muted": "#7a6f60",
+    "edge": "#d9cdb8",
+    "leaf": "#3f7d3a",
+    "sky": "#2b6f9e",
+    "violet": "#b49be8",
+    "rose": "#a2336f",
+    "warn": "#b8321f"
+  },
+  "fonts": {
+    "body": "Charter, \"Bitstream Charter\", \"Sitka Text\", Cambria, serif",
+    "mono": "ui-monospace, \"SF Mono\", Menlo, Consolas, monospace"
+  },
+  "scale": 1,
+  "leading": 1.5,
+  "tracking": 0,
+  "corner": 0,
+  "edge": 1,
+  "density": 1.15,
+  "motion": true
+}

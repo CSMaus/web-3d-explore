@@ -54,6 +54,8 @@ export const store: Store = fresh();
 const listeners = new Set<() => void>();
 const emit = () => {
   store.version += 1;
+  store.model = { ...store.model };
+  store.skip = { ...store.skip };
   for (const l of listeners) l();
 };
 

@@ -2,18 +2,51 @@ import type { Box, Pen } from "@/components/Plot";
 import type { Net } from "@/systems/net";
 import { forward } from "@/systems/net";
 
-/** the colours every page in topic 3 uses for the same things. */
-export const INK = "#e8e8ea";
-export const MUTED = "#8a919b";
-export const EDGE = "#39414c";
-export const FAINT = "#23262c";
+/**
+ * the colours every page uses for the same things. they are live bindings
+ * read from the stylesheet's tokens, so a picture follows the page's theme;
+ * the literal values are the fallback where there is no stylesheet, as in a
+ * test. `retone` re-reads them, and a plot calls it before every paint.
+ */
+export let GROUND = "#0e1116";
+export let INK = "#e8e8ea";
+export let MUTED = "#8a919b";
+export let EDGE = "#39414c";
+export let FAINT = "#23262c";
 /** the two colours of dots: green is class one, rose is class zero. */
-export const ONE = "#a5e3a0";
-export const TWO = "#c75ab0";
-export const SKY = "#8fd3e8";
+export let ONE = "#a5e3a0";
+export let TWO = "#c75ab0";
+export let SKY = "#8fd3e8";
+
+const HEX = /^#[0-9a-f]{6}$/i;
+
+export function retone(doc: Document | undefined = typeof document === "undefined" ? undefined : document) {
+  if (!doc) return;
+  const style = doc.defaultView?.getComputedStyle(doc.documentElement);
+  if (!style) return;
+  const read = (name: string, fallback: string) => {
+    const v = style.getPropertyValue(name).trim();
+    return HEX.test(v) ? v.toLowerCase() : fallback;
+  };
+  GROUND = read("--c-background", GROUND);
+  INK = read("--c-foreground", INK);
+  MUTED = read("--c-muted-foreground", MUTED);
+  FAINT = read("--c-border", FAINT);
+  EDGE = blend(FAINT, MUTED, 0.25);
+  ONE = read("--c-selected", ONE);
+  TWO = read("--c-chart-4", TWO);
+  SKY = read("--c-secondary", SKY);
+}
 
 function channel(hex: string, at: number) {
   return parseInt(hex.slice(1 + at * 2, 3 + at * 2), 16);
+}
+
+/** a colour part way from a to b, as hex. */
+export function blend(a: string, b: string, t: number) {
+  const k = Math.max(0, Math.min(1, t));
+  const c = [0, 1, 2].map((i) => Math.round(channel(a, i) + (channel(b, i) - channel(a, i)) * k));
+  return "#" + c.map((v) => v.toString(16).padStart(2, "0")).join("");
 }
 
 /** a colour part way from a to b. */
@@ -30,7 +63,7 @@ export function mix(a: string, b: string, t: number) {
  */
 export function classColour(value: number) {
   const v = Math.max(0, Math.min(1, value));
-  return v < 0.5 ? mix("#2a1a26", TWO, (0.5 - v) * 2 * 0.75) : mix("#1a2a1c", ONE, (v - 0.5) * 2 * 0.75);
+  return v < 0.5 ? mix(blend(GROUND, TWO, 0.16), TWO, (0.5 - v) * 2 * 0.75) : mix(blend(GROUND, ONE, 0.12), ONE, (v - 0.5) * 2 * 0.75);
 }
 
 /**
@@ -54,7 +87,7 @@ export function shadePlane(pen: Pen, f: (x: number, y: number) => number, cells 
 /** a height painted from dark to sky, given its range. */
 export function heightColour(h: number, lo: number, hi: number) {
   const t = hi > lo ? (h - lo) / (hi - lo) : 0.5;
-  return mix("#0e1116", SKY, 0.1 + 0.9 * t);
+  return mix(GROUND, SKY, 0.1 + 0.9 * t);
 }
 
 export function shadeHeight(

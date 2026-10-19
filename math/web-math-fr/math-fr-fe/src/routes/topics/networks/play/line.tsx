@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Button, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot, type Box } from "@/components/Plot";
 import { ticks } from "@/lib/draw";
 import { Caption } from "@/components/Caption";
@@ -9,9 +9,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { SETS, dataset, perceptron, type SetKind } from "@/systems/learn";
 
@@ -92,19 +91,15 @@ function LinePage() {
   const finished = taken >= total && total > 0;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
-        title={system?.name ?? "Draw the line yourself"}
-        job="Dots of two colours. The job is to put one straight line between them so every dot is on the side of its own colour. You go first; then a machine tries, one correction at a time."
+        title={system?.name ?? "Draw the line by hand"}
+        job="Dots of two colours. The job is to put one straight line between them so every dot is on the side of its own colour. The line is placed by hand first; then a machine tries, one correction at a time."
         input={
           <div className="space-y-3">
             <div className="flex flex-wrap gap-1.5">
               {KINDS.map((id) => (
-                <button
+                <Button variant="outline" size="sm"
                   key={id}
                   type="button"
                   onClick={() => {
@@ -113,25 +108,20 @@ function LinePage() {
                     setShown(0);
                   }}
                   aria-pressed={kind === id}
-                  className={
-                    kind === id
-                      ? "rounded border border-leaf px-2.5 py-1 font-mono text-[11px] text-leaf"
-                      : "rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-muted"
-                  }
                 >
                   {SETS[id].label}
-                </button>
+                </Button>
               ))}
             </div>
-            <p className="text-[11px] text-muted">{SETS[kind].note}</p>
+            <Text kind="note" as="p">{SETS[kind].note}</Text>
             {kind !== "xor" ? (
               <Slider label="Another sample" min={1} max={40} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => { setSeed(Math.round(v)); runner.reset(); setShown(0); }} />
             ) : null}
-            <p className="text-[11px] text-muted">
-              Your line is the white one, and it starts in the wrong place. Drag either of its two
-              ends until no dot is on the wrong side. The count under the picture tells you how many
+            <Text kind="note" as="p">
+              The white line is the one to place, and it starts in the wrong place. Drag either of its
+              two ends until no dot is on the wrong side. The count under the picture says how many
               still are.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -161,7 +151,7 @@ function LinePage() {
           <section
             ref={stage}
             className="space-y-1"
-          ><div className="h-[min(560px,calc(100vh-14rem))] overflow-hidden rounded border border-edge">
+          ><div data-slot="plot" className="h-[min(560px,calc(100vh-14rem))] overflow-hidden">
             <Plot
               className="h-full w-full"
               box={box}
@@ -210,12 +200,12 @@ function LinePage() {
 
               }}
             />
-          </div><Caption>This dot was wrong, so the line turned towards it White: your line, drag its ends. {machine ? "Blue: the machine's line, ringed dots are its mistakes" : "Blue: the machine's line, once you press run"}</Caption></section>
+          </div><Caption>This dot was wrong, so the line turned towards it White: the hand-drawn line, drag its ends. {machine ? "Blue: the machine's line, ringed dots are its mistakes" : "Blue: the machine's line, once run is pressed"}</Caption></section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={yoursWrong === 0}>
-              Your line puts {yoursWrong} of {data.X.length} dots on the wrong side
+              The hand-drawn line puts {yoursWrong} of {data.X.length} dots on the wrong side
               {yoursWrong === 0 ? ". That is the job done." : "."}
             </Verdict>
             <Verdict good={machineWrong === null ? undefined : machineWrong === 0}>
@@ -227,22 +217,22 @@ function LinePage() {
                     ? `After ${total} corrections the machine still has ${machineWrong} wrong, and it will never do better: no straight line can separate these dots, so there is always one to correct and the rule never stops.`
                     : `After ${taken} corrections the machine has ${machineWrong} wrong.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 pt-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 pt-1">
               <dt>Dots</dt>
-              <dd className="text-right text-ink/80">{data.X.length}</dd>
+              <dd className="text-right text-foreground/80">{data.X.length}</dd>
               <dt>Corrections the machine made</dt>
-              <dd className="text-right text-ink/80">{taken} of {total}</dd>
+              <dd className="text-right text-foreground/80">{taken} of {total}</dd>
               <dt>Did it stop by itself</dt>
-              <dd className="text-right text-ink/80">{run.converged ? `Yes, after ${run.updates}` : "No, it was stopped"}</dd>
+              <dd className="text-right text-foreground/80">{run.converged ? `Yes, after ${run.updates}` : "No, it was stopped"}</dd>
               <dt>One correction is</dt>
-              <dd className="text-right text-ink/80">One wrong dot, and the line nudged towards it</dd>
+              <dd className="text-right text-foreground/80">One wrong dot, and the line nudged towards it</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The machine is a perceptron, from 1958. It never sees the whole picture: it looks at
               one dot, and if that dot is on the wrong side it turns the line a little towards it.
               On two clouds that is enough. On exclusive or it is not, and nothing about the rule
               can make it enough. The next pages are about what can.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -252,7 +242,7 @@ function LinePage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }
 

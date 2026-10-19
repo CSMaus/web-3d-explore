@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Aim } from "@/components/Aim";
-import { ChaosTabs } from "@/components/ChaosTabs";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
 import { Orbit3 } from "@/components/Orbit3";
@@ -13,9 +13,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { CHAOS, TOPIC } from "@/lib/chaos";
+import { TOPIC } from "@/lib/chaos";
 import { FAINT, INK, MUTED, plate, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
@@ -40,6 +39,8 @@ const PRESETS = [
   { id: "steady", label: "Steady convection", sigma: 10, rho: 20, beta: 8 / 3 },
   { id: "attractor", label: "The attractor", sigma: 10, rho: 28, beta: 8 / 3 },
 ];
+
+const RHO: [number, number] = [0.5, 60];
 
 function LorenzPage() {
   const system = Route.useLoaderData();
@@ -112,7 +113,6 @@ function LorenzPage() {
   }, [apart, gap]);
 
   // the diagram over rho with sigma and beta held: each peak of z is one dot above its rho
-  const RHO: [number, number] = [0.5, 60];
   const sweep = useMemo(
     () => orbitDiagram((rho) => lorenz(look.sigma, rho, look.beta), RHO[0], RHO[1], 300, [1, 1, 1], 0.01, 3000, 6000, localMax(2)),
     [look.sigma, look.beta],
@@ -126,11 +126,7 @@ function LorenzPage() {
   const settled = look.rho < 1 ? "rest" : look.rho < 24.74 ? "steady" : "attractor";
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={CHAOS} />
-      <div className="mt-4">
-        <ChaosTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "The Lorenz system"}
         job="Lorenz wrote these three equations in 1963 as a stripped-down model of the weather, and they are the reason a forecast has a horizon: the standard example of a system that is fully determined and still unpredictable. Three equations for a layer of heated fluid, and two starting states so close that no measurement could tell them apart. The job is to follow both forward and watch what happens to the gap between them. That, and not the shape, is what the word chaos means."
@@ -140,11 +136,11 @@ function LorenzPage() {
             <Slider label="Sigma" min={1} max={20} step={0.1} value={look.sigma} format={(v) => v.toFixed(1)} onChange={(v) => { set("sigma")(v); reset(); }} />
             <Slider label="Rho" min={0.5} max={60} step={0.1} value={look.rho} format={(v) => v.toFixed(1)} onChange={(v) => { set("rho")(v); reset(); }} />
             <Slider label="Beta" min={0.5} max={6} step={0.01} value={look.beta} format={(v) => v.toFixed(2)} onChange={(v) => { set("beta")(v); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Rho is the heating. Below one the fluid is at rest; past one it convects steadily in
               one of two directions; past about 24.7 both of those lose stability and there is
               nowhere left to settle.
-            </p>
+            </Text>
             <Choices options={[{ id: "two", label: "Two starts" }, { id: "one", label: "One start" }]} value={twin ? "two" : "one"} onPick={(id) => { setTwin(id === "two"); reset(); }} />
             {twin ? (
               <Slider label="How far apart" min={-14} max={-2} step={0.5} value={Math.log10(gap)} format={(v) => `1e${v.toFixed(1)}`} onChange={(v) => { setGap(Math.pow(10, v)); reset(); }} />
@@ -187,7 +183,7 @@ function LorenzPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div className="h-[min(420px,calc(100vh-24rem))] overflow-hidden rounded border border-edge">
+            <div data-slot="plot" className="h-[min(420px,calc(100vh-24rem))] overflow-hidden">
               <Orbit3
                 className="h-full w-full"
                 paths={paths}
@@ -207,7 +203,7 @@ function LorenzPage() {
                 onZoom={(z) => setLook((was) => ({ ...was, zoom: z }))}
               />
             </div>
-            <div><div className="h-[170px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[170px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={sweepBox}
@@ -230,7 +226,7 @@ function LorenzPage() {
                 }}
               />
             </div><Caption>The flow's bifurcation diagram: rho along the bottom, the height of each peak of z above. Click to set rho. A steady state is one point, a cycle a few, the attractor a smear with windows in it.</Caption></div>
-            <div><div className="h-[150px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={seriesBox}
@@ -287,12 +283,12 @@ function LorenzPage() {
                 ["Trajectory", `${STEPS.toLocaleString("en")} states at a step of ${DT}, ${upTo.toLocaleString("en")} drawn`],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The exponent is the slope of the climb, measured by following a neighbour and pulling
               it back each time it drifts. The volume shrinks at a fixed rate, so the set the state
               lives on has no volume at all, and its dimension, counted two ways, comes out a little
               above two.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -302,6 +298,6 @@ function LorenzPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

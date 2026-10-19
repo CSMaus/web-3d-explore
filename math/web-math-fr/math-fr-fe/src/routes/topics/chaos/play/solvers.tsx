@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
-import { ChaosTabs } from "@/components/ChaosTabs";
 import { Equations } from "@/components/Equations";
 import { PaletteBar } from "@/components/PaletteBar";
 import { Plot } from "@/components/Plot";
@@ -10,9 +10,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { CHAOS, TOPIC } from "@/lib/chaos";
+import { TOPIC } from "@/lib/chaos";
 import { INK, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
@@ -105,11 +104,7 @@ function SolversPage() {
   }, [table, shown]);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={CHAOS} />
-      <div className="mt-4">
-        <ChaosTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "Solving it by stepping"}
         job="A swing with no friction: after a whole number of turns it is exactly back where it began, so the true answer is known and the stepping can be scored. The job is to step round one turn with each method, halve the step, do it again, and read off how fast each method's error falls."
@@ -118,10 +113,10 @@ function SolversPage() {
             <Slider label="Turns" min={1} max={8} step={1} value={turns} format={(v) => String(Math.round(v))} onChange={(v) => { setTurns(Math.round(v)); reset(); }} />
             <Slider label="Coarsest steps" min={8} max={64} step={4} value={coarsest} format={(v) => `${Math.round(v)} a turn`} onChange={(v) => { setCoarsest(Math.round(v)); reset(); }} />
             <Slider label="Halvings" min={3} max={12} step={1} value={levels} format={(v) => String(Math.round(v))} onChange={(v) => { setLevels(Math.round(v)); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               The run always ends exactly on a whole turn. Ending a fraction of a step past it adds
               an error of its own that swamps the method and makes Runge-Kutta look first order.
-            </p>
+            </Text>
             <PaletteBar />
           </div>
         }
@@ -144,7 +139,7 @@ function SolversPage() {
         }
         picture={
           <section ref={stage} className="grid gap-2 lg:grid-cols-[300px_1fr]">
-            <div><div className="h-[min(400px,calc(100vh-24rem))] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[min(400px,calc(100vh-24rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={circleBox}
@@ -169,7 +164,7 @@ function SolversPage() {
                 }}
               />
             </div><Caption>{shown > 0 ? `${row("euler").steps / turns} steps a turn: where each method ends up after ${turns} turn${turns > 1 ? "s" : ""}` : "The true orbit is the circle; the state should come back to the white dot"}</Caption></div>
-            <div><div className="h-[min(400px,calc(100vh-24rem))] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[min(400px,calc(100vh-24rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={bounds}
@@ -219,12 +214,12 @@ function SolversPage() {
                 ["Energy at the end, exactly 0.5", shown > 0 ? table.map((t) => `${t.how} ${t.rows[level].energy.toFixed(4)}`).join(", ") : "-"],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               Euler's outward spiral is not a rounding error: a straight step from a point on a
               circle always lands outside it. The higher methods look inside the step before moving.
               Runge-Kutta stops reporting sixteen once its error reaches the rounding floor of
               double precision, and those rows are left out of the fitted slope.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -234,6 +229,6 @@ function SolversPage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

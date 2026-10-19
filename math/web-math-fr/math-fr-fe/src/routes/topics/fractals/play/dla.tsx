@@ -1,16 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Label, Text, Heading } from "@kit/index";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Equations } from "@/components/Equations";
 import { Frame } from "@/components/Frame";
 import { PaletteBar } from "@/components/PaletteBar";
-import { PlayTabs } from "@/components/PlayTabs";
-import { TopicBar } from "@/components/TopicBar";
 import { Readout } from "@/components/Readout";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/systems";
-import { FRACTALS } from "@/lib/topic";
 import { useGrower } from "@/lib/grower";
 import { useLook } from "@/lib/store";
 import { boxDim } from "@/systems/ifs";
@@ -107,16 +105,12 @@ function DlaPage() {
   }, [tick]);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={FRACTALS} />
-      <div className="mt-4">
-        <PlayTabs />
-      </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "Wandering particles"}</h1>
+    <div>
+      <Heading level={1} className="mt-4">{system?.name ?? "Wandering particles"}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">WALK</h2>
+          <section data-slot="panel">
+            <Label>WALK</Label>
             <div className="mt-3 space-y-2">
               <Slider label="Particles" min={200} max={4000} step={100} value={target} format={(v) => String(Math.round(v))} onChange={(v) => setTarget(Math.round(v))} />
               <Slider label="Grid width" min={81} max={201} step={10} value={size} format={(v) => String(Math.round(v) | 1)} onChange={(v) => setSize(Math.round(v) | 1)} />
@@ -125,19 +119,19 @@ function DlaPage() {
               <Slider label="Seed" min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
               <PaletteBar />
             </div>
-            <p className="mt-3 text-[11px] text-muted">
+            <Text kind="note" as="p" className="mt-3">
               A particle starts on the ring, steps to one of four neighbours with chance a quarter
               each, and stops the moment it touches the cluster. Let go at is how far it may drift
               before it is abandoned and another is released. Walks kept draws the paths the last
               few particles actually took.
-            </p>
+            </Text>
           </section>
 
           <Equations system={system} />
         </div>
 
         <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
-          <section ref={stage} className="h-[min(620px,calc(100vh-12rem))] overflow-hidden rounded border border-edge" style={{ background: palette.back }}>
+          <section ref={stage} data-slot="plot" className="h-[min(620px,calc(100vh-12rem))] overflow-hidden" style={{ background: palette.back }}>
             <Frame draw={draw} className="block h-full w-full" />
           </section>
           <SaveImage stage={stage} name="wandering-particles" />
@@ -158,6 +152,6 @@ function DlaPage() {
           />
         </div>
       </div>
-    </main>
+    </div>
   );
 }

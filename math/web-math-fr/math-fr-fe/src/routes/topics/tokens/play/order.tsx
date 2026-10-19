@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Button, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
@@ -16,7 +17,7 @@ import { TOPIC } from "@/lib/tokens";
 import { encode, type Token } from "@/systems/bpe";
 import { forward, sinusoid, type Model } from "@/systems/lm";
 import { rng } from "@/systems/net";
-import { BTN, FIELD, TokenFrame } from "./-shared";
+import { Input } from "@kit/index";
 
 export const Route = createFileRoute("/topics/tokens/play/order")({
   loader: () => api.system(TOPIC, "order"),
@@ -66,7 +67,7 @@ function OrderPage() {
   const model = useMemo<Model>(() => {
     const rows = Array.from({ length: P.length }, (_, p) => (scheme === "none" ? new Array(WIDTH).fill(0) : scheme === "learned" ? P[p] : sinusoid(p, WIDTH)));
     return { ...store.model, P: rows };
-  }, [scheme, P, store.model, store.version]);
+  }, [scheme, P, store.model]);
   // the mixing is one step of attention with the mask off: every position looks at every
   // other and takes a weighted average, with weights that depend only on content
   const streamA = useMemo(() => forward(model, tokens.map((t) => t.id), false).h, [model, tokens]);
@@ -89,25 +90,25 @@ function OrderPage() {
   };
 
   return (
-    <TokenFrame>
+    <>
       <TaskPage
         title={system?.name ?? "Order has to be supplied"}
         job="A contextual vector has to be built from every position in the sentence, and the mixing that builds it treats every position alike: each one looks at all the others and takes a weighted average. Mix a sentence that way, and mix the same words shuffled, and the results are the same set of vectors in a different order. The job is to see that happen, and to see what fixes it."
         input={
           <div className="space-y-3">
             <label className="block">
-              <span className="text-xs text-muted">The sentence</span>
-              <input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className={FIELD} />
+              <span data-text="note">The sentence</span>
+              <Input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className="mt-1" />
             </label>
-            <button type="button" onClick={() => { setSeed((s) => s + 1); reset(); }} className={BTN}>Shuffle it another way</button>
+            <Button variant="outline" size="sm" type="button" onClick={() => { setSeed((s) => s + 1); reset(); }}>Shuffle it another way</Button>
             <Choices options={SCHEMES} value={scheme} onPick={(id) => { setScheme(id); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               {scheme === "none"
                 ? "Each token's vector is its row of the table and nothing else. The same token at position 1 and position 5 is the same vector."
                 : scheme === "learned"
                   ? "One trainable vector per position index, added to the token's row. The shared model learned these; there are as many as the model's window is long, and no more."
                   : "A fixed vector per position made of sines and cosines at many frequencies, added to the row. Nothing to learn, and there is one for any index."}
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -132,11 +133,11 @@ function OrderPage() {
             <div className="grid gap-2 lg:grid-cols-2">
               {[{ label: "The sentence", list: tokens, rows: streamA, sum: sumA }, { label: "The same words, shuffled", list: mixed, rows: streamB, sum: sumB }].map((side) => (
                 <div key={side.label} className="space-y-2">
-                  <div className="rounded border border-edge p-2">
-                    <div className="font-mono text-[11px] text-muted">{side.label}</div>
+                  <div className="rounded border border-border p-2">
+                    <div data-text="caption">{side.label}</div>
                     <div className="mt-1"><TokenRow tokens={side.list} size="sm" dimFrom={at} /></div>
                   </div>
-                  <div><div className="h-[260px] overflow-hidden rounded border border-edge">
+                  <div><div data-slot="plot" className="h-[260px] overflow-hidden">
                     <Plot
                       className="h-full w-full"
                       box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -175,7 +176,7 @@ function OrderPage() {
               ))}
             </div>
             {scheme === "sinus" ? (
-              <div><div className="h-[110px] overflow-hidden rounded border border-edge">
+              <div><div data-slot="plot" className="h-[110px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
                   box={{ x0: 0, x1: 1, y0: 0, y1: 1 }}
@@ -209,24 +210,24 @@ function OrderPage() {
                     ? `After ${at} positions the two totals are identical: they differ by ${gap.toExponential(1)}. The same rows went in, in a different order; the mixing treats positions alike, so it gave the same vectors back in that other order, and the total does not care about order. Nothing built this way can tell a sentence from its shuffle.`
                     : `After ${at} positions the two totals differ by ${gap.toFixed(3)}. The token rows that went in are the same, but each carried its position with it, so the mixing weights came out different and the order survived. That is what a position vector is for, and it is all it is for.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Tokens</dt>
-              <dd className="text-right text-ink/80">{n}</dd>
+              <dd className="text-right text-foreground/80">{n}</dd>
               <dt>Width of every vector, the stream's width for the whole depth</dt>
-              <dd className="text-right text-ink/80">{WIDTH}</dd>
+              <dd className="text-right text-foreground/80">{WIDTH}</dd>
               <dt>Gap between the two totals</dt>
-              <dd className="text-right text-ink/80">{gap.toExponential(2)}</dd>
+              <dd className="text-right text-foreground/80">{gap.toExponential(2)}</dd>
               <dt>Position vectors available</dt>
-              <dd className="text-right text-ink/80">{scheme === "none" ? "None" : scheme === "learned" ? `${P.length}, the window's length, and then none` : "One for any index"}</dd>
+              <dd className="text-right text-foreground/80">{scheme === "none" ? "None" : scheme === "learned" ? `${P.length}, the window's length, and then none` : "One for any index"}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               The learned scheme has a ceiling: a position past the last learned vector has no vector.
               The sine scheme has none, and rotating a query and a key by an angle proportional to
               their positions, so that their dot product depends only on the distance between them,
               is what current models do. The mask is off here on purpose: with it on, the mixing
               itself would already know which position came first. The next page opens the mixing.
 
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -236,7 +237,7 @@ function OrderPage() {
           </>
         }
       />
-    </TokenFrame>
+    </>
   );
 }
 

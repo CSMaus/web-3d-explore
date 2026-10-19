@@ -2,6 +2,7 @@ import { RouterProvider, createMemoryHistory, createRouter } from "@tanstack/rea
 import { render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { routeTree } from "@/routeTree.gen";
+import common from "@/locales/en/common.json";
 
 async function siteAt(path: string) {
   const router = createRouter({
@@ -34,7 +35,9 @@ describe("Every page with the backend down", () => {
       await siteAt(path);
       await waitFor(() => expect(screen.getByRole("heading", { name: title })).toBeTruthy());
       expect(document.querySelector("canvas")).toBeTruthy();
-      expect(screen.getByText(/needs nothing from it/i)).toBeTruthy();
+      // the equations come from the snapshot when the backend is down
+      expect(screen.getByText("MATHEMATICS")).toBeTruthy();
+      expect(screen.queryByText(/needs nothing from it/i)).toBeNull();
     });
   }
 
@@ -44,17 +47,21 @@ describe("Every page with the backend down", () => {
     for (const name of ["Iterated maps", "Rewriting systems", "Julia sets"]) {
       expect(screen.getAllByText(name).length).toBeGreaterThan(0);
     }
+    // the rail beside the page links every system by its short name
     expect(screen.getAllByRole("link", { name: "Mandelbulb 3D" }).length).toBe(1);
   });
 
-  it("/topics/fractals/theory says what is missing instead of failing", async () => {
+  it("/topics/fractals/theory shows the equations from the snapshot instead of failing", async () => {
     await siteAt("/topics/fractals/theory");
-    await waitFor(() => expect(screen.getByText("The backend is not answering")).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "The mathematics, all of it" })).toBeTruthy());
+    expect(screen.queryByText("The backend is not answering")).toBeNull();
+    expect(screen.getByLabelText("On this page")).toBeTruthy();
   });
 
-  it("/topics/fractals/parts says what is missing instead of failing", async () => {
+  it("/topics/fractals/parts shows the series from the snapshot instead of failing", async () => {
     await siteAt("/topics/fractals/parts");
-    await waitFor(() => expect(screen.getByText("The backend is not answering")).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "The series, in order" })).toBeTruthy());
+    expect(screen.queryByText("The backend is not answering")).toBeNull();
   });
 
   it("The series page is named as one section of one topic, not as a lecture", async () => {
@@ -68,9 +75,7 @@ describe("Every page with the backend down", () => {
 
   it("The front page needs no backend at all", async () => {
     await siteAt("/");
-    await waitFor(() =>
-      expect(screen.getByText(/this page is not finished yet/i)).toBeTruthy(),
-    );
+    await waitFor(() => expect(screen.getByText(common.front.title1)).toBeTruthy());
   });
 });
 
@@ -235,6 +240,8 @@ const TOPIC = {
       title: "The coastline paradox",
       video: "",
       caption: "A coastline measured with dividers. The length keeps growing as the opening shrinks.",
+      question: "How long is the coast of Britain?",
+      text: ["It sounds like a question with an answer.", "Take a pair of dividers and walk them along the coast."],
       beats: [
         { slug: "02-coastline", seconds: 61.5, video: "", shows: "A coast", why: "A reason", say: "A line" },
       ],
@@ -244,6 +251,8 @@ const TOPIC = {
       title: "Box-counting dimension",
       video: "",
       caption: "The same coast under a grid. The count grows faster than a line's would.",
+      question: "How is something measured when it is not a line?",
+      text: ["Lay a grid over the whole coast.", "Halve the squares and count again."],
       beats: [
         { slug: "03-box-counting", seconds: 56.9, video: "", shows: "A grid", why: "A reason", say: "A line" },
       ],
@@ -295,30 +304,26 @@ describe("The index beside a long page", () => {
     ["/topics/fractals/theory", { "/topics/fractals/equations": THEORY }],
     ["/topics/fractals/parts", { "/topics/fractals": TOPIC }],
   ] as const) {
-    it(`${path} gives the index its own column so it cannot land on the text`, async () => {
+    it(`${path} hands its index to the side menu, so the page has one menu and the index cannot land on the text`, async () => {
       serve(body);
       await siteAt(path);
       await waitFor(() => expect(screen.getByLabelText("On this page")).toBeTruthy());
-      const rail = screen.getByLabelText("On this page");
-      expect(rail.className).not.toContain("fixed");
-      const holder = rail.closest("main");
-      expect(holder?.className).toContain("xl:grid");
-      expect(holder?.className).toContain("xl:grid-cols-[240px_minmax(0,1fr)]");
-      expect(rail.parentElement).toBe(holder);
+      const index = screen.getByLabelText("On this page");
+      const rail = index.closest('nav[data-slot="side-nav"]');
+      expect(rail?.getAttribute("aria-label")).toBe("Topic 1 - Fractals");
+      expect(document.querySelector("main")?.dataset.slot).toBe("page");
     });
   }
 
-  it("Each part is one clip with a short text that opens on request", async () => {
+  it("Each part is one clip with its reading text beside it, the question first", async () => {
     serve({ "/topics/fractals": TOPIC });
     await siteAt("/topics/fractals/parts");
     await waitFor(() => expect(screen.getAllByText("Clip not published yet").length).toBe(2));
+    expect(screen.getByRole("heading", { name: "How long is the coast of Britain?" })).toBeTruthy();
+    expect(screen.getByText("Take a pair of dividers and walk them along the coast.")).toBeTruthy();
+    expect(screen.getByText("Halve the squares and count again.")).toBeTruthy();
+    // the old summary and the beat lines are not on the page
     expect(screen.queryByText(/a coastline measured with dividers/i)).toBeNull();
-    const buttons = screen.getAllByRole("button", { name: "Show description" });
-    expect(buttons.length).toBe(2);
-    buttons[0].click();
-    await waitFor(() => expect(screen.getByText(/a coastline measured with dividers/i)).toBeTruthy());
-    expect(screen.getByRole("button", { name: "Hide description" })).toBeTruthy();
-    // the beat lines are not on the page
     expect(screen.queryByText("A line")).toBeNull();
     expect(screen.queryByText("A reason")).toBeNull();
   });
@@ -359,7 +364,7 @@ describe("The index tracks the page and lands where it says", () => {
     const second = rail.querySelector('a[href="#part-3"]') as HTMLAnchorElement;
     expect(second.getAttribute("aria-current")).toBeNull();
     second.click();
-    await waitFor(() => expect(second.getAttribute("aria-current")).toBe("true"));
+    await waitFor(() => expect(second.getAttribute("aria-current")).toBe("location"));
     expect(rail.querySelector('a[href="#part-2"]')?.getAttribute("aria-current")).toBeNull();
   });
 
@@ -374,11 +379,12 @@ describe("The index tracks the page and lands where it says", () => {
     }
   });
 
-  it("The index is set in a size that can be read", async () => {
+  it("The index is set in the menu's page style", async () => {
     serve({ "/theory": THEORY, "/topics/fractals/equations": THEORY });
     await siteAt("/topics/fractals/theory");
     await waitFor(() => expect(screen.getByLabelText("On this page")).toBeTruthy());
-    const label = screen.getByLabelText("On this page").querySelector("a span:last-child");
-    expect(label?.className).toContain("text-[13px]");
+    const link = screen.getByLabelText("On this page").querySelector("a");
+    expect(link?.getAttribute("data-text")).toBe("tab");
+    expect(link?.getAttribute("data-level")).toBe("page");
   });
 });

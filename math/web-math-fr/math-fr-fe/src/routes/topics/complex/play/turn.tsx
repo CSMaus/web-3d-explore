@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Equations } from "@/components/Equations";
@@ -13,7 +14,6 @@ import { TOPIC } from "@/lib/complex";
 import { INK, MUTED, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { abs, mul, show, turns, type C } from "@/systems/complex";
-import { ComplexFrame } from "./-shared";
 
 export const Route = createFileRoute("/topics/complex/play/turn")({
   loader: () => api.system(TOPIC, "turn"),
@@ -54,18 +54,18 @@ function TurnPage() {
   };
 
   return (
-    <ComplexFrame>
+    <>
       <TaskPage
-        title={system?.name ?? "A quarter turn, called i"}
+        title={system?.name ?? "What 𝑖 is"}
         job="Multiplying by minus one is a half turn about zero. The last page asked for a number that does half of that, so that doing it twice is a half turn. Give the line a second direction, up, and a quarter turn is available. The number that turns an arrow by a quarter is written i. The job is to multiply by it again and again and watch what happens."
         input={
           <div className="space-y-3">
             <Slider label="Start, along" min={-2} max={2} step={0.1} value={start[0]} format={(v) => v.toFixed(1)} onChange={(v) => { setStart([v, start[1]]); reset(); }} />
             <Slider label="Start, up" min={-2} max={2} step={0.1} value={start[1]} format={(v) => v.toFixed(1)} onChange={(v) => { setStart([start[0], v]); reset(); }} />
-            <p className="text-[11px] text-muted">
-              Click the picture to put the starting arrow anywhere. Each step multiplies it by i,
+            <Text kind="note" as="p">
+              Click the picture to put the starting arrow anywhere. Each step multiplies it by 𝑖,
               which turns it a quarter of the way round and leaves its length alone.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -73,7 +73,7 @@ function TurnPage() {
             running={runner.running}
             count={done}
             limit={MOST}
-            what="multiplications by i"
+            what="multiplications by 𝑖"
             onToggle={() => {
               if (!runner.running && at >= MOST * FRAMES) reset();
               runner.toggle();
@@ -86,7 +86,7 @@ function TurnPage() {
         }
         picture={
           <section ref={stage}>
-            <div className="h-[min(480px,calc(100vh-20rem))] overflow-hidden rounded border border-edge">
+            <div data-slot="plot" className="h-[min(480px,calc(100vh-20rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={BOX}
@@ -125,26 +125,26 @@ function TurnPage() {
           <div className="space-y-2">
             <Verdict good={done >= 4 ? true : undefined}>
               {done === 0 && within === 0
-                ? `The arrow starts at ${show(start)}. Press run: times i, four times.`
+                ? `The arrow starts at ${show(start)}. Press run: times 𝑖, four times.`
                 : done < MOST && within > 0
                   ? `Turning: multiplication ${done + 1} is a quarter of the way round, ${(within * 100).toFixed(0)} per cent done.`
-                  : `After ${done} multiplication${done === 1 ? "" : "s"} by i the arrow is at ${show(chain[done])}, the same length as it started, turned ${done} quarter${done === 1 ? "" : "s"}. ${done === 2 ? "Two quarter turns is a half turn: the arrow points the opposite way, which is what times minus one does. So i times i is minus one, and the last page's question has its answer." : done === 4 ? "Four quarters is a whole turn: back where it started. Times i four times is times one." : done > 4 ? "Past four it repeats: the pattern is 1, i, minus 1, minus i, and round again." : ""}`}
+                  : `After ${done} multiplication${done === 1 ? "" : "s"} by 𝑖 the arrow is at ${show(chain[done])}, the same length as it started, turned ${done} quarter${done === 1 ? "" : "s"}. ${done === 2 ? "Two quarter turns is a half turn: the arrow points the opposite way, which is what times minus one does. So 𝑖 times 𝑖 is minus one, and the last page's question has its answer." : done === 4 ? "Four quarters is a whole turn: back where it started. Times 𝑖 four times is times one." : done > 4 ? "Past four it repeats: the pattern is 1, 𝑖, minus 1, minus 𝑖, and round again." : ""}`}
             </Verdict>
             <Readout
               rows={[
                 ["Start", show(start)],
-                ["After 1: times i", show(chain[1])],
-                ["After 2: times i, twice", `${show(chain[2])}, which is minus the start`],
+                ["After 1: times 𝑖", show(chain[1])],
+                ["After 2: times 𝑖, twice", `${show(chain[2])}, which is minus the start`],
                 ["After 3", show(chain[3])],
                 ["After 4", `${show(chain[4])}, the start again`],
                 ["Length, throughout", abs(start).toFixed(3)],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               A number is now a place in the plane: so much along, so much up, written a + bi. The
               old numbers are the ones with nothing up. The word imaginary was an insult from the
               seventeenth century that stuck; nothing on the up axis is less real than a length.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -154,6 +154,6 @@ function TurnPage() {
           </>
         }
       />
-    </ComplexFrame>
+    </>
   );
 }

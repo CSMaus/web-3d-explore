@@ -1,0 +1,26 @@
+{
+  "name": "default",
+  "scheme": "dark",
+  "colours": {
+    "ground": "#0e1116",
+    "ink": "#e8e8ea",
+    "muted": "#7c828c",
+    "edge": "#23262c",
+    "leaf": "#a5e3a0",
+    "sky": "#8fd3e8",
+    "violet": "#b49be8",
+    "rose": "#c75ab0",
+    "warn": "#ff6b6b"
+  },
+  "fonts": {
+    "body": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Helvetica, Arial, sans-serif",
+    "mono": "ui-monospace, \"SF Mono\", Menlo, Consolas, monospace"
+  },
+  "scale": 1,
+  "leading": 1.5,
+  "tracking": 0,
+  "corner": 4,
+  "edge": 1,
+  "density": 1,
+  "motion": true
+}

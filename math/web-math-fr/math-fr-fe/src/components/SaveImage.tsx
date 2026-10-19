@@ -1,4 +1,5 @@
 import { useState, type RefObject } from "react";
+import { Button, Text } from "@kit/index";
 
 type Props = { stage: RefObject<HTMLElement | null>; name: string };
 
@@ -25,15 +26,14 @@ export function SaveImage({ stage, name }: Props) {
 
   return (
     <div>
-      <button
+      <Button variant="outline"
         type="button"
         onClick={save}
-        className="rounded border border-edge px-3 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-leaf hover:text-leaf"
       >
         Save image
-      </button>
+      </Button>
       {trouble ? (
-        <p className="mt-1 text-[11px] text-warn">The picture could not be read back</p>
+        <Text kind="warning" as="p" className="mt-1">The picture could not be read back</Text>
       ) : null}
     </div>
   );

@@ -1,18 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Label, Text, Heading } from "@kit/index";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Chips } from "@/components/Chips";
 import { Equations } from "@/components/Equations";
 import { Frame } from "@/components/Frame";
 import { MapMaths } from "@/components/MapMaths";
 import { PaletteBar } from "@/components/PaletteBar";
-import { PlayTabs } from "@/components/PlayTabs";
-import { TopicBar } from "@/components/TopicBar";
 import { Readout } from "@/components/Readout";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/systems";
-import { FRACTALS } from "@/lib/topic";
 import { useLook } from "@/lib/store";
 import {
   IFS_PRESETS,
@@ -112,23 +110,19 @@ function IfsPage() {
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={FRACTALS} />
-      <div className="mt-4">
-        <PlayTabs />
-      </div>
-      <h1 className="font-mono text-sm tracking-wide text-leaf">{system?.name ?? "Iterated maps"}</h1>
+    <div>
+      <Heading level={1} className="mt-4">{system?.name ?? "Iterated maps"}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-4">
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">PRESET</h2>
+          <section data-slot="panel">
+            <Label>PRESET</Label>
             <div className="mt-3">
               <Chips items={Object.keys(IFS_PRESETS)} active={preset} onPick={pickPreset} />
             </div>
           </section>
 
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">MOVE</h2>
+          <section data-slot="panel">
+            <Label>MOVE</Label>
             <div className="mt-3">
               <Chips
                 items={maps.map((_, i) => `move ${i + 1}`)}
@@ -160,11 +154,11 @@ function IfsPage() {
                 onChange={(v) => setCoeff("p", v)}
               />
             </div>
-            <div className="mt-4 space-y-1 font-mono text-[11px]">
+            <div data-text="caption" className="mt-4 space-y-1">
               {maps.map((m, i) => {
                 const s = contraction(m);
                 return (
-                  <div key={i} className={s < 1 ? "text-muted" : "text-warn"}>
+                  <div key={i} className={s < 1 ? "text-muted-foreground" : "text-destructive"}>
                     {`Move ${i + 1} shrinks by ${s.toFixed(3)}`}
                     {s < 1 ? "" : "  - Above 1, this one spreads out"}
                   </div>
@@ -173,13 +167,13 @@ function IfsPage() {
             </div>
           </section>
 
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">EQUATIONS</h2>
-            <p className="mt-2 text-[11px] text-muted">
+          <section data-slot="panel">
+            <Label>EQUATIONS</Label>
+            <Text kind="note" as="p" className="mt-2">
               Each move is coloured to match the points it puts on the picture, so a change to one
               of its six numbers is a change to the part of the shape in that colour. Tap one to
               edit it above.
-            </p>
+            </Text>
             <div className="mt-3">
               <MapMaths
                 maps={maps}
@@ -192,8 +186,8 @@ function IfsPage() {
             </div>
           </section>
 
-          <section className="rounded border border-edge p-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-wider text-sky">COLOUR</h2>
+          <section data-slot="panel">
+            <Label>COLOUR</Label>
             <div className="mt-3 space-y-3">
               <Chips items={MODES.map((m) => m[0].toUpperCase() + m.slice(1))} active={mode[0].toUpperCase() + mode.slice(1)} onPick={(m) => setMode(m.toLowerCase() as Mode)} />
               <PaletteBar />
@@ -224,15 +218,16 @@ function IfsPage() {
         <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
           <section
             ref={stage}
-            className="relative h-[min(620px,calc(100vh-12rem))] overflow-hidden rounded border border-edge"
+            data-slot="plot"
+            className="relative h-[min(620px,calc(100vh-12rem))] overflow-hidden"
             style={{ background: palette.back }}
           >
             <Frame draw={draw} className="block h-full w-full" />
             {run.escaped ? (
-              <p className="absolute inset-x-0 top-1/2 px-8 text-center text-sm text-warn">
+              <Text kind="warning" as="p" className="absolute inset-x-0 top-1/2 px-8 text-center">
                 The point ran away - at least one move stretches instead of shrinking, so there is
                 no attractor to draw
-              </p>
+              </Text>
             ) : null}
           </section>
           <SaveImage stage={stage} name="iterated-maps" />
@@ -253,6 +248,6 @@ function IfsPage() {
           />
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Button, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Equations } from "@/components/Equations";
-import { NetTabs } from "@/components/NetTabs";
 import { Plot, type Box } from "@/components/Plot";
 import { ticks } from "@/lib/draw";
 import { Caption } from "@/components/Caption";
@@ -9,9 +9,8 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
-import { TopicBar } from "@/components/TopicBar";
 import { api } from "@/lib/api";
-import { NETWORKS, TOPIC } from "@/lib/networks";
+import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { MOTIONS, slopeBetween, trace } from "@/systems/calc";
 
@@ -63,19 +62,15 @@ function RatePage() {
   const started = tick > 0;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-24 pb-16">
-      <TopicBar topic={NETWORKS} />
-      <div className="mt-4">
-        <NetTabs />
-      </div>
+    <div>
       <TaskPage
         title={system?.name ?? "How fast is it going"}
-        job="A car drives along a road. You can see where it is at every moment. The job is to say how fast it is going, using nothing but where it is."
+        job="A car drives along a road. Where it is can be seen at every moment. The job is to say how fast it is going, using nothing but where it is."
         input={
           <div className="space-y-3">
             <div className="flex flex-wrap gap-1.5">
               {KEYS.map((id) => (
-                <button
+                <Button variant="outline" size="sm"
                   key={id}
                   type="button"
                   onClick={() => {
@@ -84,17 +79,12 @@ function RatePage() {
                     setTick(0);
                   }}
                   aria-pressed={motion === id}
-                  className={
-                    motion === id
-                      ? "rounded border border-leaf px-2.5 py-1 font-mono text-[11px] text-leaf"
-                      : "rounded border border-edge px-2.5 py-1 font-mono text-[11px] text-muted hover:border-muted"
-                  }
                 >
                   {MOTIONS[id].label}
-                </button>
+                </Button>
               ))}
             </div>
-            <p className="text-[11px] text-muted">{m.what}</p>
+            <Text kind="note" as="p">{m.what}</Text>
             <Slider
               label="The gap"
               min={0.05}
@@ -104,10 +94,10 @@ function RatePage() {
               format={(v) => `${v.toFixed(2)} s`}
               onChange={setGap}
             />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               The gap is how far apart the two positions are that the speed is worked out from.
               Pinch it down and watch the number from two positions settle on the true speed.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -134,7 +124,7 @@ function RatePage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div className="h-[110px] overflow-hidden rounded border border-edge">
+            <div data-slot="plot" className="h-[110px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={roadBox}
@@ -150,7 +140,7 @@ function RatePage() {
                 }}
               />
             </div>
-            <div><div className="h-[230px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[230px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={posBox}
@@ -173,7 +163,7 @@ function RatePage() {
                 }}
               />
             </div><Caption>Where the car is, against time. {`The line through two positions ${gap.toFixed(2)} s apart. Its steepness is the speed.`}</Caption></div>
-            <div><div className="h-[190px] overflow-hidden rounded border border-edge">
+            <div><div data-slot="plot" className="h-[190px] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={spdBox}
@@ -197,22 +187,22 @@ function RatePage() {
                 ? "Press run and the car sets off. The speed will be read from where it is, and only from where it is."
                 : `At ${t.toFixed(1)} s the car is at ${position.toFixed(1)} m and going ${exact.toFixed(2)} m/s. From two positions ${gap.toFixed(2)} s apart, the speed comes out as ${fromTwo.toFixed(2)} m/s, ${Math.abs(fromTwo - exact) < 0.05 * Math.max(1, Math.abs(exact)) ? "which is right" : "which is off, because the gap is too wide for a curve that bends this much"}.`}
             </Verdict>
-            <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
               <dt>Moved between the two positions</dt>
-              <dd className="text-right text-ink/80">{(m.at(tB) - m.at(tA)).toFixed(3)} m</dd>
+              <dd className="text-right text-foreground/80">{(m.at(tB) - m.at(tA)).toFixed(3)} m</dd>
               <dt>In</dt>
-              <dd className="text-right text-ink/80">{(tB - tA).toFixed(3)} s</dd>
+              <dd className="text-right text-foreground/80">{(tB - tA).toFixed(3)} s</dd>
               <dt>So the speed is that divided by this</dt>
-              <dd className="text-right text-ink/80">{fromTwo.toFixed(4)} M/s</dd>
+              <dd className="text-right text-foreground/80">{fromTwo.toFixed(4)} M/s</dd>
               <dt>The exact speed at this instant</dt>
-              <dd className="text-right text-ink/80">{exact.toFixed(4)} M/s</dd>
+              <dd className="text-right text-foreground/80">{exact.toFixed(4)} M/s</dd>
               <dt>The gap between the two answers</dt>
-              <dd className="text-right text-ink/80">{Math.abs(fromTwo - exact).toExponential(2)}</dd>
+              <dd className="text-right text-foreground/80">{Math.abs(fromTwo - exact).toExponential(2)}</dd>
             </dl>
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               That is the whole of a derivative: a change in one thing divided by the change in
-              another, with the gap made as small as you like. Every page after this one uses it.
-            </p>
+              another, with the gap made as small as wanted. Every page after this one uses it.
+            </Text>
           </div>
         }
         below={
@@ -222,6 +212,6 @@ function RatePage() {
           </>
         }
       />
-    </main>
+    </div>
   );
 }

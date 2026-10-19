@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Text } from "@kit/index";
 import { useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Choices } from "@/components/Choices";
@@ -13,7 +14,6 @@ import { TOPIC } from "@/lib/complex";
 import { INK, MUTED, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { abs, add, scale, show, sub, type C } from "@/systems/complex";
-import { ComplexFrame } from "./-shared";
 
 export const Route = createFileRoute("/topics/complex/play/add")({
   loader: () => api.system(TOPIC, "add"),
@@ -48,16 +48,16 @@ function AddPage() {
   };
 
   return (
-    <ComplexFrame>
+    <>
       <TaskPage
-        title={system?.name ?? "Adding: arrows tip to tail"}
+        title={system?.name ?? "Complex numbers: adding"}
         job="Every number is an arrow from zero to its place. To add two, walk the second arrow out from the tip of the first; where it ends is the sum. The along parts add on their own and the up parts add on their own, and they never mix. Drag either arrow's tip and run the walk."
         input={
           <div className="space-y-3">
             <Choices options={OPS} value={op} onPick={(id) => { setOp(id); reset(); }} />
-            <p className="text-[11px] text-muted">
+            <Text kind="note" as="p">
               Green is z, rose is w. Drag either tip. Subtracting is adding the arrow turned round.
-            </p>
+            </Text>
           </div>
         }
         run={
@@ -78,7 +78,7 @@ function AddPage() {
         }
         picture={
           <section ref={stage}>
-            <div className="h-[min(480px,calc(100vh-20rem))] overflow-hidden rounded border border-edge">
+            <div data-slot="plot" className="h-[min(480px,calc(100vh-20rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={BOX}
@@ -135,10 +135,10 @@ function AddPage() {
                 ["Sub check", show(sub(result, step)) === show(z) ? "taking w away again gives z back" : "-"],
               ]}
             />
-            <p className="pt-1 text-[11px] text-muted">
+            <Text kind="note" as="p" className="pt-1">
               Adding never turns anything: the sum's direction comes out of the two arrows, not out
               of the rule. The turning is all in multiplying, and that is the next page.
-            </p>
+            </Text>
           </div>
         }
         below={
@@ -148,6 +148,6 @@ function AddPage() {
           </>
         }
       />
-    </ComplexFrame>
+    </>
   );
 }

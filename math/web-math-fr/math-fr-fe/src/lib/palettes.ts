@@ -1,3 +1,5 @@
+import own from "./palettes.own.json";
+
 export type Palette = {
   id: string;
   name: string;
@@ -7,7 +9,8 @@ export type Palette = {
   ramp: string[];
 };
 
-export const PALETTES: Palette[] = [
+/** the palettes written in code, then the ones the owner composed in the picker (palettes.own.json, written by the dev server) */
+const BUILT_IN: Palette[] = [
   {
     id: "ice",
     name: "Crystal ice",
@@ -37,8 +40,8 @@ export const PALETTES: Palette[] = [
     name: "Moss",
     back: "#070b08",
     ink: "#e9f2e8",
-    roles: ["#a5e3a0", "#63d471", "#c9e86b", "#8fd3e8"],
-    ramp: ["#0a1a12", "#17452a", "#3d8a45", "#8fd06a", "#ecf7cf"],
+    roles: ["#4eb75c", "#37d152", "#002a0a", "#ecf7cf"],
+    ramp: ["#0a1a12", "#002a0a", "#4eb75c", "#37d152", "#ecf7cf"],
   },
   {
     id: "spectrum",
@@ -73,6 +76,8 @@ export const PALETTES: Palette[] = [
     ramp: ["#f4f1ea", "#cbd8c9", "#8fb0a0", "#4f7a72", "#1b3b3a"],
   },
 ];
+
+export const PALETTES: Palette[] = [...BUILT_IN, ...(own as Palette[])];
 
 export function paletteOf(id: string): Palette {
   return PALETTES.find((p) => p.id === id) ?? PALETTES[0];

@@ -129,7 +129,7 @@ describe("the applied pages", () => {
   });
 
   it("the heart page places the recorded beats and names the flutter and the return", async () => {
-    await siteAt("/topics/chaos/play/control");
+    await siteAt("/topics/chaos/uses/control");
     await waitFor(() => expect(screen.getByRole("heading", { name: "A real heart: the normal beat, the arrhythmia, and back" })).toBeTruthy());
     expect(document.querySelectorAll("main canvas").length).toBe(3);
     expect(screen.getByText(/recorded beats from 3:48 to 5:00/)).toBeTruthy();
@@ -140,17 +140,17 @@ describe("the applied pages", () => {
   });
 
   it("the three fractals pages draw, run and say what they measured", async () => {
-    let view = await siteAt("/topics/fractals/play/hurst");
+    let view = await siteAt("/topics/fractals/uses/hurst");
     await waitFor(() => expect(screen.getByRole("heading", { name: "A line that remembers: the Hurst exponent" })).toBeTruthy());
     for (let i = 0; i < 30; i++) fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
     await waitFor(() => expect(screen.getByText(/the memory was in the order/)).toBeTruthy());
     view.unmount();
-    view = await siteAt("/topics/fractals/play/credibility");
+    view = await siteAt("/topics/fractals/uses/credibility");
     await waitFor(() => expect(screen.getByRole("heading", { name: "Trust the group or trust the record: an actuary's Bayes" })).toBeTruthy());
     for (let i = 0; i < 4; i++) fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
     await waitFor(() => expect(screen.getByText(/has earned 67 per cent of the weight/)).toBeTruthy());
     view.unmount();
-    view = await siteAt("/topics/fractals/play/tails");
+    view = await siteAt("/topics/fractals/uses/tails");
     await waitFor(() => expect(screen.getByRole("heading", { name: "Claims with a fractal tail" })).toBeTruthy());
     for (let i = 0; i < 30; i++) fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
     await waitFor(() => expect(screen.getByText(/the variance is infinite and the average will never settle/)).toBeTruthy());

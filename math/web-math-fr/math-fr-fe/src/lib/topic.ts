@@ -19,6 +19,7 @@ export const FRACTALS = {
     { to: "/topics/fractals/parts", label: "Parts" },
     { to: "/topics/fractals/play", label: "Play" },
     { to: "/topics/fractals/theory", label: "Mathematics" },
+    { to: "/topics/fractals/uses", label: "Applications" },
   ],
 } as const;
 
