@@ -10,6 +10,9 @@ import { themesPlugin } from "./scripts/themes-plugin.ts";
 const kitDir = fileURLToPath(new URL("../ui-kit", import.meta.url));
 
 export default defineConfig({
+  // the path the site is served under: "/" by default, the repository's name on GitHub Pages
+  // (npm run build:pages sets it)
+  base: process.env.VITE_BASE || "/",
   plugins: [
     tanstackRouter({ target: "react", autoCodeSplitting: true }),
     react(),

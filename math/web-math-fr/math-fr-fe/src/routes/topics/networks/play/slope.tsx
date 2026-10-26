@@ -170,7 +170,7 @@ function SlopePage() {
                         : `After ${taken} steps the ground under the ball is flat: the bottom, height ${heightHere.toFixed(4)}. It started at ${startHeight.toFixed(3)}.`
                       : `After ${taken} steps the ball is at height ${heightHere.toFixed(3)}, down from ${startHeight.toFixed(3)}. The slope under it is ${Math.hypot(...g).toFixed(3)}, so the next step is ${stepLen.toFixed(3)} long.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>The ball stands at</dt>
               <dd className="text-right text-foreground/80">({fmt(here[0])}, {fmt(here[1])})</dd>
               <dt>Nudge it a hair to the right: height changes by</dt>

@@ -118,7 +118,7 @@ SYSTEMS = [
             {
                 "label": "The only curve that obeys it",
                 "tex": r"A(t) = A_0\,e^{rt}",
-                "note": "e is the base for which the steepness equals the height exactly, so that the constant is the rate and nothing else",
+                "note": "The number e is the base for which the steepness equals the height exactly, so that the constant is the rate and nothing else",
             },
             {
                 "label": "Doubling time",

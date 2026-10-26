@@ -2,6 +2,7 @@ import { Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Page } from "@kit/index";
+import { TopicHead } from "@/components/TopicHead";
 import { TopicRail } from "@/components/TopicRail";
 import type { BuiltTopic } from "@/lib/topic";
 
@@ -90,6 +91,7 @@ export function TopicLayout({ topic }: { topic: BuiltTopic }) {
             {t("nav.menu")}
           </button>
         </div>
+        {topic.sections.some((s) => s.to === path.replace(/\/$/, "")) ? <TopicHead topic={topic} /> : null}
         <Outlet />
       </div>
 

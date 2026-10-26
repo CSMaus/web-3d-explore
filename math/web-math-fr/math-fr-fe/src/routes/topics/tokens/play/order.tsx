@@ -210,7 +210,7 @@ function OrderPage() {
                     ? `After ${at} positions the two totals are identical: they differ by ${gap.toExponential(1)}. The same rows went in, in a different order; the mixing treats positions alike, so it gave the same vectors back in that other order, and the total does not care about order. Nothing built this way can tell a sentence from its shuffle.`
                     : `After ${at} positions the two totals differ by ${gap.toFixed(3)}. The token rows that went in are the same, but each carried its position with it, so the mixing weights came out different and the order survived. That is what a position vector is for, and it is all it is for.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Tokens</dt>
               <dd className="text-right text-foreground/80">{n}</dd>
               <dt>Width of every vector, the stream's width for the whole depth</dt>

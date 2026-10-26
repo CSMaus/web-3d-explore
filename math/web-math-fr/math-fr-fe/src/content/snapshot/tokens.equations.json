@@ -131,7 +131,7 @@
     {
      "label": "The shape of an input",
      "tex": "X = \\begin{pmatrix} E_{t_1,:} \\\\ \\vdots \\\\ E_{t_n,:} \\end{pmatrix} \\in \\mathbb{R}^{n \\times d}",
-     "note": "n rows for n tokens, each d wide. Only n changes with the input. This is the answer to why a token's vector has a fixed length"
+     "note": "There are n rows for n tokens, each d wide. Only n changes with the input. This is the answer to why a token's vector has a fixed length"
     }
    ],
    "dimension": {

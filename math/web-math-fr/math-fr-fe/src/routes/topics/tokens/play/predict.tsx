@@ -172,7 +172,7 @@ function PredictPage() {
                 ? `Untrained: every one of the ${VOCAB.bytes.length} tokens is about equally likely, so the top one has ${(shown[0].p * 100).toFixed(1)} % and the perplexity is ${perplexity(model.loss || Math.log(VOCAB.bytes.length)).toFixed(0)}: as good as guessing among ${VOCAB.bytes.length}. Press run.`
                 : `After ${steps} steps the model gives ${visible(tokenText(shown[0].id))} ${(shown[0].p * 100).toFixed(0)} %, then ${visible(tokenText(shown[1].id))} ${(shown[1].p * 100).toFixed(0)} % and ${visible(tokenText(shown[2].id))} ${(shown[2].p * 100).toFixed(0)} %; the top three hold ${(inTop * 100).toFixed(0)} % and the other ${VOCAB.bytes.length - 3} tokens share the rest. ${truth === null ? "This prompt is not in the text, so there is no right answer to score against." : `In the text this prompt was followed by ${visible(tokenText(truth))}, which the model ranks ${truthRank + 1}${truthRank === 0 ? "St" : truthRank === 1 ? "Nd" : truthRank === 2 ? "Rd" : "Th"}: its loss on this one prediction is ${lossHere!.toFixed(2)}.`}`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Output width, one score a vocabulary entry</dt>
               <dd className="text-right text-foreground/80">{VOCAB.bytes.length}</dd>
               <dt>The score for {visible(tokenText(shown[0].id))}: Last vector dotted with its own table row</dt>

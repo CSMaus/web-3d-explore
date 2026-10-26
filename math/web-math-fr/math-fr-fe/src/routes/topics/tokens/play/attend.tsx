@@ -184,7 +184,7 @@ function AttendPage() {
                   ? STAGES[at - 1] + (at === 3 ? ` There are ${n} by ${n} = ${n * n} scores, one per pair of positions.` : at === 4 ? (mask === "causal" ? ` ${(n * (n - 1)) / 2} of the ${n * n} entries are gone: the future.` : " The mask is off, so every position sees every other, which a model that writes text one token at a time cannot do.") : "")
                   : `${visible(tokens[last].text)} listens ${(row[top] * 100).toFixed(0)} % to ${visible(tokens[top].text)} at position ${top + 1}${row.filter((v) => v > 0.1).length > 1 ? ` And ${row.map((v, j) => [v, j] as [number, number]).filter(([v, j]) => v > 0.1 && j !== top).map(([v, j]) => `${(v * 100).toFixed(0)} % to ${visible(tokens[j].text)}`).join(", ")}` : ""}. ${at === 6 ? "Its new vector is those weights applied to the values, added to what it had. That is the only way earlier tokens reach later ones, and it is recomputed at every position." : "The row adds to one."}`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Positions, so rows in every grid</dt>
               <dd className="text-right text-foreground/80">{n}</dd>
               <dt>Scores for this prompt</dt>

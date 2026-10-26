@@ -20,6 +20,7 @@ export const buttons = defineButtons({
     weight: 500,
   },
   glow: { on: "hover", hover: true, colour: "glow", blur: 14 },
+  glass: { on: true, tint: 70, blur: 12 },
   disabled: 0.4,
   extraCss: "",
 });

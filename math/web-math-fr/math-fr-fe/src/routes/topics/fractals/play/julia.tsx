@@ -33,7 +33,7 @@ function JuliaPage() {
   return (
     <div>
       <Heading level={1} className="mt-4">{system?.name ?? "Julia sets"}</Heading>
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
+      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
         <div className="space-y-4">
           <section data-slot="panel">
             <Label>CONSTANT C</Label>

@@ -1,0 +1,56 @@
+name: pages
+
+# publishes the maths site, without its backend, to GitHub Pages at
+# https://csmaus.github.io/web-3d-explore/. it runs only when started by hand
+# (Actions, "pages", Run workflow), so nothing is published by a push.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: math/web-math-fr/math-fr-fe
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            math/web-math-fr/math-fr-fe/package-lock.json
+            math/web-math-fr/ui-kit/package-lock.json
+      - run: npm ci
+        working-directory: math/web-math-fr/ui-kit
+      # the look the site ships: the case named in ui-kit/config/case.ts
+      - run: npm run theme
+        working-directory: math/web-math-fr/ui-kit
+      - run: npm ci
+      # no backend address, so the content comes from the snapshot; served under /web-3d-explore/;
+      # 404.html is the page itself, so an address typed or reloaded on any page opens that page
+      - run: npm run build:pages
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: math/web-math-fr/math-fr-fe/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

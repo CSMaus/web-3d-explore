@@ -151,7 +151,7 @@ function FadePage() {
           />
         }
         picture={
-          <section ref={stage} className="grid gap-2 lg:grid-cols-[1fr_300px]">
+          <section ref={stage} className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_300px]">
             <div><div data-slot="plot" className="h-[380px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -217,7 +217,7 @@ function FadePage() {
                 ? `Before any step, with ${layers - 1} hidden layers: the blame reaching the first layer is ${ratio.toExponential(1)} times smaller than the blame at the last. ${ratio > 100 ? "At that rate the first layer is as good as frozen. Press run and watch which layers move." : ratio > 10 ? "That is a real gap. Press run and watch which layers move." : "That is close to even: the blame arrives nearly undiminished. Press run."}`
                 : `After ${view.steps} steps, ${wrong} of ${data.X.length} wrong. Since the start the last layer's weights have moved ${travel[layers - 1].toExponential(1)} and the first layer's ${travel[0].toExponential(1)}, ${travelRatio.toExponential(1)} times less. ${stalled ? "The blame is now tiny at every layer: the network has stalled. The layers nearest the answer flattened onto answering about one half for every dot, and the first layer, which barely moved, is the one that would have to change for anything else to happen. This is what the vanishing gradient looks like from outside: not slow progress but a network that stops." : travelRatio > 100 ? "The first layer is learning last, if at all: the layers nearest the answer move first and the layer that actually sees the dots waits. This is the vanishing gradient." : travelRatio > 10 ? "The gap is there but the first layer is moving." : "Every layer is moving by about the same amount, so the whole network learns at once."}${act === "relu" ? " The cut-off unit's slope is exactly one wherever it is on, so nothing is lost passing through it." : ""}${init === "he" || init === "xavier" ? " The start was sized so the signal keeps its size through each layer, which is what the rule was made for." : ""}`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Blame at the last layer</dt>
               <dd className="text-right text-foreground/80">{last.toExponential(2)}</dd>
               <dt>Blame at the first layer</dt>

@@ -217,7 +217,7 @@ function PicturesPage() {
                     ? `The map is complete: ${SLIDE} numbers from ${conv.weights} weights. Now each block of two by two keeps only its largest, which throws away exactly where inside the block the fit was: ${pooled.length * pooled.length} numbers left.`
                     : `The picture is nearest to ${ranked[0].label}, at distance ${ranked[0].d.toFixed(1)}; the next nearest is ${ranked[1].label} at ${ranked[1].d.toFixed(1)}.${drawnFrom !== "yours" && ranked[0].id !== drawnFrom ? ` That is wrong: it was ${PICTURES[drawnFrom].label}. This pattern does not tell those two apart; try another.` : ""} shift the picture by a pixel and run again: the answer should hold.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Weights in the sliding pattern</dt>
               <dd className="text-right text-foreground/80">{conv.weights}</dd>
               <dt>Weights a unit wired to every pixel would need, for the same map</dt>

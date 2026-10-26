@@ -113,8 +113,8 @@ function TurnPage() {
                     pen.arrow(0, 0, now[0], now[1], INK);
                     pen.dot(now[0], now[1], 4, INK);
                   }
-                  pen.text("along", BOX.x1 - 0.5, -0.3, SKY, "center");
-                  pen.text("up", 0.25, BOX.y1 - 0.4, TWO, "left");
+                  pen.text("Along", BOX.x1 - 0.5, -0.3, SKY, "center");
+                  pen.text("Up", 0.25, BOX.y1 - 0.4, TWO, "left");
                 }}
               />
             </div>

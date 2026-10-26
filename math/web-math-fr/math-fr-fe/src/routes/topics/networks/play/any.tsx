@@ -143,7 +143,7 @@ function AnyPage() {
                   ? `${on} of ${n} units on. The network's curve is within ${fit.worst.toFixed(3)} of the target everywhere so far, the worst gap at x = ${fit.at.toFixed(2)}, which is ${fit.at > stepAt(on - 1, n) ? "to the right of the last step, where no unit has switched on yet" : "inside the part already built"}.`
                   : `All ${n} units on. The network's curve is within ${fit.worst.toFixed(3)} of the target everywhere, average gap ${fit.mean.toFixed(4)}. ${fit.worst > 0.1 ? "The gap is set by the steps: more units make them narrower, more steepness makes them sharper, and either shrinks it." : "More units or steeper steps shrink the gap further, without limit."} There is no curve that cannot be followed this way, which is the reason a network can do any job of this kind: not cleverness, but enough small steps.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Hidden units on</dt>
               <dd className="text-right text-foreground/80">{on} of {n}</dd>
               <dt>Numbers in the network</dt>

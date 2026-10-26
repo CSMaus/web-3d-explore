@@ -166,7 +166,7 @@ function ArtefactsPage() {
                       ? `An answer changes with a stray space because the space travels inside the token: a different id goes in, so a different row of the table, so different numbers everywhere after. The cutting page.`
                       : `A rare or specialised word arrives in pieces whose rows were barely trained, so the model knows less about it than its frequency in the world would suggest. The meaning page. All four are consequences of the first four pages, made before any network appeared. None is a mystery about the model.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Letters in the word, tokens the model gets</dt>
               <dd className="text-right text-foreground/80">{letters}, {wordTokens.length}</dd>
               <dt>The number, tokens in three spellings</dt>

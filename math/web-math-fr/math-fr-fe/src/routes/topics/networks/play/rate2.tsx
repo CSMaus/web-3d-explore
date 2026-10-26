@@ -168,7 +168,7 @@ function Rate2Page() {
                 ? "Press run. The green arrow will be the speed and the rose arrow the change in it. Watch the rose arrow point backwards whenever the green one is shrinking."
                 : `At ${t.toFixed(1)} s the car is ${trend}: its speed is ${speed.toFixed(2)} m/s and changing by ${exactAccel.toFixed(2)} m/s every second. From two speeds ${gap.toFixed(2)} s apart the change comes out as ${accel.toFixed(2)}, ${Math.abs(accel - exactAccel) < 0.08 * Math.max(0.5, Math.abs(exactAccel)) ? "which is right" : "which is off: the gap is too wide for a speed that swings this fast"}.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Speed a little before</dt>
               <dd className="text-right text-foreground/80">{slopeBetween(m.at, t - gap / 2, gap).toFixed(3)} M/s</dd>
               <dt>Speed a little after</dt>

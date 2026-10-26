@@ -19,4 +19,11 @@ export const figures = defineFigures({
   relief: false,
   // true = the light's strength rises and falls with the page's breathing (motion.ts -> breathe)
   breathe: false,
+  // the small drawings on page tiles (Play and each topic's play list): a light always walking
+  // along one unbroken line of the drawing, slowly. lightLength is the lit fraction of that line,
+  // seconds one lap; under the pointer the light runs at the seconds above
+  tile: { lightLength: 0.28, seconds: 12 },
+  // the large turning figures of the topics (front page, Topics, Learn, Play, a topic's head): the
+  // same walking light, a longer stretch of it, slower
+  solid: { lightLength: 0.35, seconds: 16 },
 });

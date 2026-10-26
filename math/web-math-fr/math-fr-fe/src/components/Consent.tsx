@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Text, Banner, Button } from "@kit/index";
+import { HAS_BACKEND } from "@/lib/api";
 
 const KEY = "mathfr_session_consent";
 
@@ -18,7 +19,9 @@ export function Consent() {
   const { t } = useTranslation();
   const [choice, setChoice] = useState<string | null>(() => readChoice());
 
-  if (choice !== null) return null;
+  // the notice is about the backend's session cookie and its record of requests; a site built to
+  // run without the backend keeps neither, so it asks nothing
+  if (!HAS_BACKEND || choice !== null) return null;
 
   const decide = (value: string) => {
     writeChoice(value);

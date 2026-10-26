@@ -15,13 +15,13 @@ export function Page({ className, ...props }: React.ComponentProps<"main">) {
 /** a heading at one of three levels; each level is its own text style. */
 export function Heading({ className, level = 1, ...props }: React.ComponentProps<"h1"> & { level?: 1 | 2 | 3 }) {
   const Tag = `h${level}` as const;
-  return <Tag data-slot="heading" data-level={level} className={className} {...props} />;
+  return <Tag data-slot="heading" data-level={level} className={cn("fractal-obstacle", className)} {...props} />;
 }
 
 /** text in a named style from the config, for any style the fixed elements do not cover. */
-export function Text({ kind, as = "span", ...props }: React.HTMLAttributes<HTMLElement> & { kind: string; as?: "span" | "p" | "div" | "dl" | "dt" | "dd" | "li" | "ul" | "figcaption" }) {
+export function Text({ kind, as = "span", className, ...props }: React.HTMLAttributes<HTMLElement> & { kind: string; as?: "span" | "p" | "div" | "dl" | "dt" | "dd" | "li" | "ul" | "figcaption" }) {
   const Tag = as as "span";
-  return <Tag data-text={kind} {...props} />;
+  return <Tag data-text={kind} className={cn("fractal-obstacle", className)} {...props} />;
 }
 
 /** the one very large line of a front page. */
@@ -47,7 +47,7 @@ export function Tag({ colour, style, ...props }: React.ComponentProps<"span"> & 
 
 export function Panel({ label, tone, className, children, ...props }: React.ComponentProps<"section"> & { label?: string; tone?: "primary" | "muted" }) {
   return (
-    <section data-slot="panel" data-tone={tone} className={className} {...props}>
+    <section data-slot="panel" data-tone={tone} className={cn("fractal-obstacle", className)} {...props}>
       {label ? <Label>{label}</Label> : null}
       <div>{children}</div>
     </section>
@@ -84,7 +84,7 @@ export function Verdict({ good, className, ...props }: React.ComponentProps<"p">
 
 export function Readout({ rows, className }: { rows: [React.ReactNode, React.ReactNode][]; className?: string }) {
   return (
-    <dl data-slot="readout" className={className}>
+    <dl data-slot="readout" className={cn("fractal-obstacle", className)}>
       {rows.map(([k, v], i) => (
         <React.Fragment key={i}>
           <dt>{k}</dt>
@@ -217,6 +217,8 @@ export function Hero({
   actions,
   tags,
   picture,
+  aside,
+  size = "stage",
   className,
 }: {
   eyebrow?: React.ReactNode;
@@ -224,12 +226,18 @@ export function Hero({
   lede?: React.ReactNode;
   actions?: React.ReactNode;
   tags?: React.ReactNode;
+  /** the large picture behind the right of the first screen, off its edge */
   picture?: React.ReactNode;
+  /** small controls set at the lower right, over the picture */
+  aside?: React.ReactNode;
+  /** "stage" fills the first screen of the front page; "page" heads a page of lists */
+  size?: "stage" | "page";
   className?: string;
 }) {
   return (
-    <section data-slot="hero" className={cn("grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]", className)}>
-      <div>
+    <section data-slot="hero" data-size={size} className={className}>
+      {picture ? <div data-slot="hero-picture">{picture}</div> : null}
+      <div data-slot="hero-text">
         {eyebrow ? (
           <div data-slot="hero-eyebrow">
             <Label as="div">{eyebrow}</Label>
@@ -240,9 +248,14 @@ export function Hero({
         {actions ? <div data-slot="hero-actions" className="flex flex-wrap gap-3">{actions}</div> : null}
         {tags ? <div data-slot="hero-tags" className="flex flex-wrap">{tags}</div> : null}
       </div>
-      {picture ? <div>{picture}</div> : null}
+      {aside ? <div data-slot="hero-aside">{aside}</div> : null}
     </section>
   );
+}
+
+/** a section the width of the screen with its content in the page's column; "card" is the second tone, for bands in turn. */
+export function Band({ tone = "page", className, ...props }: React.ComponentProps<"section"> & { tone?: "page" | "card" }) {
+  return <section data-slot="band" data-tone={tone} className={className} {...props} />;
 }
 
 // ------------------------------------------------------------ frame and screens
@@ -360,7 +373,7 @@ export function ModeSwitch({ mode, onChange, labels }: { mode: "light" | "dark";
 /** the rail beside a topic: its sections, and under the open section its pages. one landmark, named for the topic. */
 export function SideNav({ label, children, ...props }: React.ComponentProps<"nav"> & { label: string }) {
   return (
-    <nav data-slot="side-nav" aria-label={label} {...props}>
+    <nav data-slot="side-nav" aria-label={label} className="fractal-obstacle" {...props}>
       {children}
     </nav>
   );

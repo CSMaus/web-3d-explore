@@ -460,7 +460,9 @@ ${primary}:hover, ${primary}[data-look="hover"] { text-shadow: 0 0 ${px(Math.rou
 
 ${plain}, ${on(plain, '[data-look="rest"]')} { ${look(b.plain.rest)} }
 ${on(plain, ":hover")}, ${on(plain, '[data-look="hover"]')} { ${look(b.plain.hover)} ${motion} }
+${b.glass.on ? `${plain}, ${on(plain, '[data-look="rest"]')}, ${on(plain, ":hover")}, ${on(plain, '[data-look="hover"]')} { ${frost(t)} }` : ""}
 ${on(plain, ":active")}, ${on(plain, '[aria-pressed="true"]')}, ${on(plain, '[data-look="pressed"]')} { ${look(b.plain.pressed)} transform: none; box-shadow: none; }
+${b.glass.on && clearPressed(t) ? `${on(plain, ":active")}, ${on(plain, '[aria-pressed="true"]')}, ${on(plain, '[data-look="pressed"]')} { ${frost(t)} }` : ""}
 
 ${primary} {
   ${look(b.primary.rest)}
@@ -505,7 +507,8 @@ function tabs(t: Theme): string {
 [data-slot="toggle-group"], [data-slot="tabs-list"] { display: flex; flex-wrap: wrap; gap: var(--tab-gap); background: transparent; border: 0; padding: 0; height: auto; }
 ${item} { ${look(b.plain.rest)} border-style: solid; border-radius: var(--button-radius); padding: var(--button-py) var(--button-px); box-shadow: none; }
 ${hover} { ${look(b.plain.hover)} }
-${active} { ${look(b.plain.pressed)} box-shadow: none; }`,
+${active} { ${look(b.plain.pressed)} box-shadow: none; }
+${b.glass.on ? `${item}, ${hover}${clearPressed(t) ? `, ${active}` : ""} { ${frost(t)} }` : ""}`,
     segmented: `
 [data-slot="toggle-group"], [data-slot="tabs-list"] { display: inline-flex; gap: 0; border: ${px(Math.max(b.plain.rest.border, 1))} solid ${v("border")}; border-radius: var(--button-radius); padding: 2px; background: transparent; height: auto; }
 ${item} { background: transparent; border: 0; border-radius: calc(var(--button-radius) - 2px); color: ${swatch(b.plain.rest.ink)}; padding: var(--button-py) var(--button-px); }
@@ -675,6 +678,9 @@ function plots(t: Theme): string {
   border: var(--panel-border) solid ${v("border")};
   border-radius: var(--panel-corner);
   overflow: hidden;
+  /* the drawing keeps clear of the rounded corners: 0.3 of the radius is how far a corner's
+     curve reaches in, so nothing drawn at the plot's edge is cut */
+  padding: calc(var(--panel-corner) * 0.3);
 }
 
 [data-slot="caption"] {
@@ -737,9 +743,27 @@ ${relief}
   stroke-opacity: ${f.glow > 0 ? 0.22 : 0};
 }
 
+${tileLight(f)}
+
 @keyframes travel {
   to { stroke-dashoffset: -1; }
 }`;
+}
+
+/**
+ * the walking light of the tile drawings ([data-kind="line"]) and of the large turning figures
+ * ([data-solid]): a longer stretch than on the other figures, going round slowly
+ */
+function tileLight(f: Theme["figures"]): string {
+  const walk = (sel: string, { lightLength: l, seconds }: { lightLength: number; seconds: number }) => {
+    const dash = (k: number) => `${(l * k).toFixed(4)} ${(1 - l * k).toFixed(4)}`;
+    return `
+[data-slot="edge-figure"]${sel} :is(.edge-core, .edge-tail, .edge-halo) { animation-duration: calc(${seconds}s * var(--walk-scale, 1)), var(--breathe-seconds); }
+[data-slot="edge-figure"]${sel} .edge-core { stroke-dasharray: ${dash(0.5)}; }
+[data-slot="edge-figure"]${sel} .edge-tail { stroke-dasharray: ${dash(1)}; stroke-opacity: 0.8; }
+[data-slot="edge-figure"]${sel} .edge-halo { stroke-dasharray: ${dash(0.6)}; }`;
+  };
+  return walk('[data-kind="line"]', f.tile ?? { lightLength: 0.28, seconds: 12 }) + walk("[data-solid]", f.solid ?? { lightLength: 0.35, seconds: 16 });
 }
 
 function readouts(t: Theme): string {
@@ -925,9 +949,74 @@ function pieces(t: Theme): string {
 [data-slot="furniture"] > * { pointer-events: auto; }`;
 }
 
-/** the gaps of the front page hero, from page.ts, in every case whether or not it uses screens */
+/**
+ * the front page hero as a stage that fits the first screen: the picture large at the
+ * right, from under the bar to above the small controls, whole and up to the screen's
+ * right edge; the words low at the left, kept clear of it; small controls at the lower
+ * right. the title scales with the screen's width and height both, so the words fit a
+ * short laptop screen. the title of two parts shows its second part in the muted
+ * colour. as the first screen scrolls away the picture draws back and dims. on a
+ * narrow screen the picture stands above the words.
+ *
+ * the same piece at the size of a page ("page") heads the pages of lists: the title
+ * and the lede at the top, no picture behind, nothing filling the screen.
+ *
+ * a band is a section the width of the screen, its content in the page's column; the
+ * second tone has the card colour, so bands in turn read as separate scenes. the colour
+ * reaches the screen's edges through the border image, which leaves the layout alone;
+ * pulling the band out with negative margins stopped the browser painting it. the
+ * band's heading is set in the display style, smaller.
+ */
 function hero(t: Theme): string {
+  const display = t.text.styles.display;
+  const bar = t.topbar.height;
   return `
+html, body { overflow-x: clip; }
+[data-slot="hero"] { --hero-foot: clamp(28px, 7svh, 72px); position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(100svh - 8rem); padding-bottom: var(--hero-foot); }
+[data-slot="hero-picture"] { position: absolute; z-index: -1; top: calc(${px(bar)} - 8rem + 12px); bottom: calc(var(--hero-foot) + 44px); right: calc(50% - 50vw); width: min(54vw, 980px); }
+[data-slot="hero-text"] { position: relative; max-width: min(820px, 60%); }
+[data-slot="hero"] [data-slot="display"] { font-size: clamp(40px, min(7vw, 11.5svh), ${px(display.size)}); text-wrap: balance; }
+[data-slot="hero"] [data-slot="display"] > :last-child:not(:first-child) { color: ${v("muted-foreground")}; }
+[data-slot="hero"] [data-slot="lede"] { max-width: 34ch; }
+[data-slot="hero-aside"] { position: absolute; right: 0; bottom: var(--hero-foot); display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 20px; max-width: 36%; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-slot="hero"]:not([data-size="page"]) [data-slot="hero-picture"] { animation: hero-leave linear both; animation-timeline: view(); animation-range: exit 0% exit 90%; }
+    @keyframes hero-leave { to { transform: scale(0.82) translateY(6%); opacity: 0.25; } }
+  }
+}
+@media (max-width: 1023px) {
+  [data-slot="hero"] { min-height: 0; padding-bottom: 48px; }
+  [data-slot="hero-picture"] { position: relative; z-index: 0; top: auto; bottom: auto; right: auto; width: auto; height: min(58svh, 92vw); margin: -2rem calc(-1 * var(--page-gutter)) 8px; }
+  [data-slot="hero-text"] { max-width: none; }
+  [data-slot="hero-aside"] { position: static; justify-content: flex-start; max-width: none; margin-top: 28px; }
+}
+[data-slot="hero"][data-size="page"] { min-height: 0; justify-content: flex-start; padding: 32px 0 clamp(40px, 8svh, 80px); }
+[data-slot="hero"][data-size="page"] [data-slot="hero-text"] { max-width: min(900px, 100%); }
+[data-slot="hero"][data-size="page"] [data-slot="display"] { font-size: clamp(40px, min(6vw, 10svh), ${px(Math.round(display.size * 0.75))}); }
+[data-slot="hero"][data-size="page"] [data-slot="lede"] { max-width: 46ch; }
+[data-slot="hero"][data-size="page"] [data-slot="hero-picture"] { position: absolute; z-index: 0; top: 0; bottom: 0; right: 0; left: auto; width: min(30%, 280px); height: auto; margin: 0; animation: none; }
+[data-slot="hero"][data-size="page"]:has([data-slot="hero-picture"]) [data-slot="hero-text"] { max-width: min(900px, 68%); }
+@media (max-width: 1023px) {
+  [data-slot="hero"][data-size="page"] [data-slot="hero-picture"] { position: relative; width: 160px; height: 160px; margin: 0 0 8px; }
+  [data-slot="hero"][data-size="page"]:has([data-slot="hero-picture"]) [data-slot="hero-text"] { max-width: none; }
+}
+[data-slot="front-scene"] { --p: 0; position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; text-align: center; }
+[data-slot="scene-words"] { position: relative; z-index: 1; max-width: 1000px; padding-top: clamp(8px, 5svh, 48px); opacity: calc(1 - var(--p) * 1.3); transform: translateY(calc(var(--p) * -56px)); }
+[data-slot="front-scene"] [data-slot="hero-eyebrow"] { display: flex; justify-content: center; margin-bottom: ${px(t.page.hero.afterEyebrow)}; }
+[data-slot="front-scene"] [data-slot="display"] { font-size: clamp(40px, min(6.6vw, 9.5svh), ${px(display.size)}); text-wrap: balance; margin-bottom: ${px(t.page.hero.afterTitle)}; }
+[data-slot="front-scene"] [data-slot="display"] > :last-child:not(:first-child) { color: ${v("muted-foreground")}; }
+[data-slot="front-scene"] [data-slot="lede"] { max-width: 52ch; margin: 0 auto ${px(t.page.hero.afterLede)}; }
+[data-slot="scene-picture"] { position: relative; z-index: 0; align-self: stretch; margin-inline: calc(50% - 50vw); margin-top: clamp(-48px, -4svh, -16px); height: min(90svh, 960px); transform-origin: 50% 0; transform: scale(calc(0.84 + var(--p) * 0.16)); }
+[data-slot="scene-foot"] { position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; margin-top: -40px; }
+@media (max-width: 1023px) {
+  [data-slot="scene-picture"] { height: min(70svh, 96vw); margin-top: 0; transform: none; }
+  [data-slot="scene-words"] { opacity: 1; transform: none; }
+  [data-slot="scene-foot"] { margin-top: 8px; }
+}
+[data-slot="band"] { position: relative; padding-block: clamp(56px, 11svh, 112px); }
+[data-slot="band"][data-tone="card"] { border-image: linear-gradient(${v("card")} 0 0) fill 0 / / 0 100vmax; }
+[data-slot="band"] [data-slot="heading"][data-level="2"] { ${styleRules(display)} font-size: clamp(30px, 4vw, ${px(Math.round(display.size * 0.62))}); line-height: 1.05; text-wrap: balance; }
 [data-slot="hero"] [data-slot="hero-eyebrow"] { margin-bottom: ${px(t.page.hero.afterEyebrow)}; }
 [data-slot="hero"] [data-slot="display"] { margin-bottom: ${px(t.page.hero.afterTitle)}; }
 [data-slot="hero"] [data-slot="lede"] { margin-bottom: ${px(t.page.hero.afterLede)}; }
@@ -1047,8 +1136,65 @@ function sidenav(): string {
 `;
 }
 
+/** the frosted glass of the plain button and of the chips, the top bar's effect */
+function frost(t: Theme): string {
+  const g = t.buttons.glass;
+  return `background: color-mix(in oklab, ${v("background")} ${g.tint}%, transparent); backdrop-filter: blur(${px(g.blur)}); -webkit-backdrop-filter: blur(${px(g.blur)});`;
+}
+
+/** a pressed plain button or chosen chip is frosted too when its own fill is clear */
+const clearPressed = (t: Theme) => t.buttons.plain.pressed.fill === "transparent";
+
+/**
+ * the fractal layer behind the page: its colour, line and opacity; where it grows is the component's.
+ * the fade-in of a line keeps no state once it ends (fill "backwards", not "both"): a page grows over
+ * a thousand lines, and a thousand finished animations held for good stopped chrome painting the
+ * rest of the page. the drift layers are not marked will-change for the same reason: each spans the
+ * page's height. the wave's mask covers the whole page and is painted again at every change, so it
+ * moves in steps, four a second, which the soft edge of a wave 1,600 px long hides, and it holds
+ * still while the page scrolls (data-scrolling on html, set by the site's shell); measured, painting
+ * it sixty times a second made four frames in ten late while scrolling.
+ */
+function fractal(t: Theme): string {
+  const f = t.fractal;
+  return `
+[data-slot="fractal"] { position: absolute; top: 0; left: 0; z-index: 0; pointer-events: none; overflow: hidden; color: ${swatch(f.colour)}; opacity: ${f.on ? f.opacity : 0}; }
+${f.on && f.lightOpacity !== undefined ? `html[data-mode="light"] [data-slot="fractal"] { opacity: ${f.lightOpacity}; }` : ""}
+${f.wave > 0 ? `@property --fractal-wave { syntax: "<length>"; inherits: false; initial-value: 0px; }
+[data-slot="fractal"] { --wave-mask: repeating-radial-gradient(circle at 100% 0, rgba(0,0,0,${f.waveLow}) var(--fractal-wave), #000 calc(var(--fractal-wave) + ${f.wave / 2}px), rgba(0,0,0,${f.waveLow}) calc(var(--fractal-wave) + ${f.wave}px)); mask-image: var(--wave-mask); -webkit-mask-image: var(--wave-mask); animation: fractal-wave ${f.waveTime}s steps(${Math.max(1, Math.round(f.waveTime * 4))}) infinite; }
+@keyframes fractal-wave { from { --fractal-wave: 0px; } to { --fractal-wave: ${f.wave}px; } }
+@media (prefers-reduced-motion: reduce) { [data-slot="fractal"] { animation: none; mask-image: none; -webkit-mask-image: none; } }
+html[data-scrolling] [data-slot="fractal"] { animation-play-state: paused; }
+` : ""}[data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; ${f.drift > 0 ? `animation: fractal-drift var(--drift-time) ease-in-out var(--drift-delay) infinite alternate;` : ""} }
+@keyframes fractal-drift { from { opacity: 1; } to { opacity: ${(1 - f.drift).toFixed(2)}; } }
+@media (prefers-reduced-motion: reduce) { [data-slot="fractal-layer"] { animation: none; } }
+[data-slot="fractal"] path { fill: none; stroke: currentColor; stroke-width: ${px(f.stroke)}; stroke-linecap: round; stroke-linejoin: round; }
+${f.fade > 0 ? `[data-slot="fractal"] path { animation: fractal-in ${f.fade}ms ease-out backwards; }
+@keyframes fractal-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { [data-slot="fractal"] path { animation: none; } }
+` : ""}`;
+}
+
+/** the topic graph of the front page: the light along its links, and a card lifting and its figure brightening when it is lit */
+function graph(): string {
+  return `
+[data-slot="graph-light"] { animation-name: travel; animation-timing-function: linear; animation-iteration-count: infinite; }
+[data-slot="topic-graph"] a[data-slot="panel"], a[data-tile] { transition: transform 300ms ease, border-color 300ms ease; }
+a[data-tile] { display: flex; border: 1px solid ${v("border")}; border-radius: 10px; padding: 12px 14px; background: color-mix(in oklab, ${v("card")} 88%, transparent); color: ${v("foreground")}; text-decoration: none; }
+a[data-tile]:hover, a[data-tile]:focus-visible { transform: translateY(-3px); border-color: ${v("selected")}; }
+a[data-tile]:is(:hover, :focus-visible) [data-slot="edge-figure"] :is(.edge-core, .edge-tail, .edge-halo) { animation-duration: var(--figure-seconds), var(--breathe-seconds); }
+[data-slot="topic-graph"] a[data-slot="panel"][data-lit] { transform: translateY(-6px); border-color: ${v("selected")}; }
+[data-slot="topic-graph"] [data-lit] [data-slot="edge-figure"] .edge-halo { stroke-opacity: 0.45; }
+[data-slot="topic-graph"] [data-lit] [data-slot="graph-open"] { color: ${v("selected")}; }
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="graph-light"] { animation: none; stroke-opacity: 0; }
+  [data-slot="topic-graph"] a[data-slot="panel"][data-lit], a[data-tile]:hover { transform: none; }
+}
+`;
+}
+
 export function render(t: Theme): string {
-  const parts = [tokens(t), text(t), page(t), topbar(t), buttons(t), tabs(t), sliders(t), inputs(t), panels(t), plots(t), figures(t), readouts(t), pieces(t), sidenav(), hero(t), screens(t), motion(t)];
+  const parts = [tokens(t), text(t), page(t), topbar(t), buttons(t), tabs(t), sliders(t), inputs(t), panels(t), plots(t), figures(t), readouts(t), pieces(t), sidenav(), hero(t), graph(), fractal(t), screens(t), motion(t)];
   const imports = (t.type.imports ?? []).map((u) => `@import url("${u}");`).join("\n");
   return `/* generated by build/theme.ts from the config folder. edit the config, not this file. */\n${imports}\n${parts.join("\n")}\n`
     .split("\n")

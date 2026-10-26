@@ -13,8 +13,11 @@ export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./comp
 export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./components/ui/card";
 export { Label as FormLabel } from "./components/ui/label";
 export { Chips, Choices, Field, Slider, Swatch } from "./components/controls";
-export { Banner, Brand, BrandInner, Caption, CaseSwitch, Counter, Display, Figure, Furniture, Heading, Hero, HeroPanel, IconCard, Label, LanguageSwitch, Lede, ModeSwitch, Page, PaletteSwitch, Panel, PanelHead, Plot, Readout, Screen, Screens, ScrollHint, SearchButton, Share, SideNav, SideNavLink, SkipLink, Strip, Tag, Text, TextLink, TopBar, TopBarDivider, TopBarLink, Verdict } from "./components/pieces";
-export { EdgeFigure } from "./components/figures";
+export { Band, Banner, Brand, BrandInner, Caption, CaseSwitch, Counter, Display, Figure, Furniture, Heading, Hero, HeroPanel, IconCard, Label, LanguageSwitch, Lede, ModeSwitch, Page, PaletteSwitch, Panel, PanelHead, Plot, Readout, Screen, Screens, ScrollHint, SearchButton, Share, SideNav, SideNavLink, SkipLink, Strip, Tag, Text, TextLink, TopBar, TopBarDivider, TopBarLink, Verdict } from "./components/pieces";
+export { EdgeFigure, LineFigure, SolidFigure } from "./components/figures";
+export { arc, arrow, axes, box, circle, fit, loop, plot, poly, seg, type Pt } from "./lib/motifs";
+export { SOLID_KINDS, SOLID_NAMES, type SolidKind } from "./lib/solids";
+export { FractalBackground, OBSTACLE } from "./components/fractal";
 export { FIGURE_KINDS, FIGURE_NAMES, type FigureKind } from "./lib/figures";
 export { applyMode, currentMode, readMode, saveMode, useMode, useModeChoice, watchMode, MODE_KEY, type Mode } from "./lib/mode";
 export { applyPalette, currentPalette, readPalette, savePalette, usePalette, usePaletteChoice, watchPalette, PALETTE_KEY } from "./lib/palette";

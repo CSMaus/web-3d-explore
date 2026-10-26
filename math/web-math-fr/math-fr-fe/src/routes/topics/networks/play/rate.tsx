@@ -187,7 +187,7 @@ function RatePage() {
                 ? "Press run and the car sets off. The speed will be read from where it is, and only from where it is."
                 : `At ${t.toFixed(1)} s the car is at ${position.toFixed(1)} m and going ${exact.toFixed(2)} m/s. From two positions ${gap.toFixed(2)} s apart, the speed comes out as ${fromTwo.toFixed(2)} m/s, ${Math.abs(fromTwo - exact) < 0.05 * Math.max(1, Math.abs(exact)) ? "which is right" : "which is off, because the gap is too wide for a curve that bends this much"}.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Moved between the two positions</dt>
               <dd className="text-right text-foreground/80">{(m.at(tB) - m.at(tA)).toFixed(3)} m</dd>
               <dt>In</dt>

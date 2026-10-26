@@ -60,7 +60,10 @@ export const buttons = defineButtons({
   //   hover    true or false: the plain button's edge brightens the same way under the pointer
   //   colour   the light's colour
   //   blur     how far it spreads, in px
+  // the plain button frosted like the top bar: the page colour at tint per cent over what lies
+  // behind it, blurred by blur px; the pressed state keeps its own fill. on: true or false
   glow: { on: false, hover: true, colour: "glow", blur: 14 },
+  glass: { on: true, tint: 70, blur: 12 },
 
   // a disabled button: 1 = fully visible, 0 = invisible
   disabled: 0.4,

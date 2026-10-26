@@ -143,7 +143,7 @@ function UnitPage() {
           />
         }
         picture={
-          <section ref={stage} className="grid gap-2 lg:grid-cols-[1fr_300px]">
+          <section ref={stage} className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_300px]">
             <div><div data-slot="plot" className="h-[420px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -282,7 +282,7 @@ function UnitPage() {
                     ? `After ${steps} steps the unit still has ${wrong} of ${data.X.length} wrong. Its boundary is a straight line and the shape it needs is a circle. More units, next page.`
                     : `The unit gets ${wrong} of ${data.X.length} dots wrong${steps > 0 ? ` after ${steps} steps` : ""}. How wrong, as one number: ${total.toFixed(4)}.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>The ringed dot: {probe[0].toFixed(2)} times {w1.toFixed(2)} plus {probe[1].toFixed(2)} times {w2.toFixed(2)} plus {b.toFixed(2)}</dt>
               <dd className="text-right text-foreground/80">{z.toFixed(3)}</dd>
               <dt>Squashed</dt>

@@ -73,7 +73,7 @@ function RoundPage() {
           />
         }
         picture={
-          <section ref={stage} className="grid gap-2 lg:grid-cols-[320px_1fr]">
+          <section ref={stage} className="grid gap-2 lg:grid-cols-[320px_minmax(0,1fr)]">
             <div>
               <div data-slot="plot" className="h-[320px] overflow-hidden">
                 <Plot

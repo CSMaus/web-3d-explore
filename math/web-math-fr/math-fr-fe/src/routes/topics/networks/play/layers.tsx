@@ -132,7 +132,7 @@ function LayersPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div className="grid gap-2 lg:grid-cols-[1fr_300px]">
+            <div className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_300px]">
               <div><div data-slot="plot" className="h-[340px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
@@ -234,7 +234,7 @@ function LayersPage() {
                       : `After ${view.steps} steps it still has ${wrong} wrong and has stopped improving. It has settled in a dip that is not the bottom: with ${hidden} units it is possible to be stuck. Try a different set of starting numbers, or more units.`
                     : `After ${view.steps} steps it has ${wrong} of ${data.X.length} wrong. How wrong: ${total.toFixed(4)}, ${view.history.length > 10 && total < view.history[view.history.length - 10][1] ? "falling" : "not falling right now"}.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Units: two in, {hidden} in the middle, one out</dt>
               <dd className="text-right text-foreground/80">{count.total} numbers to learn</dd>
               <dt>Of which weights</dt>

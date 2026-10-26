@@ -186,7 +186,7 @@ function WordsPage() {
                     : `Word ${at}, "${tokens[at - 1]}", listens ${(evenness * 100).toFixed(0)} % to "${tokens[top]}" at position ${top + 1}${head === "previous" && top === at - 2 ? ": The word just before it, as this head was wired to do" : head === "first" && top === 0 ? ": The first word, as this head was wired to do" : head === "same" && tokens[top] === tokens[at - 1] && top !== at - 1 ? ": An earlier copy of the same word" : head === "same" && top === at - 1 ? ": Itself, since there is no earlier copy of it" : ""}.${mask === "back" && at === 1 ? " The first word has nothing behind it, so it can only listen to itself." : ""}`}
             </Verdict>
             {row ? (
-              <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+              <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
                 {row.map((v, j) => (v > 0.005 ? (
                   <FragmentRow key={j} label={`"${tokens[j]}", position ${j + 1}:`} value={`${(v * 100).toFixed(1)} %`} />
                 ) : null))}

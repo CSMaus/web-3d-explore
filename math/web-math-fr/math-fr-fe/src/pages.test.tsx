@@ -315,15 +315,16 @@ describe("The index beside a long page", () => {
     });
   }
 
-  it("Each part is one clip with its reading text beside it, the question first", async () => {
+  it("Each part is one clip with its question and brief description beside it", async () => {
     serve({ "/topics/fractals": TOPIC });
     await siteAt("/topics/fractals/parts");
     await waitFor(() => expect(screen.getAllByText("Clip not published yet").length).toBe(2));
     expect(screen.getByRole("heading", { name: "How long is the coast of Britain?" })).toBeTruthy();
+    // the brief description stands under the question
+    expect(screen.getByText("A coastline measured with dividers. The length keeps growing as the opening shrinks.")).toBeTruthy();
+    // reading paragraphs, where a part still has them, follow it
     expect(screen.getByText("Take a pair of dividers and walk them along the coast.")).toBeTruthy();
-    expect(screen.getByText("Halve the squares and count again.")).toBeTruthy();
-    // the old summary and the beat lines are not on the page
-    expect(screen.queryByText(/a coastline measured with dividers/i)).toBeNull();
+    // the beats' notes and spoken lines are not on the page
     expect(screen.queryByText("A line")).toBeNull();
     expect(screen.queryByText("A reason")).toBeNull();
   });

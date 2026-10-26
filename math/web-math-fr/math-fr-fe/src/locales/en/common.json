@@ -43,7 +43,16 @@
     "scroll": "Scroll to discover",
     "topicsHeading": "The topics",
     "topicsLede": "One subject a topic, in reading order. Each is a series of short clips with the reasoning beside them, a set of pages where the thing is moved by hand, and every equation it rests on.",
-    "openTopic": "Open the topic"
+    "openTopic": "Open the topic",
+    "startHere": "Start here",
+    "topic": "Topic",
+    "lines": {
+      "complex": "Multiplying by 𝑖 turns the plane a quarter. Everything else follows from that.",
+      "fractals": "Shapes whose dimension falls between the whole numbers, and how to measure it.",
+      "chaos": "Exact rules whose future still cannot be predicted.",
+      "networks": "From the slope of a curve to a network that learns.",
+      "tokens": "How text becomes numbers, and numbers become the next word."
+    }
   },
   "learn": {
     "heading": "Learn",

@@ -148,19 +148,19 @@ function BlamePage() {
   const words = (() => {
     switch (phase) {
       case -1:
-        return `the dot (${x[0]}, ${x[1]}) is about to go in. it wants ${y[0] ? "green" : "rose"}. press run, or one step, and watch it pass through six moments.`;
+        return `The dot (${x[0]}, ${x[1]}) is about to go in. It wants ${y[0] ? "green" : "rose"}. Press run, or one step, and watch it pass through six moments.`;
       case 0:
-        return `the dot (${x[0]}, ${x[1]}) goes in. its two numbers sit on the two input units.`;
+        return `The dot (${x[0]}, ${x[1]}) goes in. Its two numbers sit on the two input units.`;
       case 1:
-        return `each middle unit weighs the two inputs with its own weights, adds its bias, and squashes: ${t.pass.a[1].map((v) => v.toFixed(2)).join(", ")}.`;
+        return `Each middle unit weighs the two inputs with its own weights, adds its bias, and squashes: ${t.pass.a[1].map((v) => v.toFixed(2)).join(", ")}.`;
       case 2:
-        return `the last unit weighs those three answers and squashes: ${t.pass.a[2][0].toFixed(3)}. it wanted ${y[0]}.`;
+        return `The last unit weighs those three answers and squashes: ${t.pass.a[2][0].toFixed(3)}. It wanted ${y[0]}.`;
       case 3:
-        return `the miss is ${t.miss.toFixed(3)}: the answer minus what it wanted. through the squash's own slope that becomes a blame of ${t.dOut[0].toFixed(3)} on the last unit. ${t.miss > 0 ? "rose means: the answer was too high." : "green means: the answer was too low."}`;
+        return `The miss is ${t.miss.toFixed(3)}: the answer minus what it wanted. Through the squash's own slope that becomes a blame of ${t.dOut[0].toFixed(3)} on the last unit. ${t.miss > 0 ? "Rose means: the answer was too high." : "Green means: the answer was too low."}`;
       case 4:
-        return `the blame flows back along the wires. each middle unit gets a share in proportion to its weight into the last unit, times its own squash's slope: ${t.dHid.map((d) => d.toFixed(3)).join(", ")}. unit ${strongest + 1} carries the most, because its wire to the output is the strongest and it was not saturated.`;
+        return `The blame flows back along the wires. Each middle unit gets a share in proportion to its weight into the last unit, times its own squash's slope: ${t.dHid.map((d) => d.toFixed(3)).join(", ")}. Unit ${strongest + 1} carries the most, because its wire to the output is the strongest and it was not saturated.`;
       default:
-        return `every weight moves: by minus the step size, times the blame on the unit it feeds, times the value that came along it. the halo on each wire shows the move (green up, rose down). the output for this dot was ${t.pass.a[2][0].toFixed(3)} and is now ${after.toFixed(3)}, ${Math.abs(after - y[0]) < Math.abs(t.pass.a[2][0] - y[0]) ? "closer to" : "not closer to"} ${y[0]}.`;
+        return `Every weight moves: by minus the step size, times the blame on the unit it feeds, times the value that came along it. The halo on each wire shows the move (green up, rose down). The output for this dot was ${t.pass.a[2][0].toFixed(3)} and is now ${after.toFixed(3)}, ${Math.abs(after - y[0]) < Math.abs(t.pass.a[2][0] - y[0]) ? "closer to" : "not closer to"} ${y[0]}.`;
     }
   })();
 
@@ -201,7 +201,7 @@ function BlamePage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div className="grid gap-2 lg:grid-cols-[1fr_260px]">
+            <div className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_260px]">
               <div><div data-slot="plot" className="h-[380px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
@@ -288,7 +288,7 @@ function BlamePage() {
         result={
           <div className="space-y-2">
             <Verdict>{words}</Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>The dot, and what it wants</dt>
               <dd className="text-right text-foreground/80">({x[0]}, {x[1]}) Wants {y[0]}</dd>
               <dt>The network's answer for it</dt>

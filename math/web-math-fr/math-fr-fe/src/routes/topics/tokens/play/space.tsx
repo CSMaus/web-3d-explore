@@ -188,7 +188,7 @@ function SpacePage() {
               {visible(a)} and {visible(b)}: Cosine {cos.toFixed(3)}, Distance {dist.toFixed(3)}. In the flat picture they are {flatDist.toFixed(2)} apart, which is {flatDist < dist * 0.8 ? "closer than they really are" : "about as far as they really are"}; The picture keeps {(proj.kept * 100).toFixed(0)} per cent of the spread and hides the rest.
               {pairsSeen > 0 ? ` Over ${pairsSeen} random pairs the raw cosines average ${hist.rawMean.toFixed(2)}: the vectors lean one way together, a cone rather than a cloud. Take the average vector away and the same pairs average ${hist.cenMean.toFixed(2)}.` : " Press run to measure the cone."}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Cosine: the angle between them, blind to length</dt>
               <dd className="text-right text-foreground/80">{cos.toFixed(4)}</dd>
               <dt>Distance: how far apart, which grows with length</dt>

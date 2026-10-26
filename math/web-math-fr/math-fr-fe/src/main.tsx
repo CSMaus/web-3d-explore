@@ -9,7 +9,9 @@ import "@/i18n";
 applyMode(readMode(kitTheme.colours.default));
 if (kitTheme.palettes && kitTheme.palette) applyPalette(kitTheme.palette);
 
-const router = createRouter({ routeTree, defaultPreload: "intent" });
+// the site can live under a path, as on GitHub Pages (/web-3d-explore/); vite's base, set by
+// VITE_BASE at build time, is the router's base too
+const router = createRouter({ routeTree, defaultPreload: "intent", basepath: import.meta.env.BASE_URL.replace(/\/$/, "") || "/" });
 
 declare module "@tanstack/react-router" {
   interface Register {

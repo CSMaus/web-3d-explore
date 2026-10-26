@@ -241,6 +241,8 @@ export type Buttons = {
   primary: States & { shape?: Shape; weight?: number };
   /** the light on the primary button's contour: always (true), only under the pointer and while pressed ("hover"), or never (false); and whether the plain button's contour brightens the same way under the pointer (hover) */
   glow: { on: boolean | "hover"; hover: boolean; colour: Swatch; blur: number };
+  /** the plain button frosted like the top bar: the page colour at `tint` per cent over what lies behind, blurred by `blur` px; the pressed state keeps its own fill */
+  glass: { on: boolean; tint: number; blur: number };
   /** opacity of a disabled button, 0 to 1 */
   disabled: number;
   /** anything the knobs do not reach, as css for [data-slot="button"] */
@@ -320,6 +322,66 @@ export type Figures = {
   relief: boolean;
   /** the light's strength rising and falling with the page's breathing */
   breathe: boolean;
+  /** the large turning figures of the topics: a light always walking along them, slowly; leave out for 0.35 and 16 */
+  solid?: {
+    /** length of the lit stretch as a fraction of the figure's walking line, 0 to 1 */
+    lightLength: number;
+    /** seconds for one lap of the light */
+    seconds: number;
+  };
+  /** the small drawings on page tiles: a light always walking along them, slowly; leave out for 0.28 and 12 */
+  tile?: {
+    /** length of the lit stretch as a fraction of the whole drawing, 0 to 1 */
+    lightLength: number;
+    /** seconds for one lap of the light; under the pointer it runs at `seconds` above */
+    seconds: number;
+  };
+};
+
+/** the fractal that grows across the page behind the content, from the top-right corner, around every element with the class fractal-obstacle */
+export type Fractal = {
+  /** shown or not */
+  on: boolean;
+  /** what grows: "flowsnake" is the Gosper curve drawn outward from the top-right corner, broken where it would cross an obstacle; "branches" is a random branching growth that turns around obstacles */
+  shape: "flowsnake" | "branches";
+  /** colour of the lines */
+  colour: Swatch;
+  /** width of a line, in px */
+  stroke: number;
+  /** opacity of the whole layer, 0 to 1 */
+  opacity: number;
+  /** opacity of the whole layer on the light page, 0 to 1, when the colour needs more there to be seen; leave out for the same as `opacity` */
+  lightOpacity?: number;
+  /** how much the lines differ in opacity, 0 to 1: 0 all alike; 1 the faintest of them invisible */
+  vary: number;
+  /** how far the lines drift in opacity over time, 0 to 1: 0 still; 1 down to nothing and back */
+  drift: number;
+  /** about how long one drift down and back takes, in seconds; each layer of lines a little faster or slower */
+  driftTime: number;
+  /** the distance between two waves that sweep out from the top-right corner, showing the fractal as they pass and hiding it after, in px; 0 for no waves */
+  wave: number;
+  /** how long a wave takes to travel that distance, in seconds: higher is slower */
+  waveTime: number;
+  /** how much of the fractal stays between two waves, 0 to 1: 0 is nothing */
+  waveLow: number;
+  /** length of one segment, in px */
+  step: number;
+  /** how many segments grow each frame */
+  speed: number;
+  /** how long the lines of each frame take to fade in, in ms; 0 for none */
+  fade: number;
+  /** how unevenly it grows, 0 to 1: 0 is one even front from the corner; higher lets some lines out of the corner run ahead of others */
+  chaos: number;
+  /** the chance that a tip forks at each step, 0 to 1 */
+  branch: number;
+  /** how much a branch may bend at each step, in radians */
+  bend: number;
+  /** true: the fractal keeps clear of every element with the class fractal-obstacle; false: it runs behind them all */
+  avoid: boolean;
+  /** the space kept clear around an obstacle, in px */
+  gap: number;
+  /** how densely the page is filled: segments per million square px of page, so a long page fills as fully as a short one */
+  density: number;
 };
 
 export type Motion = {
@@ -358,6 +420,7 @@ export type Theme = {
   plots: Plots;
   figures: Figures;
   motion: Motion;
+  fractal: Fractal;
 };
 
 export const defineColours = (c: Colours) => c;
@@ -373,4 +436,5 @@ export const definePanels = (p: Panels) => p;
 export const definePlots = (p: Plots) => p;
 export const defineFigures = (f: Figures) => f;
 export const defineMotion = (m: Motion) => m;
+export const defineFractal = (f: Fractal) => f;
 export const defineTheme = (t: Theme) => t;

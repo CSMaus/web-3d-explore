@@ -217,7 +217,7 @@ function LinePage() {
                     ? `After ${total} corrections the machine still has ${machineWrong} wrong, and it will never do better: no straight line can separate these dots, so there is always one to correct and the rule never stops.`
                     : `After ${taken} corrections the machine has ${machineWrong} wrong.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 pt-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 pt-1">
               <dt>Dots</dt>
               <dd className="text-right text-foreground/80">{data.X.length}</dd>
               <dt>Corrections the machine made</dt>

@@ -192,7 +192,7 @@ function SequencePage() {
                     ? `Step ${at}. The gated memory is ${now!.cell.toFixed(3)}, set at step 1 and moved by ${drift.toFixed(4)} since: the forget gate is ${now!.forget.toFixed(2)} and the input gate has been ${now!.input.toFixed(2)} since step 2, so nothing new gets in and nothing old leaks out. The plain loop's state is ${plain[at - 1].toFixed(3)}, which is about the last few numbers. Asked for the first number, the gated cell can answer. The plain loop cannot.`
                     : `Step ${at}. With the forget gate at ${now!.forget.toFixed(2)} the memory is emptied every step and refilled with the newest number: ${now!.cell.toFixed(3)}. The first number is gone from both. The gates are the same machinery either way; what they are set to is what training decides.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>The first number</dt>
               <dd className="text-right text-foreground/80">{first.toFixed(3)}</dd>
               <dt>What the gated memory held after step 1</dt>

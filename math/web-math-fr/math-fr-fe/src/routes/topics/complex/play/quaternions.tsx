@@ -181,7 +181,7 @@ function QuaternionsPage() {
                   pen.line([[angle, -1], [angle, 1]], MUTED, 1);
                   pen.dot(turned, Math.cos((turned * Math.PI) / 360), 4, ONE);
                   pen.dot(turned, Math.sin((turned * Math.PI) / 360), 4, TWO);
-                  pen.text("turn, deg", 350, -0.9, MUTED, "right");
+                  pen.text("Turn, deg", 350, -0.9, MUTED, "right");
                 }}
               />
             </div>

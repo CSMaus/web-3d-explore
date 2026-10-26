@@ -13,7 +13,9 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(new URL("../../../..", import.meta.url)));
 const SKIP_DIRS = new Set(["node_modules", ".git", ".venv", "storybook-static", ".claude", ".pytest_cache", "dist", "media", "videos"]);
-const SKIP = new Set(["rules.md", "CLAUDE.md", "notes.md", "math/docs/idea1.md", "math/docs/idea2.md", "math/docs/idea3.md", "math/01-fractals/fractals_idea.md"]);
+// verbatim records are left as they are: video-texts.md keeps the old clip texts word for word,
+// and the clip timelines quote the on-screen captions, which are lower case, exactly
+const SKIP = new Set(["rules.md", "CLAUDE.md", "notes.md", "math/docs/idea1.md", "math/docs/idea2.md", "math/docs/idea3.md", "math/01-fractals/fractals_idea.md", "math/web-math-fr/docs/video-texts.md", "math/01-fractals/narration/timeline-parts-01-05.md", "math/01-fractals/narration/timeline-parts-06-08.md", "math/01-fractals/narration/timeline-parts-09-11.md"]);
 const LOWER_OK = new Set(["shadcn", "npm", "npx", "uv", "pip", "git", "node", "pytest", "colah", "i18next", "zustand", "nginx", "systemd", "ffmpeg", "numpy", "scipy", "tsc", "vitest", "eslint", "ruff", "alembic", "uvicorn", "docker", "manim", "katex", "macos", "jsdom", "radix", "lucide", "cva", "cn", "clsx", "i18n", "a11y", "http", "https", "www", "src", "sudo", "curl", "brew", "apt", "bash", "zsh", "vite", "tailwind", "storybook", "prettier", "pydantic", "sqlalchemy", "fastapi", "react", "localhost", "cron", "ssh"]);
 const ABBREV = new Set(["e.g", "i.e", "vs", "etc", "cf", "approx", "fig", "no", "nr", "ca", "min", "max", "st", "mr", "dr", "eq", "ch", "sec", "p", "pp", "vol", "al", "resp", "incl", "ref", "px", "ms", "pt"]);
 

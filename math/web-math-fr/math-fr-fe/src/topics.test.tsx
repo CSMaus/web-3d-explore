@@ -92,10 +92,10 @@ describe("The topic index", () => {
   it("Lists every topic, built or not, in reading order", async () => {
     serve(CARDS);
     await siteAt("/topics");
-    await waitFor(() => expect(screen.getByText("Topic 1 - Fractals")).toBeTruthy());
-    expect(screen.getByText("Topic 2 - Differential equations, attractors and chaos")).toBeTruthy();
-    expect(screen.getByText("Topic 3 - Calculus into a first neural network")).toBeTruthy();
-    expect(screen.getByText("Topic 4 - Tokens, embeddings and generation")).toBeTruthy();
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Fractals" })).toBeTruthy());
+    expect(screen.getByRole("heading", { name: "Differential equations, attractors and chaos" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Calculus into a first neural network" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Tokens, embeddings and generation" })).toBeTruthy();
     const items = Array.from(document.querySelectorAll("li"));
     expect(items[0].textContent).toContain("Topic 1");
     expect(items[2].textContent).toContain("Topic 3");
@@ -105,7 +105,7 @@ describe("The topic index", () => {
   it("A topic with pages is a link, whether or not it is filmed", async () => {
     serve(CARDS);
     await siteAt("/topics");
-    await waitFor(() => expect(screen.getByText("Topic 1 - Fractals")).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Fractals" })).toBeTruthy());
     const hrefs = Array.from(document.querySelectorAll("main a")).map((a) =>
       a.getAttribute("href"),
     );
@@ -143,7 +143,7 @@ describe("The topic index", () => {
       vi.fn(() => Promise.reject(new Error("connection refused"))),
     );
     await siteAt("/topics");
-    await waitFor(() => expect(screen.getByText("Topic 1 - Fractals")).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Fractals" })).toBeTruthy());
     expect(screen.queryByText("The backend is not answering")).toBeNull();
   });
 });

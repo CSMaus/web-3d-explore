@@ -200,7 +200,7 @@ function SamplePage() {
                 ? `Under ${describe(rule)} the next token is drawn from ${live} candidate${live === 1 ? "" : "s"} of ${VOCAB.bytes.length}; the model itself gave ${raw.filter((v) => v > 0.01).length} of them more than one per cent. Press run to generate under the rule and under greedy side by side.`
                 : `${made} tokens under each rule. Greedy is the same every time and ${greedy.length > prompt.length + 12 && decode(VOCAB, greedy).split(". ").length < 3 ? "has settled into a loop" : "repeats whatever the text repeats"}; the rule draws from ${live} candidate${live === 1 ? "" : "s"} at this step${temperature > 1.3 ? " and at this temperature it wanders, because unlikely tokens are given a real chance" : temperature > 0 && temperature < 0.5 ? " and at this temperature it is nearly greedy" : ""}. The model did not change between the two columns; only the choosing did.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Candidates left after the rule</dt>
               <dd className="text-right text-foreground/80">{live} of {VOCAB.bytes.length}</dd>
               <dt>Most likely token, raw and after the rule</dt>

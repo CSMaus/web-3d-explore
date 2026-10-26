@@ -148,7 +148,7 @@ function MeaningPage() {
                 ? `Nothing trained: the rows are random, so the nearest tokens to ${visible(probe)} are whichever happened to land nearby: ${near.map((n) => visible(tokenText(n.id))).join(", ")}. Press run.`
                 : `After ${steps.toLocaleString("en")} steps the nearest tokens to ${visible(probe)} are ${near.map((n) => `${visible(tokenText(n.id))} (${n.cos.toFixed(2)})`).join(", ")}. Cat and dog now sit at cosine ${catDog.toFixed(2)}${catDog > 0.6 ? ": They occur in the same places in the text, so the loss pushed their rows together" : "; More steps will bring them together, because they occur in the same places in the text"}.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Times the row for {visible(tokenText(frequent))} was moved</dt>
               <dd className="text-right text-foreground/80">{sg.touched[frequent]} (It occurs {countOf(frequent)} times in the text)</dd>
               <dt>Times the row for {visible(tokenText(rare))} was moved</dt>

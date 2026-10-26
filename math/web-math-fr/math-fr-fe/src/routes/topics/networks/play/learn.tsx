@@ -334,7 +334,7 @@ function LearnPage() {
                     ? `Done: every dot right after ${view.steps} steps with ${OPTS[method].label}${batch !== "all" ? `, Looking at ${batch} dot${batch === "1" ? "" : "s"} at a time` : ""}. How wrong: ${total.toFixed(4)}.`
                     : `After ${view.steps} steps, ${wrong} of ${data.X.length} wrong, how wrong ${total.toFixed(4)}, ${total < late * 0.97 ? "still falling" : "no longer falling much"}.${batch !== "all" ? " The curve is jagged because each step sees only a few dots, so its idea of downhill is noisy. It is also cheaper per step." : ""}`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Method</dt>
               <dd className="text-right text-foreground/80">{OPTS[method].label}</dd>
               <dt>Dots looked at before each move</dt>

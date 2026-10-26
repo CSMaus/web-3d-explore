@@ -11,5 +11,5 @@ export const page = definePage({
   // what is drawn behind the page: "plain" | "gradient" | "grain" | "grid" | "vignette" | "waves"| "gradient" | "grain" | "grid" | "vignette"
   background: "waves",
   // space under each block of the hero, in px: eyebrow, title, lede, buttons; tagGap between the tags
-  hero: { afterEyebrow: 14, afterTitle: 20, afterLede: 20, afterActions: 18, tagGap: 38 },
+  hero: { afterEyebrow: 28, afterTitle: 28, afterLede: 36, afterActions: 28, tagGap: 24 },
 });

@@ -79,7 +79,7 @@ export function RuinFigure() {
 
   return (
     <Panel label="The reader's experiment: a thousand insurers" tone="primary">
-      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
         <div className="space-y-4">
           <Choices options={WORLD_OPTIONS} value={which} onPick={(id) => { setWhich(id); setResult(null); }} />
           <Field label="Capital" min={2} max={60} step={1} value={capital} format={(v) => `${v} × mean claim`} onChange={(v) => { setCapital(v); setResult(null); }} />

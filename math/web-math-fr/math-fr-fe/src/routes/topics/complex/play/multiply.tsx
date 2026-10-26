@@ -109,8 +109,8 @@ function MultiplyPage() {
                     pen.dot(product[0], product[1], 6, SKY);
                     pen.text(`z w = ${show(product)}`, product[0], product[1] - 0.45, SKY, "center");
                   }
-                  pen.text("along", BOX.x1 - 0.8, -0.35, MUTED, "center");
-                  pen.text("up", 0.3, BOX.y1 - 0.5, MUTED, "left");
+                  pen.text("Along", BOX.x1 - 0.8, -0.35, MUTED, "center");
+                  pen.text("Up", 0.3, BOX.y1 - 0.5, MUTED, "left");
                 }}
               />
             </div>

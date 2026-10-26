@@ -148,7 +148,7 @@ function GrowthPage() {
                   ? `${t.toFixed(1)} years in, it is at ${value.toFixed(0)}: past the target. The exact moment was ${reach.toFixed(2)} years, and that is what a logarithm is: the question of when, asked of a growth like this.`
                   : `${t.toFixed(1)} years in, there is ${value.toFixed(0)}, and it is growing by ${slope.toFixed(1)} a year. That is ${((slope / value) * 100).toFixed(1)} % of itself, the same as at every other moment. ${Number.isFinite(reach) && reach > 0 ? `At this rate the target of ${target} is reached at ${reach.toFixed(1)} years.` : "At this rate the target is never reached."}`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Amount now</dt>
               <dd className="text-right text-foreground/80">{value.toFixed(2)}</dd>
               <dt>Growing at</dt>

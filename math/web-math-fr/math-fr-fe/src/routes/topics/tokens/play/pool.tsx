@@ -167,7 +167,7 @@ function PoolPage() {
                 ? `Two passages, ${ta.length} and ${tb.length} tokens, so ${ta.length} and ${tb.length} vectors. Press run to fold them into one vector each and compare.`
                 : `After folding in ${at} position${at === 1 ? "" : "s"} the two passage vectors have cosine ${cos.toFixed(3)}.${at >= most ? ` Across the three pairs, ${way === "mean" ? "averaging" : "the last position"} gives: ${all.map((p) => `${p.label} ${p.cos.toFixed(2)}`).join("; ")}. ${all[1].cos > all[2].cos ? "The pair with opposite meaning sits closer than the pair with a different subject: the one vector is a summary of the words used, and a single \"not\" barely moves it." : "On this model the different subject is furthest, and the opposite pair is not far behind the same-meaning pair."}` : ""}`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Vectors before collapsing</dt>
               <dd className="text-right text-foreground/80">{ta.length} and {tb.length}, Each {WIDTH} wide</dd>
               <dt>Vectors after</dt>

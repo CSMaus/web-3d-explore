@@ -231,7 +231,7 @@ function HeartPage() {
                 {`The recording as intervals: time along the bottom in minutes and seconds, the interval from each beat to the next in milliseconds up, one dot a beat as the cardiologists marked it. Sky: a normal beat. Rose: a flutter wave. White: a premature or escape beat. The rose band is the stretch they named ventricular flutter; the grey band the self-paced ventricular rhythm; the faint sky bands bigeminy and the fast rhythm from above. Showing ${clock(span[0])} to ${clock(span[1])}.`}
               </Caption>
             </div>
-            <div className="grid gap-2 lg:grid-cols-[300px_1fr]">
+            <div className="grid gap-2 lg:grid-cols-[300px_minmax(0,1fr)]">
               <div>
                 <div data-slot="plot" className="h-[300px] overflow-hidden">
                   <Plot

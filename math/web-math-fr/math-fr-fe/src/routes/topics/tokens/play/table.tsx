@@ -203,7 +203,7 @@ function TablePage() {
                 ? `${tokens.length} tokens are waiting. Press run: each id becomes a vector ${width} wide by picking one row of the table.`
                 : `Token ${at}, ${visible(current!.text)}, id ${current!.id}: as a one-hot vector it is ${V} zeros with a single one at position ${current!.id}. Multiplying that by the table selects row ${current!.id} and nothing else, so the lookup is that multiplication, done cheaply. The network now holds ${at} rows of ${width} numbers.${at === tokens.length ? ` A longer input would add rows; nothing could make a row wider.` : ""}`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Vocabulary size, so one-hot length and table rows</dt>
               <dd className="text-right text-foreground/80">{V}</dd>
               <dt>Width, chosen once</dt>

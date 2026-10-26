@@ -24,8 +24,8 @@ export const text = defineText({
       font: "heading",
       size: 84,
       weight: 500,
-      leading: 1.02,
-      tracking: -0.03,
+      leading: 0.98,
+      tracking: -0.035,
       case: "sentence",
       colour: "foreground",
     },
@@ -42,7 +42,7 @@ export const text = defineText({
     body: {
       used: "running text everywhere: the reading text beside a clip, the application pieces, the mathematics pages",
       font: "body",
-      size: 15,
+      size: 16,
       weight: 400,
       leading: 1.55,
       tracking: 0,
@@ -52,7 +52,7 @@ export const text = defineText({
     heading1: {
       used: "the title of a page under the topic bar: a play page, a theory page, an application piece, About, Projects",
       font: "label",
-      size: 14,
+      size: 22,
       weight: 500,
       leading: 1.3,
       tracking: 0.04,
@@ -62,7 +62,7 @@ export const text = defineText({
     heading2: {
       used: "a section inside a page, in capitals: MATHEMATICS, the groups on a play index, the parts of a piece",
       font: "label",
-      size: 11,
+      size: 14,
       weight: 500,
       leading: 1.4,
       tracking: 0.1,
@@ -72,7 +72,7 @@ export const text = defineText({
     heading3: {
       used: "a quieter section, in capitals: ROTATION MODE, Asides, the question above the reading text beside each clip",
       font: "label",
-      size: 11,
+      size: 12,
       weight: 500,
       leading: 1.4,
       tracking: 0.1,
@@ -82,7 +82,7 @@ export const text = defineText({
     label: {
       used: "the small label in capitals over a block: WHAT GOES IN, RUN, the name of a definition on a theory page, the group of a tab row",
       font: "label",
-      size: 12,
+      size: 13,
       weight: 400,
       leading: 1.4,
       tracking: 0.1,
@@ -92,17 +92,17 @@ export const text = defineText({
     tag: {
       used: "a coloured word or two under the front page lede: NO PREREQUISITES, FREE TO EXPLORE",
       font: "label",
-      size: 12,
+      size: 13,
       weight: 400,
       leading: 1.4,
       tracking: 0.1,
       case: "upper",
-      colour: "primary",
+      colour: "muted-foreground",
     },
     caption: {
       used: "small monospaced lines: under a plot or a picture, the rows of a hand-made readout, a path, a time, a log",
       font: "label",
-      size: 11,
+      size: 13,
       weight: 400,
       leading: 1.5,
       tracking: 0,
@@ -112,7 +112,7 @@ export const text = defineText({
     verdict: {
       used: "the sentence a play page says after a run: done, blew up, about to go in",
       font: "body",
-      size: 13,
+      size: 14,
       weight: 400,
       leading: 1.55,
       tracking: 0,
@@ -122,7 +122,7 @@ export const text = defineText({
     readout: {
       used: "the names in a readout of numbers after a run (method, numbers being moved, runs kept)",
       font: "label",
-      size: 12,
+      size: 13,
       weight: 400,
       leading: 1.5,
       tracking: 0,
@@ -132,7 +132,7 @@ export const text = defineText({
     readoutValue: {
       used: "the numbers in that readout",
       font: "label",
-      size: 12,
+      size: 13,
       weight: 400,
       leading: 1.5,
       tracking: 0,
@@ -152,7 +152,7 @@ export const text = defineText({
     nav: {
       used: "the links in the top bar: Learn, Topics, Play, About, Projects, Contact (the active one takes the marker from topbar.ts)",
       font: "label",
-      size: 14,
+      size: 15,
       weight: 400,
       leading: 1,
       tracking: 0,
@@ -162,7 +162,7 @@ export const text = defineText({
     crumb: {
       used: "the Topics link above a topic's name, the way back to the list",
       font: "label",
-      size: 14,
+      size: 15,
       weight: 400,
       leading: 1.4,
       tracking: 0.04,
@@ -172,7 +172,7 @@ export const text = defineText({
     topic: {
       used: "the topic's number and name under the top bar: Topic 2 - Differential equations",
       font: "label",
-      size: 14,
+      size: 15,
       weight: 400,
       leading: 1.4,
       tracking: 0.04,
@@ -182,7 +182,7 @@ export const text = defineText({
     tab: {
       used: "the links of a topic's sub-menu: Play, Mathematics, Applications, and the systems of a play page; the current one takes the selected colour",
       font: "label",
-      size: 13,
+      size: 14,
       weight: 400,
       leading: 1.4,
       tracking: 0,
@@ -192,7 +192,7 @@ export const text = defineText({
     button: {
       used: "the text of every button, chip and tab; the colours come from buttons.ts",
       font: "label",
-      size: 12,
+      size: 14,
       weight: 500,
       leading: 1.2,
       tracking: 0,
@@ -202,7 +202,7 @@ export const text = defineText({
     search: {
       used: "the search field in the top bar, before it is opened",
       font: "label",
-      size: 12,
+      size: 13,
       weight: 400,
       leading: 1,
       tracking: 0,
@@ -222,7 +222,7 @@ export const text = defineText({
     panelHead: {
       used: "the title row of a card with a dot before it: the Mandelbulb card on the front page",
       font: "label",
-      size: 12,
+      size: 13,
       weight: 400,
       leading: 1.4,
       tracking: 0,
@@ -232,7 +232,7 @@ export const text = defineText({
     strip: {
       used: "the thin line across the foot of the front page: observation, what is new, the scroll hint",
       font: "label",
-      size: 12,
+      size: 13,
       weight: 400,
       leading: 1.4,
       tracking: 0.1,
@@ -242,7 +242,7 @@ export const text = defineText({
     field: {
       used: "the name of a slider",
       font: "body",
-      size: 12,
+      size: 13,
       weight: 400,
       leading: 1.4,
       tracking: 0,
@@ -252,7 +252,7 @@ export const text = defineText({
     fieldValue: {
       used: "the number a slider stands at",
       font: "label",
-      size: 12,
+      size: 13,
       weight: 400,
       leading: 1.4,
       tracking: 0,
@@ -262,7 +262,7 @@ export const text = defineText({
     banner: {
       used: "the consent notice at the foot of the screen",
       font: "body",
-      size: 12,
+      size: 13,
       weight: 400,
       leading: 1.5,
       tracking: 0,
@@ -272,7 +272,7 @@ export const text = defineText({
     skip: {
       used: "the link that appears on the first keyboard press and jumps past the top bar",
       font: "label",
-      size: 12,
+      size: 13,
       weight: 500,
       leading: 1.2,
       tracking: 0,
@@ -285,7 +285,7 @@ export const text = defineText({
     counter: {
       used: "the screen counter at the foot of a screen: 002 / 005",
       font: "label",
-      size: 11,
+      size: 12,
       weight: 400,
       leading: 1.4,
       tracking: 0.06,
@@ -295,7 +295,7 @@ export const text = defineText({
     share: {
       used: "the share control at the foot of a screen",
       font: "label",
-      size: 11,
+      size: 12,
       weight: 400,
       leading: 1.4,
       tracking: 0.06,
@@ -315,7 +315,7 @@ export const text = defineText({
     cardText: {
       used: "the text under an icon card's title",
       font: "body",
-      size: 13,
+      size: 14,
       weight: 400,
       leading: 1.6,
       tracking: 0,
@@ -325,7 +325,7 @@ export const text = defineText({
     itemTitle: {
       used: "the name of an item in a list or a card: a system on a play index, a project, a section of a theory page",
       font: "label",
-      size: 14,
+      size: 16,
       weight: 500,
       leading: 1.3,
       tracking: 0,
@@ -336,7 +336,7 @@ export const text = defineText({
     note: {
       used: "the explanation under a control or a picture: what the slider does, what to click, what the numbers mean",
       font: "body",
-      size: 11,
+      size: 14,
       weight: 400,
       leading: 1.5,
       tracking: 0,
@@ -346,7 +346,7 @@ export const text = defineText({
     intro: {
       used: "the paragraph under a page's title saying what the page shows",
       font: "body",
-      size: 14,
+      size: 17,
       weight: 400,
       leading: 1.6,
       tracking: 0,

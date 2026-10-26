@@ -102,7 +102,7 @@ function MergePage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            <div className="grid gap-2 lg:grid-cols-[1fr_260px]">
+            <div className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_260px]">
               <div><div data-slot="plot" className="h-[250px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
@@ -160,7 +160,7 @@ function MergePage() {
                 ? `Before any merge the text is ${bytesTotal} bytes, so ${bytesTotal} tokens, from an alphabet of 256. The commonest pair right now is ${winner ? `${name(now.vocab, winner.a)} + ${name(now.vocab, winner.b)}, seen ${winner.count} times` : "none"}. Press run.`
                 : `Merge ${at}: ${name(now.vocab, last!.a)} + ${name(now.vocab, last!.b)} became one symbol, ${name(now.vocab, last!.into)}, because that pair was the commonest, ${last!.count} times. The vocabulary is now ${now.vocab.bytes.length} symbols and the text is ${tokensNow} tokens, down from ${bytesTotal} bytes.${at >= most ? " No more pairs occur twice, so there is nothing left worth a symbol." : ""}`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Symbols in the vocabulary</dt>
               <dd className="text-right text-foreground/80">256 + {at} = {now.vocab.bytes.length}</dd>
               <dt>Tokens the text takes</dt>

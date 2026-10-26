@@ -1,6 +1,7 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Text, Heading } from "@kit/index";
 import { api } from "@/lib/api";
+import { PlayTile } from "@/components/PlayTile";
 import { useRise } from "@/lib/reveal";
 import { TOPIC, routeOf, type TokenRoute } from "@/lib/tokens";
 
@@ -47,23 +48,20 @@ function TokenIndex() {
           from it and neither does any of the mathematics.
         </Text>
       ) : null}
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {items.map((s, i) => (
-          <Tile key={s.id} to={routeOf(s.id)} name={s.name} summary={s.summary} delay={i * 60} />
+          <Tile key={s.id} to={routeOf(s.id)} number={i + 1} name={s.name} summary={s.summary} delay={i * 60} />
         ))}
       </div>
     </div>
   );
 }
 
-function Tile({ to, name, summary, delay }: { to: TokenRoute; name: string; summary: string; delay: number }) {
+function Tile({ to, number, name, summary, delay }: { to: TokenRoute; number: number; name: string; summary: string; delay: number }) {
   const ref = useRise<HTMLDivElement>(delay);
   return (
-    <div ref={ref} className="rise">
-      <Link to={to} className="block rounded border border-border p-4 transition-colors hover:border-selected">
-        <div data-text="itemTitle">{name}</div>
-        <Text kind="note" as="p" className="mt-1">{summary}</Text>
-      </Link>
+    <div ref={ref} className="rise h-full">
+      <PlayTile to={to} number={number} label={name} summary={summary} />
     </div>
   );
 }

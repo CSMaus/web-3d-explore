@@ -70,7 +70,7 @@ function BulbPage() {
   return (
     <div>
       <Heading level={1} className="mt-4">{system?.name ?? "The three-dimensional set"}</Heading>
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
+      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
         <div className="space-y-4">
           <section data-slot="panel">
             <Label>SOLID</Label>
@@ -88,7 +88,7 @@ function BulbPage() {
                     {palette.ramp.map((hex, i) => (
                       <input key={i} type="color" value={hex} aria-label={`Stop `} onChange={(e) => tint(i, e.target.value)} className="h-7 w-9 cursor-pointer rounded border border-border bg-transparent" />
                     ))}
-                    <input type="color" value={palette.back} aria-label="background" onChange={(e) => setOwn((p) => ({ ramp: (p ?? stored).ramp, back: e.target.value }))} className="ml-2 h-7 w-9 cursor-pointer rounded border border-border bg-transparent" />
+                    <input type="color" value={palette.back} aria-label="Background" onChange={(e) => setOwn((p) => ({ ramp: (p ?? stored).ramp, back: e.target.value }))} className="ml-2 h-7 w-9 cursor-pointer rounded border border-border bg-transparent" />
                     {own ? (
                       <Button
                         variant="outline"

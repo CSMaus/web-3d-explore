@@ -1,5 +1,5 @@
 // every design the kit carries, by name. one folder per case, each with the same
-// thirteen scripts. to add a case: copy a folder, give it a name, add a line here.
+// fourteen scripts. to add a case: copy a folder, give it a name, add a line here.
 // a case can start from another one: import that case's script and spread it,
 // changing only the fields that differ, for example
 //   export const buttons = defineButtons({ ...base, shape: "square" });

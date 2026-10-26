@@ -58,8 +58,7 @@ function TopicPage() {
           <Heading level={1} className="mt-6">{HEADING}</Heading>
           <Text kind="intro" as="p" className="mt-3 max-w-2xl">
             {topic.part_list.length} clips, one a part, about {minutes} minutes of picture in
-            order. Beside each clip is the reasoning of the part, written out to be read with the
-            clip or instead of it.
+            order. Beside each clip is the part's question and a short description of it.
           </Text>
         </header>
 

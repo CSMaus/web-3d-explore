@@ -151,7 +151,7 @@ function CostPage() {
                   ? `English: ${current!.count} tokens for ${current!.chars} characters, ${current!.ratio.toFixed(2)} tokens a character. The vocabulary was built on English, so almost every word is one token.`
                   : `${current!.label}: ${current!.count} tokens for ${current!.chars} characters, ${current!.ratio.toFixed(2)} tokens a character, ${(current!.ratio / english.ratio).toFixed(1)} times the English rate. ${current!.ratio >= 1 ? "More tokens than characters: every character is several bytes and the vocabulary has no symbol for any of them, so it falls back to bytes." : "The vocabulary has some of these pieces from shared letters, and none of the words."} in a window of ${window} tokens this sentence fits ${fits(current!.count)} time${fits(current!.count) === 1 ? "" : "s"}; the English one fits ${fits(english.count)}.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               {shown.map((r) => (
                 <Row key={r.id} label={`${r.label}, tokens a character`} value={`${r.ratio.toFixed(2)}  (x${(r.ratio / english.ratio).toFixed(1)})`} />
               ))}

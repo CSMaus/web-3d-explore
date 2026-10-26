@@ -17,6 +17,9 @@ const DARK = {
   border: "#223026",
 } as const;
 
+// the light page of each phosphor is the same screen by day, in the phosphor's own hue, so it
+// reads as the dark one with the lights on: cool green-grey for the green, warm paper for the
+// amber, cool grey-blue for the white
 const PAPER = {
   background: "#efeadb",
   card: "#f7f3e6",
@@ -25,14 +28,34 @@ const PAPER = {
   border: "#b9b19a",
 } as const;
 
-const palette = (light: Hues, dark: Hues): Colours => defineColours({ default: "dark", light: { ...PAPER, ...light }, dark: { ...DARK, ...dark } });
+const DAY_GREEN = {
+  background: "#e6ede7",
+  card: "#f2f6f2",
+  foreground: "#0b1a10",
+  "muted-foreground": "#3f5545",
+  border: "#b4c6b8",
+} as const;
+
+const DAY_WHITE = {
+  background: "#e7ebef",
+  card: "#f3f5f8",
+  foreground: "#121820",
+  "muted-foreground": "#46505c",
+  border: "#b7c0cb",
+} as const;
+
+type Greys = Record<"background" | "card" | "foreground" | "muted-foreground" | "border", `#${string}`>;
+
+const palette = (light: Hues, dark: Hues, day: Greys = PAPER): Colours => defineColours({ default: "dark", light: { ...day, ...light }, dark: { ...DARK, ...dark } });
 
 export const PALETTES: Record<string, Colours> = {
   T_GN: palette(
     {
-      primary: "#1b7a38",
-      secondary: "#0b6a30",
-      chart: ["#1b7a38", "#0b6a30", "#5f6b5c", "#2f9452", "#a8352a"],
+      primary: "#0f8a3a",
+      secondary: "#0a6b2c",
+      // the light that walks the figures and glows under buttons: a clear phosphor green, as on the dark page
+      glow: "#12b04a",
+      chart: ["#0f8a3a", "#0a6b2c", "#5f6b5c", "#2f9452", "#a8352a"],
       destructive: "#a8352a",
     },
     {
@@ -41,6 +64,7 @@ export const PALETTES: Record<string, Colours> = {
       chart: ["#33ff66", "#00c853", "#7f8f7a", "#b4ffc8", "#ff5f56"],
       destructive: "#ff5f56",
     },
+    DAY_GREEN,
   ),
   T_AM: palette(
     {
@@ -69,6 +93,7 @@ export const PALETTES: Record<string, Colours> = {
       chart: ["#e8f4ff", "#9ecbff", "#7f8a94", "#c7d6e2", "#ff5f56"],
       destructive: "#ff5f56",
     },
+    DAY_WHITE,
   ),
 };
 

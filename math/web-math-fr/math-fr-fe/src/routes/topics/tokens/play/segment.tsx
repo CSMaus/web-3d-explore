@@ -141,7 +141,7 @@ function SegmentPage() {
                   ? `${tokens.length} tokens after ${at} merges. The pieces are joining in the order the vocabulary learned them: common pairs first, whole common words later.`
                   : `${final.length} tokens for ${nChars} characters under this vocabulary. ${worst.count > 1 ? `The word "${worst.word.trim()}" is ${worst.count} pieces${worst.known ? "" : " because it never appears in the text the vocabulary was built from, so no merge ever covered it"}.` : "Every word is a single token."} decoding the ${final.length} ids gives back ${trip.exact ? "exactly the sentence, byte for byte" : "something different"}.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Characters</dt>
               <dd className="text-right text-foreground/80">{nChars}</dd>
               <dt>Tokens under {size} merges</dt>

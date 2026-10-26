@@ -115,7 +115,7 @@ function LinePage() {
                       pen.dot(x, 0.35, 5, ONE);
                       pen.text(`${x.toFixed(2)}, squared: ${(x * x).toFixed(2)}`, x, 0.75, ONE, "center");
                       pen.dot(-1, -0.45, 5, TWO);
-                      pen.text("minus one is here, on the lower line", -1, -0.85, TWO, "center");
+                      pen.text("Minus one is here, on the lower line", -1, -0.85, TWO, "center");
                       pen.dot(x * x, -0.45, 4, ONE);
                     }
                   }}

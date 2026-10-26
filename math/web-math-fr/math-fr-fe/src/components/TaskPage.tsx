@@ -27,7 +27,7 @@ export function TaskPage({ title, job, input, run, picture, result, more, below 
       <Heading className="mt-4">{title}</Heading>
       <Text kind="body" as="p" className="mt-2 max-w-2xl">{job}</Text>
 
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_1fr]">
+      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
         <div className="space-y-4">
           <Panel label="WHAT GOES IN">{input}</Panel>
           <Panel label="RUN" tone="primary">{run}</Panel>

@@ -157,7 +157,7 @@ function BytesPage() {
                     ? `${list.length} characters, ${points} code points, ${bytes} bytes: all three counts agree, because every character here fits in one byte. That is true of plain English and of almost nothing else.`
                     : `${list.length} characters, ${points} code points, ${bytes} bytes. ${multi > 0 ? `${multi} characters need more than one byte, so the byte count is ${(bytes / list.length).toFixed(2)} times the character count.` : ""} ${marks > 0 ? `${marks} characters are made of more than one code point: a base letter with a mark on it.` : ""}`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Characters, as read</dt>
               <dd className="text-right text-foreground/80">{list.length}</dd>
               <dt>Code points</dt>

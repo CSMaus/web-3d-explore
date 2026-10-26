@@ -176,7 +176,12 @@ export function Bulb({ className, view = "solid", palette, light = "#9fe3ff", ..
 
       const phase = moving ? ((now - started) % p.period) / p.period : 0;
       uniforms.uPhase.value = phase;
-      uniforms.uSpin.value = moving ? (phase * TAU) / p.power : p.azimuth;
+      // a bulb of whole power n looks the same after 1/(n - 1) of a turn about its axis, since each
+      // step multiplies the angle by n and adds the point's own angle back; one period turns it by
+      // exactly that much, so the wrap at the end of a period lands on the same view. a power that
+      // is not whole has no such repeat, and then one period is a whole turn
+      const fold = Number.isInteger(p.power) && p.power > 1 ? p.power - 1 : 1;
+      uniforms.uSpin.value = moving ? (phase * TAU) / fold : p.azimuth;
       uniforms.uElev.value = p.elevation;
       uniforms.uPower.value = p.power;
       uniforms.uInner.value = p.inner;

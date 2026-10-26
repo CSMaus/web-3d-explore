@@ -207,22 +207,22 @@
     {
      "label": "Steps that remember",
      "tex": "\\rho(k) = \\tfrac{1}{2}\\bigl((k+1)^{2H} - 2k^{2H} + (k-1)^{2H}\\bigr)",
-     "note": "the correlation between steps k apart in fractional Gaussian noise. H = 0.5 is the coin toss, no memory; above it a run tends to continue, below it to reverse"
+     "note": "The correlation between steps k apart in fractional Gaussian noise. H = 0.5 is the coin toss, no memory; above it a run tends to continue, below it to reverse"
     },
     {
      "label": "Hurst's rescaled range",
      "tex": "\\frac{R}{S}(m) \\propto m^{H}",
-     "note": "in a block of m steps, how far the running sum wanders over how much the steps vary. Hurst found 0.72 across the Nile and seventy-four other records, where a coin gives 0.5"
+     "note": "In a block of m steps, how far the running sum wanders over how much the steps vary. Hurst found 0.72 across the Nile and seventy-four other records, where a coin gives 0.5"
     },
     {
      "label": "The spread of the future",
      "tex": "\\sigma(T) = \\sigma\\, T^{H}",
-     "note": "how far the walk can be T steps ahead. a coin gives the square root of T; a persistent series spreads faster, so a long horizon is riskier than the square-root rule says"
+     "note": "How far the walk can be T steps ahead. A coin gives the square root of T; a persistent series spreads faster, so a long horizon is riskier than the square-root rule says"
     },
     {
      "label": "The graph's dimension",
      "tex": "D = 2 - H",
-     "note": "the box-counting dimension of the walk drawn as a line: a persistent walk is a smoother line, an anti-persistent one rougher. the link back to the coastline"
+     "note": "The box-counting dimension of the walk drawn as a line: a persistent walk is a smoother line, an anti-persistent one rougher. The link back to the coastline"
     }
    ],
    "dimension": {
@@ -239,23 +239,23 @@
     {
      "label": "The blend",
      "tex": "\\hat{\\lambda} = Z\\,\\bar{x} + (1 - Z)\\,\\mu, \\qquad Z = \\frac{n}{n + k}",
-     "note": "x bar the customer's own rate over n years, mu the group's; Z rises from nothing towards one as the years come. Whitney 1918, Bailey 1950, Buhlmann 1967"
+     "note": "Here x bar is the customer's own rate over n years and mu the group's; Z rises from nothing towards one as the years come. Whitney 1918, Bailey 1950, Buhlmann 1967"
     },
     {
      "label": "What k means",
      "tex": "k = \\frac{\\mathbb{E}[\\mathrm{Var}(X \\mid \\theta)]}{\\mathrm{Var}(\\mathbb{E}[X \\mid \\theta])}",
-     "note": "the noise in one customer's outcomes over the spread between customers. customers who differ a lot from each other earn their own rate quickly; a noisy outcome earns it slowly. Z is one half at n = k"
+     "note": "The noise in one customer's outcomes over the spread between customers. Customers who differ a lot from each other earn their own rate quickly; a noisy outcome earns it slowly. Z is one half at n = k"
     },
     {
      "label": "The exact Bayes behind it",
      "tex": "\\lambda \\sim \\Gamma(a, b),\\quad X \\mid \\lambda \\sim \\mathrm{Poisson}(\\lambda) \\;\\Rightarrow\\; \\lambda \\mid x \\sim \\Gamma(a + x,\\, b + n)",
-     "note": "the posterior mean (a + x) / (b + n) is the blend with k = b and mu = a / b. the page draws this belief as a curve narrowing year by year"
+     "note": "The posterior mean (a + x) / (b + n) is the blend with k = b and mu = a / b. The page draws this belief as a curve narrowing year by year"
     }
    ],
    "dimension": {
     "label": "The same shape elsewhere",
     "tex": "\\text{reserve} = Z\\cdot\\text{chain ladder} + (1 - Z)\\cdot\\text{prior}",
-    "note": "the money set aside for claims not yet paid is blended the same way, the reported fraction as Z; mortality forecasts widen their intervals the same way when the parameters are uncertain"
+    "note": "The money set aside for claims not yet paid is blended the same way, the reported fraction as Z; mortality forecasts widen their intervals the same way when the parameters are uncertain"
    }
   },
   {
@@ -266,23 +266,23 @@
     {
      "label": "The tail",
      "tex": "P(X > x) = \\left(\\frac{x_0}{x}\\right)^{\\alpha}, \\quad x \\ge x_0",
-     "note": "a straight line of slope minus alpha on log-log axes, where a thin tail bends down. the same law Pareto found for incomes in 1896"
+     "note": "A straight line of slope minus alpha on log-log axes, where a thin tail bends down. The same law Pareto found for incomes in 1896"
     },
     {
      "label": "The same at every scale",
      "tex": "P(X > x \\mid X > u) = \\left(\\frac{u}{x}\\right)^{\\alpha}",
-     "note": "above any threshold the excess is again Pareto with the same alpha: the largest tenth of the claims, rescaled, is distributed like the whole. self-similarity, as for the coastline"
+     "note": "Above any threshold the excess is again Pareto with the same alpha: the largest tenth of the claims, rescaled, is distributed like the whole. Self-similarity, as for the coastline"
     },
     {
      "label": "The average that never settles",
      "tex": "\\mathbb{E}[X] = \\frac{\\alpha x_0}{\\alpha - 1}\\ (\\alpha > 1), \\qquad \\mathrm{Var}[X] = \\infty\\ (\\alpha \\le 2)",
-     "note": "below two the variance is infinite, and one claim can outweigh all the others so far: Mandelbrot's Noah effect. the running mean keeps jumping however many claims arrive"
+     "note": "Below two the variance is infinite, and one claim can outweigh all the others so far: Mandelbrot's Noah effect. The running mean keeps jumping however many claims arrive"
     }
    ],
    "dimension": {
     "label": "The index as a dimension",
     "tex": "\\alpha = -\\frac{d \\log P(X > x)}{d \\log x}",
-    "note": "read off the slope of the survival plot as a dimension is read off the box count: the exponent of a power law saying how a count changes with scale"
+    "note": "Read off the slope of the survival plot as a dimension is read off the box count: the exponent of a power law saying how a count changes with scale"
    }
   }
  ],

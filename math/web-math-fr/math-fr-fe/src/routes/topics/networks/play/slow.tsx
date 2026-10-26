@@ -85,7 +85,7 @@ function SlowPage() {
           />
         }
         picture={
-          <section ref={stage} className="grid gap-2 lg:grid-cols-[1fr_320px]">
+          <section ref={stage} className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_320px]">
             <div><div data-slot="plot" className="h-[380px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -136,7 +136,7 @@ function SlowPage() {
                 ? `Both copies start by answering ${start.toFixed(3)} when the right answer is 0. Their total sits far out on the flat part of the squash, where its slope is ${slopeM.toFixed(4)}. Press run.`
                 : `After ${k} steps the copy trained on the squared miss answers ${am.toFixed(3)}${toM > 0 ? ` and took ${toM} steps to get within ${NEAR} of the right answer` : ` and is not yet within ${NEAR} of the right answer`}. The copy trained on cross entropy answers ${ac.toFixed(3)}${toC > 0 ? ` and took ${toC} steps` : " and is not there yet either"}. ${toM > 0 && toC > 0 ? `That is ${(toM / toC).toFixed(1)} times slower for the squared miss, from the same start with the same step size.` : ""} The squared miss moves the numbers by the miss times the slope of the squash, and out on the flat part that slope is nearly nothing, so the more sure and wrong the start, the slower it corrects. Under cross entropy the slope of the squash cancels out of the move: what is left is the miss alone, and the move is large exactly when the miss is large.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Answer now, squared miss and cross entropy</dt>
               <dd className="text-right text-foreground/80">{am.toFixed(4)}, {ac.toFixed(4)}</dd>
               <dt>Move asked for this step, squared miss</dt>

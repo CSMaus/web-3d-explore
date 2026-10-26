@@ -272,28 +272,28 @@
     {
      "label": "The interval",
      "tex": "I_{n} = t_{n+1} - t_{n}",
-     "note": "the time from one marked beat to the next, in milliseconds, from the cardiologists' annotation file at 360 samples a second. during flutter each flutter wave is a marked beat"
+     "note": "The time from one marked beat to the next, in milliseconds, from the cardiologists' annotation file at 360 samples a second. During flutter each flutter wave is a marked beat"
     },
     {
      "label": "The return map",
      "tex": "(I_{n},\\, I_{n+1})",
-     "note": "each interval against the one after it, the picture the Rossler page introduced and the 1992 experiment used. a rhythm that repeats is one spot; a switch is a jump between clouds"
+     "note": "Each interval against the one after it, the picture the Rossler page introduced and the 1992 experiment used. A rhythm that repeats is one spot; a switch is a jump between clouds"
     },
     {
      "label": "How much one interval says about the next",
      "tex": "\\rho = \\frac{\\overline{\\sigma(I_{n+1} \\mid I_n \\in \\text{bin})}}{\\sigma(I_{n+1})}",
-     "note": "the spread of the next interval among beats whose own interval fell in the same 20 ms bin, over the spread knowing nothing. one for no help, zero for a rule; the same measure the primes aside uses"
+     "note": "The spread of the next interval among beats whose own interval fell in the same 20 ms bin, over the spread knowing nothing. One for no help, zero for a rule; the same measure the primes aside uses"
     },
     {
      "label": "Rate from interval",
      "tex": "\\text{beats a minute} = \\frac{60000}{\\bar{I}}",
-     "note": "her normal rhythm and the flutter, each as a rate, from their mean intervals"
+     "note": "Her normal rhythm and the flutter, each as a rate, from their mean intervals"
     }
    ],
    "dimension": {
     "label": "What the record is",
     "tex": "\\text{MIT-BIH 207: 47 patients, 1975-1979, ODC-BY 1.0}",
-    "note": "Moody and Mark, IEEE Eng Med Biol 20(3), 2001; Goldberger and colleagues, Circulation 101(23), 2000; PhysioNet doi 10.13026/C2F305. nothing on the page is generated"
+    "note": "Moody and Mark, IEEE Eng Med Biol 20(3), 2001; Goldberger and colleagues, Circulation 101(23), 2000; PhysioNet doi 10.13026/C2F305. Nothing on the page is generated"
    }
   }
  ],

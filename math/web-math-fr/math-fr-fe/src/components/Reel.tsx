@@ -5,9 +5,9 @@ import type { Part } from "@/lib/api";
 type Props = { part: Part; accent: string };
 
 /**
- * one part of the series: its clip, its length, and beside it the reading text
- * that answers the part's question paragraph by paragraph, one a beat, so the
- * part can be read instead of heard or along with the clip.
+ * one part of the series: its clip and its length, and beside it the part's
+ * question and a brief description; the clip's voice-over carries the reasoning.
+ * reading paragraphs, where a part has them, follow the description.
  */
 export function Reel({ part, accent }: Props) {
   const host = useRef<HTMLElement | null>(null);
@@ -65,6 +65,7 @@ export function Reel({ part, accent }: Props) {
         </div>
         <article className="max-w-2xl">
           {part.question ? <Heading level={3}>{part.question}</Heading> : null}
+          {part.caption ? <Text kind="intro" as="p" className="mt-4">{part.caption}</Text> : null}
           <div className="mt-4 space-y-4">
             {(part.text ?? []).map((paragraph, i) => (
               <Text kind="body" as="p" key={i}>

@@ -10,10 +10,10 @@ const Bulb = lazy(() => import("@/components/Bulb").then((m) => ({ default: m.Bu
 type View = "solid" | "contour";
 
 /**
- * the first screen of the front page: the words at the left, and at the right
- * the Mandelbulb turning, drawn live, with no frame around it unless the site
- * says so. one switch: the solid body, or its edges as lines with a light
- * running along them. the palette is set in code.
+ * the first screen of the front page: the Mandelbulb turning large behind the
+ * right of the screen, off its edge, drawn live; the words low at the left, clear
+ * of it; at the lower right one switch, the solid body or its edges with a light
+ * running along them, and the way to its page. the palette is set in code.
  */
 export function FrontHero() {
   const { t } = useTranslation();
@@ -47,27 +47,25 @@ export function FrontHero() {
       tags={
         <>
           <Tag>{t("front.tag1")}</Tag>
-          <Tag colour="var(--c-chart-3)">{t("front.tag2")}</Tag>
-          <Tag colour="var(--chart-3)">{t("front.tag3")}</Tag>
+          <Tag>{t("front.tag2")}</Tag>
+          <Tag>{t("front.tag3")}</Tag>
         </>
       }
-      picture={
-        <div>
-          {FRONT_BULB_FRAMED ? <Plot className="relative h-[520px]">{canvas}</Plot> : <div className="relative h-[520px]">{canvas}</div>}
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-            <Choices
-              options={[
-                { id: "solid", label: t("front.solid") },
-                { id: "contour", label: t("front.contour") },
-              ]}
-              value={view}
-              onPick={setView}
-            />
-            <TextLink asChild>
-              <Link to="/topics/fractals/play/mandelbulb">{t("front.open")} ↗</Link>
-            </TextLink>
-          </div>
-        </div>
+      picture={FRONT_BULB_FRAMED ? <Plot className="relative h-full">{canvas}</Plot> : <div className="relative h-full">{canvas}</div>}
+      aside={
+        <>
+          <Choices
+            options={[
+              { id: "solid", label: t("front.solid") },
+              { id: "contour", label: t("front.contour") },
+            ]}
+            value={view}
+            onPick={setView}
+          />
+          <TextLink asChild>
+            <Link to="/topics/fractals/play/mandelbulb">{t("front.open")} ↗</Link>
+          </TextLink>
+        </>
       }
     />
   );

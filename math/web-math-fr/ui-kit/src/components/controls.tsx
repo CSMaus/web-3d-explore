@@ -9,7 +9,7 @@ import { Slider as SliderBase } from "./ui/slider";
  */
 
 function Group({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="toggle-group" role="group" className={cn("flex flex-wrap", className)} {...props} />;
+  return <div data-slot="toggle-group" role="group" className={cn("fractal-obstacle flex flex-wrap", className)} {...props} />;
 }
 
 function Item({ on, className, ...props }: React.ComponentProps<"button"> & { on: boolean }) {
@@ -19,7 +19,7 @@ function Item({ on, className, ...props }: React.ComponentProps<"button"> & { on
       data-slot="toggle-group-item"
       data-state={on ? "on" : "off"}
       aria-pressed={on}
-      className={cn("inline-flex items-center justify-center whitespace-nowrap outline-none", className)}
+      className={cn("inline-flex max-w-full items-center justify-center text-center outline-none", className)}
       {...props}
     />
   );

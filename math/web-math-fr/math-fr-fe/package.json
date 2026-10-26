@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc -b",
+    "build:pages": "VITE_API_BASE= VITE_BASE=/web-3d-explore/ vite build && cp dist/index.html dist/404.html",
     "serve": "vite preview",
     "test": "vitest run",
     "lint": "eslint .",

@@ -114,7 +114,7 @@ function NudgePage() {
           />
         }
         picture={
-          <section ref={stage} className="grid gap-2 lg:grid-cols-[1fr_320px]">
+          <section ref={stage} className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_320px]">
             <div><div data-slot="plot" className="h-[400px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -171,7 +171,7 @@ function NudgePage() {
                 ? `The ringed dot is ${want ? "green" : "rose"} and its total is ${z0.toFixed(3)}. The smooth unit answers ${a0.toFixed(3)}; the hard unit answers ${out.hard[0]}${(out.hard[0] === want) ? ", which is right" : ", which is wrong"}. Press run: every nudge adds ${push.toFixed(3)} to the weight on x and touches nothing else.`
                 : `After ${k} nudges the smooth unit's answer went from ${a0.toFixed(3)} to ${ak.toFixed(3)}, about ${Math.abs(per).toFixed(4)} per nudge, a small amount every single time. The hard unit's answer ${flip < 0 ? `has not moved at all in ${k} nudges` : `did not move for ${flip - 1} nudges, then jumped from ${out.hard[0]} to ${out.hard[flip]} at nudge ${flip}${flip < k ? " and has not moved since" : ""}`}. A rule for learning needs the first kind: move a number a little, get a small change in a readable direction, and the way to move is known. Nothing or a jump says nothing about which way to go.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Weight on x now</dt>
               <dd className="text-right text-foreground/80">{w1.toFixed(3)}</dd>
               <dt>The smooth unit's answer for the ringed dot</dt>

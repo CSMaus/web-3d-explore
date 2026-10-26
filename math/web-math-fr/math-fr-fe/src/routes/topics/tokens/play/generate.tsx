@@ -189,7 +189,7 @@ function GeneratePage() {
                 ? `The prompt is ${prompt.length} tokens. Press run: each step runs the model over the window, draws one token, and appends it.`
                 : `Step ${made.length}: the model was run over ${Math.min(window, all.length - 1)} tokens and ${ruleId === "greedy" ? "took its most likely token" : "drew"} ${visible(tokenText(last.id))}, which it gave ${(last.p * 100).toFixed(0)} %. It is now token ${all.length} of the text and will be read next step like any other.${dropped > 0 ? ` The window is full: ${dropped} token${dropped === 1 ? " has" : "s have"} fallen out of it, prompt included, and the model has no memory of them.` : ""}${repeated ? ` The last ${repeated} tokens repeat the ${repeated} before them: with the most likely token always chosen, the loop has found a cycle and will stay in it.` : ""}`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Tokens in the text now</dt>
               <dd className="text-right text-foreground/80">{all.length} ({prompt.length} prompt, {made.length} generated)</dd>
               <dt>Tokens the model can see</dt>

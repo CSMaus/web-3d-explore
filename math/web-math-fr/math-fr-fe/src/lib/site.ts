@@ -27,6 +27,15 @@ export const FRONT_LIGHT_SET = FRONT_LIGHTS[KIT_CASE] ?? {};
 export const PLAY_PALETTES: Record<"light" | "dark", string> = { light: "paper", dark: "ice" };
 export const PLAY_PALETTE = PLAY_PALETTES.dark;
 
+/**
+ * the layout of the front page. "scene" (2026-10-26): the words centred at the top of the first
+ * screen and the Mandelbulb rising from under them, cut by the screen's edge, coming whole into
+ * view as the page scrolls. "stage" (2026-10-25): the words low at the left and the Mandelbulb
+ * at the right. under both the topics are the graph (components/TopicGraph.tsx); the straight
+ * row tried on 2026-10-26 (components/TopicLine.tsx) is not used.
+ */
+export const FRONT_LAYOUT: "scene" | "stage" = "scene";
+
 /** whether the Mandelbulb on the front page sits in a frame; none by default. */
 export const FRONT_BULB_FRAMED = false;
 

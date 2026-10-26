@@ -160,7 +160,7 @@ function AccumulatePage() {
                 ? "Press run. One slice at a time, a rectangle of speed times duration goes in, and the running total climbs."
                 : `After ${shown} of ${count} slices, ${tNow.toFixed(1)} s in, the slices add up to ${added.toFixed(2)} m. The car had really gone ${truth.toFixed(2)} m. The total is off by ${Math.abs(added - truth).toFixed(3)} m${Math.abs(added - truth) < 0.02 * Math.max(1, Math.abs(truth)) ? ", which is close enough to call right" : ": the slices are too fat for a speed that changes this much inside one of them"}.`}
             </Verdict>
-            <dl data-text="caption" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+            <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>Each slice lasts</dt>
               <dd className="text-right text-foreground/80">{(T_END / count).toFixed(3)} s</dd>
               <dt>All {count} slices together</dt>

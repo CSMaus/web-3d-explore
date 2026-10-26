@@ -17,7 +17,7 @@ function PlayOne() {
       <Heading level={1} className="mt-4">
         {system?.name ?? "This system"}
       </Heading>
-      <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
         <div className="space-y-4">
           <section data-slot="panel">
             <Label>CONTROLS</Label>

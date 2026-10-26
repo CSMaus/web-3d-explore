@@ -168,22 +168,20 @@ def test_the_fractals_topic_carries_the_whole_series(client: TestClient):
     assert body["part_list"][1]["beats"][0]["slug"] == "02-coastline"
 
 
-def test_every_part_has_one_clip_and_its_reading_text(client: TestClient):
-    """the text beside a clip is a question and its answer in paragraphs, one a
-    beat, written to the site's writing standard: no reader addressed, no
-    summary in place of reasons."""
+def test_every_part_has_one_clip_and_a_brief_description(client: TestClient):
+    """beside a clip stand its question and a brief description, written to the site's
+    writing standard: no reader addressed. the reasoning is the clip's voice-over."""
     body = client.get("/api/topics/fractals").json()
     for part in body["part_list"]:
         assert "video" in part
         assert part["question"].endswith("?") or part["number"] == 11, part["number"]
-        assert len(part["text"]) >= 6, part["number"]
-        joined = " " + " ".join(part["text"]).lower() + " "
+        brief = part["caption"]
+        assert 12 <= len(brief.split()) <= 60, (part["number"], len(brief.split()))
+        assert brief[0].isupper(), part["number"]
         # the imaginary unit is written i, so the first person is checked by its capital
         for word in (" you ", " your ", " we ", " our "):
-            assert word not in joined, (part["number"], word)
-        assert " I " not in " " + " ".join(part["text"]) + " ", part["number"]
-        for paragraph in part["text"]:
-            assert 8 <= len(paragraph.split()) <= 140, (part["number"], len(paragraph.split()))
+            assert word not in " " + brief.lower() + " ", (part["number"], word)
+        assert " I " not in " " + brief + " ", part["number"]
 
 
 def test_every_beat_has_words(client: TestClient):

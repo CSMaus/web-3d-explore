@@ -138,7 +138,7 @@ function SolversPage() {
           />
         }
         picture={
-          <section ref={stage} className="grid gap-2 lg:grid-cols-[300px_1fr]">
+          <section ref={stage} className="grid gap-2 lg:grid-cols-[300px_minmax(0,1fr)]">
             <div><div data-slot="plot" className="h-[min(400px,calc(100vh-24rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
