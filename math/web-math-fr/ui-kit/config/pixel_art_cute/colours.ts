@@ -23,7 +23,7 @@ const DARK = {
   border: "#3b4b4c",
 } as const;
 
-const palette = (light: Hues, dark: Hues): Colours => defineColours({ default: "light", light: { ...LIGHT, ...light }, dark: { ...DARK, ...dark } });
+const palette = (light: Hues, dark: Hues): Colours => defineColours({ default: "dark", light: { ...LIGHT, ...light }, dark: { ...DARK, ...dark } });
 
 export const PALETTES: Record<string, Colours> = {
   T_GP: palette(

@@ -1,0 +1,338 @@
+{
+ "systems": [
+  {
+   "id": "field",
+   "name": "Une équation, et son champ",
+   "summary": "Une équation dont l'inconnue est une fonction plutôt qu'un nombre. Elle prescrit un taux en chaque état, ce qui peut se dessiner avant toute résolution",
+   "blocks": [
+    {
+     "label": "L'objet",
+     "tex": "\\frac{dx}{dt} = f(x, t), \\qquad x(t_0) = x_0",
+     "note": "La règle dit à quelle vitesse l'état change, et rien d'autre"
+    },
+    {
+     "label": "À variables séparables, résolue en intégrant les deux membres",
+     "tex": "\\frac{dx}{g(x)} = h(t)\\,dt \\;\\Longrightarrow\\; \\int\\!\\frac{dx}{g(x)} = \\int\\! h(t)\\,dt + C",
+     "note": "La constante arbitraire est la condition initiale déguisée"
+    },
+    {
+     "label": "Linéaire du premier ordre, par un facteur intégrant",
+     "tex": "x' + a(t)x = b(t), \\qquad x(t) = e^{-A(t)}\\!\\left(\\int\\! e^{A(t)}b(t)\\,dt + C\\right),\\; A = \\!\\int\\! a",
+     "note": "Une mémoire du départ qui s'estompe, plus une réponse au terme de forçage"
+    },
+    {
+     "label": "Linéaire à coefficients constants, par son équation caractéristique",
+     "tex": "x'' + 2\\zeta\\omega x' + \\omega^2 x = 0, \\qquad \\lambda^2 + 2\\zeta\\omega\\lambda + \\omega^2 = 0",
+     "note": "Des racines réelles donnent des exponentielles, des racines complexes donnent une oscillation"
+    },
+    {
+     "label": "Là où la forme explicite s'arrête",
+     "tex": "\\theta'' + \\frac{g}{L}\\sin\\theta = 0",
+     "note": "Le pendule sans l'approximation des petits angles. Aucune solution élémentaire n'existe, et c'est la raison de tout le numérique qui suit"
+    }
+   ],
+   "dimension": {
+    "label": "Ce qu'est une solution",
+    "tex": "x(t)\\ \\text{such that}\\ x'(t) - f(x(t), t) \\equiv 0",
+    "note": "Seule la vérification par substitution certifie une solution"
+   }
+  },
+  {
+   "id": "solvers",
+   "name": "Résoudre pas à pas",
+   "summary": "Pas de formule, seulement le taux dans l'état présent. Une trajectoire se construit un petit pas à la fois, et la taille du pas décide de la part de vrai qu'elle contient",
+   "blocks": [
+    {
+     "label": "Euler explicite, le champ pris au pied de la lettre",
+     "tex": "x_{n+1} = x_n + h\\,f(x_n, t_n)",
+     "note": "Rester sur place, lire le taux, avancer le long de lui"
+    },
+    {
+     "label": "Point milieu, une correction",
+     "tex": "x_{n+1} = x_n + h\\,f\\!\\left(x_n + \\tfrac{h}{2}f(x_n,t_n),\\; t_n + \\tfrac{h}{2}\\right)",
+     "note": "Le taux est relu à mi-chemin du pas"
+    },
+    {
+     "label": "Runge-Kutta d'ordre quatre, la bête de somme",
+     "tex": "x_{n+1} = x_n + \\frac{h}{6}\\left(k_1 + 2k_2 + 2k_3 + k_4\\right),\\qquad\\begin{aligned} k_1 &= f(x_n, t_n) \\\\ k_2 &= f(x_n + \\tfrac{h}{2}k_1,\\; t_n + \\tfrac{h}{2}) \\\\ k_3 &= f(x_n + \\tfrac{h}{2}k_2,\\; t_n + \\tfrac{h}{2}) \\\\ k_4 &= f(x_n + h k_3,\\; t_n + h) \\end{aligned}",
+     "note": "Quatre lectures du taux par pas"
+    },
+    {
+     "label": "L'ordre d'une méthode",
+     "tex": "\\lVert x_N - x(T) \\rVert = O(h^{\\,p}) \\quad\\Longrightarrow\\quad p = \\log_2\\!\\frac{e(h)}{e(h/2)}",
+     "note": "Diviser le pas par deux devrait diviser l'erreur par deux puissance l'ordre. Mesuré sur l'oscillateur, où la réponse exacte est connue : 1,03 pour Euler, 2,00 pour le point milieu, 4,00 pour Runge-Kutta"
+    },
+    {
+     "label": "Ce qu'une méthode ne conserve pas",
+     "tex": "E = \\tfrac{1}{2}\\!\\left(x^2 + v^2\\right) \\ \\text{constant for}\\ x'' + x = 0",
+     "note": "Sur cent tours avec un pas de 0,01, Euler donne une énergie de 267,67 là où la réponse est 0,5, et Runge-Kutta donne 0,500000"
+    }
+   ],
+   "dimension": {
+    "label": "L'ordre, mesuré plutôt que cité",
+    "tex": "p \\approx \\log_2\\!\\left(e(h)\\,/\\,e(h/2)\\right)",
+    "note": "La fin du calcul doit tomber exactement sur une période entière, sinon le décalage du temps final noie la méthode"
+   }
+  },
+  {
+   "id": "phase",
+   "name": "Deux inconnues, et le plan de phase",
+   "summary": "Plusieurs fonctions inconnues d'une même horloge. L'état entier devient un seul point, son histoire une seule courbe, et l'horloge quitte complètement les axes",
+   "blocks": [
+    {
+     "label": "Le système",
+     "tex": "\\dot{\\mathbf{x}} = \\mathbf{f}(\\mathbf{x}), \\qquad \\mathbf{x} \\in \\mathbb{R}^2",
+     "note": "Une seule règle pour tout le faisceau d'inconnues"
+    },
+    {
+     "label": "Une équation d'ordre supérieur comme système",
+     "tex": "x'' = g(x, x') \\;\\Longleftrightarrow\\; \\begin{cases} \\dot{x} = v \\\\ \\dot{v} = g(x, v)\\end{cases}",
+     "note": "Chaque dérivée reçoit le nom d'une nouvelle variable d'état, et rien d'autre"
+    },
+    {
+     "label": "Un équilibre, et le substitut linéaire à côté de lui",
+     "tex": "\\mathbf{f}(\\mathbf{x}^{*}) = \\mathbf{0}, \\qquad J_{ij} = \\left.\\frac{\\partial f_i}{\\partial x_j}\\right|_{\\mathbf{x}^{*}}",
+     "note": "La jacobienne est à un système ce que la tangente est à une courbe"
+    },
+    {
+     "label": "Les valeurs propres qui le classent",
+     "tex": "\\lambda_{1,2} = \\frac{\\tau \\pm \\sqrt{\\tau^2 - 4\\Delta}}{2}, \\qquad \\tau = \\operatorname{tr} J,\\ \\ \\Delta = \\det J",
+     "note": "Réelles et de même signe, c'est un nœud ; de signes opposés, une selle ; complexes, une spirale ; purement imaginaires, un centre, où l'image linéaire ne décide de rien"
+    },
+    {
+     "label": "Le volume, et s'il fuit",
+     "tex": "\\nabla\\!\\cdot\\!\\mathbf{f} = \\operatorname{tr} J = \\frac{1}{V}\\frac{dV}{dt}",
+     "note": "Seul un système qui perd du volume peut avoir un attracteur"
+    },
+    {
+     "label": "L'oscillateur de van der Pol, et son cycle limite",
+     "tex": "\\ddot{x} - \\mu\\!\\left(1 - x^2\\right)\\dot{x} + x = 0",
+     "note": "Une trajectoire fermée isolée sur laquelle ses voisines s'enroulent en spirale"
+    },
+    {
+     "label": "Pourquoi deux dimensions ne suffisent pas",
+     "tex": "\\text{Poincar\\'e-Bendixson: a bounded planar orbit tends to an equilibrium or a closed orbit}",
+     "note": "Le chaos est donc impossible dans le plan, et la troisième variable est une nécessité plutôt qu'une curiosité"
+    }
+   ],
+   "dimension": {
+    "label": "La classification, à partir des deux valeurs propres",
+    "tex": "\\operatorname{sign}(\\operatorname{Re}\\lambda_i),\\quad \\operatorname{Im}\\lambda_i \\ne 0\\,?",
+    "note": "Mesurée en chaque équilibre que trouve la méthode de Newton, et non supposée d'après l'image"
+   }
+  },
+  {
+   "id": "lorenz",
+   "name": "Le système de Lorenz",
+   "summary": "Trois équations écrites en 1963 comme modèle très tronqué de la convection dans une couche de fluide chauffée par le bas. Le plus petit endroit honnête où le chaos peut vivre",
+   "blocks": [
+    {
+     "label": "Les trois équations",
+     "tex": "\\begin{aligned} \\dot{x} &= \\sigma\\,(y - x) \\\\ \\dot{y} &= x\\,(\\rho - z) - y \\\\ \\dot{z} &= x y - \\beta z \\end{aligned}",
+     "note": "Classiquement sigma = 10, rhô = 28, bêta = 8/3"
+    },
+    {
+     "label": "Ses équilibres",
+     "tex": "\\mathbf{0}, \\qquad \\left(\\pm\\sqrt{\\beta(\\rho-1)},\\ \\pm\\sqrt{\\beta(\\rho-1)},\\ \\rho-1\\right)",
+     "note": "L'origine est le fluide au repos ; la paire symétrique est la convection stationnaire, et toutes deux perdent leur stabilité avant rhô = 28"
+    },
+    {
+     "label": "Le volume qu'il perd, partout et au même rythme",
+     "tex": "\\nabla\\!\\cdot\\!\\mathbf{f} = -(\\sigma + 1 + \\beta) = -13.6\\overline{66}",
+     "note": "Constante, donc une valeur ponctuelle est la moyenne. Mesurée à -13,6667"
+    },
+    {
+     "label": "À quelle vitesse les voisins se séparent",
+     "tex": "\\lambda_1 = \\lim_{T\\to\\infty}\\frac{1}{T}\\ln\\frac{\\lVert \\delta(T)\\rVert}{\\lVert\\delta(0)\\rVert}",
+     "note": "Mesuré à 0,9043 en lâchant un voisin et en renormalisant ; la valeur publiée est 0,906"
+    },
+    {
+     "label": "L'horizon de prédiction qui en découle",
+     "tex": "T \\approx \\frac{1}{\\lambda_1}\\ln\\frac{\\Delta}{\\delta_0}",
+     "note": "Un facteur dix sur la précision de mesure rapporte ln(10)/0,904, soit environ 2,5 unités de temps de plus, et pas davantage"
+    }
+   ],
+   "dimension": {
+    "label": "La dimension de Kaplan-Yorke",
+    "tex": "D = 2 + \\frac{\\lambda_1}{\\lvert\\lambda_3\\rvert}, \\qquad \\lambda_1 + \\lambda_2 + \\lambda_3 = \\nabla\\!\\cdot\\!\\mathbf{f},\\ \\ \\lambda_2 = 0",
+    "note": "L'exposant du milieu est nul parce qu'avancer le long de la trajectoire n'agrandit ni ne réduit un écart ; le troisième découle donc de la divergence. Mesurée à 2,062, la valeur publiée. Le comptage de boîtes sur un échantillon fini donne 1,911, et ce sont deux définitions différentes plutôt qu'un désaccord"
+   }
+  },
+  {
+   "id": "rossler",
+   "name": "Le système de Rössler",
+   "summary": "Construit exprès en 1976 pour être le support le plus simple du même comportement. Deux des trois équations sont linéaires, et un seul terme ne l'est pas",
+   "blocks": [
+    {
+     "label": "Les trois équations",
+     "tex": "\\begin{aligned} \\dot{x} &= -y - z \\\\ \\dot{y} &= x + a y \\\\ \\dot{z} &= b + z\\,(x - c) \\end{aligned}",
+     "note": "Classiquement a = 0,2, b = 0,2, c = 5,7. Le seul terme non linéaire est z x"
+    },
+    {
+     "label": "Étirer et replier, en un seul geste",
+     "tex": "\\text{spiral outward in the } (x,y) \\text{ plane} \\;\\longrightarrow\\; \\text{lifted by } z \\;\\longrightarrow\\; \\text{folded back inward}",
+     "note": "Le mécanisme derrière chaque système chaotique de ce thème, sans rien qui empêche de le voir"
+    },
+    {
+     "label": "Le volume qu'il perd, qui n'est pas le même partout",
+     "tex": "\\nabla\\!\\cdot\\!\\mathbf{f} = a + x - c",
+     "note": "Elle dépend de l'état, donc une valeur ponctuelle n'est pas le taux de contraction. En (1,1,1) elle vaut -4,500, et la moyenne le long de l'attracteur est -5,325"
+    },
+    {
+     "label": "La section qui réduit le flot à une application",
+     "tex": "\\Sigma = \\{\\,y = 0,\\ \\dot{y} > 0\\,\\}, \\qquad P : \\Sigma \\to \\Sigma",
+     "note": "Une dimension retirée par le plan, l'horloge retirée en ne regardant que les traversées"
+    }
+   ],
+   "dimension": {
+    "label": "La dimension de Kaplan-Yorke",
+    "tex": "D = 2 + \\frac{\\lambda_1}{\\lvert\\lambda_3\\rvert}",
+    "note": "À partir d'un plus grand exposant mesuré de 0,0702, publié 0,0714, et d'une divergence moyenne mesurée de -5,325 : D = 2,013, contre 2,01 publié"
+   }
+  },
+  {
+   "id": "logistic",
+   "name": "L'application logistique",
+   "summary": "D'un nombre au suivant, encore et encore. Une application n'a besoin que d'une dimension pour être chaotique là où un flot en demande trois, donc tout ce qui la concerne est peu coûteux à calculer et à tracer",
+   "blocks": [
+    {
+     "label": "L'application",
+     "tex": "x_{n+1} = r\\,x_n\\,(1 - x_n), \\qquad x \\in [0, 1]",
+     "note": "Une croissance freinée par l'encombrement, avec un seul paramètre"
+    },
+    {
+     "label": "Ses points fixes, et quand ils tiennent",
+     "tex": "x^{*} = 0,\\ \\ 1 - \\tfrac{1}{r}; \\qquad \\text{stable while } \\lvert f'(x^{*})\\rvert < 1,\\ \\ f'(x) = r\\,(1 - 2x)",
+     "note": "La pente au point fixe est le cas à une dimension de la valeur propre de la jacobienne"
+    },
+    {
+     "label": "Un cycle d'une application est un point fixe d'une autre",
+     "tex": "f_r^{(2)}(x) = f_r\\!\\left(f_r(x)\\right)",
+     "note": "C'est ce qui rend le doublement de période mécanique plutôt que mystérieux"
+    },
+    {
+     "label": "Le doublement de période, comme condition sur la pente",
+     "tex": "\\frac{d}{dx}f_r^{(2^{n})}\\!\\left(x^{*}\\right) = -1",
+     "note": "Le cycle perd sa stabilité et un cycle de période double apparaît"
+    },
+    {
+     "label": "Superstable, quand le point critique est sur le cycle",
+     "tex": "f_R^{(2^{n})}(\\tfrac{1}{2}) = \\tfrac{1}{2}",
+     "note": "Localisés par dichotomie en R = 2 ; 3,236068 ; 3,498562 ; 3,554641 ; 3,566667 ; 3,569244 ; 3,569795 ; 3,569913"
+    }
+   ],
+   "dimension": {
+    "label": "L'exposant de Lyapunov d'une application",
+    "tex": "\\lambda = \\lim_{N\\to\\infty}\\frac{1}{N}\\sum_{n=0}^{N-1}\\ln\\bigl\\lvert f'(x_n)\\bigr\\rvert",
+    "note": "Négatif sur un cycle, nul à chaque bifurcation, positif dans la bande chaotique. En r = 4 il vaut exactement ln 2, et la mesure donne 0,6931"
+   }
+  },
+  {
+   "id": "bifurcation",
+   "name": "Le diagramme de bifurcation",
+   "summary": "Chaque valeur du paramètre sur un axe, et au-dessus chaque valeur que visite l'orbite. La liste des changements qualitatifs devient une seule image",
+   "blocks": [
+    {
+     "label": "Comment il est construit",
+     "tex": "\\text{for each } r: \\ \\text{iterate, discard the transient, plot what remains}",
+     "note": "Construit plutôt qu'affiché, donc rien n'y est dessiné à la main"
+    },
+    {
+     "label": "Les images locales, et pourquoi la liste est courte",
+     "tex": "\\dot{x} = r - x^2 \\ \\ (\\text{saddle-node}), \\qquad \\dot{x} = rx - x^3 \\ \\ (\\text{pitchfork}), \\qquad \\operatorname{Re}\\lambda_{1,2} : - \\to + \\ \\ (\\text{Hopf})",
+     "note": "Les formes normales épuisent les possibilités locales, c'est pourquoi elles sont si peu nombreuses"
+    },
+    {
+     "label": "La cascade, et la constante dans ses écarts",
+     "tex": "\\delta = \\lim_{n\\to\\infty}\\frac{R_{n} - R_{n-1}}{R_{n+1} - R_{n}} = 4.669\\,201\\ldots",
+     "note": "Les rapports mesurés valent 4,7089 ; 4,6808 ; 4,6630 ; 4,6684 ; 4,6690 ; 4,6692 quand la période double de 4 à 128"
+    },
+    {
+     "label": "L'universalité, vérifiée plutôt qu'affirmée",
+     "tex": "x_{n+1} = r\\sin(\\pi x_n)",
+     "note": "Une autre famille avec un seul maximum lisse. La même construction donne 4,6690, et sa cascade s'accumule en 0,865571 au lieu de 3,569913"
+    },
+    {
+     "label": "La seconde constante, dans les largeurs plutôt que dans les écarts",
+     "tex": "\\alpha = 2.502\\,907\\ldots",
+     "note": "Le facteur selon lequel le diagramme est autosimilaire au point d'accumulation, là où ce thème et celui des fractales deviennent un même sujet"
+    }
+   ],
+   "dimension": {
+    "label": "Le delta de Feigenbaum, mesuré sur deux familles",
+    "tex": "\\delta \\approx \\frac{R_{n} - R_{n-1}}{R_{n+1} - R_{n}}",
+    "note": "4,6692 pour la famille logistique et 4,6690 pour la famille sinus, toutes deux avec le même code"
+   }
+  },
+  {
+   "id": "control",
+   "name": "Un vrai cœur : le rythme normal, l'arythmie, et le retour",
+   "summary": "Une demi-heure d'un battement cardiaque humain enregistré, l'enregistrement 207 de la base de données d'arythmies MIT-BIH, sous forme d'intervalles entre battements marqués : le rythme normal, des épisodes de flutter ventriculaire qui commencent et s'arrêtent d'eux-mêmes, et l'application de premier retour des basculements",
+   "blocks": [
+    {
+     "label": "L'intervalle",
+     "tex": "I_{n} = t_{n+1} - t_{n}",
+     "note": "Le temps d'un battement marqué au suivant, en millisecondes, tiré du fichier d'annotations des cardiologues à 360 échantillons par seconde. Pendant le flutter, chaque onde de flutter est un battement marqué"
+    },
+    {
+     "label": "L'application de premier retour",
+     "tex": "(I_{n},\\, I_{n+1})",
+     "note": "Chaque intervalle en fonction du suivant, l'image que la page sur Rössler a introduite et que l'expérience de 1992 a utilisée. Un rythme qui se répète forme une seule tache ; un basculement est un saut entre nuages"
+    },
+    {
+     "label": "Ce qu'un intervalle dit du suivant",
+     "tex": "\\rho = \\frac{\\overline{\\sigma(I_{n+1} \\mid I_n \\in \\text{bin})}}{\\sigma(I_{n+1})}",
+     "note": "La dispersion de l'intervalle suivant parmi les battements dont l'intervalle propre tombe dans la même classe de 20 ms, divisée par la dispersion sans rien savoir. Un pour aucune aide, zéro pour une règle ; la même mesure que dans la parenthèse sur les nombres premiers"
+    },
+    {
+     "label": "La fréquence à partir de l'intervalle",
+     "tex": "\\text{beats a minute} = \\frac{60000}{\\bar{I}}",
+     "note": "Son rythme normal et le flutter, chacun comme fréquence, à partir de leurs intervalles moyens"
+    }
+   ],
+   "dimension": {
+    "label": "Ce qu'est l'enregistrement",
+    "tex": "\\text{MIT-BIH 207: 47 patients, 1975-1979, ODC-BY 1.0}",
+    "note": "Moody et Mark, IEEE Eng Med Biol 20(3), 2001 ; Goldberger et collègues, Circulation 101(23), 2000 ; PhysioNet doi 10.13026/C2F305. Rien sur la page n'est généré"
+   }
+  }
+ ],
+ "definitions": [
+  {
+   "id": "upo",
+   "name": "Une orbite périodique instable, et le contrôle par petites poussées",
+   "tex": "x^{*} = f(x^{*}), \\quad |f'(x^{*})| > 1",
+   "note": "Un point auquel la règle revient exactement et que les états voisins quittent. Un attracteur chaotique en est parcouru, c'est pourquoi le rythme passe sans cesse près d'un battement régulier qu'il ne garde jamais. Ott, Grebogi et Yorke ont montré en 1990 qu'un petit changement, bien placé dans le temps et appliqué chaque fois que l'état s'approche, peut l'y maintenir ; Garfinkel, Spano, Ditto et Weiss l'ont fait dans du tissu cardiaque en 1992 avec des stimuli qui ne pouvaient que raccourcir un battement."
+  },
+  {
+   "id": "lyapunov",
+   "name": "L'exposant de Lyapunov",
+   "tex": "\\lambda = \\lim_{T\\to\\infty}\\frac{1}{T}\\ln\\frac{\\lVert\\delta(T)\\rVert}{\\lVert\\delta(0)\\rVert}",
+   "note": "Le taux exponentiel moyen auquel des états voisins se séparent. Son signe sert de définition pratique du chaos, et il se mesure en renormalisant l'écart pour que la paire ne sature jamais à la largeur de l'attracteur"
+  },
+  {
+   "id": "divergence",
+   "name": "La divergence du champ",
+   "tex": "\\nabla\\!\\cdot\\!\\mathbf{f} = \\sum_i \\frac{\\partial f_i}{\\partial x_i} = \\frac{1}{V}\\frac{dV}{dt}",
+   "note": "Le taux auquel un petit volume d'états grandit ou rétrécit. Elle est égale à la somme des exposants, ce qui permet de trouver le troisième à partir des deux autres"
+  },
+  {
+   "id": "kaplanyorke",
+   "name": "La dimension de Kaplan-Yorke",
+   "tex": "D = k + \\frac{\\sum_{i=1}^{k}\\lambda_i}{\\lvert\\lambda_{k+1}\\rvert}, \\qquad k = \\max\\Bigl\\{\\,j : \\textstyle\\sum_{i\\le j}\\lambda_i \\ge 0\\,\\Bigr\\}",
+   "note": "Le nombre de directions entières que l'étirement soutient, plus la fraction de la suivante qu'il atteint. C'est le nombre habituellement cité pour un attracteur étrange"
+  },
+  {
+   "id": "boxcount",
+   "name": "Dimension par comptage de boîtes",
+   "tex": "d = \\lim_{\\varepsilon\\to 0}\\frac{\\log N(\\varepsilon)}{\\log(1/\\varepsilon)}",
+   "note": "La même définition que celle que le thème des fractales a mesurée sur une côte. Sur une trajectoire, elle ne s'applique que tant que la boîte est plus grande que l'espacement entre états enregistrés ; l'ajustement est donc fait sur cette fenêtre, et la fenêtre est indiquée avec la réponse"
+  },
+  {
+   "id": "feigenbaum",
+   "name": "Les constantes de Feigenbaum",
+   "tex": "\\delta = 4.669\\,201\\ldots, \\qquad \\alpha = 2.502\\,907\\ldots",
+   "note": "Le rapport selon lequel les écarts de paramètre de la cascade rétrécissent, et celui selon lequel les largeurs de ses branches rétrécissent. Les deux mêmes nombres pour toute application à un seul maximum quadratique lisse, quoi qu'elle soit par ailleurs"
+  }
+ ]
+}

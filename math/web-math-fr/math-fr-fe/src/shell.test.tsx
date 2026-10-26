@@ -50,7 +50,7 @@ describe("The shell", () => {
   it("Indexes topics, sections, interactive pages and projects", () => {
     expect(search("lorenz")[0].to).toBe("/topics/chaos/play/lorenz");
     expect(search("mathematics fractals").some((h) => h.to === "/topics/fractals/theory")).toBe(true);
-    expect(search("ui kit")[0].to).toBe("/projects/ui-kit");
+    expect(search("webpaut")[0].to).toBe("/projects/webpaut");
     expect(search("draw the line").some((h) => h.to === "/topics/networks/play/line")).toBe(true);
     expect(search("")).toEqual([]);
     expect(search("zzzz")).toEqual([]);
@@ -61,7 +61,7 @@ describe("The shell", () => {
     ["/play", "Play"],
     ["/about", "About"],
     ["/projects", "Projects"],
-    ["/projects/ui-kit", "A ui kit set from code"],
+    ["/projects/webpaut", "WebPAUT, ultrasonic inspection in the browser"],
     ["/contact", "Contact"],
     ["/search", "Search"],
   ] as const) {

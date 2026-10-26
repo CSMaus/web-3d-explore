@@ -1,0 +1,74 @@
+[
+ {
+  "slug": "complex",
+  "number": 0,
+  "title": "Nombres imaginaires",
+  "summary": "L'entrée en matière, pour un lecteur qui n'a jamais rencontré i : la droite des nombres et la seule question à laquelle elle ne peut pas répondre, un quart de tour, l'addition comme des flèches, la multiplication comme rotation et étirement, l'élévation au carré répétée jusqu'à l'apparition d'un ensemble de Julia, et l'exponentielle qui tourne en rond",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 7,
+  "aside": false
+ },
+ {
+  "slug": "fractals",
+  "number": 1,
+  "title": "Fractales",
+  "summary": "Une rugosité qui ne s'efface pas quand le regard s'approche, mesurée plutôt qu'admirée : une dimension qui n'est pas un nombre entier, et la poignée de règles qui produisent chaque forme de la série",
+  "state": "ready",
+  "parts": 11,
+  "beats": 57,
+  "seconds": 1309.9,
+  "systems": 10,
+  "aside": false
+ },
+ {
+  "slug": "chaos",
+  "number": 2,
+  "title": "Équations différentielles, attracteurs et chaos",
+  "summary": "Une équation dont l'inconnue est une fonction, résolue sous forme explicite tant que c'est possible, puis numériquement, l'attracteur sur lequel un système se pose, le chaos déterministe, l'entrée par le doublement de période, et la seule expérience où toute la chaîne a servi à faire quelque chose",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 8,
+  "aside": false
+ },
+ {
+  "slug": "networks",
+  "number": 3,
+  "title": "Du calcul différentiel à un premier réseau de neurones",
+  "summary": "Le perceptron, le neurone qu'il est devenu, un réseau écrit comme un système d'équations, et toutes les méthodes qui l'entraînent, pour finir sur la dérivée et l'intégrale, les deux objets à partir desquels tout cela est construit",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 17,
+  "aside": false
+ },
+ {
+  "slug": "tokens",
+  "number": 4,
+  "title": "Jetons, plongements et génération",
+  "summary": "Une chaîne de texte transformée en nombres, ce que ces nombres finissent par signifier, comment le texte qui précède façonne celui qui suit, et comment un jeton à la fois devient un paragraphe",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 14,
+  "aside": false
+ },
+ {
+  "slug": "primes",
+  "number": 5,
+  "title": "Une parenthèse : les écarts entre nombres premiers",
+  "summary": "Les écarts entre nombres premiers consécutifs, tracés comme l'application de premier retour d'un flot chaotique, à côté d'une application qui a une règle, pour montrer ce que le chaos n'est pas",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 1,
+  "aside": true
+ }
+]

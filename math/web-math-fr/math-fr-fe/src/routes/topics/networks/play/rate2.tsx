@@ -14,6 +14,7 @@ import { FAINT, INK, MUTED, ONE, SKY, TWO, plate, ticks } from "@/lib/draw";
 import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { MOTIONS, secondSlope, slopeBetween, trace } from "@/systems/calc";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/networks/play/rate2")({
   loader: () => api.system(TOPIC, "rate2"),
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/topics/networks/play/rate2")({
 
 const T_END = 12;
 const TICKS = 240;
-const OPTIONS = Object.keys(MOTIONS).map((id) => ({ id, label: MOTIONS[id].label }));
+const OPTIONS = Object.keys(MOTIONS).map((id) => ({ id, label: L(MOTIONS[id].label) }));
 
 function fit(pts: [number, number][], padFrac: number, zero = false): Box {
   const ys = pts.map((p) => p[1]);
@@ -74,22 +75,20 @@ function Rate2Page() {
     pen.line(pts.filter((p) => p[0] >= t), dark, 1);
   };
 
-  const trend = Math.abs(exactAccel) < 0.05 ? "Holding steady" : exactAccel > 0 ? "Getting faster" : "Getting slower";
+  const trend = Math.abs(exactAccel) < 0.05 ? L("Holding steady") : exactAccel > 0 ? L("Getting faster") : L("Getting slower");
 
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "Is it speeding up or slowing down"}
-        job="The same car. Last page the job was its speed. This time the job is whether the speed itself is rising or falling, and by how much a second: the acceleration. It comes from the speed exactly the way the speed came from the position."
+        title={system?.name ?? L("Is it speeding up or slowing down")}
+        job={L("The same car. Last page the job was its speed. This time the job is whether the speed itself is rising or falling, and by how much a second: the acceleration. It comes from the speed exactly the way the speed came from the position.")}
         input={
           <div className="space-y-3">
             <Choices options={OPTIONS} value={motion} onPick={(id) => { setMotion(id); reset(); }} />
-            <Text kind="note" as="p">{m.what}</Text>
-            <Slider label="The gap" min={0.05} max={3} step={0.05} value={gap} format={(v) => `${v.toFixed(2)} s`} onChange={setGap} />
+            <Text kind="note" as="p">{L(m.what)}</Text>
+            <Slider label={L("The gap")} min={0.05} max={3} step={0.05} value={gap} format={(v) => `${v.toFixed(2)} s`} onChange={setGap} />
             <Text kind="note" as="p">
-              The acceleration is read from two speeds this far apart, and each of those speeds is
-              read from two positions this far apart. So it is a change of a change. A wide gap
-              blurs it twice over; pinch it down and the ring settles on the dot.
+              {L("The acceleration is read from two speeds this far apart, and each of those speeds is read from two positions this far apart. So it is a change of a change. A wide gap blurs it twice over; pinch it down and the ring settles on the dot.")}
             </Text>
           </div>
         }
@@ -97,7 +96,7 @@ function Rate2Page() {
           <RunBar
             running={runner.running}
             count={Math.round(t * 10) / 10}
-            what="seconds"
+            what={L("seconds")}
             limit={T_END}
             onToggle={() => {
               if (!runner.running && tick >= TICKS) reset();
@@ -129,13 +128,13 @@ function Rate2Page() {
                   pen.dot(position, 0, 9, ONE);
                 }}
               />
-            </div><Caption>{started ? `Speed ${speed.toFixed(1)} m/s` : "Green arrow: the speed"}. {started ? `Acceleration ${exactAccel.toFixed(2)} m/s each second` : "Rose arrow: how the speed is changing"}</Caption></div>
+            </div><Caption>{started ? L("Speed {{v}} m/s", { v: speed.toFixed(1) }) : L("Green arrow: the speed")}. {started ? L("Acceleration {{a}} m/s each second", { a: exactAccel.toFixed(2) }) : L("Rose arrow: how the speed is changing")}</Caption></div>
             <div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot className="h-full w-full" box={posBox} deps={[posTrace, t, posBox]} draw={(pen) => {
                 ticks(pen);
                 curve(pen, posTrace, ONE, "#243a2c");
                 pen.dot(t, position, 5, INK);
-                plate(pen, "Where the car is", posBox.x0 + 0.3, posBox.y1 - (posBox.y1 - posBox.y0) * 0.1, MUTED);
+                plate(pen, L("Where the car is"), posBox.x0 + 0.3, posBox.y1 - (posBox.y1 - posBox.y0) * 0.1, MUTED);
               }} />
             </div>
             <div><div data-slot="plot" className="h-[150px] overflow-hidden">
@@ -150,7 +149,7 @@ function Rate2Page() {
                 pen.dot(b[0], b[1], 4, TWO);
                 pen.dot(t, speed, 5, INK);
               }} />
-            </div><Caption>The speed. Its steepness is the acceleration.</Caption></div>
+            </div><Caption>{L("The speed. Its steepness is the acceleration.")}</Caption></div>
             <div><div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot className="h-full w-full" box={accBox} deps={[accTrace, t, accel, accBox]} draw={(pen) => {
                 ticks(pen);
@@ -158,30 +157,36 @@ function Rate2Page() {
                 pen.dot(t, exactAccel, 4.5, TWO);
                 pen.ring(t, accel, 6, INK, 2);
               }} />
-            </div><Caption>The acceleration. Above zero: speeding up. Below: slowing down. Ring: from the gap set above.  Dot: exact.</Caption></div>
+            </div><Caption>{L("The acceleration. Above zero: speeding up. Below: slowing down. Ring: from the gap set above.  Dot: exact.")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={started ? Math.abs(accel - exactAccel) < 0.08 * Math.max(0.5, Math.abs(exactAccel)) : undefined}>
               {!started
-                ? "Press run. The green arrow will be the speed and the rose arrow the change in it. Watch the rose arrow point backwards whenever the green one is shrinking."
-                : `At ${t.toFixed(1)} s the car is ${trend}: its speed is ${speed.toFixed(2)} m/s and changing by ${exactAccel.toFixed(2)} m/s every second. From two speeds ${gap.toFixed(2)} s apart the change comes out as ${accel.toFixed(2)}, ${Math.abs(accel - exactAccel) < 0.08 * Math.max(0.5, Math.abs(exactAccel)) ? "which is right" : "which is off: the gap is too wide for a speed that swings this fast"}.`}
+                ? L("Press run. The green arrow will be the speed and the rose arrow the change in it. Watch the rose arrow point backwards whenever the green one is shrinking.")
+                : L("At {{t}} s the car is {{trend}}: its speed is {{v}} m/s and changing by {{a}} m/s every second. From two speeds {{gap}} s apart the change comes out as {{est}}, {{judge}}.", {
+                    t: t.toFixed(1),
+                    trend,
+                    v: speed.toFixed(2),
+                    a: exactAccel.toFixed(2),
+                    gap: gap.toFixed(2),
+                    est: accel.toFixed(2),
+                    judge: Math.abs(accel - exactAccel) < 0.08 * Math.max(0.5, Math.abs(exactAccel)) ? L("which is right") : L("which is off: the gap is too wide for a speed that swings this fast"),
+                  })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Speed a little before</dt>
+              <dt>{L("Speed a little before")}</dt>
               <dd className="text-right text-foreground/80">{slopeBetween(m.at, t - gap / 2, gap).toFixed(3)} M/s</dd>
-              <dt>Speed a little after</dt>
+              <dt>{L("Speed a little after")}</dt>
               <dd className="text-right text-foreground/80">{slopeBetween(m.at, t + gap / 2, gap).toFixed(3)} M/s</dd>
-              <dt>The difference, divided by the gap</dt>
-              <dd className="text-right text-foreground/80">{accel.toFixed(3)} M/s each second</dd>
-              <dt>Exact</dt>
+              <dt>{L("The difference, divided by the gap")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{a}} M/s each second", { a: accel.toFixed(3) })}</dd>
+              <dt>{L("Exact")}</dt>
               <dd className="text-right text-foreground/80">{exactAccel.toFixed(3)}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              Position, speed, acceleration: each is the steepness of the one before. The same
-              ratio, applied twice. A network's training uses exactly this ratio, once, on a
-              different kind of curve: how wrong it is, against each of its own numbers.
+              {L("Position, speed, acceleration: each is the steepness of the one before. The same ratio, applied twice. A network's training uses exactly this ratio, once, on a different kind of curve: how wrong it is, against each of its own numbers.")}
             </Text>
           </div>
         }

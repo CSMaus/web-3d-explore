@@ -11,6 +11,7 @@ import { SaveImage } from "@/components/SaveImage";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/complex";
+import { L } from "@/lib/lang";
 import { INK, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { abs, orbit, show, turns, type C } from "@/systems/complex";
@@ -23,10 +24,10 @@ export const Route = createFileRoute("/topics/complex/play/square")({
 const BOX: Box = { x0: -2.4, x1: 2.4, y0: -2.4, y1: 2.4 };
 const MOST = 40;
 const SHIFTS = [
-  { id: "none", label: "No shift: just square", c: [0, 0] as C },
-  { id: "a", label: "Shift by -0.5 + 0.5i", c: [-0.5, 0.5] as C },
-  { id: "b", label: "Shift by 0.3 + 0.5i", c: [0.3, 0.5] as C },
-  { id: "c", label: "Shift by -0.8 + 0.16i", c: [-0.8, 0.16] as C },
+  { id: "none", label: L("No shift: just square"), c: [0, 0] as C },
+  { id: "a", label: L("Shift by -0.5 + 0.5i"), c: [-0.5, 0.5] as C },
+  { id: "b", label: L("Shift by 0.3 + 0.5i"), c: [0.3, 0.5] as C },
+  { id: "c", label: L("Shift by -0.8 + 0.16i"), c: [-0.8, 0.16] as C },
 ];
 const GRID = 44;
 
@@ -67,17 +68,13 @@ function SquarePage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "Julia set"}
-        job="Squaring a number multiplies it by itself: the angle doubles and the length squares. Do that again and again and one of three things happens: a start inside the unit circle falls to zero, a start outside runs off to infinity, a start on the circle stays on it. Then add a small shift after every squaring, and the line between falling and running stops being a circle. The job is to follow one start, and to watch every start at once: after each squaring the ones that have left are coloured, and what stays dark is the Julia set."
+        title={system?.name ?? L("Julia set")}
+        job={L("Squaring a number multiplies it by itself: the angle doubles and the length squares. Do that again and again and one of three things happens: a start inside the unit circle falls to zero, a start outside runs off to infinity, a start on the circle stays on it. Then add a small shift after every squaring, and the line between falling and running stops being a circle. The job is to follow one start, and to watch every start at once: after each squaring the ones that have left are coloured, and what stays dark is the Julia set.")}
         input={
           <div className="space-y-3">
             <Choices options={SHIFTS} value={shift} onPick={(id) => { setShift(id); reset(); }} />
             <Text kind="note" as="p">
-              Click anywhere to choose the start. Every start on the picture begins dark. Press run:
-              each squaring is done to the chosen start and to every other start at once, and a start
-              that has left is coloured, brighter the sooner it left. What is still dark after many
-              squarings is the set of starts that never leave: a disc with no shift, a Julia set with
-              one. The fractals topic draws these in full.
+              {L("Click anywhere to choose the start. Every start on the picture begins dark. Press run: each squaring is done to the chosen start and to every other start at once, and a start that has left is coloured, brighter the sooner it left. What is still dark after many squarings is the set of starts that never leave: a disc with no shift, a Julia set with one. The fractals topic draws these in full.")}
             </Text>
           </div>
         }
@@ -86,7 +83,7 @@ function SquarePage() {
             running={runner.running}
             count={n}
             limit={MOST}
-            what="squarings"
+            what={L("squarings")}
             onToggle={() => {
               if (!runner.running && n >= path.path.length - 1) reset();
               runner.toggle();
@@ -144,39 +141,59 @@ function SquarePage() {
                 }}
               />
             </div>
-            <Caption>Sky ring: the start. White: where the number is now. Green: the path so far. Blue circle: length one. Dark red circle: length two, past which a number never comes back. Background: every start at once, dark while it has not left after the {n} squarings done so far, coloured once it has, brighter the sooner.{shift !== "none" ? " Rose dot: the shift c." : ""}</Caption>
+            <Caption>
+              {shift !== "none"
+                ? L("Sky ring: the start. White: where the number is now. Green: the path so far. Blue circle: length one. Dark red circle: length two, past which a number never comes back. Background: every start at once, dark while it has not left after the {{n}} squarings done so far, coloured once it has, brighter the sooner. Rose dot: the shift c.", { n })
+                : L("Sky ring: the start. White: where the number is now. Green: the path so far. Blue circle: length one. Dark red circle: length two, past which a number never comes back. Background: every start at once, dark while it has not left after the {{n}} squarings done so far, coloured once it has, brighter the sooner.", { n })}
+            </Caption>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={n === 0 ? undefined : left !== null && n >= left ? false : true}>
               {n === 0
-                ? `Start at ${show(start)}, length ${abs(start).toFixed(3)}${shift === "none" ? (abs(start) < 1 ? ", inside the circle" : abs(start) > 1 ? ", outside the circle" : ", on the circle") : ""}. Press run.`
+                ? shift !== "none"
+                  ? L("Start at {{z}}, length {{r}}. Press run.", { z: show(start), r: abs(start).toFixed(3) })
+                  : abs(start) < 1
+                    ? L("Start at {{z}}, length {{r}}, inside the circle. Press run.", { z: show(start), r: abs(start).toFixed(3) })
+                    : abs(start) > 1
+                      ? L("Start at {{z}}, length {{r}}, outside the circle. Press run.", { z: show(start), r: abs(start).toFixed(3) })
+                      : L("Start at {{z}}, length {{r}}, on the circle. Press run.", { z: show(start), r: abs(start).toFixed(3) })
                 : left !== null && n >= left
-                  ? `After ${left} squaring${left === 1 ? "" : "s"} the length passed two and the number is gone for good: from there each squaring at least doubles the distance and the shift cannot pull it back. This start leaves.`
+                  ? left === 1
+                    ? L("After {{n}} squaring the length passed two and the number is gone for good: from there each squaring at least doubles the distance and the shift cannot pull it back. This start leaves.", { n: left })
+                    : L("After {{n}} squarings the length passed two and the number is gone for good: from there each squaring at least doubles the distance and the shift cannot pull it back. This start leaves.", { n: left })
                   : shift === "none"
-                    ? `After ${n} squarings the number is at ${show(z)}, length ${abs(z).toFixed(4)}, angle ${(turns(z) * 360).toFixed(0)} deg. ${abs(start) < 1 ? "The length squares each time, so it is falling to zero: this start stays." : abs(start) > 1 ? "The length is growing and will pass two." : "On the circle the length is one, squared is one: it stays on the circle, turning by a doubling angle each time."}`
-                    : `After ${n} squarings and shifts the number is at ${show(z)}, length ${abs(z).toFixed(3)}. It has not passed two${n === MOST ? ", after the whole run: this start stays, and it is one of the dark points on the map" : ""}.`}
+                    ? L("After {{n}} squarings the number is at {{z}}, length {{r}}, angle {{a}} deg. {{more}}", {
+                        n,
+                        z: show(z),
+                        r: abs(z).toFixed(4),
+                        a: (turns(z) * 360).toFixed(0),
+                        more: abs(start) < 1 ? L("The length squares each time, so it is falling to zero: this start stays.") : abs(start) > 1 ? L("The length is growing and will pass two.") : L("On the circle the length is one, squared is one: it stays on the circle, turning by a doubling angle each time."),
+                      })
+                    : n === MOST
+                      ? L("After {{n}} squarings and shifts the number is at {{z}}, length {{r}}. It has not passed two, after the whole run: this start stays, and it is one of the dark points on the map.", { n, z: show(z), r: abs(z).toFixed(3) })
+                      : L("After {{n}} squarings and shifts the number is at {{z}}, length {{r}}. It has not passed two.", { n, z: show(z), r: abs(z).toFixed(3) })}
             </Verdict>
             <Text kind="note" as="p">
               {n === 0
-                ? "Every start on the picture is dark: nothing has been squared yet."
-                : `${share} per cent of the starts have left after ${n} squaring${n === 1 ? "" : "s"}; the dark that remains is the set taking shape.`}
+                ? L("Every start on the picture is dark: nothing has been squared yet.")
+                : n === 1
+                  ? L("{{p}} per cent of the starts have left after {{n}} squaring; the dark that remains is the set taking shape.", { p: share, n })
+                  : L("{{p}} per cent of the starts have left after {{n}} squarings; the dark that remains is the set taking shape.", { p: share, n })}
             </Text>
             <Readout
               rows={[
-                ["Start", show(start)],
-                ["Shift added each time", show(c)],
-                ["Now", show(z)],
-                ["Length now", abs(z).toFixed(4)],
-                ["Left, after", left === null ? `not within ${MOST}` : `${left} squarings`],
-                ["Squarings so far", `${n} of ${MOST}`],
+                [L("Start"), show(start)],
+                [L("Shift added each time"), show(c)],
+                [L("Now"), show(z)],
+                [L("Length now"), abs(z).toFixed(4)],
+                [L("Left, after"), left === null ? L("not within {{n}}", { n: MOST }) : L("{{n}} squarings", { n: left })],
+                [L("Squarings so far"), L("{{n}} of {{total}}", { n, total: MOST })],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              The map of which starts stay is a Julia set when there is a shift. The fractals topic
-              draws it at full resolution, and the Mandelbrot set is the same question asked of the
-              shift instead of the start. Both are this page, done for every point at once.
+              {L("The map of which starts stay is a Julia set when there is a shift. The fractals topic draws it at full resolution, and the Mandelbrot set is the same question asked of the shift instead of the start. Both are this page, done for every point at once.")}
             </Text>
           </div>
         }

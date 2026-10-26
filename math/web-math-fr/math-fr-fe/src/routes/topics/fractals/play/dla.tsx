@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Label, Text, Heading } from "@kit/index";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Equations } from "@/components/Equations";
@@ -106,24 +107,21 @@ function DlaPage() {
 
   return (
     <div>
-      <Heading level={1} className="mt-4">{system?.name ?? "Wandering particles"}</Heading>
+      <Heading level={1} className="mt-4">{system?.name ?? L("Wandering particles")}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
         <div className="space-y-4">
           <section data-slot="panel">
-            <Label>WALK</Label>
+            <Label>{L("WALK")}</Label>
             <div className="mt-3 space-y-2">
-              <Slider label="Particles" min={200} max={4000} step={100} value={target} format={(v) => String(Math.round(v))} onChange={(v) => setTarget(Math.round(v))} />
-              <Slider label="Grid width" min={81} max={201} step={10} value={size} format={(v) => String(Math.round(v) | 1)} onChange={(v) => setSize(Math.round(v) | 1)} />
-              <Slider label="Drift limit" min={1.5} max={4} step={0.1} value={kill} format={(v) => `${v.toFixed(1)} x r`} onChange={setKill} />
-              <Slider label="Walks shown" min={0} max={6} step={1} value={traced} format={(v) => String(Math.round(v))} onChange={(v) => setTraced(Math.round(v))} />
-              <Slider label="Seed" min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
+              <Slider label={L("Particles")} min={200} max={4000} step={100} value={target} format={(v) => String(Math.round(v))} onChange={(v) => setTarget(Math.round(v))} />
+              <Slider label={L("Grid width")} min={81} max={201} step={10} value={size} format={(v) => String(Math.round(v) | 1)} onChange={(v) => setSize(Math.round(v) | 1)} />
+              <Slider label={L("Drift limit")} min={1.5} max={4} step={0.1} value={kill} format={(v) => L("{{v}} x r", { v: v.toFixed(1) })} onChange={setKill} />
+              <Slider label={L("Walks shown")} min={0} max={6} step={1} value={traced} format={(v) => String(Math.round(v))} onChange={(v) => setTraced(Math.round(v))} />
+              <Slider label={L("Seed")} min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
               <PaletteBar />
             </div>
             <Text kind="note" as="p" className="mt-3">
-              A particle starts on the ring, steps to one of four neighbours with chance a quarter
-              each, and stops the moment it touches the cluster. Let go at is how far it may drift
-              before it is abandoned and another is released. Walks kept draws the paths the last
-              few particles actually took.
+              {L("A particle starts on the ring, steps to one of four neighbours with chance a quarter each, and stops the moment it touches the cluster. Let go at is how far it may drift before it is abandoned and another is released. Walks kept draws the paths the last few particles actually took.")}
             </Text>
           </section>
 
@@ -137,17 +135,17 @@ function DlaPage() {
           <SaveImage stage={stage} name="wandering-particles" />
           <Readout
             rows={[
-              ["Particles stuck", tick ? `${tick.order.length.toLocaleString()} of ${target}` : "starting"],
-              ["reach", tick ? `${tick.radius.toFixed(0)} cells of ${size >> 1}` : "-"],
-              ["mass-radius dimension", numbers.mass ? numbers.mass.toFixed(3) : "-"],
-              ["Box dimension", numbers.box ? numbers.box.toFixed(3) : "-"],
+              [L("Particles stuck"), tick ? L("{{stuck}} of {{target}}", { stuck: tick.order.length.toLocaleString(), target }) : L("starting")],
+              [L("reach"), tick ? L("{{r}} cells of {{half}}", { r: tick.radius.toFixed(0), half: size >> 1 }) : "-"],
+              [L("mass-radius dimension"), numbers.mass ? numbers.mass.toFixed(3) : "-"],
+              [L("Box dimension"), numbers.box ? numbers.box.toFixed(3) : "-"],
               [
-                "Walks drawn",
+                L("Walks drawn"),
                 tick && tick.tracks.length
-                  ? `${tick.tracks.length}, ${numbers.steps.toLocaleString()} steps between them`
+                  ? L("{{walks}}, {{steps}} steps between them", { walks: tick.tracks.length, steps: numbers.steps.toLocaleString() })
                   : "-",
               ],
-              ["state", tick?.done ? "The cluster reached the edge" : tick?.finished ? "finished" : "growing"],
+              [L("state"), tick?.done ? L("The cluster reached the edge") : tick?.finished ? L("finished") : L("growing")],
             ]}
           />
         </div>

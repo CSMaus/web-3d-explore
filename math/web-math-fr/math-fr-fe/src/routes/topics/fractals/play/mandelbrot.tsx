@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Label, Button, Text, Heading } from "@kit/index";
 import { useRef, useState } from "react";
 import { DeepView } from "@/components/DeepView";
@@ -73,29 +74,29 @@ function MandelbrotPage() {
 
   return (
     <div>
-      <Heading level={1} className="mt-4">{system?.name ?? "The Mandelbrot set"}</Heading>
+      <Heading level={1} className="mt-4">{system?.name ?? L("The Mandelbrot set")}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
         <div className="space-y-4">
           <section data-slot="panel">
-            <Label>VIEW</Label>
+            <Label>{L("VIEW")}</Label>
             <div className="mt-3 space-y-2">
-              <Slider label="Zoom" min={0} max={22} step={0.05} value={zoom} format={(v) => `x${Math.pow(2, v).toExponential(1)}`} onChange={change(setZoom)} />
-              <Slider label="Centre x" min={-2.5} max={1.5} step={0.0005} value={centre[0]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([v, centre[1]]))} />
-              <Slider label="Centre y" min={-1.6} max={1.6} step={0.0005} value={centre[1]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([centre[0], v]))} />
-              <Slider label="Max steps" min={40} max={900} step={20} value={iters} format={(v) => String(Math.round(v))} onChange={change((v: number) => setIters(Math.round(v)))} />
-              <Slider label="Colour offset" min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={change(setShift)} />
+              <Slider label={L("Zoom")} min={0} max={22} step={0.05} value={zoom} format={(v) => `x${Math.pow(2, v).toExponential(1)}`} onChange={change(setZoom)} />
+              <Slider label={L("Centre x")} min={-2.5} max={1.5} step={0.0005} value={centre[0]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([v, centre[1]]))} />
+              <Slider label={L("Centre y")} min={-1.6} max={1.6} step={0.0005} value={centre[1]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([centre[0], v]))} />
+              <Slider label={L("Max steps")} min={40} max={900} step={20} value={iters} format={(v) => String(Math.round(v))} onChange={change((v: number) => setIters(Math.round(v)))} />
+              <Slider label={L("Colour offset")} min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={change(setShift)} />
               <PaletteBar />
             </div>
             <Text kind="note" as="p" className="mt-3">
-              Click the picture to centre on that point, then wind the zoom up.
+              {L("Click the picture to centre on that point, then wind the zoom up.")}
             </Text>
           </section>
 
           <section data-slot="panel">
-            <Label>RESOLUTION</Label>
+            <Label>{L("RESOLUTION")}</Label>
             <div className="mt-3 space-y-2">
               <Slider
-                label="Supersample"
+                label={L("Supersample")}
                 min={1}
                 max={4}
                 step={0.5}
@@ -113,27 +114,21 @@ function MandelbrotPage() {
                   setStale(false);
                 }}
               >
-                {stale ? "Recalculate" : "Up to date"}
+                {stale ? L("Recalculate") : L("Up to date")}
               </Button>
             </div>
             <Text kind="note" as="p" className="mt-3">
-              The sharper pass redraws the same view at more pixels than the screen has and lets
-              the screen shrink it back down, which is what removes the stair edges. It reuses the
-              one drawing surface rather than keeping a second copy, so nothing accumulates, and
-              the detail is stepped down until it fits both the hardware limit and a pixel budget.
+              {L("The sharper pass redraws the same view at more pixels than the screen has and lets the screen shrink it back down, which is what removes the stair edges. It reuses the one drawing surface rather than keeping a second copy, so nothing accumulates, and the detail is stepped down until it fits both the hardware limit and a pixel budget.")}
             </Text>
           </section>
 
           {deep ? (
             <section className="rounded border border-destructive/40 p-4">
               <Heading level={2} data-tone="destructive">
-                SERVER RENDER
+                {L("SERVER RENDER")}
               </Heading>
               <Text kind="note" as="p" className="mt-2">
-                Past about a hundred thousand times, single precision on the graphics card runs out
-                of digits and the picture goes blocky. This view is deeper than that, so it is
-                rendered on the server in double precision and streamed back one pass at a time,
-                each four times finer than the last.
+                {L("Past about a hundred thousand times, single precision on the graphics card runs out of digits and the picture goes blocky. This view is deeper than that, so it is rendered on the server in double precision and streamed back one pass at a time, each four times finer than the last.")}
               </Text>
               <div className="mt-3 flex flex-wrap gap-2">
                 <Button variant="outline" size="sm"
@@ -142,35 +137,34 @@ function MandelbrotPage() {
                   disabled={shot.kind === "working" || shot.kind === "opening"}
                 >
                   {shot.kind === "working" || shot.kind === "opening"
-                    ? "Rendering"
-                    : "Render on the server"}
+                    ? L("Rendering")
+                    : L("Render on the server")}
                 </Button>
                 <Button variant="outline" size="sm"
                   type="button"
                   onClick={stop}
                   disabled={shot.kind === "idle"}
                 >
-                  Stop
+                  {L("Stop")}
                 </Button>
               </div>
               <div data-text="caption" className="mt-3">
-                {shot.kind === "working" ? `Pass ${shot.done} of 4` : null}
-                {shot.kind === "done" ? "Finished, full resolution" : null}
-                {shot.kind === "idle" ? "Not started" : null}
-                {shot.kind === "opening" ? "Opening the connection" : null}
+                {shot.kind === "working" ? L("Pass {{done}} of 4", { done: shot.done }) : null}
+                {shot.kind === "done" ? L("Finished, full resolution") : null}
+                {shot.kind === "idle" ? L("Not started") : null}
+                {shot.kind === "opening" ? L("Opening the connection") : null}
                 {shot.kind === "refused" || shot.kind === "busy" || shot.kind === "lost" ? (
                   <span className="text-destructive">{shot.reason}</span>
                 ) : null}
               </div>
               {showing ? (
                 <Text kind="note" as="p" className="mt-2">
-                  The connection is closed as soon as a view finishes, because the server holds
-                  capacity for as long as a socket is open whether or not it is computing.
+                  {L("The connection is closed as soon as a view finishes, because the server holds capacity for as long as a socket is open whether or not it is computing.")}
                 </Text>
               ) : null}
               {drifted && tile ? (
                 <Text kind="warning" as="p" className="mt-2">
-                  The view moved, so the server picture was dropped. Render again.
+                  {L("The view moved, so the server picture was dropped. Render again.")}
                 </Text>
               ) : null}
             </section>
@@ -217,20 +211,20 @@ function MandelbrotPage() {
           <SaveImage stage={stage} name="mandelbrot" />
           <Readout
             rows={[
-              ["Half width", span.toExponential(3)],
-              ["centre", `${centre[0].toFixed(8)}, ${centre[1].toFixed(8)}`],
-              ["Steps tried", showing && tile ? String(tile.iters) : String(iters)],
+              [L("Half width"), span.toExponential(3)],
+              [L("centre"), `${centre[0].toFixed(8)}, ${centre[1].toFixed(8)}`],
+              [L("Steps tried"), showing && tile ? String(tile.iters) : String(iters)],
               [
-                "Drawn at",
+                L("Drawn at"),
                 detail
-                  ? `${detail.width} by ${detail.height}, ${(detail.pixels / 1e6).toFixed(1)}M pixels`
+                  ? L("{{w}} by {{h}}, {{mp}}M pixels", { w: detail.width, h: detail.height, mp: (detail.pixels / 1e6).toFixed(1) })
                   : "-",
               ],
-              ["Detail in the picture", detail ? `${detail.factor.toFixed(1)} x screen` : "-"],
-              ["Drawn by", showing ? "The server, double precision" : "The graphics card"],
+              [L("Detail in the picture"), detail ? L("{{f}} x screen", { f: detail.factor.toFixed(1) }) : "-"],
+              [L("Drawn by"), showing ? L("The server, double precision") : L("The graphics card")],
               [
-                "Server pass",
-                showing && tile ? `${tile.width} by ${tile.height}, step ${tile.step}` : "-",
+                L("Server pass"),
+                showing && tile ? L("{{w}} by {{h}}, step {{step}}", { w: tile.width, h: tile.height, step: tile.step }) : "-",
               ],
             ]}
           />

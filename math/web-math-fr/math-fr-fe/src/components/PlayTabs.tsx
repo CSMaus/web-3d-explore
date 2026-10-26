@@ -1,14 +1,15 @@
 import { TabLink } from "@/components/TabLink";
 import { SYSTEMS } from "@/lib/systems";
+import { L } from "@/lib/lang";
 
 export function PlayTabs() {
   return (
-    <nav className="flex flex-wrap gap-1.5" aria-label="Pages of the topic">
+    <nav className="flex flex-wrap gap-1.5" aria-label={L("Pages of the topic")}>
       <TabLink
         to="/topics/fractals/play"
         activeOptions={{ exact: true }}
       >
-        All
+        {L("All")}
       </TabLink>
       {SYSTEMS.map((item) => (
         <TabLink

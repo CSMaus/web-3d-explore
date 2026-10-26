@@ -15,7 +15,7 @@ const meta: Meta = {
 };
 export default meta;
 
-const USES: Record<keyof Omit<Palette, "chart">, string> = {
+const USES: Record<keyof Omit<Palette, "chart" | "topics">, string> = {
   background: "the page behind everything",
   card: "the fill of panels and cards: the three boxes of a play page, the topic tiles, the search window",
   foreground: "text and lines",

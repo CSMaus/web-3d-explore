@@ -7,6 +7,7 @@ import { SYSTEMS as FRACTAL_PAGES } from "@/lib/systems";
 import { GROUPS as TOKEN_GROUPS, SYSTEMS as TOKEN_PAGES } from "@/lib/tokens";
 import type { BuiltTopic } from "@/lib/topic";
 import { usesOf } from "@/lib/uses";
+import { L } from "@/lib/lang";
 
 /**
  * what the rail beside a topic lists under a section: the pages of the play
@@ -42,7 +43,7 @@ const PLAY: Record<string, RailGroup[]> = {
 export function pagesOf(topic: BuiltTopic, section: string): RailGroup[] {
   if (section.endsWith("/play")) {
     const groups = PLAY[topic.slug] ?? [];
-    return [{ links: [{ to: section as LinkProps["to"], label: "All", exact: true }] }, ...groups];
+    return [{ links: [{ to: section as LinkProps["to"], label: L("All"), exact: true }] }, ...groups];
   }
   if (section.endsWith("/uses")) {
     const pieces = usesOf(topic.slug).flatMap((u): RailLink[] => {
@@ -50,7 +51,7 @@ export function pagesOf(topic: BuiltTopic, section: string): RailGroup[] {
       if (u.piece) return [{ to: `/topics/${topic.slug}/uses/$piece` as LinkProps["to"], params: { piece: u.piece }, label: u.label }];
       return [];
     });
-    return [{ links: [{ to: section as LinkProps["to"], label: "All", exact: true }, ...pieces] }];
+    return [{ links: [{ to: section as LinkProps["to"], label: L("All"), exact: true }, ...pieces] }];
   }
   return [];
 }

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Label, Button, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
@@ -80,19 +81,16 @@ function TailsPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "Claims with a fractal tail"}
-        job="Most claims are small and a few are enormous, and the enormous ones are not rare enough to ignore: a fire, a storm, a liability case can cost more than the previous thousand claims together. Pareto found the same shape in incomes in 1896, and Mandelbrot in 1963 in cotton prices. It is a fractal in the same sense as the coastline: the largest tenth of the claims, rescaled, is distributed exactly like the whole, at every scale, with one exponent saying how fast the tail thins. The job is to let claims arrive one at a time beside a bell-shaped comparison of the same typical size, and to watch which average settles and which never does."
+        title={system?.name ?? L("Claims with a fractal tail")}
+        job={L("Most claims are small and a few are enormous, and the enormous ones are not rare enough to ignore: a fire, a storm, a liability case can cost more than the previous thousand claims together. Pareto found the same shape in incomes in 1896, and Mandelbrot in 1963 in cotton prices. It is a fractal in the same sense as the coastline: the largest tenth of the claims, rescaled, is distributed exactly like the whole, at every scale, with one exponent saying how fast the tail thins. The job is to let claims arrive one at a time beside a bell-shaped comparison of the same typical size, and to watch which average settles and which never does.")}
         input={
           <div className="space-y-3">
-            <Slider label="Tail index alpha" min={1.1} max={3.5} step={0.05} value={alpha} format={(v) => v.toFixed(2)} onChange={(v) => { setAlpha(Math.round(v * 20) / 20); reset(); }} />
+            <Slider label={L("Tail index alpha")} min={1.1} max={3.5} step={0.05} value={alpha} format={(v) => v.toFixed(2)} onChange={(v) => { setAlpha(Math.round(v * 20) / 20); reset(); }} />
             <Button variant="outline" size="sm" type="button" onClick={() => { setSeed((s) => s + 1); reset(); }}>
-              Draw another year of claims
+              {L("Draw another year of claims")}
             </Button>
             <Text kind="note" as="p">
-              Sizes are in units of the smallest claim. The comparison draws claims from a thin tail,
-              a lognormal, with the same average as the heavy tail's theoretical one, so any
-              difference in how the averages behave is the tail and nothing else. Below alpha of two
-              the heavy tail's variance is infinite; below one even its mean is.
+              {L("Sizes are in units of the smallest claim. The comparison draws claims from a thin tail, a lognormal, with the same average as the heavy tail's theoretical one, so any difference in how the averages behave is the tail and nothing else. Below alpha of two the heavy tail's variance is infinite; below one even its mean is.")}
             </Text>
           </div>
         }
@@ -101,7 +99,7 @@ function TailsPage() {
             running={runner.running}
             count={n}
             limit={N}
-            what="claims"
+            what={L("claims")}
             onToggle={() => {
               if (!runner.running && n >= N) reset();
               runner.toggle();
@@ -114,34 +112,19 @@ function TailsPage() {
         }
         more={
           <section data-slot="panel">
-            <Label>WHERE IT IS USED</Label>
+            <Label>{L("WHERE IT IS USED")}</Label>
             <ul data-text="note" className="mt-2 space-y-2">
               <li>
-                Danish fire insurance, 1980 to 1990: 2,156 losses above a million kroner, fitted by
-                McNeil in 1997 with the tail law on this page. The textbook of the method is
-                Embrechts, Kluppelberg and Mikosch, 1997. An insurer prices the top of the tail
-                separately, often passing it to a reinsurer in layers, because the ordinary average
-                says nothing about it.
+                {L("Danish fire insurance, 1980 to 1990: 2,156 losses above a million kroner, fitted by McNeil in 1997 with the tail law on this page. The textbook of the method is Embrechts, Kluppelberg and Mikosch, 1997. An insurer prices the top of the tail separately, often passing it to a reinsurer in layers, because the ordinary average says nothing about it.")}
               </li>
               <li>
-                Mandelbrot called the two effects on these pages after two floods. The Noah effect: a
-                single event so large it dominates everything, the heavy tail. The Joseph effect:
-                seven fat years and seven lean, the long memory of the Hurst page. Both break the
-                statistics built on the bell curve and the coin toss, and both are scaling laws with
-                one exponent.
+                {L("Mandelbrot called the two effects on these pages after two floods. The Noah effect: a single event so large it dominates everything, the heavy tail. The Joseph effect: seven fat years and seven lean, the long memory of the Hurst page. Both break the statistics built on the bell curve and the coin toss, and both are scaling laws with one exponent.")}
               </li>
               <li>
-                The link to a coastline. Richardson's coastline has a count of rulers that grows as a
-                power of the ruler's shortness; a Pareto tail has a count of claims that shrinks as a
-                power of the size. In each the exponent is read off the slope of a log-log plot, and in
-                each the picture is the same at every scale. The tail index is the dimension of a
-                distribution.
+                {L("The link to a coastline. Richardson's coastline has a count of rulers that grows as a power of the ruler's shortness; a Pareto tail has a count of claims that shrinks as a power of the size. In each the exponent is read off the slope of a log-log plot, and in each the picture is the same at every scale. The tail index is the dimension of a distribution.")}
               </li>
               <li>
-                What the Bayesian blend of the last page does with this: a customer's expected claim
-                cost is frequency times size, and while frequency earns credibility year by year, the
-                size's tail cannot be learnt from one customer at all. It is estimated on the whole
-                portfolio, and the extreme-value theory of Embrechts and colleagues is how.
+                {L("What the Bayesian blend of the last page does with this: a customer's expected claim cost is frequency times size, and while frequency earns credibility year by year, the size's tail cannot be learnt from one customer at all. It is estimated on the whole portfolio, and the extreme-value theory of Embrechts and colleagues is how.")}
               </li>
             </ul>
           </section>
@@ -165,7 +148,7 @@ function TailsPage() {
                   }}
                 />
               </div>
-              <Caption>{`The running average, claims along the bottom. Rose: the heavy tail, alpha ${alpha.toFixed(2)}. Sky: the thin tail with the same average. The faint line is the heavy tail's theoretical mean${Number.isFinite(typical) ? `, ${typical.toFixed(2)}` : ", which does not exist below alpha of one"}. Rose ticks at the top: claims too large for the frame.`}</Caption>
+              <Caption>{L("The running average, claims along the bottom. Rose: the heavy tail, alpha {{alpha}}. Sky: the thin tail with the same average. The faint line is the heavy tail's theoretical mean{{mean}}. Rose ticks at the top: claims too large for the frame.", { alpha: alpha.toFixed(2), mean: Number.isFinite(typical) ? `, ${typical.toFixed(2)}` : L(", which does not exist below alpha of one") })}</Caption>
             </div>
             <div className="grid gap-2 lg:grid-cols-2">
               <div>
@@ -185,7 +168,7 @@ function TailsPage() {
                     }}
                   />
                 </div>
-                <Caption>{`Both axes logarithmic. Along the bottom: a claim size. Up: the fraction of claims at least that large. Rose: the heavy tail, a straight line of slope about minus ${alpha.toFixed(2)}. Sky: the thin tail, bending down. Green: the largest tenth of the heavy claims alone, each divided by the smallest of them: the same line again. Grey: the exact law.`}</Caption>
+                <Caption>{L("Both axes logarithmic. Along the bottom: a claim size. Up: the fraction of claims at least that large. Rose: the heavy tail, a straight line of slope about minus {{alpha}}. Sky: the thin tail, bending down. Green: the largest tenth of the heavy claims alone, each divided by the smallest of them: the same line again. Grey: the exact law.", { alpha: alpha.toFixed(2) })}</Caption>
               </div>
               <div>
                 <div data-slot="plot" className="h-[220px] overflow-hidden">
@@ -208,11 +191,11 @@ function TailsPage() {
                       }
                       ctx.fillStyle = "#2c3540";
                       ctx.fillRect(0, pen.height * 0.5, pen.width, 1);
-                      pen.text(`largest ${largest.toFixed(1)}`, pen.width - 6, 12, MUTED, "right");
+                      pen.text(L("largest {{v}}", { v: largest.toFixed(1) }), pen.width - 6, 12, MUTED, "right");
                     }}
                   />
                 </div>
-                <Caption>Every claim as a bar, in the order it came, both rows on the same scale. Top, rose: the heavy tail. Bottom, sky: the thin tail. The heavy row is mostly tiny with a few bars that set the scale for everything.</Caption>
+                <Caption>{L("Every claim as a bar, in the order it came, both rows on the same scale. Top, rose: the heavy tail. Bottom, sky: the thin tail. The heavy row is mostly tiny with a few bars that set the scale for everything.")}</Caption>
               </div>
             </div>
           </section>
@@ -221,29 +204,25 @@ function TailsPage() {
           <div className="space-y-2">
             <Verdict good={n < 50 ? undefined : alpha < 2 ? false : true}>
               {n === 0
-                ? `Alpha is ${alpha.toFixed(2)}: ${alpha <= 1 ? "the mean itself does not exist" : alpha < 2 ? "the mean exists but the variance is infinite" : "both the mean and the variance exist"}. Press run and the claims arrive one at a time.`
+                ? L("Alpha is {{alpha}}: {{what}}. Press run and the claims arrive one at a time.", { alpha: alpha.toFixed(2), what: alpha <= 1 ? L("the mean itself does not exist") : alpha < 2 ? L("the mean exists but the variance is infinite") : L("both the mean and the variance exist") })
                 : n < 50
-                  ? `${n} claims so far. The tail needs fifty to be read.`
-                  : `After ${n} claims the heavy average is ${meanHeavy[n - 1][1].toFixed(2)} and the thin one ${meanLight[n - 1][1].toFixed(2)}${Number.isFinite(typical) ? `, both aiming at ${typical.toFixed(2)}` : ""}. The largest heavy claim so far is ${largest.toFixed(1)}, ${(share * 100).toFixed(0)} per cent of everything paid out${share > 0.1 ? ": one claim outweighs hundreds, the Noah effect" : ""}. The tail index read off the slope is ${Number.isFinite(measured) ? measured.toFixed(2) : "-"} against ${alpha.toFixed(2)} set${alpha < 2 ? ", below two: the variance is infinite and the average will never settle, however many claims come. The thin average settled long ago." : ", above two: the average settles, only more slowly than the thin one."} The largest tenth of the claims, rescaled, lie on the same line as all of them: the tail is the same at every scale.`}
+                  ? L("{{n}} claims so far. The tail needs fifty to be read.", { n })
+                  : `${L("After {{n}} claims the heavy average is {{heavy}} and the thin one {{thin}}{{aim}}.", { n, heavy: meanHeavy[n - 1][1].toFixed(2), thin: meanLight[n - 1][1].toFixed(2), aim: Number.isFinite(typical) ? L(", both aiming at {{v}}", { v: typical.toFixed(2) }) : "" })} ${L("The largest heavy claim so far is {{largest}}, {{share}} per cent of everything paid out{{noah}}.", { largest: largest.toFixed(1), share: (share * 100).toFixed(0), noah: share > 0.1 ? L(": one claim outweighs hundreds, the Noah effect") : "" })} ${L("The tail index read off the slope is {{m}} against {{alpha}} set{{tail}}", { m: Number.isFinite(measured) ? measured.toFixed(2) : "-", alpha: alpha.toFixed(2), tail: alpha < 2 ? L(", below two: the variance is infinite and the average will never settle, however many claims come. The thin average settled long ago.") : L(", above two: the average settles, only more slowly than the thin one.") })} ${L("The largest tenth of the claims, rescaled, lie on the same line as all of them: the tail is the same at every scale.")}`}
             </Verdict>
             <Readout
               rows={[
-                ["Tail index alpha, set", alpha.toFixed(2)],
-                ["Tail index, read off the slope", Number.isFinite(measured) ? measured.toFixed(3) : "-"],
-                ["Theoretical mean", Number.isFinite(typical) ? typical.toFixed(3) : "infinite"],
-                ["Theoretical variance", alpha > 2 ? ((alpha * FLOOR * FLOOR) / ((alpha - 1) * (alpha - 1) * (alpha - 2))).toFixed(3) : "infinite"],
-                ["Heavy average so far", n ? meanHeavy[n - 1][1].toFixed(3) : "-"],
-                ["Thin average so far", n ? meanLight[n - 1][1].toFixed(3) : "-"],
-                ["Largest claim, and its share of the total", n ? `${largest.toFixed(2)}, ${(share * 100).toFixed(1)} per cent` : "-"],
-                ["Claims above ten times the smallest", n ? `${seen.filter((v) => v > 10 * FLOOR).length}, the law says ${(n * Math.pow(0.1, alpha)).toFixed(1)}` : "-"],
+                [L("Tail index alpha, set"), alpha.toFixed(2)],
+                [L("Tail index, read off the slope"), Number.isFinite(measured) ? measured.toFixed(3) : "-"],
+                [L("Theoretical mean"), Number.isFinite(typical) ? typical.toFixed(3) : L("infinite")],
+                [L("Theoretical variance"), alpha > 2 ? ((alpha * FLOOR * FLOOR) / ((alpha - 1) * (alpha - 1) * (alpha - 2))).toFixed(3) : L("infinite")],
+                [L("Heavy average so far"), n ? meanHeavy[n - 1][1].toFixed(3) : "-"],
+                [L("Thin average so far"), n ? meanLight[n - 1][1].toFixed(3) : "-"],
+                [L("Largest claim, and its share of the total"), n ? L("{{v}}, {{share}} per cent", { v: largest.toFixed(2), share: (share * 100).toFixed(1) }) : "-"],
+                [L("Claims above ten times the smallest"), n ? L("{{count}}, the law says {{law}}", { count: seen.filter((v) => v > 10 * FLOOR).length, law: (n * Math.pow(0.1, alpha)).toFixed(1) }) : "-"],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              The straight line on the log-log plot is the whole story: a power law, an exponent, and a
-              picture that looks the same at every scale. Richardson found it for the coastline, Pareto
-              for incomes, Mandelbrot for prices and floods. The actuary's answer is not to average it
-              away but to price the tail as a tail, with the exponent measured on the whole book of
-              business rather than on any one customer.
+              {L("The straight line on the log-log plot is the whole story: a power law, an exponent, and a picture that looks the same at every scale. Richardson found it for the coastline, Pareto for incomes, Mandelbrot for prices and floods. The actuary's answer is not to average it away but to price the tail as a tail, with the exponent measured on the whole book of business rather than on any one customer.")}
             </Text>
           </div>
         }

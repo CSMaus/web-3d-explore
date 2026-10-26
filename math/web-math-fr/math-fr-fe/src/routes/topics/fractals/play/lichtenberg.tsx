@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Label, Text, Heading } from "@kit/index";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Chips } from "@/components/Chips";
@@ -110,33 +111,31 @@ function LichtenbergPage() {
 
   return (
     <div>
-      <Heading level={1} className="mt-4">{system?.name ?? "Dielectric breakdown"}</Heading>
+      <Heading level={1} className="mt-4">{system?.name ?? L("Dielectric breakdown")}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
         <div className="space-y-4">
           <section data-slot="panel">
-            <Label>SOURCE</Label>
+            <Label>{L("SOURCE")}</Label>
             <div className="mt-3">
-              <Chips items={[...WHERE]} active={where} onPick={setWhere} />
+              <Chips items={WHERE.map((w) => L(w))} active={L(where)} onPick={(item) => setWhere(WHERE.find((w) => L(w) === item) ?? item)} />
             </div>
             <Text kind="note" as="p" className="mt-3">
-              From a point is the Lichtenberg figure: charge injected at one spot in an insulator,
-              branching out in every direction, the burn left in glass or wood. Across a gap is the
-              same model with two plates, which is a bolt crossing the gap.
+              {L("From a point is the Lichtenberg figure: charge injected at one spot in an insulator, branching out in every direction, the burn left in glass or wood. Across a gap is the same model with two plates, which is a bolt crossing the gap.")}
             </Text>
           </section>
 
           <section data-slot="panel">
-            <Label>MODEL</Label>
+            <Label>{L("MODEL")}</Label>
             <div className="mt-3 space-y-2">
-              <Slider label="Roughness" min={0} max={3} step={0.05} value={eta} format={(v) => v.toFixed(2)} onChange={setEta} />
-              <Slider label="Grid width" min={61} max={161} step={10} value={cols} format={(v) => String(Math.round(v))} onChange={(v) => setCols(Math.round(v))} />
-              <Slider label="Sites" min={40} max={900} step={20} value={sites} format={(v) => String(Math.round(v))} onChange={(v) => setSites(Math.round(v))} />
-              <Slider label="Sweeps per site" min={4} max={40} step={1} value={warm} format={(v) => String(Math.round(v))} onChange={(v) => setWarm(Math.round(v))} />
-              <Slider label="Seed" min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
+              <Slider label={L("Roughness")} min={0} max={3} step={0.05} value={eta} format={(v) => v.toFixed(2)} onChange={setEta} />
+              <Slider label={L("Grid width")} min={61} max={161} step={10} value={cols} format={(v) => String(Math.round(v))} onChange={(v) => setCols(Math.round(v))} />
+              <Slider label={L("Sites")} min={40} max={900} step={20} value={sites} format={(v) => String(Math.round(v))} onChange={(v) => setSites(Math.round(v))} />
+              <Slider label={L("Sweeps per site")} min={4} max={40} step={1} value={warm} format={(v) => String(Math.round(v))} onChange={(v) => setWarm(Math.round(v))} />
+              <Slider label={L("Seed")} min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
               <PaletteBar />
             </div>
             <Text kind="note" as="p" className="mt-3">
-              At roughness 0 every edge site is equally likely; raise it and the tips take over.
+              {L("At roughness 0 every edge site is equally likely; raise it and the tips take over.")}
             </Text>
           </section>
 
@@ -150,18 +149,18 @@ function LichtenbergPage() {
           <SaveImage stage={stage} name="lichtenberg" />
           <Readout
             rows={[
-              ["Sites lit", tick ? `${tick.order.length.toLocaleString()} of ${sites}` : "starting"],
-              ["grid", `${cols} by ${rows}`],
-              ["Measured box dimension", dimension ? dimension.toFixed(3) : "-"],
+              [L("Sites lit"), tick ? L("{{lit}} of {{sites}}", { lit: tick.order.length.toLocaleString(), sites }) : L("starting")],
+              [L("grid"), L("{{cols}} by {{rows}}", { cols, rows })],
+              [L("Measured box dimension"), dimension ? dimension.toFixed(3) : "-"],
               [
-                "state",
+                L("state"),
                 tick?.done
                   ? mode === "point"
-                    ? "A branch reached the edge of the block"
-                    : "The tree reached the far plate"
+                    ? L("A branch reached the edge of the block")
+                    : L("The tree reached the far plate")
                   : tick?.finished
-                    ? "finished"
-                    : "growing",
+                    ? L("finished")
+                    : L("growing"),
               ],
             ]}
           />

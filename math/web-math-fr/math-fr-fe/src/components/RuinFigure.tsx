@@ -3,6 +3,7 @@ import { Text, Badge, Button, Caption, Choices, Field, Figure, Panel, Plot as Fr
 import { Plot, type Box } from "@/components/Plot";
 import { FAINT, INK, MUTED, ONE, TWO, ticks } from "@/lib/draw";
 import { expectedCeded, lundbergRuin, trial, type Cover, type Terms, type World } from "@/systems/ruin";
+import { L } from "@/lib/lang";
 
 /**
  * the reader's experiment inside the insurance piece: a thousand insurers with
@@ -12,10 +13,10 @@ import { expectedCeded, lundbergRuin, trial, type Cover, type Terms, type World 
  */
 
 const WORLDS = [
-  { id: "classical", label: "Independent, ordinary claims" },
-  { id: "heavy", label: "Heavy-tailed claims" },
-  { id: "clustered", label: "Years that cluster" },
-  { id: "both", label: "Both at once" },
+  { id: "classical", label: L("Independent, ordinary claims") },
+  { id: "heavy", label: L("Heavy-tailed claims") },
+  { id: "clustered", label: L("Years that cluster") },
+  { id: "both", label: L("Both at once") },
 ] as const;
 type WorldId = (typeof WORLDS)[number]["id"];
 const WORLD_OPTIONS: { id: WorldId; label: string }[] = [...WORLDS];
@@ -78,32 +79,32 @@ export function RuinFigure() {
   }, [result, premium]);
 
   return (
-    <Panel label="The reader's experiment: a thousand insurers" tone="primary">
+    <Panel label={L("The reader's experiment: a thousand insurers")} tone="primary">
       <div className="grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
         <div className="space-y-4">
           <Choices options={WORLD_OPTIONS} value={which} onPick={(id) => { setWhich(id); setResult(null); }} />
-          <Field label="Capital" min={2} max={60} step={1} value={capital} format={(v) => `${v} × mean claim`} onChange={(v) => { setCapital(v); setResult(null); }} />
-          <Field label="Premium margin" min={0.05} max={0.6} step={0.05} value={loading} format={(v) => `${Math.round(v * 100)} % over expected claims`} onChange={(v) => { setLoading(v); setResult(null); }} />
+          <Field label={L("Capital")} min={2} max={60} step={1} value={capital} format={(v) => L("{{v}} × mean claim", { v })} onChange={(v) => { setCapital(v); setResult(null); }} />
+          <Field label={L("Premium margin")} min={0.05} max={0.6} step={0.05} value={loading} format={(v) => L("{{v}} % over expected claims", { v: Math.round(v * 100) })} onChange={(v) => { setLoading(v); setResult(null); }} />
           {which === "heavy" || which === "both" ? (
-            <Field label="Tail index" min={1.1} max={3} step={0.05} value={alpha} format={(v) => `alpha ${v.toFixed(2)}`} onChange={(v) => { setAlpha(v); setResult(null); }} />
+            <Field label={L("Tail index")} min={1.1} max={3} step={0.05} value={alpha} format={(v) => L("alpha {{v}}", { v: v.toFixed(2) })} onChange={(v) => { setAlpha(v); setResult(null); }} />
           ) : null}
           {which === "clustered" || which === "both" ? (
-            <Field label="Memory" min={0.5} max={0.95} step={0.05} value={hurst} format={(v) => `H ${v.toFixed(2)}`} onChange={(v) => { setHurst(v); setResult(null); }} />
+            <Field label={L("Memory")} min={0.5} max={0.95} step={0.05} value={hurst} format={(v) => `H ${v.toFixed(2)}`} onChange={(v) => { setHurst(v); setResult(null); }} />
           ) : null}
           <Field
-            label="Reinsurance"
+            label={L("Reinsurance")}
             min={1}
             max={41}
             step={1}
             value={Number.isFinite(retention) ? retention : 41}
-            format={(v) => (v >= 41 ? "none bought" : `pays above ${v} × mean claim`)}
+            format={(v) => (v >= 41 ? L("none bought") : L("pays above {{v}} × mean claim", { v }))}
             onChange={(v) => { setRetention(v >= 41 ? Infinity : v); setResult(null); }}
           />
           <Text kind="note" as="p">
-            Every insurer starts with the same capital, charges the same premium, {premium.toFixed(1)} a year against expected
-            claims of {(RATE * MEAN).toFixed(0)}, and lives {YEARS} years. {Number.isFinite(retention) ? `The reinsurance costs ${cededCost.toFixed(2)} a year, taken out of the premium.` : "No reinsurance is bought."}
+            {L("Every insurer starts with the same capital, charges the same premium, {{premium}} a year against expected claims of {{claims}}, and lives {{years}} years.", { premium: premium.toFixed(1), claims: (RATE * MEAN).toFixed(0), years: YEARS })}{" "}
+            {Number.isFinite(retention) ? L("The reinsurance costs {{cost}} a year, taken out of the premium.", { cost: cededCost.toFixed(2) }) : L("No reinsurance is bought.")}
           </Text>
-          <Button onClick={run}>Run a thousand insurers</Button>
+          <Button onClick={run}>{L("Run a thousand insurers")}</Button>
         </div>
         <div className="space-y-3">
           <Figure>
@@ -128,7 +129,7 @@ export function RuinFigure() {
                 }}
               />
             </Frame>
-            <Caption>Twenty-four of the insurers, year by year. Green: survived. Rose: went below zero at some moment, which is ruin</Caption>
+            <Caption>{L("Twenty-four of the insurers, year by year. Green: survived. Rose: went below zero at some moment, which is ruin")}</Caption>
           </Figure>
           <Figure>
             <Frame className="relative h-[160px]">
@@ -161,27 +162,37 @@ export function RuinFigure() {
                 }}
               />
             </Frame>
-            <Caption>What one year cost, over every insurer and year. Dashed line: the premium taken in. Rose bar at the right: years costing more than three premiums</Caption>
+            <Caption>{L("What one year cost, over every insurer and year. Dashed line: the premium taken in. Rose bar at the right: years costing more than three premiums")}</Caption>
           </Figure>
           <Verdict good={result ? result.ruinRate < 0.05 : undefined}>
             {!result
-              ? "Nothing has run yet. Choose a world and press the button."
-              : `${Math.round(result.ruinRate * RUNS)} of ${RUNS} insurers were ruined within ${YEARS} years, ${(result.ruinRate * 100).toFixed(1)} per cent.${which === "classical" && !Number.isFinite(retention) ? ` The classical formula for ruin over an unlimited horizon gives ${(lundbergRuin(world, terms) * 100).toFixed(1)} per cent, so with these numbers the thirty years see most of the ruin there will ever be.` : ""} On average the single largest claim an insurer paid was ${(result.largestClaimShare * 100).toFixed(1)} per cent of everything it paid in thirty years.`}
+              ? L("Nothing has run yet. Choose a world and press the button.")
+              : L("{{ruined}} of {{runs}} insurers were ruined within {{years}} years, {{rate}} per cent.{{classical}} On average the single largest claim an insurer paid was {{share}} per cent of everything it paid in thirty years.", {
+                  ruined: Math.round(result.ruinRate * RUNS),
+                  runs: RUNS,
+                  years: YEARS,
+                  rate: (result.ruinRate * 100).toFixed(1),
+                  classical:
+                    which === "classical" && !Number.isFinite(retention)
+                      ? " " + L("The classical formula for ruin over an unlimited horizon gives {{rate}} per cent, so with these numbers the thirty years see most of the ruin there will ever be.", { rate: (lundbergRuin(world, terms) * 100).toFixed(1) })
+                      : "",
+                  share: (result.largestClaimShare * 100).toFixed(1),
+                })}
           </Verdict>
           {result ? (
             <Readout
               rows={[
-                ["World", WORLDS.find((w) => w.id === which)?.label ?? ""],
-                ["Ruined by year 10, 20, 30", `${(result.byYear[9] * 100).toFixed(1)} %, ${(result.byYear[19] * 100).toFixed(1)} %, ${(result.byYear[29] * 100).toFixed(1)} %`],
-                ["Largest claim's share of all paid, average", `${(result.largestClaimShare * 100).toFixed(1)} %`],
-                ["Reinsurance", Number.isFinite(retention) ? `above ${retention}, costing ${cededCost.toFixed(2)} a year` : "none"],
+                [L("World"), WORLDS.find((w) => w.id === which)?.label ?? ""],
+                [L("Ruined by year 10, 20, 30"), L("{{a}} %, {{b}} %, {{c}} %", { a: (result.byYear[9] * 100).toFixed(1), b: (result.byYear[19] * 100).toFixed(1), c: (result.byYear[29] * 100).toFixed(1) })],
+                [L("Largest claim's share of all paid, average"), `${(result.largestClaimShare * 100).toFixed(1)} %`],
+                [L("Reinsurance"), Number.isFinite(retention) ? L("above {{r}}, costing {{c}} a year", { r: retention, c: cededCost.toFixed(2) }) : L("none")],
               ]}
             />
           ) : null}
           <div className="flex flex-wrap gap-2">
-            <Badge variant="outline">{RUNS} runs</Badge>
-            <Badge variant="outline">{YEARS} years each</Badge>
-            <Badge variant="outline">{RATE} expected claims a year</Badge>
+            <Badge variant="outline">{L("{{n}} runs", { n: RUNS })}</Badge>
+            <Badge variant="outline">{L("{{n}} years each", { n: YEARS })}</Badge>
+            <Badge variant="outline">{L("{{n}} expected claims a year", { n: RATE })}</Badge>
           </div>
         </div>
       </div>

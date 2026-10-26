@@ -1,0 +1,315 @@
+{
+ "systems": [
+  {
+   "id": "ifs",
+   "name": "반복 사상",
+   "summary": "몇 개의 아핀 이동을 한 점에 되풀이해 적용하며, 매 단계마다 하나를 무작위로 고릅니다. 그러면 방문한 점들이 하나의 정해진 모양 위에 쌓입니다",
+   "blocks": [
+    {
+     "label": "이동 하나",
+     "tex": "f_k(x,y) = \\bigl(a_k x + b_k y + e_k,\\; c_k x + d_k y + f_k\\bigr)",
+     "note": "네 수가 돌리고 늘이며, 두 수가 더 밉니다"
+    },
+    {
+     "label": "카오스 게임",
+     "tex": "z_{n+1} = f_{k_n}(z_n), \\qquad \\Pr[k_n = k] = p_k",
+     "note": "매 단계마다 가중치에 따라 이동을 뽑습니다"
+    },
+    {
+     "label": "끌개",
+     "tex": "A = \\bigcup_{k} f_k(A)",
+     "note": "모양은 정확히 자기 자신의 상들의 합집합입니다"
+    },
+    {
+     "label": "왜 자리를 잡는가",
+     "tex": "s_k = \\sigma_{\\max}(M_k) = \\sqrt{\\lambda_{\\max}\\!\\left(M_k^{\\mathsf T} M_k\\right)} < 1",
+     "note": "모든 이동이 줄이므로 어떤 시작 모양이든 같은 극한으로 끌려갑니다"
+    }
+   ],
+   "dimension": {
+    "label": "상자 세기로 측정",
+    "tex": "d = \\lim_{\\varepsilon \\to 0} \\frac{\\log N(\\varepsilon)}{\\log(1/\\varepsilon)}",
+    "note": "고사리는 약 1.78로 측정됩니다"
+   }
+  },
+  {
+   "id": "lsystem",
+   "name": "다시 쓰기 시스템",
+   "summary": "짧은 씨앗 단어를 몇 가지 규칙으로 한 번에 한 차례씩 다시 쓴 다음, 거북이 명령으로 읽습니다",
+   "blocks": [
+    {
+     "label": "생성 규칙",
+     "tex": "\\omega \\to \\omega', \\qquad w_{n+1} = P(w_n)",
+     "note": "모든 기호를 한꺼번에 바꾸므로 단어는 일정한 배율로 자랍니다"
+    },
+    {
+     "label": "가지 뻗는 식물",
+     "tex": "X \\to F+[[X]-X]-F[-FX]+X, \\qquad F \\to FF",
+     "note": "F는 한 걸음을 그리고, 더하기와 빼기는 방향을 돌리며, 괄호는 점을 기억합니다"
+    },
+    {
+     "label": "거북이",
+     "tex": "\\begin{aligned} p_{n+1} &= p_n + \\ell\\,(\\cos\\theta_n, \\sin\\theta_n) \\\\ \\theta_{n+1} &= \\theta_n \\pm \\alpha \\end{aligned}",
+     "note": "단어 전체에 회전각 하나를 씁니다"
+    }
+   ],
+   "dimension": {
+    "label": "조각이 정확한 복사본이면 규칙에서 바로 읽는다",
+    "tex": "d = \\frac{\\log N}{\\log(1/s)}",
+    "note": "코흐 곡선은 log 4를 log 3으로 나눈 값, 약 1.262를 줍니다"
+   }
+  },
+  {
+   "id": "lichtenberg",
+   "name": "절연 파괴",
+   "summary": "격자에서 장을 풀고, 어떤 칸이 다음에 켜질 확률을 그 칸의 장 세기의 거듭제곱으로 정합니다. 방전이 절연체에 새기는 무늬가 이렇게 생깁니다",
+   "blocks": [
+    {
+     "label": "성장 사이의 장",
+     "tex": "\\nabla^2 \\phi = 0, \\qquad \\phi = 0 \\text{ on the cluster}",
+     "note": "덩어리는 도체이므로 그 위에서 전위가 일정합니다"
+    },
+    {
+     "label": "다음 칸이 켜지는 곳",
+     "tex": "p_i = \\frac{\\left|\\nabla\\phi_i\\right|^{\\eta}}{\\sum_{j \\in \\partial} \\left|\\nabla\\phi_j\\right|^{\\eta}}",
+     "note": "에타가 유일한 손잡이입니다. 0이면 가장자리의 모든 칸이 똑같이 가능합니다"
+    },
+    {
+     "label": "이를 푸는 이완법",
+     "tex": "\\phi^{(m+1)}_{r,c} = \\tfrac{1}{4}\\left(\\phi^{(m)}_{r-1,c} + \\phi^{(m)}_{r+1,c} + \\phi^{(m)}_{r,c-1} + \\phi^{(m)}_{r,c+1}\\right)",
+     "note": "장이 더 이상 움직이지 않을 때까지 훑고, 그다음에는 성장할 때마다 몇 번씩 훑습니다"
+    }
+   ],
+   "dimension": {
+    "label": "상자 세기로 측정하며, 손잡이를 따라 변한다",
+    "tex": "d(\\eta): \\; 1.58 \\;\\text{at}\\; \\eta = 0.6 \\;\\longrightarrow\\; 1.27 \\;\\text{at}\\; \\eta = 2",
+    "note": "무성한 덩어리는 높게, 가는 바늘은 낮게 측정됩니다"
+   }
+  },
+  {
+   "id": "dla",
+   "name": "떠도는 입자",
+   "summary": "씨앗 하나와, 하나씩 풀려나 덩어리에 닿아 붙을 때까지 무작위로 걷는 입자들입니다",
+   "blocks": [
+    {
+     "label": "걸음 하나",
+     "tex": "\\Pr\\bigl[(y,x) \\to (y \\pm 1, x)\\bigr] = \\Pr\\bigl[(y,x) \\to (y, x \\pm 1)\\bigr] = \\tfrac14",
+     "note": "방향도 기억도 없습니다"
+    },
+    {
+     "label": "달라붙기",
+     "tex": "\\text{stop at the first site with a neighbour already in the cluster}",
+     "note": "팔들이 안쪽을 가리므로 새로 오는 입자는 바깥쪽에 붙습니다"
+    },
+    {
+     "label": "질량-반지름 법칙",
+     "tex": "N(r) = k\\,r^{d} \\qquad \\Longleftrightarrow \\qquad \\log N = d \\log r + \\log k",
+     "note": "로그 축에서의 기울기가 차원입니다"
+    }
+   ],
+   "dimension": {
+    "label": "질량-반지름 맞춤으로 측정",
+    "tex": "d \\approx 1.67 \\;\\text{measured}, \\qquad d \\to 1.71 \\;\\text{for large clusters}",
+    "note": "작은 덩어리는 낮게 나옵니다"
+   }
+  },
+  {
+   "id": "julia",
+   "name": "쥘리아 집합",
+   "summary": "c를 고정했을 때, 제곱 한 번과 이동 한 번을 거듭해도 결코 탈출하지 않는 시작점들입니다",
+   "blocks": [
+    {
+     "label": "규칙",
+     "tex": "z_{n+1} = z_n^{2} + c",
+     "note": "한 번 돌리고 늘인 다음, 한 번 밉니다"
+    },
+    {
+     "label": "집합",
+     "tex": "K_c = \\left\\{ z_0 \\in \\mathbb{C} \\;:\\; \\sup_n |z_n| < \\infty \\right\\}",
+     "note": "엄밀한 의미의 쥘리아 집합은 이 덩어리의 경계입니다"
+    },
+    {
+     "label": "탈출 판정, 그리고 그것은 최종적이다",
+     "tex": "|z_n| > 2 \\;\\Longrightarrow\\; |z_{n+k}| \\to \\infty",
+     "note": "한 번 넘기만 하면 충분하며, 그래서 그림을 계산할 수 있습니다"
+    },
+    {
+     "label": "왜 제곱만으로는 부족한가",
+     "tex": "c = 0: \\; |z_0| < 1 \\Rightarrow z_n \\to 0, \\quad |z_0| > 1 \\Rightarrow z_n \\to \\infty",
+     "note": "이때 경계는 정확히 단위원이며, 단위원은 매끄럽습니다"
+    }
+   ],
+   "dimension": {
+    "label": "경계에서 상자 세기로 측정",
+    "tex": "1 \\le \\dim_{\\mathrm{B}} \\partial K_c \\le 2",
+    "note": "c에 따라 달라지며, 어떤 값에서는 2에 이릅니다"
+   }
+  },
+  {
+   "id": "mandelbrot",
+   "name": "망델브로 집합",
+   "summary": "시작점을 0에 고정하고 그림 전체에 걸쳐 c를 바꾸는 같은 규칙입니다. 어떤 쥘리아 집합이 한 덩어리로 이어져 있는지를 정확히 기록합니다",
+   "blocks": [
+    {
+     "label": "집합",
+     "tex": "M = \\left\\{ c \\in \\mathbb{C} \\;:\\; \\sup_n \\left|z_n\\right| < \\infty, \\; z_0 = 0 \\right\\}",
+     "note": "그림 한 장이 모든 c에 대한 질문에 한꺼번에 답합니다"
+    },
+    {
+     "label": "두 가지로 읽는 같은 조건",
+     "tex": "c \\in M \\iff K_c \\text{ is connected}",
+     "note": "안쪽은 한 덩어리를, 바깥쪽은 먼지를 줍니다"
+    },
+    {
+     "label": "탈출 시간 색칠",
+     "tex": "\\nu(c) = \\min\\{ n : |z_n| > R \\}",
+     "note": "색의 띠가 바로 그 횟수입니다"
+    }
+   ],
+   "dimension": {
+    "label": "측정이 아니라 증명",
+    "tex": "\\dim_{\\mathrm{H}} \\partial M = 2",
+    "note": "곡선이 가질 수 있는 가장 거친 정도입니다. 어떤 유한한 그림도 그 극한에 이르지 못합니다"
+   }
+  },
+  {
+   "id": "mandelbulb",
+   "name": "3차원 집합",
+   "summary": "제곱을 구면 좌표에서의 거듭제곱으로 바꿉니다. 그러면 같은 탈출 판정이 경계를 지을 입체가 생깁니다",
+   "blocks": [
+    {
+     "label": "제곱을 대신하는 거듭제곱",
+     "tex": "\\mathbf{v}^{n} = r^{n}\\bigl(\\sin n\\theta \\cos n\\varphi,\\; \\sin n\\theta \\sin n\\varphi,\\; \\cos n\\theta \\bigr)",
+     "note": "r, 세타, 파이는 점의 구면 좌표입니다"
+    },
+    {
+     "label": "반복",
+     "tex": "\\mathbf{v}_{k+1} = \\mathbf{v}_k^{\\,n} + \\mathbf{c}",
+     "note": "n이 8이면 입체는 축을 중심으로 8겹 대칭을 가집니다"
+    },
+    {
+     "label": "광선이 입체를 찾게 해 주는 거리 추정",
+     "tex": "\\mathrm{DE} = \\frac{|\\mathbf{v}|\\,\\log|\\mathbf{v}|}{2\\,|\\mathbf{v}'|}",
+     "note": "광선은 표면을 뚫고 지나가지 않고 이만큼 안전하게 나아갈 수 있습니다"
+    }
+   ],
+   "dimension": {
+    "label": "공간 속의 곡면",
+    "tex": "2 \\le \\dim_{\\mathrm{B}} \\partial \\le 3",
+    "note": "경계는 곡선이 아니라 곡면입니다"
+   }
+  },
+  {
+   "id": "hurst",
+   "name": "기억하는 선: 허스트 지수",
+   "summary": "걸음이 과거를 기억하는 무작위 걸음이며, 그 정도를 수 H 하나가 말해 줍니다. 허스트가 나일강을 잰 방식으로 측정하고, 그래프의 차원도 같은 수에서 읽습니다",
+   "blocks": [
+    {
+     "label": "기억하는 걸음",
+     "tex": "\\rho(k) = \\tfrac{1}{2}\\bigl((k+1)^{2H} - 2k^{2H} + (k-1)^{2H}\\bigr)",
+     "note": "분수 가우스 잡음에서 k만큼 떨어진 걸음 사이의 상관입니다. H = 0.5는 기억이 없는 동전 던지기이고, 그보다 크면 흐름이 이어지려 하고, 작으면 뒤집히려 합니다"
+    },
+    {
+     "label": "허스트의 재조정 범위",
+     "tex": "\\frac{R}{S}(m) \\propto m^{H}",
+     "note": "m걸음으로 된 묶음에서, 누적합이 얼마나 멀리 떠도는지를 걸음이 얼마나 변하는지로 나눈 값입니다. 동전은 0.5를 주는데, 허스트는 나일강과 다른 기록 74개에서 0.72를 얻었습니다"
+    },
+    {
+     "label": "미래의 퍼짐",
+     "tex": "\\sigma(T) = \\sigma\\, T^{H}",
+     "note": "T걸음 뒤에 걸음이 얼마나 멀리 가 있을 수 있는지입니다. 동전은 T의 제곱근을 주고, 지속성이 있는 계열은 더 빨리 퍼지므로 긴 지평은 제곱근 규칙이 말하는 것보다 위험합니다"
+    },
+    {
+     "label": "그래프의 차원",
+     "tex": "D = 2 - H",
+     "note": "선으로 그린 걸음의 상자 세기 차원입니다. 지속성이 있는 걸음은 더 매끄러운 선이 되고, 반지속성 걸음은 더 거친 선이 됩니다. 해안선으로 되돌아가는 연결 고리입니다"
+    }
+   ],
+   "dimension": {
+    "label": "할 수 없는 것",
+    "tex": "\\mathbb{E}[X_{n+1} \\mid X_n] \\text{ barely moves}",
+    "note": "H는 위험이 지평에 따라 어떻게 커지는지, 흐름이 이어지는지를 말해 줄 뿐 다음 값이 무엇인지는 말하지 않습니다. 또한 짧은 계열에서는 H를 읽어 내기 어려운데, 이것이 1991년 로의 반론입니다"
+   }
+  },
+  {
+   "id": "credibility",
+   "name": "집단을 믿을까, 기록을 믿을까: 보험계리사의 베이즈",
+   "summary": "고객의 짧은 기록을 집단의 긴 기록과 섞습니다. 기록에 주는 가중치가 신뢰도이며, 청구를 포아송 분포로, 비율을 감마 분포로 두면 정확히 베이즈가 됩니다",
+   "blocks": [
+    {
+     "label": "섞기",
+     "tex": "\\hat{\\lambda} = Z\\,\\bar{x} + (1 - Z)\\,\\mu, \\qquad Z = \\frac{n}{n + k}",
+     "note": "여기서 x 바는 n년 동안의 고객 자신의 비율이고 뮤는 집단의 비율입니다. 해가 갈수록 Z는 0에서 1을 향해 커집니다. Whitney 1918, Bailey 1950, Bühlmann 1967"
+    },
+    {
+     "label": "k의 의미",
+     "tex": "k = \\frac{\\mathbb{E}[\\mathrm{Var}(X \\mid \\theta)]}{\\mathrm{Var}(\\mathbb{E}[X \\mid \\theta])}",
+     "note": "한 고객의 결과에 있는 잡음을 고객 사이의 퍼짐으로 나눈 값입니다. 서로 크게 다른 고객들은 자기 요율을 빨리 얻고, 잡음이 큰 결과는 천천히 얻습니다. n = k에서 Z는 2분의 1입니다"
+    },
+    {
+     "label": "그 뒤에 있는 정확한 베이즈",
+     "tex": "\\lambda \\sim \\Gamma(a, b),\\quad X \\mid \\lambda \\sim \\mathrm{Poisson}(\\lambda) \\;\\Rightarrow\\; \\lambda \\mid x \\sim \\Gamma(a + x,\\, b + n)",
+     "note": "사후 평균 (a + x) / (b + n)은 k = b, 뮤 = a / b인 섞기입니다. 페이지는 이 믿음을 해마다 좁아지는 곡선으로 그립니다"
+    }
+   ],
+   "dimension": {
+    "label": "다른 곳의 같은 모양",
+    "tex": "\\text{reserve} = Z\\cdot\\text{chain ladder} + (1 - Z)\\cdot\\text{prior}",
+    "note": "아직 지급하지 않은 청구를 위해 따로 떼어 둔 돈도 같은 방식으로 섞으며, 보고된 비율이 Z 역할을 합니다. 사망률 예측도 매개변수가 불확실하면 같은 방식으로 구간을 넓힙니다"
+   }
+  },
+  {
+   "id": "tails",
+   "name": "프랙털 꼬리를 가진 청구",
+   "summary": "파레토 꼬리를 가진 청구 금액은 어느 규모에서나 같아 보이며, 꼬리 지수는 해안선에서 차원이 하는 역할을 합니다. 2보다 작으면 평균이 결코 자리 잡지 않습니다",
+   "blocks": [
+    {
+     "label": "꼬리",
+     "tex": "P(X > x) = \\left(\\frac{x_0}{x}\\right)^{\\alpha}, \\quad x \\ge x_0",
+     "note": "로그-로그 축에서 기울기가 마이너스 알파인 직선입니다. 얇은 꼬리라면 아래로 휩니다. 파레토가 1896년에 소득에서 찾은 것과 같은 법칙입니다"
+    },
+    {
+     "label": "어느 규모에서나 같다",
+     "tex": "P(X > x \\mid X > u) = \\left(\\frac{u}{x}\\right)^{\\alpha}",
+     "note": "어떤 문턱값 위에서든 초과분은 같은 알파의 파레토 분포입니다. 청구 가운데 가장 큰 10분의 1을 다시 축척하면 전체와 같은 분포를 따릅니다. 해안선과 같은 자기 닮음입니다"
+    },
+    {
+     "label": "결코 자리 잡지 않는 평균",
+     "tex": "\\mathbb{E}[X] = \\frac{\\alpha x_0}{\\alpha - 1}\\ (\\alpha > 1), \\qquad \\mathrm{Var}[X] = \\infty\\ (\\alpha \\le 2)",
+     "note": "2보다 작으면 분산이 무한하며, 청구 하나가 지금까지의 나머지 전부보다 클 수 있습니다. 망델브로의 노아 효과입니다. 청구가 아무리 많이 들어와도 누적 평균은 계속 튑니다"
+    }
+   ],
+   "dimension": {
+    "label": "차원으로 본 지수",
+    "tex": "\\alpha = -\\frac{d \\log P(X > x)}{d \\log x}",
+    "note": "차원을 상자 세기에서 읽듯이 생존 그래프의 기울기에서 읽습니다. 개수가 규모에 따라 어떻게 변하는지 말해 주는 거듭제곱 법칙의 지수입니다"
+   }
+  }
+ ],
+ "definitions": [
+  {
+   "id": "box",
+   "name": "상자 세기 차원",
+   "tex": "d = \\lim_{\\varepsilon \\to 0} \\frac{\\log N(\\varepsilon)}{\\log(1/\\varepsilon)}",
+   "note": "한 변이 엡실론인 상자를 모양 위에 깔고, 모양이 닿는 상자를 셉니다. 크기에 대한 개수는 로그 축에서 직선이 되며, 차원은 그 기울기입니다"
+  },
+  {
+   "id": "similarity",
+   "name": "자기 닮음 차원",
+   "tex": "N s^{d} = 1 \\qquad \\Longrightarrow \\qquad d = \\frac{\\log N}{\\log(1/s)}",
+   "note": "모양이 알려진 개수의 축소 복사본으로 이루어진 정확한 특수한 경우입니다"
+  },
+  {
+   "id": "hausdorff",
+   "name": "하우스도르프 차원",
+   "tex": "\\mathcal{H}^{p}(S) = \\lim_{\\delta \\to 0} \\inf \\sum_i (\\mathrm{diam}\\,U_i)^{p}, \\qquad d = \\inf\\{ p : \\mathcal{H}^{p}(S) = 0 \\}",
+   "note": "덮개 지름의 합이 무한에서 0으로 떨어지는 임계 거듭제곱이며, 상자 세기가 근사하는 수입니다"
+  },
+  {
+   "id": "richardson",
+   "name": "디바이더 방법",
+   "tex": "L(\\varepsilon) \\propto \\varepsilon^{1-d}",
+   "note": "고정된 벌림으로 경계를 따라 걸으면, 벌림이 줄어들수록 길이가 늘어나며, 그 기울기에 차원이 담깁니다"
+  }
+ ]
+}

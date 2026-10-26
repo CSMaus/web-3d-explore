@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Band, Badge, Button, Choices, Heading, Hero, Page, SolidFigure, Text } from "@kit/index";
 import { api } from "@/lib/api";
+import { L } from "@/lib/lang";
 import { SHAPES, topicLabel } from "@/lib/shapes";
 import { BUILT } from "@/lib/topic";
 
@@ -31,7 +32,7 @@ function Learn() {
   const topic = TOPICS[at];
   const card = cards?.find((c) => c.slug === topic.slug);
   const parts = series[at]?.part_list ?? [];
-  const into = topic.sections.find((s) => s.label === "Parts");
+  const into = topic.sections.find((s) => s.to.endsWith("/parts"));
   const shape = SHAPES[topic.slug];
 
   return (
@@ -39,17 +40,17 @@ function Learn() {
       <Hero size="page" title={t("learn.heading")} lede={t("learn.lede")} />
       <Choices options={TOPICS.map((b) => ({ id: b.slug, label: topicLabel(b.number, t) }))} value={topic.slug} onPick={setSlug} />
       <Band tone="card" className="mt-8" aria-live="polite">
-        <div className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,360px)] md:gap-16">
+        <div data-topic={topic.number} className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,360px)] md:gap-16">
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <span data-text="label">{topicLabel(topic.number, t)}</span>
               {card ? <Badge variant="outline">{t(`state.${card.state}`)}</Badge> : null}
             </div>
-            <Heading level={2} className="mt-3">{topic.title}</Heading>
+            <Heading level={2} data-topic-name="" className="mt-3">{topic.title}</Heading>
             <Text kind="intro" as="p" className="mt-4 max-w-xl">{card?.summary || t(`front.lines.${topic.slug}`)}</Text>
             {card ? (
               <Text kind="caption" as="p" className="mt-4">
-                {card.parts > 0 ? `${card.parts} parts, ${card.beats} beats, about ${Math.round(card.seconds / 60)} minutes` : "No clip filmed yet"}
+                {card.parts > 0 ? L("{{parts}} parts, {{beats}} beats, about {{minutes}} minutes", { parts: card.parts, beats: card.beats, minutes: Math.round(card.seconds / 60) }) : L("No clip filmed yet")}
               </Text>
             ) : null}
             {into ? (

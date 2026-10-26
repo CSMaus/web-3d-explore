@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Text, Heading } from "@kit/index";
 import type { Part } from "@/lib/api";
+import { L } from "@/lib/lang";
 
 type Props = { part: Part; accent: string };
 
@@ -56,7 +57,7 @@ export function Reel({ part, accent }: Props) {
             ) : (
               <div className="absolute inset-0 grid place-items-center bg-black/40">
                 <span data-text="caption">
-                  {part.video ? "Loading" : "Clip not published yet"}
+                  {part.video ? L("Loading") : L("Clip not published yet")}
                 </span>
               </div>
             )}

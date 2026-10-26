@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Text, Heading } from "@kit/index";
 import { api } from "@/lib/api";
 import { PlayTile } from "@/components/PlayTile";
@@ -11,13 +12,13 @@ export const Route = createFileRoute("/topics/fractals/play/")({
 });
 
 const LOCAL = [
-  { id: "ifs", name: "Iterated maps", summary: "A point moved by a handful of affine moves" },
-  { id: "lsystem", name: "Rewriting systems", summary: "A seed word rewritten, then walked" },
-  { id: "lichtenberg", name: "Dielectric breakdown", summary: "The figure a discharge burns" },
-  { id: "dla", name: "Wandering particles", summary: "Walkers that stick where they touch" },
-  { id: "julia", name: "Julia sets", summary: "The points whose walk never escapes" },
-  { id: "mandelbrot", name: "The Mandelbrot set", summary: "The same test over every constant" },
-  { id: "mandelbulb", name: "The three-dimensional set", summary: "The same rule, one power up" },
+  { id: "ifs", name: L("Iterated maps"), summary: L("A point moved by a handful of affine moves") },
+  { id: "lsystem", name: L("Rewriting systems"), summary: L("A seed word rewritten, then walked") },
+  { id: "lichtenberg", name: L("Dielectric breakdown"), summary: L("The figure a discharge burns") },
+  { id: "dla", name: L("Wandering particles"), summary: L("Walkers that stick where they touch") },
+  { id: "julia", name: L("Julia sets"), summary: L("The points whose walk never escapes") },
+  { id: "mandelbrot", name: L("The Mandelbrot set"), summary: L("The same test over every constant") },
+  { id: "mandelbulb", name: L("The three-dimensional set"), summary: L("The same rule, one power up") },
 ];
 
 function PlayIndex() {
@@ -25,10 +26,9 @@ function PlayIndex() {
   const systems = (theory ? theory.systems : LOCAL).filter((s) => SYSTEMS.some((p) => p.id === s.id));
   return (
     <div>
-      <Heading level={1} className="mt-6">Pick something to move</Heading>
+      <Heading level={1} className="mt-6">{L("Pick something to move")}</Heading>
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-        Every system carries its equations, its parameters as controls, a colour scheme that can be
-        changed, and the dimension measured from whatever is on screen.
+        {L("Every system carries its equations, its parameters as controls, a colour scheme that can be changed, and the dimension measured from whatever is on screen.")}
       </Text>
       <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {systems.map((s, i) => (

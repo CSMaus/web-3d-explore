@@ -1,5 +1,6 @@
 import { TabLink } from "@/components/TabLink";
 import { GROUPS, SYSTEMS } from "@/lib/networks";
+import { L } from "@/lib/lang";
 
 /**
  * seventeen pages is too many for one flat row, so the tabs are grouped by what
@@ -7,13 +8,13 @@ import { GROUPS, SYSTEMS } from "@/lib/networks";
  */
 export function NetTabs() {
   return (
-    <nav className="space-y-1.5" aria-label="Pages of the topic">
+    <nav className="space-y-1.5" aria-label={L("Pages of the topic")}>
       <div className="flex flex-wrap items-center gap-1.5">
         <TabLink
           to="/topics/networks/play"
           activeOptions={{ exact: true }}
         >
-          All
+          {L("All")}
         </TabLink>
       </div>
       {GROUPS.map((group) => (

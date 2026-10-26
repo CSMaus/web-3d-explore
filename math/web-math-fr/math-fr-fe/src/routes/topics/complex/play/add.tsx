@@ -11,6 +11,7 @@ import { SaveImage } from "@/components/SaveImage";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/complex";
+import { L } from "@/lib/lang";
 import { INK, MUTED, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { abs, add, scale, show, sub, type C } from "@/systems/complex";
@@ -23,8 +24,8 @@ export const Route = createFileRoute("/topics/complex/play/add")({
 const BOX: Box = { x0: -4.5, x1: 4.5, y0: -4.5, y1: 4.5 };
 const FRAMES = 60;
 const OPS = [
-  { id: "add", label: "z plus w" },
-  { id: "sub", label: "z minus w" },
+  { id: "add", label: L("z plus w") },
+  { id: "sub", label: L("z minus w") },
 ];
 
 function AddPage() {
@@ -50,13 +51,13 @@ function AddPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "Complex numbers: adding"}
-        job="Every number is an arrow from zero to its place. To add two, walk the second arrow out from the tip of the first; where it ends is the sum. The along parts add on their own and the up parts add on their own, and they never mix. Drag either arrow's tip and run the walk."
+        title={system?.name ?? L("Complex numbers: adding")}
+        job={L("Every number is an arrow from zero to its place. To add two, walk the second arrow out from the tip of the first; where it ends is the sum. The along parts add on their own and the up parts add on their own, and they never mix. Drag either arrow's tip and run the walk.")}
         input={
           <div className="space-y-3">
             <Choices options={OPS} value={op} onPick={(id) => { setOp(id); reset(); }} />
             <Text kind="note" as="p">
-              Green is z, rose is w. Drag either tip. Subtracting is adding the arrow turned round.
+              {L("Green is z, rose is w. Drag either tip. Subtracting is adding the arrow turned round.")}
             </Text>
           </div>
         }
@@ -65,7 +66,7 @@ function AddPage() {
             running={runner.running}
             count={Math.round(f * 100)}
             limit={100}
-            what="per cent of the walk"
+            what={L("per cent of the walk")}
             onToggle={() => {
               if (!runner.running && tick >= FRAMES) reset();
               runner.toggle();
@@ -107,37 +108,42 @@ function AddPage() {
                     pen.arrow(0, 0, result[0], result[1], SKY);
                     pen.text(`${op === "add" ? "z + w" : "z - w"} = ${show(result)}`, result[0], result[1] - 0.4, SKY, "center");
                   }
-                  pen.text("Along", BOX.x1 - 0.8, -0.35, MUTED, "center");
-                  pen.text("Up", 0.3, BOX.y1 - 0.5, MUTED, "left");
+                  pen.text(L("Along"), BOX.x1 - 0.8, -0.35, MUTED, "center");
+                  pen.text(L("Up"), 0.3, BOX.y1 - 0.5, MUTED, "left");
                 }}
               />
             </div>
-            <Caption>Green: z. Rose: w{op === "sub" ? ", turned round for subtracting" : ""}. The white dot walks w out from the tip of z; the sky arrow is where it ends, the {op === "add" ? "sum" : "difference"}.</Caption>
+            <Caption>
+              {op === "sub"
+                ? L("Green: z. Rose: w, turned round for subtracting. The white dot walks w out from the tip of z; the sky arrow is where it ends, the difference.")
+                : L("Green: z. Rose: w. The white dot walks w out from the tip of z; the sky arrow is where it ends, the sum.")}
+            </Caption>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict>
               {f === 0
-                ? `z is ${show(z)} and w is ${show(w)}. Press run and w is walked out from the tip of z.`
+                ? L("z is {{z}} and w is {{w}}. Press run and w is walked out from the tip of z.", { z: show(z), w: show(w) })
                 : f < 1
-                  ? `${Math.round(f * 100)} per cent of the way along w from the tip of z: the dot is at ${show(walker)}.`
-                  : `${show(z)} ${op === "add" ? "plus" : "minus"} ${show(w)} is ${show(result)}: along, ${z[0]} ${op === "add" ? "+" : "-"} ${w[0]} = ${result[0]}; up, ${z[1]} ${op === "add" ? "+" : "-"} ${w[1]} = ${result[1]}. The two parts were added separately, and the answer is the far corner of the parallelogram.`}
+                  ? L("{{p}} per cent of the way along w from the tip of z: the dot is at {{at}}.", { p: Math.round(f * 100), at: show(walker) })
+                  : op === "add"
+                    ? L("{{z}} plus {{w}} is {{r}}: along, {{z0}} + {{w0}} = {{r0}}; up, {{z1}} + {{w1}} = {{r1}}. The two parts were added separately, and the answer is the far corner of the parallelogram.", { z: show(z), w: show(w), r: show(result), z0: z[0], w0: w[0], r0: result[0], z1: z[1], w1: w[1], r1: result[1] })
+                    : L("{{z}} minus {{w}} is {{r}}: along, {{z0}} - {{w0}} = {{r0}}; up, {{z1}} - {{w1}} = {{r1}}. The two parts were added separately, and the answer is the far corner of the parallelogram.", { z: show(z), w: show(w), r: show(result), z0: z[0], w0: w[0], r0: result[0], z1: z[1], w1: w[1], r1: result[1] })}
             </Verdict>
             <Readout
               rows={[
                 ["z", show(z)],
                 ["w", show(w)],
                 [op === "add" ? "z + w" : "z - w", show(result)],
-                ["Length of z, of w", `${abs(z).toFixed(2)}, ${abs(w).toFixed(2)}`],
-                ["Length of the result", abs(result).toFixed(2)],
-                ["The two lengths added", `${(abs(z) + abs(w)).toFixed(2)}, which the result only reaches if they point the same way`],
-                ["Sub check", show(sub(result, step)) === show(z) ? "taking w away again gives z back" : "-"],
+                [L("Length of z, of w"), `${abs(z).toFixed(2)}, ${abs(w).toFixed(2)}`],
+                [L("Length of the result"), abs(result).toFixed(2)],
+                [L("The two lengths added"), L("{{sum}}, which the result only reaches if they point the same way", { sum: (abs(z) + abs(w)).toFixed(2) })],
+                [L("Sub check"), show(sub(result, step)) === show(z) ? L("taking w away again gives z back") : "-"],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              Adding never turns anything: the sum's direction comes out of the two arrows, not out
-              of the rule. The turning is all in multiplying, and that is the next page.
+              {L("Adding never turns anything: the sum's direction comes out of the two arrows, not out of the rule. The turning is all in multiplying, and that is the next page.")}
             </Text>
           </div>
         }

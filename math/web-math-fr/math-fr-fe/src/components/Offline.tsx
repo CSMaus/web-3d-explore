@@ -1,7 +1,8 @@
 import { Text } from "@kit/index";
+import { L } from "@/lib/lang";
 
 /** what a page says when content it needs is missing: the reason, and in development how to start the backend */
-export function Offline({ what, title = "The backend is not answering" }: { what: string; title?: string }) {
+export function Offline({ what, title = L("The backend is not answering") }: { what: string; title?: string }) {
   return (
     <div className="rounded border border-destructive/40 bg-destructive/5 p-4">
       <Text kind="warning" as="p">{title}</Text>

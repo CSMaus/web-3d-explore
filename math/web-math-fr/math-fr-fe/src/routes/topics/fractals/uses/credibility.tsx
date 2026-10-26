@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Label, Button, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
@@ -71,21 +72,18 @@ function CredibilityPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "Trust the group or trust the record: an actuary's Bayes"}
-        job="Insurance is many people paying a little so that the few who are hit hard are paid. The person who sets the price is an actuary, and the first question is how often a customer will claim. A new customer has a short record: one year, no claims, or one year, one claim. The group they belong to has a long one. Trust the record alone and the price swings wildly; trust the group alone and a careful customer pays for a careless one. The answer written down by Whitney in 1918 and made exact by Bailey and Buhlmann is a weighted average, with the weight on the record growing as the years come. The job is to watch the years arrive and the weight move."
+        title={system?.name ?? L("Trust the group or trust the record: an actuary's Bayes")}
+        job={L("Insurance is many people paying a little so that the few who are hit hard are paid. The person who sets the price is an actuary, and the first question is how often a customer will claim. A new customer has a short record: one year, no claims, or one year, one claim. The group they belong to has a long one. Trust the record alone and the price swings wildly; trust the group alone and a careful customer pays for a careless one. The answer written down by Whitney in 1918 and made exact by Bailey and Buhlmann is a weighted average, with the weight on the record growing as the years come. The job is to watch the years arrive and the weight move.")}
         input={
           <div className="space-y-3">
-            <Slider label="The group's rate" min={0.02} max={0.5} step={0.01} value={mu} format={(v) => `${v.toFixed(2)} claims a year`} onChange={(v) => { setMu(Math.round(v * 100) / 100); reset(); }} />
-            <Slider label="How alike the customers are, k" min={2} max={80} step={1} value={k} format={(v) => `k = ${Math.round(v)}`} onChange={(v) => { setK(Math.round(v)); reset(); }} />
-            <Slider label="This customer's true rate" min={0.02} max={1} step={0.01} value={truth} format={(v) => `${v.toFixed(2)} a year`} onChange={(v) => { setTruth(Math.round(v * 100) / 100); reset(); }} />
+            <Slider label={L("The group's rate")} min={0.02} max={0.5} step={0.01} value={mu} format={(v) => L("{{v}} claims a year", { v: v.toFixed(2) })} onChange={(v) => { setMu(Math.round(v * 100) / 100); reset(); }} />
+            <Slider label={L("How alike the customers are, k")} min={2} max={80} step={1} value={k} format={(v) => `k = ${Math.round(v)}`} onChange={(v) => { setK(Math.round(v)); reset(); }} />
+            <Slider label={L("This customer's true rate")} min={0.02} max={1} step={0.01} value={truth} format={(v) => L("{{v}} a year", { v: v.toFixed(2) })} onChange={(v) => { setTruth(Math.round(v * 100) / 100); reset(); }} />
             <Button variant="outline" size="sm" type="button" onClick={() => { setSeed((s) => s + 1); reset(); }}>
-              Draw another customer
+              {L("Draw another customer")}
             </Button>
             <Text kind="note" as="p">
-              The true rate is known to the page and hidden from the actuary, who sees only the
-              claims. k is the number of years of record it takes for the record to earn half the
-              weight: large when customers are much alike, so one record says little; small when
-              they differ a lot, so a record is believed quickly.
+              {L("The true rate is known to the page and hidden from the actuary, who sees only the claims. k is the number of years of record it takes for the record to earn half the weight: large when customers are much alike, so one record says little; small when they differ a lot, so a record is believed quickly.")}
             </Text>
           </div>
         }
@@ -94,7 +92,7 @@ function CredibilityPage() {
             running={runner.running}
             count={n}
             limit={YEARS}
-            what="years of record"
+            what={L("years of record")}
             pace="slow"
             onToggle={() => {
               if (!runner.running && n >= YEARS) reset();
@@ -108,36 +106,19 @@ function CredibilityPage() {
         }
         more={
           <section data-slot="panel">
-            <Label>WHAT AN ACTUARY DOES</Label>
+            <Label>{L("WHAT AN ACTUARY DOES")}</Label>
             <ul data-text="note" className="mt-2 space-y-2">
               <li>
-                Three questions, all about money that depends on chance. Pricing: what to charge so
-                that the claims are covered and the careful are not made to pay for the careless.
-                Reserving: how much to set aside for accidents that have already happened but not
-                yet been paid for, which for some kinds of insurance takes years to know. Mortality:
-                how long people will live, for pensions and life insurance.
+                {L("Three questions, all about money that depends on chance. Pricing: what to charge so that the claims are covered and the careful are not made to pay for the careless. Reserving: how much to set aside for accidents that have already happened but not yet been paid for, which for some kinds of insurance takes years to know. Mortality: how long people will live, for pensions and life insurance.")}
               </li>
               <li>
-                This page is pricing, and the oldest tool in it. Whitney proposed the weighted average
-                in 1918 with the weight set by judgement; Bailey showed in 1950 that it is what
-                Bayes' rule gives when claims are counted as Poisson and the rates across customers
-                are spread as a gamma; Buhlmann showed in 1967 that it is the best straight-line
-                estimate whatever the distributions are. The weight is called the credibility.
+                {L("This page is pricing, and the oldest tool in it. Whitney proposed the weighted average in 1918 with the weight set by judgement; Bailey showed in 1950 that it is what Bayes' rule gives when claims are counted as Poisson and the rates across customers are spread as a gamma; Buhlmann showed in 1967 that it is the best straight-line estimate whatever the distributions are. The weight is called the credibility.")}
               </li>
               <li>
-                The same blend appears in the other two questions. Money set aside for unpaid claims
-                is estimated either from the year's own pattern (the chain ladder) or from a prior
-                expectation (Bornhuetter and Ferguson, 1972), and Mack showed in 2000 that the best
-                of both is a credibility mixture with the fraction already reported as the weight.
-                Bayesian versions of the standard mortality model (Lee and Carter, 1992; Czado,
-                Delwarde and Denuit, 2005) widen their forecasts to admit that the model's own
-                numbers are uncertain, which the plain version does not.
+                {L("The same blend appears in the other two questions. Money set aside for unpaid claims is estimated either from the year's own pattern (the chain ladder) or from a prior expectation (Bornhuetter and Ferguson, 1972), and Mack showed in 2000 that the best of both is a credibility mixture with the fraction already reported as the weight. Bayesian versions of the standard mortality model (Lee and Carter, 1992; Czado, Delwarde and Denuit, 2005) widen their forecasts to admit that the model's own numbers are uncertain, which the plain version does not.")}
               </li>
               <li>
-                Why it sits in the fractals topic: the next page. The size of a claim, as opposed to
-                how often one comes, has a tail that looks the same at every scale, and the average
-                of such claims never settles. An actuary who prices with a bell curve where the tail
-                is Pareto is the reservoir sized by the coin-toss rule.
+                {L("Why it sits in the fractals topic: the next page. The size of a claim, as opposed to how often one comes, has a tail that looks the same at every scale, and the average of such claims never settles. An actuary who prices with a bell curve where the tail is Pareto is the reservoir sized by the coin-toss rule.")}
               </li>
             </ul>
           </section>
@@ -177,7 +158,7 @@ function CredibilityPage() {
                   }}
                 />
               </div>
-              <Caption>Years of record along the bottom, claims a year up. Grey: the group's rate. Sky: this customer's own record, claims so far over years so far. Green: the actuary's estimate, the blend, with the band it is nine in ten sure of shaded behind. Rose: the true rate, which the actuary never sees. White ticks at the foot: the claims, one tick each.</Caption>
+              <Caption>{L("Years of record along the bottom, claims a year up. Grey: the group's rate. Sky: this customer's own record, claims so far over years so far. Green: the actuary's estimate, the blend, with the band it is nine in ten sure of shaded behind. Rose: the true rate, which the actuary never sees. White ticks at the foot: the claims, one tick each.")}</Caption>
             </div>
             <div className="grid gap-2 lg:grid-cols-2">
               <div>
@@ -203,7 +184,7 @@ function CredibilityPage() {
                     }}
                   />
                 </div>
-                <Caption>The belief as a curve: how likely each rate is thought to be. Grey: before any record, the group's spread. Green: after the years so far, narrowing. White: its centre, the estimate. Rose: the truth.</Caption>
+                <Caption>{L("The belief as a curve: how likely each rate is thought to be. Grey: before any record, the group's spread. Green: after the years so far, narrowing. White: its centre, the estimate. Rose: the truth.")}</Caption>
               </div>
               <div>
                 <div data-slot="plot" className="h-[200px] overflow-hidden">
@@ -222,7 +203,7 @@ function CredibilityPage() {
                     }}
                   />
                 </div>
-                <Caption>{`The weight on the record, the credibility Z = n / (n + k), against the years n. It is one half at n = k, here ${k}${k > YEARS ? ", beyond the run" : ""}. White: where the run is now.`}</Caption>
+                <Caption>{L("The weight on the record, the credibility Z = n / (n + k), against the years n. It is one half at n = k, here {{k}}{{beyond}}. White: where the run is now.", { k, beyond: k > YEARS ? L(", beyond the run") : "" })}</Caption>
               </div>
             </div>
           </section>
@@ -231,26 +212,23 @@ function CredibilityPage() {
           <div className="space-y-2">
             <Verdict good={n === 0 ? undefined : inside}>
               {n === 0
-                ? `No record yet. The actuary's only estimate is the group's rate, ${mu.toFixed(2)} claims a year, with the weight on the record at zero. Press run and the years arrive one at a time.`
-                : `After ${n} year${n === 1 ? "" : "s"} with ${totals[n]} claim${totals[n] === 1 ? "" : "s"}: the record alone says ${own.toFixed(2)} a year, the group says ${mu.toFixed(2)}, and the record has earned ${(Z * 100).toFixed(0)} per cent of the weight, so the estimate is ${estimate.toFixed(3)}. The actuary is nine in ten sure the rate is between ${band[0].toFixed(2)} and ${band[1].toFixed(2)}${inside ? ", and the true rate, " + truth.toFixed(2) + ", is inside that band" : ", and the true rate, " + truth.toFixed(2) + ", is outside it: this customer's record has been unlucky or lucky so far"}. ${Z >= 0.5 ? "The record now counts for more than the group." : `The group still counts for more; the record catches up at year ${k}.`}`}
+                ? L("No record yet. The actuary's only estimate is the group's rate, {{mu}} claims a year, with the weight on the record at zero. Press run and the years arrive one at a time.", { mu: mu.toFixed(2) })
+                : `${L("After {{years}} with {{claims}}: the record alone says {{own}} a year, the group says {{mu}}, and the record has earned {{z}} per cent of the weight, so the estimate is {{est}}.", { years: n === 1 ? L("1 year") : L("{{n}} years", { n }), claims: totals[n] === 1 ? L("1 claim") : L("{{n}} claims", { n: totals[n] }), own: own.toFixed(2), mu: mu.toFixed(2), z: (Z * 100).toFixed(0), est: estimate.toFixed(3) })} ${L("The actuary is nine in ten sure the rate is between {{lo}} and {{hi}}{{where}}.", { lo: band[0].toFixed(2), hi: band[1].toFixed(2), where: inside ? L(", and the true rate, {{t}}, is inside that band", { t: truth.toFixed(2) }) : L(", and the true rate, {{t}}, is outside it: this customer's record has been unlucky or lucky so far", { t: truth.toFixed(2) }) })} ${Z >= 0.5 ? L("The record now counts for more than the group.") : L("The group still counts for more; the record catches up at year {{k}}.", { k })}`}
             </Verdict>
             <Readout
               rows={[
-                ["The blend", `${Z.toFixed(3)} × ${own.toFixed(3)} + ${(1 - Z).toFixed(3)} × ${mu.toFixed(3)} = ${estimate.toFixed(4)}`],
-                ["Credibility Z = n / (n + k)", `${n} / (${n} + ${k}) = ${Z.toFixed(3)}`],
-                ["Belief before any record", `gamma, shape ${prior.shape.toFixed(2)}, rate ${prior.rate}, mean ${mu.toFixed(3)}`],
-                ["Belief now", `gamma, shape ${post.shape.toFixed(2)}, rate ${post.rate}, mean ${estimate.toFixed(4)}`],
-                ["Nine-in-ten band", `${band[0].toFixed(3)} to ${band[1].toFixed(3)}`],
-                ["True rate, hidden from the actuary", truth.toFixed(2)],
-                ["Half weight reached at", `${k} years`],
-                ["Claims so far", `${totals[n]} in ${n} years`],
+                [L("The blend"), `${Z.toFixed(3)} × ${own.toFixed(3)} + ${(1 - Z).toFixed(3)} × ${mu.toFixed(3)} = ${estimate.toFixed(4)}`],
+                [L("Credibility Z = n / (n + k)"), `${n} / (${n} + ${k}) = ${Z.toFixed(3)}`],
+                [L("Belief before any record"), L("gamma, shape {{shape}}, rate {{rate}}, mean {{mean}}", { shape: prior.shape.toFixed(2), rate: prior.rate, mean: mu.toFixed(3) })],
+                [L("Belief now"), L("gamma, shape {{shape}}, rate {{rate}}, mean {{mean}}", { shape: post.shape.toFixed(2), rate: post.rate, mean: estimate.toFixed(4) })],
+                [L("Nine-in-ten band"), L("{{lo}} to {{hi}}", { lo: band[0].toFixed(3), hi: band[1].toFixed(3) })],
+                [L("True rate, hidden from the actuary"), truth.toFixed(2)],
+                [L("Half weight reached at"), L("{{n}} years", { n: k })],
+                [L("Claims so far"), L("{{claims}} in {{n}} years", { claims: totals[n], n })],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              With claims counted as Poisson and the rates across the group spread as a gamma, the
-              blend is not an approximation: the belief after the record is again a gamma, its mean is
-              exactly the weighted average, and k is the gamma's rate. Turn k down to see a record
-              believed almost at once; turn it up to see a customer priced as the group for decades.
+              {L("With claims counted as Poisson and the rates across the group spread as a gamma, the blend is not an approximation: the belief after the record is again a gamma, its mean is exactly the weighted average, and k is the gamma's rate. Turn k down to see a record believed almost at once; turn it up to see a customer priced as the group for decades.")}
             </Text>
           </div>
         }

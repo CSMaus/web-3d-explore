@@ -16,6 +16,7 @@ import { INK, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
 import { oscillator, step as advance, type Method } from "@/systems/flow";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/chaos/play/solvers")({
   loader: () => api.system(TOPIC, "solvers"),
@@ -106,16 +107,15 @@ function SolversPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "Solving it by stepping"}
-        job="A swing with no friction: after a whole number of turns it is exactly back where it began, so the true answer is known and the stepping can be scored. The job is to step round one turn with each method, halve the step, do it again, and read off how fast each method's error falls."
+        title={system?.name ?? L("Solving it by stepping")}
+        job={L("A swing with no friction: after a whole number of turns it is exactly back where it began, so the true answer is known and the stepping can be scored. The job is to step round one turn with each method, halve the step, do it again, and read off how fast each method's error falls.")}
         input={
           <div className="space-y-3">
-            <Slider label="Turns" min={1} max={8} step={1} value={turns} format={(v) => String(Math.round(v))} onChange={(v) => { setTurns(Math.round(v)); reset(); }} />
-            <Slider label="Coarsest steps" min={8} max={64} step={4} value={coarsest} format={(v) => `${Math.round(v)} a turn`} onChange={(v) => { setCoarsest(Math.round(v)); reset(); }} />
-            <Slider label="Halvings" min={3} max={12} step={1} value={levels} format={(v) => String(Math.round(v))} onChange={(v) => { setLevels(Math.round(v)); reset(); }} />
+            <Slider label={L("Turns")} min={1} max={8} step={1} value={turns} format={(v) => String(Math.round(v))} onChange={(v) => { setTurns(Math.round(v)); reset(); }} />
+            <Slider label={L("Coarsest steps")} min={8} max={64} step={4} value={coarsest} format={(v) => L("{{n}} a turn", { n: Math.round(v) })} onChange={(v) => { setCoarsest(Math.round(v)); reset(); }} />
+            <Slider label={L("Halvings")} min={3} max={12} step={1} value={levels} format={(v) => String(Math.round(v))} onChange={(v) => { setLevels(Math.round(v)); reset(); }} />
             <Text kind="note" as="p">
-              The run always ends exactly on a whole turn. Ending a fraction of a step past it adds
-              an error of its own that swamps the method and makes Runge-Kutta look first order.
+              {L("The run always ends exactly on a whole turn. Ending a fraction of a step past it adds an error of its own that swamps the method and makes Runge-Kutta look first order.")}
             </Text>
             <PaletteBar />
           </div>
@@ -124,7 +124,7 @@ function SolversPage() {
           <RunBar
             running={runner.running}
             count={shown}
-            what="step sizes tried"
+            what={L("step sizes tried")}
             limit={levels}
             onToggle={() => {
               if (!runner.running && shown >= levels) reset();
@@ -163,7 +163,7 @@ function SolversPage() {
 
                 }}
               />
-            </div><Caption>{shown > 0 ? `${row("euler").steps / turns} steps a turn: where each method ends up after ${turns} turn${turns > 1 ? "s" : ""}` : "The true orbit is the circle; the state should come back to the white dot"}</Caption></div>
+            </div><Caption>{shown > 0 ? (turns > 1 ? L("{{steps}} steps a turn: where each method ends up after {{turns}} turns", { steps: row("euler").steps / turns, turns }) : L("{{steps}} steps a turn: where each method ends up after {{turns}} turn", { steps: row("euler").steps / turns, turns })) : L("The true orbit is the circle; the state should come back to the white dot")}</Caption></div>
             <div><div data-slot="plot" className="h-[min(400px,calc(100vh-24rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -180,7 +180,7 @@ function SolversPage() {
                     pen.text(`h=1e${g}`, g + 0.03, bounds.y0 + 0.12, "#4a525e");
                   }
                   pen.line([[bounds.x0, Math.log10(2.2e-16)], [bounds.x1, Math.log10(2.2e-16)]], "#4a3a3a", 1);
-                  pen.text("Double precision floor", bounds.x0 + 0.05, Math.log10(2.2e-16) + 0.1, "#7a5a5a");
+                  pen.text(L("Double precision floor"), bounds.x0 + 0.05, Math.log10(2.2e-16) + 0.1, "#7a5a5a");
                   table.forEach((t, i) => {
                     const colour = colourOf(i);
                     const pts: [number, number][] = t.rows.slice(0, shown).map((r) => [Math.log10(r.dt), Math.log10(Math.max(r.error, 1e-16))]);
@@ -193,32 +193,29 @@ function SolversPage() {
                   });
                 }}
               />
-            </div><Caption>Error after the run against step size, both on powers of ten. Steeper is a higher order.</Caption></div>
+            </div><Caption>{L("Error after the run against step size, both on powers of ten. Steeper is a higher order.")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict>
               {shown === 0
-                ? `${coarsest} steps a turn to begin with, then the step halved ${levels - 1} times. Press run: each step size is tried by all three methods and its error lands on the chart.`
+                ? L("{{coarsest}} steps a turn to begin with, then the step halved {{halvings}} times. Press run: each step size is tried by all three methods and its error lands on the chart.", { coarsest, halvings: levels - 1 })
                 : shown === 1
-                  ? `${row("euler").steps / turns} steps a turn. Euler ends ${row("euler").error.toFixed(3)} from where it started and its orbit spirals outward: each straight step leaves the circle a little, and the gain is never given back. Midpoint misses by ${row("midpoint").error.toExponential(1)}, Runge-Kutta by ${row("rk4").error.toExponential(1)}.`
-                  : `${row("euler").steps / turns} steps a turn, half the last size. Euler's error fell by ${Math.pow(2, table[0].gains[level - 1]).toFixed(1)}x, midpoint's by ${Math.pow(2, table[1].gains[level - 1]).toFixed(1)}x and Runge-Kutta's by ${table[2].rows[level].error > 1e-13 ? `${Math.pow(2, table[2].gains[level - 1]).toFixed(1)}x` : "down to the rounding floor"}: halving the step buys two, four and sixteen. That is what order one, two and four mean.`}
+                  ? L("{{steps}} steps a turn. Euler ends {{euler}} from where it started and its orbit spirals outward: each straight step leaves the circle a little, and the gain is never given back. Midpoint misses by {{midpoint}}, Runge-Kutta by {{rk4}}.", { steps: row("euler").steps / turns, euler: row("euler").error.toFixed(3), midpoint: row("midpoint").error.toExponential(1), rk4: row("rk4").error.toExponential(1) })
+                  : L("{{steps}} steps a turn, half the last size. Euler's error fell by {{euler}}x, midpoint's by {{midpoint}}x and Runge-Kutta's by {{rk4}}: halving the step buys two, four and sixteen. That is what order one, two and four mean.", { steps: row("euler").steps / turns, euler: Math.pow(2, table[0].gains[level - 1]).toFixed(1), midpoint: Math.pow(2, table[1].gains[level - 1]).toFixed(1), rk4: table[2].rows[level].error > 1e-13 ? `${Math.pow(2, table[2].gains[level - 1]).toFixed(1)}x` : L("down to the rounding floor") })}
             </Verdict>
             <Readout
               rows={[
-                ["Turns run", String(turns)],
-                ["Step sizes tried", `${shown} of ${levels}`],
-                ...table.map((t) => [`${t.how}: fitted order`, `${Number.isNaN(t.slope) ? "-" : t.slope.toFixed(3)}  (exactly ${ORDER[t.how]})`] as [string, string]),
-                ...(shown > 0 ? table.map((t) => [`${t.how}: error at this step`, t.rows[level].error.toExponential(2)] as [string, string]) : []),
-                ["Energy at the end, exactly 0.5", shown > 0 ? table.map((t) => `${t.how} ${t.rows[level].energy.toFixed(4)}`).join(", ") : "-"],
+                [L("Turns run"), String(turns)],
+                [L("Step sizes tried"), L("{{n}} of {{total}}", { n: shown, total: levels })],
+                ...table.map((t) => [L("{{how}}: fitted order", { how: t.how }), L("{{slope}}  (exactly {{order}})", { slope: Number.isNaN(t.slope) ? "-" : t.slope.toFixed(3), order: ORDER[t.how] })] as [string, string]),
+                ...(shown > 0 ? table.map((t) => [L("{{how}}: error at this step", { how: t.how }), t.rows[level].error.toExponential(2)] as [string, string]) : []),
+                [L("Energy at the end, exactly 0.5"), shown > 0 ? table.map((t) => `${t.how} ${t.rows[level].energy.toFixed(4)}`).join(", ") : "-"],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              Euler's outward spiral is not a rounding error: a straight step from a point on a
-              circle always lands outside it. The higher methods look inside the step before moving.
-              Runge-Kutta stops reporting sixteen once its error reaches the rounding floor of
-              double precision, and those rows are left out of the fitted slope.
+              {L("Euler's outward spiral is not a rounding error: a straight step from a point on a circle always lands outside it. The higher methods look inside the step before moving. Runge-Kutta stops reporting sixteen once its error reaches the rounding floor of double precision, and those rows are left out of the fitted slope.")}
             </Text>
           </div>
         }

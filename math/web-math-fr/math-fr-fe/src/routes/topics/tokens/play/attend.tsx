@@ -19,6 +19,7 @@ import { TOPIC } from "@/lib/tokens";
 import { encode } from "@/systems/bpe";
 import { forward, paramCount } from "@/systems/lm";
 import { Input } from "@kit/index";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/tokens/play/attend")({
   loader: () => api.system(TOPIC, "attend"),
@@ -26,16 +27,16 @@ export const Route = createFileRoute("/topics/tokens/play/attend")({
 });
 
 const STAGES = [
-  "The stream: each token's row plus its position",
-  "Three projections of every row: a query, a key and a value",
-  "Scores: each query against each key, divided by the square root of the width",
-  "The mask: every score against a later position becomes minus infinity",
-  "Softmax along each row: weights that are positive and add to one",
-  "The weights applied to the values, and the result added back into the stream",
+  L("The stream: each token's row plus its position"),
+  L("Three projections of every row: a query, a key and a value"),
+  L("Scores: each query against each key, divided by the square root of the width"),
+  L("The mask: every score against a later position becomes minus infinity"),
+  L("Softmax along each row: weights that are positive and add to one"),
+  L("The weights applied to the values, and the result added back into the stream"),
 ];
 const MASKS = [
-  { id: "causal", label: "May only look back" },
-  { id: "both", label: "May look both ways" },
+  { id: "causal", label: L("May only look back") },
+  { id: "both", label: L("May look both ways") },
 ];
 
 function signed(v: number, scale = 1) {
@@ -73,28 +74,27 @@ function AttendPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "Attention, with the numbers"}
-        job="Every position gets a new vector that is a weighted average of the vectors at all positions. That is the whole mechanism; everything else is how the weights are computed. The job is to compute them, on a real prompt, through the small model this topic trains, in six moments."
+        title={system?.name ?? L("Attention, with the numbers")}
+        job={L("Every position gets a new vector that is a weighted average of the vectors at all positions. That is the whole mechanism; everything else is how the weights are computed. The job is to compute them, on a real prompt, through the small model this topic trains, in six moments.")}
         input={
           <div className="space-y-3">
             <label className="block">
-              <span data-text="note">The prompt</span>
+              <span data-text="note">{L("The prompt")}</span>
               <Input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className="mt-1" />
             </label>
             <Choices options={MASKS} value={mask} onPick={(id) => { setMask(id); reset(); }} />
-            <Slider label="A sequence of" min={10} max={8000} step={10} value={length} format={(v) => `${Math.round(v)} tokens`} onChange={(v) => setLength(Math.round(v))} />
+            <Slider label={L("A sequence of")} min={10} max={8000} step={10} value={length} format={(v) => L("{{n}} tokens", { n: Math.round(v) })} onChange={(v) => setLength(Math.round(v))} />
             <Text kind="note" as="p">
-              The slider does not change the picture. It is for the cost line in the result: the
-              score matrix has one entry per pair of positions, so its size is the length squared.
+              {L("The slider does not change the picture. It is for the cost line in the result: the score matrix has one entry per pair of positions, so its size is the length squared.")}
             </Text>
-            {!trained ? <Text kind="warning" as="p">The model is still training in the background ({store.model.steps} of {MODEL_STEPS} steps); the weights below settle as it finishes.</Text> : null}
+            {!trained ? <Text kind="warning" as="p">{L("The model is still training in the background ({{done}} of {{total}} steps); the weights below settle as it finishes.", { done: store.model.steps, total: MODEL_STEPS })}</Text> : null}
           </div>
         }
         run={
           <RunBar
             running={runner.running}
             count={at}
-            what="moments"
+            what={L("moments")}
             limit={STAGES.length}
             onToggle={() => {
               if (!runner.running && at >= STAGES.length) reset();
@@ -145,16 +145,16 @@ function AttendPage() {
                   const rh = 14;
                   const col = W * 0.25;
                   // row 1: x, q, k, v
-                  grid(pass.x, 60, 26, cw, rh, 1.5, "The stream x", at >= 1, true);
-                  grid(pass.q, col + 40, 26, cw, rh, 1.5, "Queries  q = x Wq", at >= 2);
-                  grid(pass.k, col * 2 + 40, 26, cw, rh, 1.5, "Keys  k = x Wk", at >= 2);
-                  grid(pass.v, col * 3 + 40, 26, cw, rh, 1.5, "Values  v = x Wv", at >= 2);
+                  grid(pass.x, 60, 26, cw, rh, 1.5, L("The stream x"), at >= 1, true);
+                  grid(pass.q, col + 40, 26, cw, rh, 1.5, L("Queries  q = x Wq"), at >= 2);
+                  grid(pass.k, col * 2 + 40, 26, cw, rh, 1.5, L("Keys  k = x Wk"), at >= 2);
+                  grid(pass.v, col * 3 + 40, 26, cw, rh, 1.5, L("Values  v = x Wv"), at >= 2);
                   // row 2: scores or weights, n by n
                   const y2 = 26 + n * rh + 40;
                   const sc = Math.min(30, (pen.height - y2 - 70) / n, (W * 0.45 - 60) / n);
                   const scoresShown = at >= 4 ? pass.scores : pass.scores.map((r, i) => r.map((v, j) => (mask === "causal" && j > i ? (at >= 4 ? -Infinity : pass.q[i].reduce((s, qq, d) => s + qq * pass.k[j][d], 0) / Math.sqrt(WIDTH)) : v)));
-                  if (at >= 5) grid(pass.weights, 60, y2, sc, sc, 1, "Weights: softmax of each row", true, true);
-                  else grid(scoresShown, 60, y2, sc, sc, 3, at >= 4 ? "Scores, masked: nothing may look ahead" : "Scores  q_i . k_j / sqrt(width)", at >= 3, true);
+                  if (at >= 5) grid(pass.weights, 60, y2, sc, sc, 1, L("Weights: softmax of each row"), true, true);
+                  else grid(scoresShown, 60, y2, sc, sc, 3, at >= 4 ? L("Scores, masked: nothing may look ahead") : L("Scores  q_i . k_j / sqrt(width)"), at >= 3, true);
                   if (at >= 5) {
                     ctx.fillStyle = INK;
                     pass.weights[last].forEach((v, j) => {
@@ -167,43 +167,39 @@ function AttendPage() {
                   // row 2 right: the mixed vectors and the stream after
                   const rx = Math.max(60 + n * sc + 50, W * 0.42);
                   const cw2 = Math.min(cw, (W - rx - 60) / (2 * WIDTH));
-                  grid(pass.mixed, rx, y2, cw2, rh, 1.5, "The mix: weights x values", at >= 6);
-                  grid(pass.h, rx + WIDTH * cw2 + 40, y2, cw2, rh, 1.5, "The stream after: x + mix", at >= 6);
+                  grid(pass.mixed, rx, y2, cw2, rh, 1.5, L("The mix: weights x values"), at >= 6);
+                  grid(pass.h, rx + WIDTH * cw2 + 40, y2, cw2, rh, 1.5, L("The stream after: x + mix"), at >= 6);
                   ctx.fillStyle = at > 0 ? INK : MUTED;
                 }}
               />
-            </div><Caption>The last row, as percentages. {at === 0 ? "Six moments, in order. Press run." : `Moment ${at} of 6: ${STAGES[at - 1]}`}</Caption></div>
+            </div><Caption>{L("The last row, as percentages.")} {at === 0 ? L("Six moments, in order. Press run.") : L("Moment {{at}} of 6: {{stage}}", { at, stage: STAGES[at - 1] })}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict>
               {at === 0
-                ? `${n} tokens. The last one, ${visible(tokens[last].text)}, will end up with a new vector built from all ${n}. Press run.`
+                ? L("{{n}} tokens. The last one, {{token}}, will end up with a new vector built from all {{n}}. Press run.", { n, token: visible(tokens[last].text) })
                 : at < 5
-                  ? STAGES[at - 1] + (at === 3 ? ` There are ${n} by ${n} = ${n * n} scores, one per pair of positions.` : at === 4 ? (mask === "causal" ? ` ${(n * (n - 1)) / 2} of the ${n * n} entries are gone: the future.` : " The mask is off, so every position sees every other, which a model that writes text one token at a time cannot do.") : "")
-                  : `${visible(tokens[last].text)} listens ${(row[top] * 100).toFixed(0)} % to ${visible(tokens[top].text)} at position ${top + 1}${row.filter((v) => v > 0.1).length > 1 ? ` And ${row.map((v, j) => [v, j] as [number, number]).filter(([v, j]) => v > 0.1 && j !== top).map(([v, j]) => `${(v * 100).toFixed(0)} % to ${visible(tokens[j].text)}`).join(", ")}` : ""}. ${at === 6 ? "Its new vector is those weights applied to the values, added to what it had. That is the only way earlier tokens reach later ones, and it is recomputed at every position." : "The row adds to one."}`}
+                  ? STAGES[at - 1] + (at === 3 ? ` ${L("There are {{n}} by {{n}} = {{nn}} scores, one per pair of positions.", { n, nn: n * n })}` : at === 4 ? (mask === "causal" ? ` ${L("{{gone}} of the {{nn}} entries are gone: the future.", { gone: (n * (n - 1)) / 2, nn: n * n })}` : ` ${L("The mask is off, so every position sees every other, which a model that writes text one token at a time cannot do.")}`) : "")
+                  : `${L("{{token}} listens {{pct}} % to {{other}} at position {{pos}}", { token: visible(tokens[last].text), pct: (row[top] * 100).toFixed(0), other: visible(tokens[top].text), pos: top + 1 })}${row.filter((v) => v > 0.1).length > 1 ? ` ${L("And {{list}}", { list: row.map((v, j) => [v, j] as [number, number]).filter(([v, j]) => v > 0.1 && j !== top).map(([v, j]) => L("{{pct}} % to {{token}}", { pct: (v * 100).toFixed(0), token: visible(tokens[j].text) })).join(", ") })}` : ""}. ${at === 6 ? L("Its new vector is those weights applied to the values, added to what it had. That is the only way earlier tokens reach later ones, and it is recomputed at every position.") : L("The row adds to one.")}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Positions, so rows in every grid</dt>
+              <dt>{L("Positions, so rows in every grid")}</dt>
               <dd className="text-right text-foreground/80">{n}</dd>
-              <dt>Scores for this prompt</dt>
+              <dt>{L("Scores for this prompt")}</dt>
               <dd className="text-right text-foreground/80">{n} x {n} = {n * n}</dd>
-              <dt>Scores for a sequence of {length.toLocaleString("en")}</dt>
+              <dt>{L("Scores for a sequence of {{n}}", { n: length.toLocaleString("en") })}</dt>
               <dd className="text-right text-foreground/80">{(length * length).toLocaleString("en")}</dd>
-              <dt>The last row adds to</dt>
+              <dt>{L("The last row adds to")}</dt>
               <dd className="text-right text-foreground/80">{row.reduce((a, b) => a + b, 0).toFixed(6)}</dd>
-              <dt>Numbers in the three projections</dt>
+              <dt>{L("Numbers in the three projections")}</dt>
               <dd className="text-right text-foreground/80">3 x {WIDTH} x {WIDTH} = {count.attention}</dd>
-              <dt>Numbers in the whole model</dt>
-              <dd className="text-right text-foreground/80">{count.total.toLocaleString("en")} (Table {count.table.toLocaleString("en")}, Positions {count.positions}, Attention {count.attention})</dd>
+              <dt>{L("Numbers in the whole model")}</dt>
+              <dd className="text-right text-foreground/80">{count.total.toLocaleString("en")} {L("(Table {{table}}, Positions {{positions}}, Attention {{attention}})", { table: count.table.toLocaleString("en"), positions: count.positions, attention: count.attention })}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              A full model has many heads doing this at once on slices of the width, a small
-              network after each one, and the pair stacked many times deep; this one has one head
-              and one layer. The division by the square root of the width keeps the scores from
-              growing with the width, which would drive every row to a single one and zeros. The
-              mask is why training on whole texts matches writing one token at a time.
+              {L("A full model has many heads doing this at once on slices of the width, a small network after each one, and the pair stacked many times deep; this one has one head and one layer. The division by the square root of the width keeps the scores from growing with the width, which would drive every row to a single one and zeros. The mask is why training on whole texts matches writing one token at a time.")}
             </Text>
           </div>
         }

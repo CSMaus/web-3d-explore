@@ -19,6 +19,7 @@ import { INK, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
 import { boxDimension, crossing, integrate, kaplanYorke, lyapunov, meanDivergence, orbitDiagram, rossler, section } from "@/systems/flow";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/chaos/play/rossler")({
   loader: () => api.system(TOPIC, "rossler"),
@@ -32,11 +33,11 @@ const STEPS = 120000;
 const PER = 40;
 const TICKS = STEPS / PER;
 const PRESETS = [
-  { id: "2.5", label: "One cycle", c: 2.5 },
-  { id: "3.5", label: "Doubled", c: 3.5 },
-  { id: "4.1", label: "Four", c: 4.1 },
-  { id: "5.7", label: "The attractor", c: 5.7 },
-  { id: "12", label: "Wider", c: 12 },
+  { id: "2.5", label: L("One cycle"), c: 2.5 },
+  { id: "3.5", label: L("Doubled"), c: 3.5 },
+  { id: "4.1", label: L("Four"), c: 4.1 },
+  { id: "5.7", label: L("The attractor"), c: 5.7 },
+  { id: "12", label: L("Wider"), c: 12 },
 ];
 
 /** how many distinct values a list of crossings has, to a picture's tolerance. */
@@ -119,8 +120,8 @@ function RosslerPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "The Rossler system"}
-        job="Rossler built this system in 1976 to be the plainest flow that is still chaotic, and it is the usual test case for every method that studies an attractor: the exponent, the dimension, the section. A flow in three dimensions with one non-linear term. The job is to reduce it to something a person can read: put a plane through it, record only where the orbit pierces the plane, and plot each crossing against the next. A three-dimensional flow becomes a map on a line, and the map is the one the next two pages are about."
+        title={system?.name ?? L("The Rossler system")}
+        job={L("Rossler built this system in 1976 to be the plainest flow that is still chaotic, and it is the usual test case for every method that studies an attractor: the exponent, the dimension, the section. A flow in three dimensions with one non-linear term. The job is to reduce it to something a person can read: put a plane through it, record only where the orbit pierces the plane, and plot each crossing against the next. A three-dimensional flow becomes a map on a line, and the map is the one the next two pages are about.")}
         input={
           <div className="space-y-3">
             <Choices options={PRESETS} value={preset} onPick={(id) => { setLook((was) => ({ ...was, a: 0.2, b: 0.2, c: Number(id) })); reset(); }} />
@@ -128,8 +129,7 @@ function RosslerPage() {
             <Slider label="b" min={0.05} max={2} step={0.01} value={look.b} format={(v) => v.toFixed(2)} onChange={(v) => { set("b")(v); reset(); }} />
             <Slider label="c" min={2} max={18} step={0.05} value={look.c} format={(v) => v.toFixed(2)} onChange={(v) => { set("c")(v); reset(); }} />
             <Text kind="note" as="p">
-              Walk c up through the presets: a single loop, then a doubled one, then four, then the
-              attractor. The same doubling the logistic map does, met here in a flow.
+              {L("Walk c up through the presets: a single loop, then a doubled one, then four, then the attractor. The same doubling the logistic map does, met here in a flow.")}
             </Text>
             <PaletteBar />
           </div>
@@ -138,7 +138,7 @@ function RosslerPage() {
           <RunBar
             running={runner.running}
             count={Math.round(t)}
-            what="time units"
+            what={L("time units")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 50, max: 1200, step: 50 }}
@@ -211,7 +211,7 @@ function RosslerPage() {
                   pen.line([[look.c, sweepBox.y0], [look.c, sweepBox.y1]], INK, 1);
                 }}
               />
-            </div><Caption>The flow's bifurcation diagram: c along the bottom, x at each crossing above. Click to set c. A cycle is one point, doubled is two, then four, then the smear.</Caption></div>
+            </div><Caption>{L("The flow's bifurcation diagram: c along the bottom, x at each crossing above. Click to set c. A cycle is one point, doubled is two, then four, then the smear.")}</Caption></div>
             <div className="grid gap-2 lg:grid-cols-2">
               <div><div data-slot="plot" className="h-[200px] overflow-hidden">
                 <Plot
@@ -229,7 +229,7 @@ function RosslerPage() {
 
                   }}
                 />
-              </div><Caption>{`The plane y = 0, crossed upward: ${seen.length} times so far`}</Caption></div>
+              </div><Caption>{L("The plane y = 0, crossed upward: {{n}} times so far", { n: seen.length })}</Caption></div>
               <div><div data-slot="plot" className="h-[200px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
@@ -247,7 +247,7 @@ function RosslerPage() {
 
                   }}
                 />
-              </div><Caption>Each crossing against the next</Caption></div>
+              </div><Caption>{L("Each crossing against the next")}</Caption></div>
             </div>
           </section>
         }
@@ -255,32 +255,33 @@ function RosslerPage() {
           <div className="space-y-2">
             <Verdict>
               {upTo === 0
-                ? "Press run. The orbit is drawn as it is integrated, and every time it pierces the plane a dot lands on the section and one on the return map."
+                ? L("Press run. The orbit is drawn as it is integrated, and every time it pierces the plane a dot lands on the section and one on the return map.")
                 : seen.length < 3
-                  ? `${t.toFixed(0)} time units in, ${seen.length} crossing${seen.length === 1 ? "" : "s"} so far. The section needs a few more before it says anything.`
+                  ? seen.length === 1
+                    ? L("{{t}} time units in, {{n}} crossing so far. The section needs a few more before it says anything.", { t: t.toFixed(0), n: seen.length })
+                    : L("{{t}} time units in, {{n}} crossings so far. The section needs a few more before it says anything.", { t: t.toFixed(0), n: seen.length })
                   : kinds <= 8 && measured.l.lambda < 0.005
-                    ? `${t.toFixed(0)} time units in, ${seen.length} crossings, and they land on ${kinds} point${kinds === 1 ? "" : "s"} over and over: a closed orbit of period ${kinds}. The return map is ${kinds} dot${kinds === 1 ? " on the diagonal" : "s"}, and the orbit repeats exactly.`
-                    : `${t.toFixed(0)} time units in, ${seen.length} crossings and no two alike: the section is filling a curve, not a set of points, and the return map is a hump. The hump is a one-dimensional map, and the next page iterates one just like it.`}
+                    ? kinds === 1
+                      ? L("{{t}} time units in, {{n}} crossings, and they land on {{k}} point over and over: a closed orbit of period {{k}}. The return map is {{k}} dot on the diagonal, and the orbit repeats exactly.", { t: t.toFixed(0), n: seen.length, k: kinds })
+                      : L("{{t}} time units in, {{n}} crossings, and they land on {{k}} points over and over: a closed orbit of period {{k}}. The return map is {{k}} dots, and the orbit repeats exactly.", { t: t.toFixed(0), n: seen.length, k: kinds })
+                    : L("{{t}} time units in, {{n}} crossings and no two alike: the section is filling a curve, not a set of points, and the return map is a hump. The hump is a one-dimensional map, and the next page iterates one just like it.", { t: t.toFixed(0), n: seen.length })}
             </Verdict>
             <Readout
               rows={[
-                ["Largest Lyapunov exponent", measured.l.lambda.toFixed(4)],
-                ["Which means", measured.l.lambda > 0.005 ? "Neighbours separate: chaos" : "Neighbours do not separate: a cycle"],
-                ["Distinct crossing values, last forty", String(kinds)],
-                ["Divergence at (1,1,1)", (look.a + 1 - look.c).toFixed(4)],
-                ["Mean divergence along the orbit", measured.md.toFixed(4)],
-                ["And they differ because", "A + x - c depends on the state"],
-                ["Third exponent", measured.ky.lambda3.toFixed(4)],
-                ["Kaplan-Yorke dimension", Number.isFinite(measured.ky.dimension) ? measured.ky.dimension.toFixed(3) : "-"],
-                ["Box counting, on this sample", measured.box.dimension.toFixed(3)],
-                ["Crossings in the whole run", String(cuts.length)],
+                [L("Largest Lyapunov exponent"), measured.l.lambda.toFixed(4)],
+                [L("Which means"), measured.l.lambda > 0.005 ? L("Neighbours separate: chaos") : L("Neighbours do not separate: a cycle")],
+                [L("Distinct crossing values, last forty"), String(kinds)],
+                [L("Divergence at (1,1,1)"), (look.a + 1 - look.c).toFixed(4)],
+                [L("Mean divergence along the orbit"), measured.md.toFixed(4)],
+                [L("And they differ because"), L("A + x - c depends on the state")],
+                [L("Third exponent"), measured.ky.lambda3.toFixed(4)],
+                [L("Kaplan-Yorke dimension"), Number.isFinite(measured.ky.dimension) ? measured.ky.dimension.toFixed(3) : "-"],
+                [L("Box counting, on this sample"), measured.box.dimension.toFixed(3)],
+                [L("Crossings in the whole run"), String(cuts.length)],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              The section removes one dimension and the clock at once: a periodic orbit is a finite
-              set of points on it, and the attractor is a dust along a curve. Plotting each crossing
-              against the next turns the flow into a map, and that map has the shape of the
-              logistic one.
+              {L("The section removes one dimension and the clock at once: a periodic orbit is a finite set of points on it, and the attractor is a dust along a curve. Plotting each crossing against the next turns the flow into a map, and that map has the shape of the logistic one.")}
             </Text>
           </div>
         }

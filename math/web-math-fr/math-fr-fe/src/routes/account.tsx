@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Input, Button, Text, Heading, Page } from "@kit/index";
 import { useEffect, useState } from "react";
 import { api, HAS_BACKEND, type Account, type Preset } from "@/lib/api";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/account")({
   component: AccountPage,
@@ -37,7 +38,7 @@ function AccountPage() {
       setSecret("");
       refresh();
     } catch (err) {
-      setTrouble(err instanceof Error ? err.message : "That did not work");
+      setTrouble(err instanceof Error ? err.message : L("That did not work"));
     }
   };
 
@@ -50,8 +51,8 @@ function AccountPage() {
   if (!HAS_BACKEND) {
     return (
       <Page className="pb-24">
-        <Heading level={1}>Account</Heading>
-        <Text kind="intro" as="p" className="mt-3 max-w-xl">Accounts and saved parameter sets need the backend, and this copy of the site runs without one.</Text>
+        <Heading level={1}>{L("Account")}</Heading>
+        <Text kind="intro" as="p" className="mt-3 max-w-xl">{L("Accounts and saved parameter sets need the backend, and this copy of the site runs without one.")}</Text>
       </Page>
     );
   }
@@ -59,22 +60,21 @@ function AccountPage() {
   if (who) {
     return (
       <Page className="pb-24">
-        <Heading level={1}>Account</Heading>
+        <Heading level={1}>{L("Account")}</Heading>
         <Text kind="caption" as="p" className="mt-3">{who.email}</Text>
         <Button variant="outline" size="sm" className="mt-4"
           type="button"
           onClick={leave}
         >
-          Sign out
+          {L("Sign out")}
         </Button>
         <section className="mt-10">
           <Heading level={2}>
-            Stored parameter sets
+            {L("Stored parameter sets")}
           </Heading>
           {presets.length === 0 ? (
             <Text kind="intro" as="p" className="mt-3">
-              Nothing kept yet. A picture saved from any play page appears here with its own
-              address.
+              {L("Nothing kept yet. A picture saved from any play page appears here with its own address.")}
             </Text>
           ) : (
             <ul className="mt-3 space-y-2">
@@ -96,7 +96,7 @@ function AccountPage() {
 
   return (
     <Page className="pb-24">
-      <Heading level={1}>Account</Heading>
+      <Heading level={1}>{L("Account")}</Heading>
       <div className="mt-4 flex gap-2">
         {(["login", "signup"] as const).map((m) => (
           <Button variant="outline" size="sm"
@@ -105,7 +105,7 @@ function AccountPage() {
             onClick={() => setMode(m)}
             aria-pressed={mode === m}
           >
-            {m}
+            {m === "login" ? L("login") : L("signup")}
           </Button>
         ))}
       </div>
@@ -115,7 +115,7 @@ function AccountPage() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Address"
+          placeholder={L("Address")}
         />
         <Input
           type="password"
@@ -123,12 +123,12 @@ function AccountPage() {
           minLength={10}
           value={secret}
           onChange={(e) => setSecret(e.target.value)}
-          placeholder="At least ten characters"
+          placeholder={L("At least ten characters")}
         />
         <Button variant="outline" size="sm" className="w-full"
           type="submit"
         >
-          {mode}
+          {mode === "login" ? L("login") : L("signup")}
         </Button>
       </form>
       {trouble ? <Text kind="warning" as="p" className="mt-3">{trouble}</Text> : null}

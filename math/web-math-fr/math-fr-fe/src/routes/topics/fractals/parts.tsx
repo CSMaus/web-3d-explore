@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Heading, Swatch, Text } from "@kit/index";
 import { useCallback } from "react";
 import { Offline } from "@/components/Offline";
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/topics/fractals/parts")({
   component: TopicPage,
 });
 
-const HEADING = "The series, in order";
+const HEADING = L("The series, in order");
 
 const anchor = (number: number) => `part-${number}`;
 
@@ -33,7 +34,7 @@ function TopicPage() {
       <div>
         <Heading level={1} className="mt-6">{HEADING}</Heading>
         <div className="mt-6">
-          <Offline what="The beats and the words beside them are served by the backend." />
+          <Offline what={L("The beats and the words beside them are served by the backend.")} />
         </div>
       </div>
     );
@@ -57,8 +58,7 @@ function TopicPage() {
         <header>
           <Heading level={1} className="mt-6">{HEADING}</Heading>
           <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-            {topic.part_list.length} clips, one a part, about {minutes} minutes of picture in
-            order. Beside each clip is the part's question and a short description of it.
+            {L("{{count}} clips, one a part, about {{minutes}} minutes of picture in order. Beside each clip is the part's question and a short description of it.", { count: topic.part_list.length, minutes })}
           </Text>
         </header>
 
@@ -71,7 +71,7 @@ function TopicPage() {
             >
               <Heading level={2}>
                 <Swatch colour={accentOf(i)} />
-                Part {part.number} - {part.title}
+                {L("Part {{number}} - {{title}}", { number: part.number, title: part.title })}
               </Heading>
               <Reel part={part} accent={accentOf(i)} />
             </section>

@@ -10,6 +10,7 @@ import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
+import { L } from "@/lib/lang";
 import { FAINT, INK, MUTED, ONE, TWO, boxOf, mix, plate, shadePlane, ticks } from "@/lib/draw";
 import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
@@ -23,11 +24,11 @@ export const Route = createFileRoute("/topics/networks/play/fade")({
 });
 
 const SQUASHES: { id: Act; label: string }[] = [
-  { id: "sigmoid", label: "Squash to 0..1" },
-  { id: "tanh", label: "Squash to -1..1" },
-  { id: "relu", label: "Cut below zero" },
+  { id: "sigmoid", label: L("Squash to 0..1") },
+  { id: "tanh", label: L("Squash to -1..1") },
+  { id: "relu", label: L("Cut below zero") },
 ];
-const STARTS: { id: Init; label: string }[] = (["uniform", "xavier", "he"] as Init[]).map((id) => ({ id, label: INITS[id].label }));
+const STARTS: { id: Init; label: string }[] = (["uniform", "xavier", "he"] as Init[]).map((id) => ({ id, label: L(INITS[id].label) }));
 const WIDTH = 6;
 const MOST = 2000;
 const LOW = -9;
@@ -117,18 +118,17 @@ function FadePage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "The first layer learns last"}
-        job="The correction page sent the blame back through two layers. This page stacks many, on the ring inside a ring, and measures how much blame reaches each layer. Every layer the blame passes back through multiplies it by a weight and by the slope of a squash, and a squash to 0..1 has a slope of at most a quarter. Layer after layer, the blame fades, and the first layer, the one that sees the dots, is the one that barely moves."
+        title={system?.name ?? L("The first layer learns last")}
+        job={L("The correction page sent the blame back through two layers. This page stacks many, on the ring inside a ring, and measures how much blame reaches each layer. Every layer the blame passes back through multiplies it by a weight and by the slope of a squash, and a squash to 0..1 has a slope of at most a quarter. Layer after layer, the blame fades, and the first layer, the one that sees the dots, is the one that barely moves.")}
         input={
           <div className="space-y-3">
             <Choices options={SQUASHES} value={act} onPick={(id) => { setAct(id); restart(id, init, deep); }} />
             <Choices options={STARTS} value={init} onPick={(id) => { setInit(id); restart(act, id, deep); }} />
-            <Text kind="note" as="p">{INITS[init].label}: {INITS[init].note}.</Text>
-            <Slider label="Hidden layers" min={2} max={7} step={1} value={deep} format={(v) => `${v}`} onChange={(v) => { setDeep(v); restart(act, init, v); }} />
-            <Slider label="Step size" min={0.05} max={2} step={0.05} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
+            <Text kind="note" as="p">{L(INITS[init].label)}: {L(INITS[init].note)}.</Text>
+            <Slider label={L("Hidden layers")} min={2} max={7} step={1} value={deep} format={(v) => `${v}`} onChange={(v) => { setDeep(v); restart(act, init, v); }} />
+            <Slider label={L("Step size")} min={0.05} max={2} step={0.05} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
             <Text kind="note" as="p">
-              Six units in every hidden layer. The bars measure the blame before any step is
-              taken, so the comparison between squashes and starts can be read without running.
+              {L("Six units in every hidden layer. The bars measure the blame before any step is taken, so the comparison between squashes and starts can be read without running.")}
             </Text>
           </div>
         }
@@ -136,7 +136,7 @@ function FadePage() {
           <RunBar
             running={runner.running}
             count={view.steps}
-            what="steps"
+            what={L("steps")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 100, max: 6000, step: 100 }}
@@ -170,12 +170,12 @@ function FadePage() {
                     const top = pen.py(y - 0.22);
                     const bottom = pen.py(y - 0.78);
                     ctx.fillRect(pen.px(LOW), top, Math.max(2, pen.px(v) - pen.px(LOW)), bottom - top);
-                    plate(pen, l === 0 ? "Layer 1, first, sees the dots" : l === layers - 1 ? `Layer ${l + 1}, last, gives the answer` : `Layer ${l + 1}`, LOW + 0.15, y - 0.5, INK);
+                    plate(pen, l === 0 ? L("Layer 1, first, sees the dots") : l === layers - 1 ? L("Layer {{n}}, last, gives the answer", { n: l + 1 }) : L("Layer {{n}}", { n: l + 1 }), LOW + 0.15, y - 0.5, INK);
                     plate(pen, view.norms[l].toExponential(1), HIGH - 0.1, y - 0.5, MUTED, "right");
                   }
                 }}
               />
-            </div><Caption>How much blame reaches each layer's weights right now, on a scale where each mark is ten times the last</Caption></div>
+            </div><Caption>{L("How much blame reaches each layer's weights right now, on a scale where each mark is ten times the last")}</Caption></div>
             <div className="space-y-2">
               <div><div data-slot="plot" className="h-[200px] overflow-hidden">
                 <Plot
@@ -193,7 +193,7 @@ function FadePage() {
                     }
                   }}
                 />
-              </div><Caption>The answer so far</Caption></div>
+              </div><Caption>{L("The answer so far")}</Caption></div>
               <div><div data-slot="plot" className="h-[172px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
@@ -206,7 +206,7 @@ function FadePage() {
                     }
                   }}
                 />
-              </div><Caption>The same, against steps. Rose: the first layer. Green: the last</Caption></div>
+              </div><Caption>{L("The same, against steps. Rose: the first layer. Green: the last")}</Caption></div>
             </div>
           </section>
         }
@@ -214,27 +214,39 @@ function FadePage() {
           <div className="space-y-2">
             <Verdict good={wrong === 0 ? true : stalled || travelRatio > 100 ? false : undefined}>
               {view.steps === 0
-                ? `Before any step, with ${layers - 1} hidden layers: the blame reaching the first layer is ${ratio.toExponential(1)} times smaller than the blame at the last. ${ratio > 100 ? "At that rate the first layer is as good as frozen. Press run and watch which layers move." : ratio > 10 ? "That is a real gap. Press run and watch which layers move." : "That is close to even: the blame arrives nearly undiminished. Press run."}`
-                : `After ${view.steps} steps, ${wrong} of ${data.X.length} wrong. Since the start the last layer's weights have moved ${travel[layers - 1].toExponential(1)} and the first layer's ${travel[0].toExponential(1)}, ${travelRatio.toExponential(1)} times less. ${stalled ? "The blame is now tiny at every layer: the network has stalled. The layers nearest the answer flattened onto answering about one half for every dot, and the first layer, which barely moved, is the one that would have to change for anything else to happen. This is what the vanishing gradient looks like from outside: not slow progress but a network that stops." : travelRatio > 100 ? "The first layer is learning last, if at all: the layers nearest the answer move first and the layer that actually sees the dots waits. This is the vanishing gradient." : travelRatio > 10 ? "The gap is there but the first layer is moving." : "Every layer is moving by about the same amount, so the whole network learns at once."}${act === "relu" ? " The cut-off unit's slope is exactly one wherever it is on, so nothing is lost passing through it." : ""}${init === "he" || init === "xavier" ? " The start was sized so the signal keeps its size through each layer, which is what the rule was made for." : ""}`}
+                ? L("Before any step, with {{hidden}} hidden layers: the blame reaching the first layer is {{ratio}} times smaller than the blame at the last. {{next}}", {
+                    hidden: layers - 1,
+                    ratio: ratio.toExponential(1),
+                    next: ratio > 100 ? L("At that rate the first layer is as good as frozen. Press run and watch which layers move.") : ratio > 10 ? L("That is a real gap. Press run and watch which layers move.") : L("That is close to even: the blame arrives nearly undiminished. Press run."),
+                  })
+                : L("After {{steps}} steps, {{wrong}} of {{total}} wrong. Since the start the last layer's weights have moved {{last}} and the first layer's {{first}}, {{ratio}} times less. {{story}}{{relu}}{{start}}", {
+                    steps: view.steps,
+                    wrong,
+                    total: data.X.length,
+                    last: travel[layers - 1].toExponential(1),
+                    first: travel[0].toExponential(1),
+                    ratio: travelRatio.toExponential(1),
+                    story: stalled ? L("The blame is now tiny at every layer: the network has stalled. The layers nearest the answer flattened onto answering about one half for every dot, and the first layer, which barely moved, is the one that would have to change for anything else to happen. This is what the vanishing gradient looks like from outside: not slow progress but a network that stops.") : travelRatio > 100 ? L("The first layer is learning last, if at all: the layers nearest the answer move first and the layer that actually sees the dots waits. This is the vanishing gradient.") : travelRatio > 10 ? L("The gap is there but the first layer is moving.") : L("Every layer is moving by about the same amount, so the whole network learns at once."),
+                    relu: act === "relu" ? L(" The cut-off unit's slope is exactly one wherever it is on, so nothing is lost passing through it.") : "",
+                    start: init === "he" || init === "xavier" ? L(" The start was sized so the signal keeps its size through each layer, which is what the rule was made for.") : "",
+                  })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Blame at the last layer</dt>
+              <dt>{L("Blame at the last layer")}</dt>
               <dd className="text-right text-foreground/80">{last.toExponential(2)}</dd>
-              <dt>Blame at the first layer</dt>
+              <dt>{L("Blame at the first layer")}</dt>
               <dd className="text-right text-foreground/80">{first.toExponential(2)}</dd>
-              <dt>Last over first</dt>
+              <dt>{L("Last over first")}</dt>
               <dd className="text-right text-foreground/80">{ratio.toExponential(2)}</dd>
-              <dt>How far the last and the first layer have moved since the start</dt>
+              <dt>{L("How far the last and the first layer have moved since the start")}</dt>
               <dd className="text-right text-foreground/80">{travel[layers - 1].toExponential(2)}, {travel[0].toExponential(2)}</dd>
-              <dt>Layers of weights</dt>
+              <dt>{L("Layers of weights")}</dt>
               <dd className="text-right text-foreground/80">{layers}</dd>
-              <dt>Wrong of {data.X.length}</dt>
+              <dt>{L("Wrong of {{total}}", { total: data.X.length })}</dt>
               <dd className="text-right text-foreground/80">{wrong}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              Try the same depth with the cut-below-zero squash and He's start, and read the
-              bars again. Skip connections, the other standard fix, give the blame a wire that
-              bypasses the squashes altogether; they are not on this page.
+              {L("Try the same depth with the cut-below-zero squash and He's start, and read the bars again. Skip connections, the other standard fix, give the blame a wire that bypasses the squashes altogether; they are not on this page.")}
             </Text>
           </div>
         }

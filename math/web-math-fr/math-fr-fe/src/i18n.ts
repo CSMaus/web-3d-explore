@@ -1,6 +1,9 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import en from "@/locales/en/common.json";
+import fr from "@/locales/fr/common.json";
+import ko from "@/locales/ko/common.json";
+import ru from "@/locales/ru/common.json";
 import { LANGUAGES, LANGUAGE_KEY } from "@/lib/site";
 
 /**
@@ -8,7 +11,7 @@ import { LANGUAGES, LANGUAGE_KEY } from "@/lib/site";
  * it, so a second language is a second json file: copy src/locales/en, translate,
  * import it here, and add the language to LANGUAGES in lib/site.ts.
  */
-const resources = { en: { common: en } } as const;
+const resources = { en: { common: en }, ru: { common: ru }, ko: { common: ko }, fr: { common: fr } } as const;
 
 function remembered(): string | undefined {
   try {

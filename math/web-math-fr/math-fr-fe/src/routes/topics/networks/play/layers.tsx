@@ -10,6 +10,7 @@ import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
+import { L } from "@/lib/lang";
 import { FAINT, INK, MUTED, ONE, SKY, TWO, boxOf, classColour, drawNet, layout, plate, shadePlane, ticks } from "@/lib/draw";
 import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
@@ -21,11 +22,11 @@ export const Route = createFileRoute("/topics/networks/play/layers")({
   component: LayersPage,
 });
 
-const KINDS: { id: SetKind; label: string }[] = (["xor", "rings", "spiral", "split"] as SetKind[]).map((id) => ({ id, label: SETS[id].label }));
+const KINDS: { id: SetKind; label: string }[] = (["xor", "rings", "spiral", "split"] as SetKind[]).map((id) => ({ id, label: L(SETS[id].label) }));
 const SQUASHES: { id: Act; label: string }[] = [
-  { id: "tanh", label: "Squash to -1..1" },
-  { id: "sigmoid", label: "Squash to 0..1" },
-  { id: "relu", label: "Cut below zero" },
+  { id: "tanh", label: L("Squash to -1..1") },
+  { id: "sigmoid", label: L("Squash to 0..1") },
+  { id: "relu", label: L("Cut below zero") },
 ];
 const MOST = 6000;
 
@@ -95,20 +96,18 @@ function LayersPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "Many units, one answer"}
-        job="The dots one line cannot separate. Put several units side by side, each drawing its own line, and one more unit after them that weighs their answers. That is a network. The job is the same as before: every dot on its own colour. Watch what each unit alone sees, and what the last one makes of it."
+        title={system?.name ?? L("Many units, one answer")}
+        job={L("The dots one line cannot separate. Put several units side by side, each drawing its own line, and one more unit after them that weighs their answers. That is a network. The job is the same as before: every dot on its own colour. Watch what each unit alone sees, and what the last one makes of it.")}
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); restart(); }} />
-            <Text kind="note" as="p">{SETS[kind].note}</Text>
+            <Text kind="note" as="p">{L(SETS[kind].note)}</Text>
             <Choices options={SQUASHES} value={act} onPick={(id) => { setAct(id); restart(hidden, id); }} />
-            <Slider label="Units in the middle" min={1} max={8} step={1} value={hidden} format={(v) => String(Math.round(v))} onChange={(v) => { setHidden(Math.round(v)); restart(Math.round(v)); }} />
-            <Slider label="Step size" min={0.02} max={2} step={0.02} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
-            <Slider label="Starting numbers" min={1} max={20} step={1} value={seed} format={(v) => `set ${Math.round(v)}`} onChange={(v) => { setSeed(Math.round(v)); restart(hidden, act, Math.round(v)); }} />
+            <Slider label={L("Units in the middle")} min={1} max={8} step={1} value={hidden} format={(v) => String(Math.round(v))} onChange={(v) => { setHidden(Math.round(v)); restart(Math.round(v)); }} />
+            <Slider label={L("Step size")} min={0.02} max={2} step={0.02} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
+            <Slider label={L("Starting numbers")} min={1} max={20} step={1} value={seed} format={(v) => L("set {{n}}", { n: Math.round(v) })} onChange={(v) => { setSeed(Math.round(v)); restart(hidden, act, Math.round(v)); }} />
             <Text kind="note" as="p">
-              The network starts from small random numbers. One unit in the middle is the last
-              page again: a single line. Try one, then three, then eight. Click on the plane to
-              send a point through the network and see every unit's answer to it.
+              {L("The network starts from small random numbers. One unit in the middle is the last page again: a single line. Try one, then three, then eight. Click on the plane to send a point through the network and see every unit's answer to it.")}
             </Text>
           </div>
         }
@@ -116,7 +115,7 @@ function LayersPage() {
           <RunBar
             running={runner.running}
             count={view.steps}
-            what="steps"
+            what={L("steps")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 100, max: 12000, step: 100 }}
@@ -153,7 +152,7 @@ function LayersPage() {
 
                   }}
                 />
-              </div><Caption>The network's answer everywhere.  Ring: a dot it gets wrong</Caption></div>
+              </div><Caption>{L("The network's answer everywhere.  Ring: a dot it gets wrong")}</Caption></div>
               <div><div data-slot="plot" className="h-[340px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
@@ -164,7 +163,7 @@ function LayersPage() {
                     drawNet(pen.ctx, net, l, {
                       values: probeValues ?? undefined,
                       tint: probeValues ? probeValues.map((layer, L) => layer.map((v) => (L === 0 ? 0.5 : L === net.W.length ? v : (ACTS[net.act].f(0) === 0 ? (v + 1) / 2 : v)))) : undefined,
-                      labels: ["in", "middle", "answer"],
+                      labels: [L("in"), L("middle"), L("answer")],
                       radius: 14,
                     });
                     pen.ctx.fillStyle = MUTED;
@@ -172,7 +171,7 @@ function LayersPage() {
                     pen.ctx.font = "11px ui-monospace, SFMono-Regular, Menlo, monospace";
                   }}
                 />
-              </div><Caption>{probe ? "Each circle: that unit's answer to the ringed point" : "Click the plane to send a point through"}</Caption></div>
+              </div><Caption>{probe ? L("Each circle: that unit's answer to the ringed point") : L("Click the plane to send a point through")}</Caption></div>
             </div>
             <div data-slot="plot" className="h-[130px] overflow-hidden">
               <Plot
@@ -201,7 +200,7 @@ function LayersPage() {
                     pen.ctx.fillStyle = MUTED;
                     pen.ctx.font = "10px ui-monospace, SFMono-Regular, Menlo, monospace";
                     pen.ctx.textAlign = "left";
-                    pen.ctx.fillText(`${u + 1}: weighs ${net.W[1][0][u].toFixed(2)}`, x0, 12);
+                    pen.ctx.fillText(L("{{n}}: weighs {{w}}", { n: u + 1, w: net.W[1][0][u].toFixed(2) }), x0, 12);
                   }
                 }}
               />
@@ -215,7 +214,7 @@ function LayersPage() {
                   ticks(pen);
                   pen.axes(FAINT);
                   pen.line(view.history, ONE, 1.8);
-                  plate(pen, "How wrong, step by step", histBox.x0 + 8, histBox.y1 - (histBox.y1 - histBox.y0) * 0.15, MUTED);
+                  plate(pen, L("How wrong, step by step"), histBox.x0 + 8, histBox.y1 - (histBox.y1 - histBox.y0) * 0.15, MUTED);
                 }}
               />
             </div>
@@ -225,38 +224,45 @@ function LayersPage() {
           <div className="space-y-2">
             <Verdict good={wrong === 0 ? true : stuck ? false : undefined}>
               {view.steps === 0
-                ? `Before any training the network gets ${wrong} of ${data.X.length} dots wrong. The small tiles are the ${hidden} middle unit${hidden > 1 ? "s" : ""}, each a line of its own. Press run.`
+                ? L("Before any training the network gets {{wrong}} of {{total}} dots wrong. {{tiles}} Press run.", {
+                    wrong,
+                    total: data.X.length,
+                    tiles: hidden > 1 ? L("The small tiles are the {{n}} middle units, each a line of its own.", { n: hidden }) : L("The small tiles are the {{n}} middle unit, each a line of its own.", { n: hidden }),
+                  })
                 : wrong === 0
-                  ? `After ${view.steps} steps every one of the ${data.X.length} dots is on its own colour. The boundary is no longer a line: it is built out of ${hidden} lines, each drawn by one middle unit, weighed together by the last one.`
+                  ? L("After {{steps}} steps every one of the {{total}} dots is on its own colour. The boundary is no longer a line: it is built out of {{hidden}} lines, each drawn by one middle unit, weighed together by the last one.", { steps: view.steps, total: data.X.length, hidden })
                   : stuck
                     ? hidden === 1
-                      ? `After ${view.steps} steps it still has ${wrong} wrong and has stopped improving. One middle unit is one line, and the last unit can only turn a single line's answer up or down. It needs more lines.`
-                      : `After ${view.steps} steps it still has ${wrong} wrong and has stopped improving. It has settled in a dip that is not the bottom: with ${hidden} units it is possible to be stuck. Try a different set of starting numbers, or more units.`
-                    : `After ${view.steps} steps it has ${wrong} of ${data.X.length} wrong. How wrong: ${total.toFixed(4)}, ${view.history.length > 10 && total < view.history[view.history.length - 10][1] ? "falling" : "not falling right now"}.`}
+                      ? L("After {{steps}} steps it still has {{wrong}} wrong and has stopped improving. One middle unit is one line, and the last unit can only turn a single line's answer up or down. It needs more lines.", { steps: view.steps, wrong })
+                      : L("After {{steps}} steps it still has {{wrong}} wrong and has stopped improving. It has settled in a dip that is not the bottom: with {{hidden}} units it is possible to be stuck. Try a different set of starting numbers, or more units.", { steps: view.steps, wrong, hidden })
+                    : L("After {{steps}} steps it has {{wrong}} of {{total}} wrong. How wrong: {{loss}}, {{trend}}.", {
+                        steps: view.steps,
+                        wrong,
+                        total: data.X.length,
+                        loss: total.toFixed(4),
+                        trend: view.history.length > 10 && total < view.history[view.history.length - 10][1] ? L("falling") : L("not falling right now"),
+                      })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Units: two in, {hidden} in the middle, one out</dt>
-              <dd className="text-right text-foreground/80">{count.total} numbers to learn</dd>
-              <dt>Of which weights</dt>
+              <dt>{L("Units: two in, {{hidden}} in the middle, one out", { hidden })}</dt>
+              <dd className="text-right text-foreground/80">{L("{{n}} numbers to learn", { n: count.total })}</dd>
+              <dt>{L("Of which weights")}</dt>
               <dd className="text-right text-foreground/80">{count.weights}</dd>
-              <dt>And biases</dt>
+              <dt>{L("And biases")}</dt>
               <dd className="text-right text-foreground/80">{count.biases}</dd>
-              <dt>How wrong (average squared miss)</dt>
+              <dt>{L("How wrong (average squared miss)")}</dt>
               <dd className="text-right text-foreground/80">{total.toFixed(5)}</dd>
               {probeValues ? (
                 <>
-                  <dt>The ringed point, through the middle</dt>
+                  <dt>{L("The ringed point, through the middle")}</dt>
                   <dd className="text-right text-foreground/80">{probeValues[1].map((v) => v.toFixed(2)).join(", ")}</dd>
-                  <dt>And out</dt>
+                  <dt>{L("And out")}</dt>
                   <dd className="text-right text-foreground/80">{probeValues[2][0].toFixed(3)}</dd>
                 </>
               ) : null}
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              Each step is the hill page's ball, rolling on {count.total} numbers at once: for
-              every number, how wrong changes when that number moves a hair, and a step the other
-              way. The next page is about how those {count.total} slopes are found without
-              nudging each number by hand.
+              {L("Each step is the hill page's ball, rolling on {{n}} numbers at once: for every number, how wrong changes when that number moves a hair, and a step the other way. The next page is about how those {{n}} slopes are found without nudging each number by hand.", { n: count.total })}
             </Text>
           </div>
         }

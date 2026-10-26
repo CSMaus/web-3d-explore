@@ -13,6 +13,7 @@ import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { SETS, dataset, perceptron, type SetKind } from "@/systems/learn";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/networks/play/line")({
   loader: () => api.system(TOPIC, "line"),
@@ -93,8 +94,8 @@ function LinePage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "Draw the line by hand"}
-        job="Dots of two colours. The job is to put one straight line between them so every dot is on the side of its own colour. The line is placed by hand first; then a machine tries, one correction at a time."
+        title={system?.name ?? L("Draw the line by hand")}
+        job={L("Dots of two colours. The job is to put one straight line between them so every dot is on the side of its own colour. The line is placed by hand first; then a machine tries, one correction at a time.")}
         input={
           <div className="space-y-3">
             <div className="flex flex-wrap gap-1.5">
@@ -109,18 +110,16 @@ function LinePage() {
                   }}
                   aria-pressed={kind === id}
                 >
-                  {SETS[id].label}
+                  {L(SETS[id].label)}
                 </Button>
               ))}
             </div>
-            <Text kind="note" as="p">{SETS[kind].note}</Text>
+            <Text kind="note" as="p">{L(SETS[kind].note)}</Text>
             {kind !== "xor" ? (
-              <Slider label="Another sample" min={1} max={40} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => { setSeed(Math.round(v)); runner.reset(); setShown(0); }} />
+              <Slider label={L("Another sample")} min={1} max={40} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => { setSeed(Math.round(v)); runner.reset(); setShown(0); }} />
             ) : null}
             <Text kind="note" as="p">
-              The white line is the one to place, and it starts in the wrong place. Drag either of its
-              two ends until no dot is on the wrong side. The count under the picture says how many
-              still are.
+              {L("The white line is the one to place, and it starts in the wrong place. Drag either of its two ends until no dot is on the wrong side. The count under the picture says how many still are.")}
             </Text>
           </div>
         }
@@ -128,7 +127,7 @@ function LinePage() {
           <RunBar
             running={runner.running}
             count={taken}
-            what="corrections"
+            what={L("corrections")}
             limit={total}
             onToggle={() => {
               if (!runner.running && finished) {
@@ -200,38 +199,36 @@ function LinePage() {
 
               }}
             />
-          </div><Caption>This dot was wrong, so the line turned towards it White: the hand-drawn line, drag its ends. {machine ? "Blue: the machine's line, ringed dots are its mistakes" : "Blue: the machine's line, once run is pressed"}</Caption></section>
+          </div><Caption>{L("This dot was wrong, so the line turned towards it White: the hand-drawn line, drag its ends.")} {machine ? L("Blue: the machine's line, ringed dots are its mistakes") : L("Blue: the machine's line, once run is pressed")}</Caption></section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={yoursWrong === 0}>
-              The hand-drawn line puts {yoursWrong} of {data.X.length} dots on the wrong side
-              {yoursWrong === 0 ? ". That is the job done." : "."}
+              {yoursWrong === 0
+                ? L("The hand-drawn line puts {{wrong}} of {{all}} dots on the wrong side. That is the job done.", { wrong: yoursWrong, all: data.X.length })
+                : L("The hand-drawn line puts {{wrong}} of {{all}} dots on the wrong side.", { wrong: yoursWrong, all: data.X.length })}
             </Verdict>
             <Verdict good={machineWrong === null ? undefined : machineWrong === 0}>
               {machine === null
-                ? "The machine has not started. Press run."
+                ? L("The machine has not started. Press run.")
                 : machineWrong === 0
-                  ? `The machine's line has none wrong after ${taken} corrections. It stopped because there was nothing left to correct.`
+                  ? L("The machine's line has none wrong after {{taken}} corrections. It stopped because there was nothing left to correct.", { taken })
                   : finished
-                    ? `After ${total} corrections the machine still has ${machineWrong} wrong, and it will never do better: no straight line can separate these dots, so there is always one to correct and the rule never stops.`
-                    : `After ${taken} corrections the machine has ${machineWrong} wrong.`}
+                    ? L("After {{total}} corrections the machine still has {{wrong}} wrong, and it will never do better: no straight line can separate these dots, so there is always one to correct and the rule never stops.", { total, wrong: String(machineWrong) })
+                    : L("After {{taken}} corrections the machine has {{wrong}} wrong.", { taken, wrong: String(machineWrong) })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 pt-1">
-              <dt>Dots</dt>
+              <dt>{L("Dots")}</dt>
               <dd className="text-right text-foreground/80">{data.X.length}</dd>
-              <dt>Corrections the machine made</dt>
-              <dd className="text-right text-foreground/80">{taken} of {total}</dd>
-              <dt>Did it stop by itself</dt>
-              <dd className="text-right text-foreground/80">{run.converged ? `Yes, after ${run.updates}` : "No, it was stopped"}</dd>
-              <dt>One correction is</dt>
-              <dd className="text-right text-foreground/80">One wrong dot, and the line nudged towards it</dd>
+              <dt>{L("Corrections the machine made")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{taken}} of {{total}}", { taken, total })}</dd>
+              <dt>{L("Did it stop by itself")}</dt>
+              <dd className="text-right text-foreground/80">{run.converged ? L("Yes, after {{n}}", { n: run.updates }) : L("No, it was stopped")}</dd>
+              <dt>{L("One correction is")}</dt>
+              <dd className="text-right text-foreground/80">{L("One wrong dot, and the line nudged towards it")}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              The machine is a perceptron, from 1958. It never sees the whole picture: it looks at
-              one dot, and if that dot is on the wrong side it turns the line a little towards it.
-              On two clouds that is enough. On exclusive or it is not, and nothing about the rule
-              can make it enough. The next pages are about what can.
+              {L("The machine is a perceptron, from 1958. It never sees the whole picture: it looks at one dot, and if that dot is on the wrong side it turns the line a little towards it. On two clouds that is enough. On exclusive or it is not, and nothing about the rule can make it enough. The next pages are about what can.")}
             </Text>
           </div>
         }

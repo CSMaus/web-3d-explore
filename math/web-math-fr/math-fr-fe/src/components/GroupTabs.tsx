@@ -1,5 +1,6 @@
 import type { LinkProps } from "@tanstack/react-router";
 import { TabLink } from "@/components/TabLink";
+import { L } from "@/lib/lang";
 
 type Item = { readonly to: LinkProps["to"]; readonly label: string; readonly group: string };
 
@@ -10,10 +11,10 @@ type Item = { readonly to: LinkProps["to"]; readonly label: string; readonly gro
  */
 export function GroupTabs({ all, groups, items }: { all: LinkProps["to"]; groups: readonly string[]; items: readonly Item[] }) {
   return (
-    <nav className="space-y-1.5" aria-label="Pages of the topic">
+    <nav className="space-y-1.5" aria-label={L("Pages of the topic")}>
       <div className="flex flex-wrap items-center gap-1.5">
         <TabLink to={all} activeOptions={{ exact: true }}>
-          All
+          {L("All")}
         </TabLink>
       </div>
       {groups.map((group) => (

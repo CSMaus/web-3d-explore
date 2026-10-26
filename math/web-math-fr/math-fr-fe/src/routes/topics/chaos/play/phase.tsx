@@ -18,6 +18,7 @@ import { TOPIC } from "@/lib/chaos";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
 import { divergence, equilibria, integrate, oscillator, predatorPrey, vanDerPol, type Field } from "@/systems/flow";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/chaos/play/phase")({
   loader: () => api.system(TOPIC, "phase"),
@@ -26,30 +27,41 @@ export const Route = createFileRoute("/topics/chaos/play/phase")({
 
 const KIND = {
   oscillator: {
-    label: "A swing",
+    label: L("A swing"),
     make: (p: number): Field => oscillator(p, 1),
-    knob: { label: "Damping", min: -0.6, max: 1.6, step: 0.01, at: 0 },
+    knob: { label: L("Damping"), min: -0.6, max: 1.6, step: 0.01, at: 0 },
     box: { x0: -2.4, x1: 2.4, y0: -2.4, y1: 2.4 } as Box,
-    note: "Position across, speed up. With no friction the loops close and the swing goes on for ever; any friction at all and every start spirals in to rest. Negative friction is a swing being pushed.",
+    note: L("Position across, speed up. With no friction the loops close and the swing goes on for ever; any friction at all and every start spirals in to rest. Negative friction is a swing being pushed."),
   },
   vanderpol: {
-    label: "Van der Pol",
+    label: L("Van der Pol"),
     make: (p: number): Field => vanDerPol(p),
     knob: { label: "Mu", min: 0.1, max: 4, step: 0.01, at: 1 },
     box: { x0: -4, x1: 4, y0: -6, y1: 6 } as Box,
-    note: "A swing pushed when small and braked when large. One rest point, unstable, and one closed loop around it that every start finds from inside or out.",
+    note: L("A swing pushed when small and braked when large. One rest point, unstable, and one closed loop around it that every start finds from inside or out."),
   },
   predator: {
-    label: "Predator and prey",
+    label: L("Predator and prey"),
     make: (p: number): Field => predatorPrey(1, 0.5, p, 0.25),
-    knob: { label: "Predator death rate", min: 0.2, max: 1.6, step: 0.01, at: 0.75 },
+    knob: { label: L("Predator death rate"), min: 0.2, max: 1.6, step: 0.01, at: 0.75 },
     box: { x0: -0.5, x1: 8, y0: -0.5, y1: 5 } as Box,
-    note: "Prey across, predators up. The populations chase each other round a loop and never settle, and which loop depends only on where they started.",
+    note: L("Prey across, predators up. The populations chase each other round a loop and never settle, and which loop depends only on where they started."),
   },
 } as const;
 type KindId = keyof typeof KIND;
 const KINDS = (Object.keys(KIND) as KindId[]).map((id) => ({ id, label: KIND[id].label }));
 const DT = 0.004;
+/** the names of the kinds of rest point, as the page shows them */
+const KIND_NAME: Record<string, string> = {
+  "stable node": L("stable node"),
+  "unstable node": L("unstable node"),
+  saddle: L("saddle"),
+  "stable spiral": L("stable spiral"),
+  "unstable spiral": L("unstable spiral"),
+  centre: L("centre"),
+  "not hyperbolic": L("not hyperbolic"),
+};
+const kindName = (kind: string) => KIND_NAME[kind] ?? kind;
 const PER = 5;
 
 function PhasePage() {
@@ -109,18 +121,18 @@ function PhasePage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "Two unknowns, and the phase plane"}
-        job="Two quantities that change each other, drawn as one point: the whole state at one instant is one dot, and the clock is not an axis. The strokes are the rule. The job is to release a few states, let them all run, and see where they go: to rest, round a closed loop, or onto one loop from every side."
+        title={system?.name ?? L("Two unknowns, and the phase plane")}
+        job={L("Two quantities that change each other, drawn as one point: the whole state at one instant is one dot, and the clock is not an axis. The strokes are the rule. The job is to release a few states, let them all run, and see where they go: to rest, round a closed loop, or onto one loop from every side.")}
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); setKnob(KIND[id].knob.at); setSeeds([[(KIND[id].box.x1 * 2) / 3, 0], [KIND[id].box.x1 / 5, KIND[id].box.y1 / 4]]); reset(); }} />
             <Text kind="note" as="p">{spec.note}</Text>
             <Slider label={spec.knob.label} min={spec.knob.min} max={spec.knob.max} step={spec.knob.step} value={knob} format={(v) => v.toFixed(2)} onChange={(v) => { setKnob(v); reset(); }} />
-            <Slider label="How long" min={4} max={80} step={1} value={span} format={(v) => `${Math.round(v)} time units`} onChange={(v) => { setSpan(Math.round(v)); reset(); }} />
+            <Slider label={L("How long")} min={4} max={80} step={1} value={span} format={(v) => L("{{n}} time units", { n: Math.round(v) })} onChange={(v) => { setSpan(Math.round(v)); reset(); }} />
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" type="button" onClick={() => { setSeeds([]); reset(); }}>Clear the states</Button>
+              <Button variant="outline" size="sm" type="button" onClick={() => { setSeeds([]); reset(); }}>{L("Clear the states")}</Button>
             </div>
-            <Text kind="note" as="p">Click anywhere on the picture to release a state there. Up to twelve run at once.</Text>
+            <Text kind="note" as="p">{L("Click anywhere on the picture to release a state there. Up to twelve run at once.")}</Text>
             <PaletteBar />
           </div>
         }
@@ -128,7 +140,7 @@ function PhasePage() {
           <RunBar
             running={runner.running}
             count={Math.round(t * 10) / 10}
-            what="time units"
+            what={L("time units")}
             limit={span}
             onToggle={() => {
               if (!runner.running && upTo >= total) reset();
@@ -142,23 +154,21 @@ function PhasePage() {
         }
         more={
           <section data-slot="panel">
-            <Label>REST POINTS</Label>
+            <Label>{L("REST POINTS")}</Label>
             {rest.length === 0 ? (
-              <Text kind="note" as="p" className="mt-2">None in view.</Text>
+              <Text kind="note" as="p" className="mt-2">{L("None in view.")}</Text>
             ) : (
               <div className="mt-2 space-y-2">
                 {rest.map((r, i) => (
                   <div key={i} data-text="caption">
-                    <div style={{ color: KINDCOLOUR[r.kind] }}>{r.kind}</div>
-                    <div className="text-muted-foreground">At ({r.at[0].toFixed(3)}, {r.at[1].toFixed(3)}); Eigenvalues {r.eigen.map((e) => (e.im ? `${e.re.toFixed(3)} ${e.im > 0 ? "+" : "-"} ${Math.abs(e.im).toFixed(3)}i` : e.re.toFixed(3))).join(", ")}</div>
+                    <div style={{ color: KINDCOLOUR[r.kind] }}>{kindName(r.kind)}</div>
+                    <div className="text-muted-foreground">{L("At ({{x}}, {{y}}); Eigenvalues {{eigen}}", { x: r.at[0].toFixed(3), y: r.at[1].toFixed(3), eigen: r.eigen.map((e) => (e.im ? `${e.re.toFixed(3)} ${e.im > 0 ? "+" : "-"} ${Math.abs(e.im).toFixed(3)}i` : e.re.toFixed(3))).join(", ") })}</div>
                   </div>
                 ))}
               </div>
             )}
             <Text kind="note" as="p" className="mt-3">
-              Found by Newton on the rule itself, then classified from the two eigenvalues of the
-              Jacobian there. An eigenvalue on the imaginary axis is reported as such rather than
-              rounded into a neighbour, because that is the case the linear picture cannot decide.
+              {L("Found by Newton on the rule itself, then classified from the two eigenvalues of the Jacobian there. An eigenvalue on the imaginary axis is reported as such rather than rounded into a neighbour, because that is the case the linear picture cannot decide.")}
             </Text>
           </section>
         }
@@ -203,41 +213,40 @@ function PhasePage() {
                 }
               }}
             />
-          </div><Caption>Rings: where each state was released.  Dots: where it is now.  Ringed marks: the rest points</Caption></section>
+          </div><Caption>{L("Rings: where each state was released.  Dots: where it is now.  Ringed marks: the rest points")}</Caption></section>
         }
         result={
           <div className="space-y-2">
             <Verdict>
               {seeds.length === 0
-                ? "No state released. Click on the picture to put one down, then press run."
+                ? L("No state released. Click on the picture to put one down, then press run.")
                 : upTo === 0
-                  ? `${seeds.length} state${seeds.length === 1 ? "" : "s"} waiting. The stroke under each says which way it will move first. Press run and all of them move together.`
+                  ? seeds.length === 1
+                    ? L("{{n}} state waiting. The stroke under each says which way it will move first. Press run and all of them move together.", { n: seeds.length })
+                    : L("{{n}} states waiting. The stroke under each says which way it will move first. Press run and all of them move together.", { n: seeds.length })
                   : closing && stableRest
-                    ? `${t.toFixed(1)} time units in, every state has spiralled in to the ${stableRest.kind} at (${stableRest.at[0].toFixed(2)}, ${stableRest.at[1].toFixed(2)}) and stopped. Wherever they started, they end in the same place: that point is an attractor.`
+                    ? L("{{t}} time units in, every state has spiralled in to the {{kind}} at ({{x}}, {{y}}) and stopped. Wherever they started, they end in the same place: that point is an attractor.", { t: t.toFixed(1), kind: kindName(stableRest.kind), x: stableRest.at[0].toFixed(2), y: stableRest.at[1].toFixed(2) })
                     : kind === "oscillator" && Math.abs(knob) < 1e-9
-                      ? `${t.toFixed(1)} time units in, each state is going round its own closed loop and will keep to it for ever. Nothing pulls them in and nothing pushes them out: with no friction the energy is kept, and no loop is preferred to any other.`
+                      ? L("{{t}} time units in, each state is going round its own closed loop and will keep to it for ever. Nothing pulls them in and nothing pushes them out: with no friction the energy is kept, and no loop is preferred to any other.", { t: t.toFixed(1) })
                       : kind === "vanderpol"
-                        ? `${t.toFixed(1)} time units in. ${t > span * 0.4 ? "The states released inside and outside are now on the same loop: one closed orbit that every start finds. That loop is an attractor, and it is not a point." : "The inner states are being pushed outward and the outer ones pulled inward, towards one loop between them."}`
+                        ? `${L("{{t}} time units in.", { t: t.toFixed(1) })} ${t > span * 0.4 ? L("The states released inside and outside are now on the same loop: one closed orbit that every start finds. That loop is an attractor, and it is not a point.") : L("The inner states are being pushed outward and the outer ones pulled inward, towards one loop between them.")}`
                         : kind === "predator"
-                          ? `${t.toFixed(1)} time units in. The populations chase each other: more prey, then more predators, then fewer prey, then fewer predators, round a loop set by where they started. ${rest.some((r) => r.kind === "centre") ? "The rest point in the middle is a centre: neither pulling nor pushing." : ""}`
+                          ? `${L("{{t}} time units in.", { t: t.toFixed(1) })} ${L("The populations chase each other: more prey, then more predators, then fewer prey, then fewer predators, round a loop set by where they started.")} ${rest.some((r) => r.kind === "centre") ? L("The rest point in the middle is a centre: neither pulling nor pushing.") : ""}`
                           : spreading
-                            ? `${t.toFixed(1)} time units in, the states are spiralling outward and growing: the rest point pushes everything away. A pushed swing with nothing to stop it.`
-                            : `${t.toFixed(1)} time units in. ${stableRest ? `The states are spiralling in towards (${stableRest.at[0].toFixed(2)}, ${stableRest.at[1].toFixed(2)}); the friction takes a little energy every loop.` : `The states follow the strokes; ${nearestRest(nowPoints[0])?.kind ?? "No rest point"} is the nearest rest point to the first one.`}`}
+                            ? L("{{t}} time units in, the states are spiralling outward and growing: the rest point pushes everything away. A pushed swing with nothing to stop it.", { t: t.toFixed(1) })
+                            : `${L("{{t}} time units in.", { t: t.toFixed(1) })} ${stableRest ? L("The states are spiralling in towards ({{x}}, {{y}}); the friction takes a little energy every loop.", { x: stableRest.at[0].toFixed(2), y: stableRest.at[1].toFixed(2) }) : L("The states follow the strokes; {{kind}} is the nearest rest point to the first one.", { kind: nearestRest(nowPoints[0]) ? kindName(nearestRest(nowPoints[0])!.kind) : L("No rest point") })}`}
             </Verdict>
             <Readout
               rows={[
-                ["States released", String(seeds.length)],
-                ["Rest points in view, and what they are", rest.map((r) => r.kind).join(", ") || "none"],
-                ["Divergence at the origin", div.toFixed(4)],
-                ["So a patch of states", div < -1e-9 ? "Shrinks: an attractor is possible" : div > 1e-9 ? "grows" : "Keeps its area: no attractor exists"],
-                ["Time run", `${t.toFixed(2)} of ${span}, at a step of ${DT}`],
+                [L("States released"), String(seeds.length)],
+                [L("Rest points in view, and what they are"), rest.map((r) => kindName(r.kind)).join(", ") || L("none")],
+                [L("Divergence at the origin"), div.toFixed(4)],
+                [L("So a patch of states"), div < -1e-9 ? L("Shrinks: an attractor is possible") : div > 1e-9 ? L("grows") : L("Keeps its area: no attractor exists")],
+                [L("Time run"), L("{{t}} of {{span}}, at a step of {{dt}}", { t: t.toFixed(2), span, dt: DT })],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              The divergence is the calculus page's rate applied to area: negative means a patch of
-              starting states shrinks as it flows, which is what lets many starts end on one thing.
-              In two dimensions that thing is a point or a loop. Three dimensions allow a third kind,
-              which the next two pages are.
+              {L("The divergence is the calculus page's rate applied to area: negative means a patch of starting states shrinks as it flows, which is what lets many starts end on one thing. In two dimensions that thing is a point or a loop. Three dimensions allow a third kind, which the next two pages are.")}
             </Text>
           </div>
         }

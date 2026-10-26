@@ -14,6 +14,7 @@ import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { logit, slowdown, stepsTo } from "@/systems/depth";
 import { ACTS } from "@/systems/net";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/networks/play/slow")({
   loader: () => api.system(TOPIC, "slow"),
@@ -53,16 +54,14 @@ function SlowPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "Starting sure and wrong"}
-        job="One unit, one input of 1, and the right answer is 0. The unit starts by saying almost 1: very sure, and wrong. Two copies of it are trained by the same descent, and the only difference between them is how wrong is turned into a number. One uses the squared miss the earlier pages used. The other uses cross entropy. Watch how long each takes to admit its mistake."
+        title={system?.name ?? L("Starting sure and wrong")}
+        job={L("One unit, one input of 1, and the right answer is 0. The unit starts by saying almost 1: very sure, and wrong. Two copies of it are trained by the same descent, and the only difference between them is how wrong is turned into a number. One uses the squared miss the earlier pages used. The other uses cross entropy. Watch how long each takes to admit its mistake.")}
         input={
           <div className="space-y-3">
-            <Slider label="Starts at" min={0.6} max={0.995} step={0.005} value={start} format={(v) => v.toFixed(3)} onChange={(v) => { setStart(v); restart(); }} />
-            <Slider label="Step size" min={0.02} max={1} step={0.01} value={rate} format={(v) => v.toFixed(2)} onChange={(v) => { setRate(v); restart(); }} />
+            <Slider label={L("Starts at")} min={0.6} max={0.995} step={0.005} value={start} format={(v) => v.toFixed(3)} onChange={(v) => { setStart(v); restart(); }} />
+            <Slider label={L("Step size")} min={0.02} max={1} step={0.01} value={rate} format={(v) => v.toFixed(2)} onChange={(v) => { setRate(v); restart(); }} />
             <Text kind="note" as="p">
-              Starts at is the unit's first answer, when the right answer is 0. Push it towards 1
-              to make the start more sure and more wrong. The step size is the same for both
-              copies.
+              {L("Starts at is the unit's first answer, when the right answer is 0. Push it towards 1 to make the start more sure and more wrong. The step size is the same for both copies.")}
             </Text>
           </div>
         }
@@ -70,7 +69,7 @@ function SlowPage() {
           <RunBar
             running={runner.running}
             count={k}
-            what="steps"
+            what={L("steps")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 50, max: 2000, step: 50 }}
@@ -98,12 +97,12 @@ function SlowPage() {
                   pen.line(out.mse.map((a, i) => [i, a] as [number, number]), TWO, 2);
                   pen.line(out.ce.map((a, i) => [i, a] as [number, number]), ONE, 2);
                   const v = pen.box;
-                  plate(pen, "Rose: trained on the squared miss", v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.05, TWO);
-                  plate(pen, "Green: trained on cross entropy", v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.11, ONE);
-                  plate(pen, `Within ${NEAR} of the right answer`, v.x1 - (v.x1 - v.x0) * 0.03, NEAR + (v.y1 - v.y0) * 0.03, MUTED, "right");
+                  plate(pen, L("Rose: trained on the squared miss"), v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.05, TWO);
+                  plate(pen, L("Green: trained on cross entropy"), v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.11, ONE);
+                  plate(pen, L("Within {{near}} of the right answer", { near: NEAR }), v.x1 - (v.x1 - v.x0) * 0.03, NEAR + (v.y1 - v.y0) * 0.03, MUTED, "right");
                 }}
               />
-            </div><Caption>The unit's answer after every step, under each cost. The right answer is 0</Caption></div>
+            </div><Caption>{L("The unit's answer after every step, under each cost. The right answer is 0")}</Caption></div>
             <div><div data-slot="plot" className="h-[380px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -122,35 +121,40 @@ function SlowPage() {
                   tangent(zm, TWO);
                   tangent(zc, ONE);
                   const v = pen.box;
-                  plate(pen, `Slope here: ${slopeM.toFixed(4)}`, v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.05, TWO);
-                  plate(pen, `Slope here: ${slopeC.toFixed(4)}`, v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.11, ONE);
+                  plate(pen, L("Slope here: {{s}}", { s: slopeM.toFixed(4) }), v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.05, TWO);
+                  plate(pen, L("Slope here: {{s}}", { s: slopeC.toFixed(4) }), v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.11, ONE);
                 }}
               />
-            </div><Caption>The squash, with each copy's total marked on it and the slope drawn there</Caption></div>
+            </div><Caption>{L("The squash, with each copy's total marked on it and the slope drawn there")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={k > 0 && toC > 0 ? true : undefined}>
               {k === 0
-                ? `Both copies start by answering ${start.toFixed(3)} when the right answer is 0. Their total sits far out on the flat part of the squash, where its slope is ${slopeM.toFixed(4)}. Press run.`
-                : `After ${k} steps the copy trained on the squared miss answers ${am.toFixed(3)}${toM > 0 ? ` and took ${toM} steps to get within ${NEAR} of the right answer` : ` and is not yet within ${NEAR} of the right answer`}. The copy trained on cross entropy answers ${ac.toFixed(3)}${toC > 0 ? ` and took ${toC} steps` : " and is not there yet either"}. ${toM > 0 && toC > 0 ? `That is ${(toM / toC).toFixed(1)} times slower for the squared miss, from the same start with the same step size.` : ""} The squared miss moves the numbers by the miss times the slope of the squash, and out on the flat part that slope is nearly nothing, so the more sure and wrong the start, the slower it corrects. Under cross entropy the slope of the squash cancels out of the move: what is left is the miss alone, and the move is large exactly when the miss is large.`}
+                ? L("Both copies start by answering {{start}} when the right answer is 0. Their total sits far out on the flat part of the squash, where its slope is {{slope}}. Press run.", { start: start.toFixed(3), slope: slopeM.toFixed(4) })
+                : `${toM > 0
+                    ? L("After {{k}} steps the copy trained on the squared miss answers {{am}} and took {{n}} steps to get within {{near}} of the right answer.", { k, am: am.toFixed(3), n: toM, near: NEAR })
+                    : L("After {{k}} steps the copy trained on the squared miss answers {{am}} and is not yet within {{near}} of the right answer.", { k, am: am.toFixed(3), near: NEAR })} ${toC > 0
+                    ? L("The copy trained on cross entropy answers {{ac}} and took {{n}} steps.", { ac: ac.toFixed(3), n: toC })
+                    : L("The copy trained on cross entropy answers {{ac}} and is not there yet either.", { ac: ac.toFixed(3) })} ${toM > 0 && toC > 0
+                    ? L("That is {{x}} times slower for the squared miss, from the same start with the same step size.", { x: (toM / toC).toFixed(1) })
+                    : ""} ${L("The squared miss moves the numbers by the miss times the slope of the squash, and out on the flat part that slope is nearly nothing, so the more sure and wrong the start, the slower it corrects. Under cross entropy the slope of the squash cancels out of the move: what is left is the miss alone, and the move is large exactly when the miss is large.")}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Answer now, squared miss and cross entropy</dt>
+              <dt>{L("Answer now, squared miss and cross entropy")}</dt>
               <dd className="text-right text-foreground/80">{am.toFixed(4)}, {ac.toFixed(4)}</dd>
-              <dt>Move asked for this step, squared miss</dt>
+              <dt>{L("Move asked for this step, squared miss")}</dt>
               <dd className="text-right text-foreground/80">{(rate * out.mseSlope[k]).toFixed(5)}</dd>
-              <dt>Move asked for this step, cross entropy</dt>
+              <dt>{L("Move asked for this step, cross entropy")}</dt>
               <dd className="text-right text-foreground/80">{(rate * out.ceSlope[k]).toFixed(5)}</dd>
-              <dt>Slope of the squash at each total</dt>
+              <dt>{L("Slope of the squash at each total")}</dt>
               <dd className="text-right text-foreground/80">{slopeM.toFixed(4)}, {slopeC.toFixed(4)}</dd>
-              <dt>Steps to within {NEAR} of the right answer</dt>
-              <dd className="text-right text-foreground/80">{toM > 0 ? toM : "not yet"}, {toC > 0 ? toC : "not yet"}</dd>
+              <dt>{L("Steps to within {{near}} of the right answer", { near: NEAR })}</dt>
+              <dd className="text-right text-foreground/80">{toM > 0 ? toM : L("not yet")}, {toC > 0 ? toC : L("not yet")}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              This is why cross entropy is the usual cost for a yes-or-no answer. The squared miss
-              is not wrong; it is slow in exactly the case that matters most, the confident mistake.
+              {L("This is why cross entropy is the usual cost for a yes-or-no answer. The squared miss is not wrong; it is slow in exactly the case that matters most, the confident mistake.")}
             </Text>
           </div>
         }

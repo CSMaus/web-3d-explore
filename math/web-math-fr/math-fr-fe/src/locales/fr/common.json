@@ -1,0 +1,100 @@
+{
+  "nav": {
+    "learn": "Apprendre",
+    "topics": "Thèmes",
+    "play": "Expériences",
+    "about": "À propos",
+    "projects": "Projets",
+    "contact": "Contact",
+    "search": "Rechercher",
+    "language": "Langue",
+    "login": "Se connecter",
+    "donate": "Faire un don",
+    "kit": "Kit",
+    "skip": "Aller au contenu",
+    "site": "Site",
+    "light": "Clair",
+    "theme": "Thème",
+    "top": "Retour en haut",
+    "menu": "Menu",
+    "hideMenu": "Masquer le menu",
+    "showMenu": "Afficher le menu",
+    "closeMenu": "Fermer",
+    "dark": "Sombre",
+    "case": "Style"
+  },
+  "front": {
+    "eyebrow": "Les mathématiques de près",
+    "title1": "Voir l'idée,",
+    "title2": "comprendre pourquoi",
+    "lede": "De beaux concepts, explorés par des expériences interactives, des récits visuels et des notes qui ne gardent que l'essentiel.",
+    "start": "Commencer par les fractales",
+    "browse": "Tous les thèmes",
+    "tag1": "Sans prérequis",
+    "tag2": "À son rythme",
+    "tag3": "Libre d'accès",
+    "bulb": "Mandelbulb",
+    "bulbMeta": "en rotation, dessiné en direct",
+    "solid": "Plein",
+    "contour": "Contour lumineux",
+    "open": "Ouvrir la page",
+    "observation": "Observation 01 / Fractales",
+    "new": "Nouveau : les pages sur les réseaux du thème 3",
+    "scroll": "Faire défiler",
+    "topicsHeading": "Les thèmes",
+    "topicsLede": "Un sujet par thème, dans l'ordre de lecture. Chacun réunit une série de courtes vidéos avec le raisonnement à côté, des pages où tout se manipule à la main, et toutes les équations sur lesquelles il repose.",
+    "openTopic": "Ouvrir le thème",
+    "startHere": "Commencer ici",
+    "topic": "Thème",
+    "lines": {
+      "complex": "Multiplier par 𝑖 fait tourner le plan d'un quart de tour. Tout le reste en découle.",
+      "fractals": "Des formes dont la dimension tombe entre les nombres entiers, et la façon de la mesurer.",
+      "chaos": "Des règles exactes dont l'avenir reste pourtant imprévisible.",
+      "networks": "De la pente d'une courbe à un réseau qui apprend.",
+      "tokens": "Comment un texte devient des nombres, et des nombres le mot suivant."
+    }
+  },
+  "learn": {
+    "heading": "Apprendre",
+    "lede": "Les séries de tous les thèmes, dans l'ordre de lecture : de courtes vidéos, une par partie, avec le raisonnement à côté.",
+    "open": "Ouvrir la série"
+  },
+  "play": {
+    "heading": "Expériences",
+    "lede": "Toutes les pages du site qui bougent, par thème. Chacune a les mêmes trois parties : ce qui entre, l'exécution, ce qui en sort."
+  },
+  "about": {
+    "heading": "À propos",
+    "lede": "Qui réalise ce site, et dans quel but."
+  },
+  "projects": {
+    "heading": "Projets",
+    "lede": "Ce qui est en cours de construction, une page par projet.",
+    "open": "Ouvrir le projet",
+    "back": "Tous les projets"
+  },
+  "contact": {
+    "heading": "Contact",
+    "lede": "Pour prendre contact.",
+    "none": "Les moyens de contact sont en cours d'ajout."
+  },
+  "search": {
+    "heading": "Recherche",
+    "placeholder": "Rechercher dans tout le site",
+    "hint": "Pages, thèmes, séries et toutes les pages interactives. Échap pour fermer.",
+    "empty": "Rien sur le site ne correspond.",
+    "results": "{{count}} résultat",
+    "results_plural": "{{count}} résultats",
+    "close": "Fermer"
+  },
+  "state": {
+    "ready": "Prêt",
+    "writing": "En cours d'écriture",
+    "planned": "Prévu"
+  },
+  "consent": {
+    "text": "Ce site conserve un cookie pour garder une session ouverte, et enregistre l'adresse réseau de chaque requête avec la page demandée. Les adresses sont conservées pendant une durée limitée, puis supprimées. Les vidéos sont lues par un lecteur externe sur son domaine sans cookie, si bien que rien n'est enregistré avant le début de la lecture.",
+    "accept": "Accepter",
+    "decline": "Refuser"
+  }
+}

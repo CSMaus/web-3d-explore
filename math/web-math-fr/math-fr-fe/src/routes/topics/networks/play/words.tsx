@@ -13,16 +13,17 @@ import { FAINT, INK, MUTED, ONE } from "@/lib/draw";
 import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { HEADS, attend, sequence } from "@/systems/shapes";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/networks/play/words")({
   loader: () => api.system(TOPIC, "words"),
   component: WordsPage,
 });
 
-const HEAD_OPTIONS = Object.keys(HEADS).map((id) => ({ id, label: HEADS[id].label }));
+const HEAD_OPTIONS = Object.keys(HEADS).map((id) => ({ id, label: L(HEADS[id].label) }));
 const MASKS = [
-  { id: "back", label: "May only look back" },
-  { id: "both", label: "May look both ways" },
+  { id: "back", label: L("May only look back") },
+  { id: "both", label: L("May look both ways") },
 ];
 const DEFAULT = "the cat sat on the mat and the dog watched";
 
@@ -56,12 +57,12 @@ function WordsPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "The same job on words"}
-        job="A sentence, one word a position. For each word the job is to decide which other words to draw meaning from, and how much. Every word asks a question, every word offers an answer key, and the match between a question and a key, squashed so the matches add to one, is how much that word listens to that one. The questions and keys are made by weights; here they are wired by hand so what they do can be seen."
+        title={system?.name ?? L("The same job on words")}
+        job={L("A sentence, one word a position. For each word the job is to decide which other words to draw meaning from, and how much. Every word asks a question, every word offers an answer key, and the match between a question and a key, squashed so the matches add to one, is how much that word listens to that one. The questions and keys are made by weights; here they are wired by hand so what they do can be seen.")}
         input={
           <div className="space-y-3">
             <label className="block">
-              <span data-text="note">The sentence</span>
+              <span data-text="note">{L("The sentence")}</span>
               <Input
                 value={text}
                 onChange={(e) => {
@@ -72,11 +73,10 @@ function WordsPage() {
               />
             </label>
             <Choices options={HEAD_OPTIONS} value={head} onPick={(id) => { setHead(id); reset(); }} />
-            <Text kind="note" as="p">{HEADS[head].what}</Text>
+            <Text kind="note" as="p">{L(HEADS[head].what)}</Text>
             <Choices options={MASKS} value={mask} onPick={(id) => { setMask(id); reset(); }} />
             <Text kind="note" as="p">
-              A model that writes text one word at a time may only look back, because the words
-              ahead do not exist yet. One that reads a finished sentence may look both ways.
+              {L("A model that writes text one word at a time may only look back, because the words ahead do not exist yet. One that reads a finished sentence may look both ways.")}
             </Text>
           </div>
         }
@@ -84,7 +84,7 @@ function WordsPage() {
           <RunBar
             running={runner.running}
             count={at}
-            what="words decided"
+            what={L("words decided")}
             limit={n}
             onToggle={() => {
               if (!runner.running && at >= n) reset();
@@ -110,7 +110,7 @@ function WordsPage() {
                 ctx.textBaseline = "middle";
                 if (n === 0) {
                   ctx.fillStyle = MUTED;
-                  ctx.fillText("Type a sentence", W / 2, 60);
+                  ctx.fillText(L("Type a sentence"), W / 2, 60);
                   return;
                 }
                 // the words in a row, arcs above them
@@ -172,35 +172,34 @@ function WordsPage() {
                 ctx.textBaseline = "alphabetic";
               }}
             />
-          </div><Caption>Green: how much the current word listens to each other word.  Sky: the words already decided The same, as a table: row listens to column</Caption></section>
+          </div><Caption>{L("Green: how much the current word listens to each other word.  Sky: the words already decided The same, as a table: row listens to column")}</Caption></section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={row && head !== "untrained" ? evenness > 0.5 : undefined}>
               {n === 0
-                ? "Type a sentence above."
+                ? L("Type a sentence above.")
                 : at === 0
-                  ? `${n} words. Press run and each word in turn decides which words to listen to.`
+                  ? L("{{n}} words. Press run and each word in turn decides which words to listen to.", { n })
                   : head === "untrained"
-                    ? `Word ${at}, "${tokens[at - 1]}", listens ${(evenness * 100).toFixed(0)} % to "${tokens[top]}" and about as much to everything else it may see. Before training the questions and keys are random, so the pattern says nothing. Training moves them until the pattern is useful; the other three heads are what useful ones look like.`
-                    : `Word ${at}, "${tokens[at - 1]}", listens ${(evenness * 100).toFixed(0)} % to "${tokens[top]}" at position ${top + 1}${head === "previous" && top === at - 2 ? ": The word just before it, as this head was wired to do" : head === "first" && top === 0 ? ": The first word, as this head was wired to do" : head === "same" && tokens[top] === tokens[at - 1] && top !== at - 1 ? ": An earlier copy of the same word" : head === "same" && top === at - 1 ? ": Itself, since there is no earlier copy of it" : ""}.${mask === "back" && at === 1 ? " The first word has nothing behind it, so it can only listen to itself." : ""}`}
+                    ? L("Word {{at}}, \"{{word}}\", listens {{pct}} % to \"{{top}}\" and about as much to everything else it may see. Before training the questions and keys are random, so the pattern says nothing. Training moves them until the pattern is useful; the other three heads are what useful ones look like.", { at, word: tokens[at - 1], pct: (evenness * 100).toFixed(0), top: tokens[top] })
+                    : listened(at, tokens[at - 1], (evenness * 100).toFixed(0), tokens[top], top + 1,
+                        head === "previous" && top === at - 2 ? L("The word just before it, as this head was wired to do") : head === "first" && top === 0 ? L("The first word, as this head was wired to do") : head === "same" && tokens[top] === tokens[at - 1] && top !== at - 1 ? L("An earlier copy of the same word") : head === "same" && top === at - 1 ? L("Itself, since there is no earlier copy of it") : "") +
+                      (mask === "back" && at === 1 ? " " + L("The first word has nothing behind it, so it can only listen to itself.") : "")}
             </Verdict>
             {row ? (
               <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
                 {row.map((v, j) => (v > 0.005 ? (
-                  <FragmentRow key={j} label={`"${tokens[j]}", position ${j + 1}:`} value={`${(v * 100).toFixed(1)} %`} />
+                  <FragmentRow key={j} label={L("\"{{word}}\", position {{pos}}:", { word: tokens[j], pos: j + 1 })} value={`${(v * 100).toFixed(1)} %`} />
                 ) : null))}
-                <dt>Adds up to</dt>
+                <dt>{L("Adds up to")}</dt>
                 <dd className="text-right text-foreground/80">{(row.reduce((a, b) => a + b, 0) * 100).toFixed(0)} %</dd>
-                <dt>Numbers in this head's wiring</dt>
+                <dt>{L("Numbers in this head's wiring")}</dt>
                 <dd className="text-right text-foreground/80">{3 * width * width}</dd>
               </dl>
             ) : null}
             <Text kind="note" as="p" className="pt-1">
-              This is one head of attention. A transformer is many heads at once, each with its
-              own questions and keys, stacked in layers, with the small networks from earlier
-              pages between them. What a word carries out of a layer is the words it listened
-              to, weighed as the table shows, and nothing else.
+              {L("This is one head of attention. A transformer is many heads at once, each with its own questions and keys, stacked in layers, with the small networks from earlier pages between them. What a word carries out of a layer is the words it listened to, weighed as the table shows, and nothing else.")}
             </Text>
           </div>
         }
@@ -215,10 +214,17 @@ function WordsPage() {
   );
 }
 
+/** the verdict for a wired head: which word the current one listens to most, and why when the wiring explains it */
+function listened(at: number, word: string, pct: string, top: string, pos: number, why: string) {
+  return why
+    ? L("Word {{at}}, \"{{word}}\", listens {{pct}} % to \"{{top}}\" at position {{pos}}: {{why}}.", { at, word, pct, top, pos, why })
+    : L("Word {{at}}, \"{{word}}\", listens {{pct}} % to \"{{top}}\" at position {{pos}}.", { at, word, pct, top, pos });
+}
+
 function FragmentRow({ label, value }: { label: string; value: string }) {
   return (
     <>
-      <dt>Listens to {label}</dt>
+      <dt>{L("Listens to {{what}}", { what: label })}</dt>
       <dd className="text-right text-foreground/80">{value}</dd>
     </>
   );

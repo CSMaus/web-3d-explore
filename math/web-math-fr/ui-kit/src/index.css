@@ -129,5 +129,6 @@
     }
 }
 
-/* the theme, generated from the config folder; it comes last so its values win */
-@import "./theme.css";
+/* the themes a visitor can choose, generated from the config folder, each under html[data-case];
+   it comes last so its values win */
+@import "./themes.css";

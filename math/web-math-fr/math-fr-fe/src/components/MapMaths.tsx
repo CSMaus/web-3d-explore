@@ -1,6 +1,7 @@
 import { Tex } from "@/components/Tex";
 import { Swatch } from "@kit/index";
 import { cn } from "@/lib/cn";
+import { L } from "@/lib/lang";
 import type { Map2 } from "@/systems/ifs";
 
 type Props = {
@@ -40,10 +41,10 @@ export function MapMaths({ maps, active, carrier, colourOf, tinted, onPick }: Pr
             <div data-text="caption" className="flex items-baseline justify-between">
               <span>
                 {colour ? <Swatch colour={colour} /> : null}
-                Move {i + 1}
+                {L("Move {{n}}", { n: i + 1 })}
               </span>
               <span className="text-muted-foreground">
-                {i === carrier ? "Carries the whole shape" : `Chance ${m.p.toFixed(3)}`}
+                {i === carrier ? L("Carries the whole shape") : L("Chance {{p}}", { p: m.p.toFixed(3) })}
               </span>
             </div>
             <div data-text="note" className="mt-1">

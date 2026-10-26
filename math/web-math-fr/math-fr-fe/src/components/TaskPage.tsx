@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Text, Heading, Panel, Verdict as KitVerdict } from "@kit/index";
+import { L } from "@/lib/lang";
 
 /**
  * the shape every play page in an applied topic has, in the same places every
@@ -29,14 +30,14 @@ export function TaskPage({ title, job, input, run, picture, result, more, below 
 
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
         <div className="space-y-4">
-          <Panel label="WHAT GOES IN">{input}</Panel>
-          <Panel label="RUN" tone="primary">{run}</Panel>
+          <Panel label={L("WHAT GOES IN")}>{input}</Panel>
+          <Panel label={L("RUN")} tone="primary">{run}</Panel>
           {more}
         </div>
 
         <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
           {picture}
-          <Panel label="WHAT CAME OUT">{result}</Panel>
+          <Panel label={L("WHAT CAME OUT")}>{result}</Panel>
           {below}
         </div>
       </div>

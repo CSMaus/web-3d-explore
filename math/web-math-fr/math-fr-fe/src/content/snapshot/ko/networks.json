@@ -1,0 +1,13 @@
+{
+ "slug": "networks",
+ "number": 3,
+ "title": "미적분에서 첫 신경망까지",
+ "summary": "퍼셉트론, 퍼셉트론이 발전한 뉴런, 연립방정식으로 적은 신경망, 그리고 신경망을 학습시키는 모든 방법을 다룹니다. 마지막에는 이 모든 것을 이루는 두 대상인 도함수와 적분으로 끝납니다",
+ "state": "writing",
+ "parts": 0,
+ "beats": 0,
+ "seconds": 0,
+ "systems": 17,
+ "aside": false,
+ "part_list": []
+}

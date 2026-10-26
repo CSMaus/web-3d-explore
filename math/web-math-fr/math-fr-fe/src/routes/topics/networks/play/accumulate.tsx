@@ -10,6 +10,7 @@ import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
+import { L } from "@/lib/lang";
 import { FAINT, INK, ONE, SKY, TWO, plate, ticks } from "@/lib/draw";
 import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/topics/networks/play/accumulate")({
 const T_END = 12;
 // the straight-line and braking motions have a speed the rectangles add up
 // exactly, so they show no error at all; the ones that bend are the lesson
-const OPTIONS = ["bumpy", "back", "faster", "braking", "steady"].map((id) => ({ id, label: MOTIONS[id].label }));
+const OPTIONS = ["bumpy", "back", "faster", "braking", "steady"].map((id) => ({ id, label: L(MOTIONS[id].label) }));
 
 function AccumulatePage() {
   const system = Route.useLoaderData();
@@ -68,16 +69,15 @@ function AccumulatePage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "Adding it back up"}
-        job="This time only the speed is given, second by second, and the job is to say how far the car has gone. The only tool is the obvious one: for each short stretch of time, speed times duration is distance, and the stretches add up."
+        title={system?.name ?? L("Adding it back up")}
+        job={L("This time only the speed is given, second by second, and the job is to say how far the car has gone. The only tool is the obvious one: for each short stretch of time, speed times duration is distance, and the stretches add up.")}
         input={
           <div className="space-y-3">
             <Choices options={OPTIONS} value={motion} onPick={(id) => { setMotion(id); reset(); }} />
-            <Text kind="note" as="p">{m.what}</Text>
-            <Slider label="Slices" min={2} max={96} step={1} value={count} format={(v) => String(Math.round(v))} onChange={(v) => { setCount(Math.round(v)); reset(); }} />
+            <Text kind="note" as="p">{L(m.what)}</Text>
+            <Slider label={L("Slices")} min={2} max={96} step={1} value={count} format={(v) => String(Math.round(v))} onChange={(v) => { setCount(Math.round(v)); reset(); }} />
             <Text kind="note" as="p">
-              How many slices the twelve seconds are cut into. Inside each slice the speed is
-              taken as constant, which is a lie that gets smaller as the slices get thinner.
+              {L("How many slices the twelve seconds are cut into. Inside each slice the speed is taken as constant, which is a lie that gets smaller as the slices get thinner.")}
             </Text>
           </div>
         }
@@ -85,7 +85,7 @@ function AccumulatePage() {
           <RunBar
             running={runner.running}
             count={shown}
-            what="slices added"
+            what={L("slices added")}
             limit={count}
             onToggle={() => {
               if (!runner.running && shown >= count) reset();
@@ -124,11 +124,11 @@ function AccumulatePage() {
                   pen.line(spdTrace, SKY, 1.8);
                   if (shown > 0) {
                     const s = list[shown - 1];
-                    plate(pen, `${s.height.toFixed(2)} m/s for ${(s.t1 - s.t0).toFixed(2)} s = ${s.area.toFixed(2)} m`, (s.t0 + s.t1) / 2, s.height + (spdBox.y1 - spdBox.y0) * 0.08, INK, "center");
+                    plate(pen, L("{{h}} m/s for {{d}} s = {{a}} m", { h: s.height.toFixed(2), d: (s.t1 - s.t0).toFixed(2), a: s.area.toFixed(2) }), (s.t0 + s.t1) / 2, s.height + (spdBox.y1 - spdBox.y0) * 0.08, INK, "center");
                   }
                 }}
               />
-            </div><Caption>The speed. Each rectangle is one slice: speed times duration, a distance.</Caption></div>
+            </div><Caption>{L("The speed. Each rectangle is one slice: speed times duration, a distance.")}</Caption></div>
             <div><div data-slot="plot" className="h-[260px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -150,31 +150,36 @@ function AccumulatePage() {
                   }
                 }}
               />
-            </div><Caption>Distance so far. Green: the slices added up.  Faint: where the car really was. Rose: the gap between the two</Caption></div>
+            </div><Caption>{L("Distance so far. Green: the slices added up.  Faint: where the car really was. Rose: the gap between the two")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={shown === 0 ? undefined : Math.abs(added - truth) < 0.02 * Math.max(1, Math.abs(truth))}>
               {shown === 0
-                ? "Press run. One slice at a time, a rectangle of speed times duration goes in, and the running total climbs."
-                : `After ${shown} of ${count} slices, ${tNow.toFixed(1)} s in, the slices add up to ${added.toFixed(2)} m. The car had really gone ${truth.toFixed(2)} m. The total is off by ${Math.abs(added - truth).toFixed(3)} m${Math.abs(added - truth) < 0.02 * Math.max(1, Math.abs(truth)) ? ", which is close enough to call right" : ": the slices are too fat for a speed that changes this much inside one of them"}.`}
+                ? L("Press run. One slice at a time, a rectangle of speed times duration goes in, and the running total climbs.")
+                : L("After {{shown}} of {{count}} slices, {{t}} s in, the slices add up to {{added}} m. The car had really gone {{truth}} m. The total is off by {{off}} m{{tail}}.", {
+                    shown,
+                    count,
+                    t: tNow.toFixed(1),
+                    added: added.toFixed(2),
+                    truth: truth.toFixed(2),
+                    off: Math.abs(added - truth).toFixed(3),
+                    tail: Math.abs(added - truth) < 0.02 * Math.max(1, Math.abs(truth)) ? L(", which is close enough to call right") : L(": the slices are too fat for a speed that changes this much inside one of them"),
+                  })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Each slice lasts</dt>
+              <dt>{L("Each slice lasts")}</dt>
               <dd className="text-right text-foreground/80">{(T_END / count).toFixed(3)} s</dd>
-              <dt>All {count} slices together</dt>
+              <dt>{L("All {{count}} slices together", { count })}</dt>
               <dd className="text-right text-foreground/80">{totals[count].toFixed(3)} m</dd>
-              <dt>The true distance over twelve seconds</dt>
+              <dt>{L("The true distance over twelve seconds")}</dt>
               <dd className="text-right text-foreground/80">{(m.at(T_END) - m.at(0)).toFixed(3)} m</dd>
-              <dt>The error with {count} slices</dt>
+              <dt>{L("The error with {{count}} slices", { count })}</dt>
               <dd className="text-right text-foreground/80">{finalError.toExponential(2)} m</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              Double the slices and the error falls by about four. That is the integral: the sum,
-              with the slices made as thin as wanted. And the green staircase, once smooth, is
-              the position curve from the first page: adding up a rate gives back the thing whose
-              rate it was.
+              {L("Double the slices and the error falls by about four. That is the integral: the sum, with the slices made as thin as wanted. And the green staircase, once smooth, is the position curve from the first page: adding up a rate gives back the thing whose rate it was.")}
             </Text>
           </div>
         }

@@ -31,18 +31,19 @@ import {
   type Net,
   type OptKind,
 } from "@/systems/net";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/networks/play/learn")({
   loader: () => api.system(TOPIC, "learn"),
   component: LearnPage,
 });
 
-const KINDS: { id: SetKind; label: string }[] = (["rings", "xor", "spiral", "split"] as SetKind[]).map((id) => ({ id, label: SETS[id].label }));
-const METHODS = (Object.keys(OPTS) as OptKind[]).map((id) => ({ id, label: OPTS[id].label }));
+const KINDS: { id: SetKind; label: string }[] = (["rings", "xor", "spiral", "split"] as SetKind[]).map((id) => ({ id, label: L(SETS[id].label) }));
+const METHODS = (Object.keys(OPTS) as OptKind[]).map((id) => ({ id, label: L(OPTS[id].label) }));
 const BATCHES = [
-  { id: "all", label: "All the dots" },
-  { id: "8", label: "8 at a time" },
-  { id: "1", label: "One at a time" },
+  { id: "all", label: L("All the dots") },
+  { id: "8", label: L("8 at a time") },
+  { id: "1", label: L("One at a time") },
 ];
 const MOST = 4000;
 const HIDDEN = 6;
@@ -125,7 +126,7 @@ function LearnPage() {
     runner.reset();
     if (keep && view.history.length > 5) {
       setKept((k) => [
-        { label: `${OPTS[method].label}, step ${rate}, ${BATCHES.find((b) => b.id === batch)?.label}`, history: view.history, colour: KEPT_COLOURS[k.length % KEPT_COLOURS.length] },
+        { label: L("{{method}}, step {{rate}}, {{batch}}", { method: L(OPTS[method].label), rate, batch: BATCHES.find((b) => b.id === batch)?.label ?? "undefined" }), history: view.history, colour: KEPT_COLOURS[k.length % KEPT_COLOURS.length] },
         ...k,
       ].slice(0, 5));
     }
@@ -201,18 +202,17 @@ function LearnPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "How it learns, and how fast"}
-        job="The same network on the same dots, with the learning itself as the thing to look at. Every step: measure how wrong, find which way is down for each number, move. The choices are how big the move is, how many dots to look at before each move, and which of the standard tricks to add. Finished runs stay on the chart, so they can be compared."
+        title={system?.name ?? L("How it learns, and how fast")}
+        job={L("The same network on the same dots, with the learning itself as the thing to look at. Every step: measure how wrong, find which way is down for each number, move. The choices are how big the move is, how many dots to look at before each move, and which of the standard tricks to add. Finished runs stay on the chart, so they can be compared.")}
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); setKept([]); restart(false); }} />
             <Choices options={METHODS} value={method} onPick={(id) => { setMethod(id); if (view.steps > 0) restart(); }} />
-            <Text kind="note" as="p">{OPTS[method].label}: Fixes {OPTS[method].fixes}.</Text>
+            <Text kind="note" as="p">{L("{{method}}: Fixes {{fixes}}.", { method: L(OPTS[method].label), fixes: L(OPTS[method].fixes) })}</Text>
             <Choices options={BATCHES} value={batch} onPick={(id) => { setBatch(id); if (view.steps > 0) restart(); }} />
-            <Slider label="Step size" min={0.01} max={3} step={0.01} value={rate} format={(v) => v.toFixed(2)} onChange={(v) => { setRate(v); if (view.steps > 0) restart(); }} />
+            <Slider label={L("Step size")} min={0.01} max={3} step={0.01} value={rate} format={(v) => v.toFixed(2)} onChange={(v) => { setRate(v); if (view.steps > 0) restart(); }} />
             <Text kind="note" as="p">
-              Changing a setting after a run has begun ends that run and keeps its curve. A step
-              size above about two blows up on this problem, and that is worth seeing once.
+              {L("Changing a setting after a run has begun ends that run and keeps its curve. A step size above about two blows up on this problem, and that is worth seeing once.")}
             </Text>
           </div>
         }
@@ -220,7 +220,7 @@ function LearnPage() {
           <RunBar
             running={runner.running}
             count={view.steps}
-            what="steps"
+            what={L("steps")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 100, max: 8000, step: 100 }}
@@ -236,22 +236,20 @@ function LearnPage() {
         }
         more={
           <section data-slot="panel">
-            <Label>OR SKIP THE STEPS</Label>
+            <Label>{L("OR SKIP THE STEPS")}</Label>
             <Text kind="note" as="p" className="mt-2">
-              Take the squashes away and the whole network is one straight line. For a straight
-              line there is a formula: the best one, in one calculation, no steps at all.
+              {L("Take the squashes away and the whole network is one straight line. For a straight line there is a formula: the best one, in one calculation, no steps at all.")}
             </Text>
             <Button variant="outline" size="sm" className="mt-3"
               type="button"
               onClick={() => setOneShot((v) => !v)}
             >
-              {oneShot ? "Hide the one-shot line" : "Show the one-shot line"}
+              {oneShot ? L("Hide the one-shot line") : L("Show the one-shot line")}
             </Button>
             {oneShot ? (
               <Text kind="note" as="p" className="mt-2">
-                The white dashed line is that answer. It gets {straightWrong} of {data.X.length} dots wrong, and
-                no amount of stepping can improve it: it is already the best line there is.
-                {straightWrong > 0 ? " The dots need a bend, and bends have no formula. Hence the steps." : ""}
+                {L("The white dashed line is that answer. It gets {{wrong}} of {{all}} dots wrong, and no amount of stepping can improve it: it is already the best line there is.", { wrong: straightWrong, all: data.X.length })}
+                {straightWrong > 0 ? " " + L("The dots need a bend, and bends have no formula. Hence the steps.") : ""}
               </Text>
             ) : null}
           </section>
@@ -271,7 +269,7 @@ function LearnPage() {
                   kept.forEach((k, i) => plate(pen, k.label, histBox.x1 - (histBox.x1 - histBox.x0) * 0.02, histBox.y1 - (histBox.y1 - histBox.y0) * (0.08 + 0.1 * (i + 1)), k.colour, "right"));
                 }}
               />
-            </div><Caption>How wrong, against steps.  Green: this run.  Dim: earlier runs</Caption></div>
+            </div><Caption>{L("How wrong, against steps.  Green: this run.  Dim: earlier runs")}</Caption></div>
             <div className="grid gap-2 lg:grid-cols-2">
               <div data-slot="plot" className="h-[300px] overflow-hidden">
                 <Plot
@@ -297,7 +295,7 @@ function LearnPage() {
                       pen.ctx.setLineDash([]);
                     }
                     const v = pen.box;
-                    plate(pen, "The network's answer now", v.x0 + (v.x1 - v.x0) * 0.03, v.y1 - (v.y1 - v.y0) * 0.05, MUTED);
+                    plate(pen, L("The network's answer now"), v.x0 + (v.x1 - v.x0) * 0.03, v.y1 - (v.y1 - v.y0) * 0.05, MUTED);
                   }}
                 />
               </div>
@@ -319,7 +317,7 @@ function LearnPage() {
 
                   }}
                 />
-              </div><Caption>The hill under two of the 25 numbers Bright: more wrong.  White: where they have been</Caption></div>
+              </div><Caption>{L("The hill under two of the 25 numbers Bright: more wrong.  White: where they have been")}</Caption></div>
             </div>
           </section>
         }
@@ -327,28 +325,30 @@ function LearnPage() {
           <div className="space-y-2">
             <Verdict good={blown ? false : wrong === 0 ? true : undefined}>
               {view.steps === 0
-                ? `Nothing learned yet: ${wrong} of ${data.X.length} wrong. Press run. The top chart will draw how wrong the network is after each step.`
+                ? L("Nothing learned yet: {{wrong}} of {{all}} wrong. Press run. The top chart will draw how wrong the network is after each step.", { wrong, all: data.X.length })
                 : blown
-                  ? `The run blew up after ${view.steps} steps: how wrong went up instead of down and kept going. The step size ${rate.toFixed(2)} is too big for this hill, so every step overshoots the valley and lands higher, exactly like the ball on the hill page. Halve it.`
+                  ? L("The run blew up after {{steps}} steps: how wrong went up instead of down and kept going. The step size {{rate}} is too big for this hill, so every step overshoots the valley and lands higher, exactly like the ball on the hill page. Halve it.", { steps: view.steps, rate: rate.toFixed(2) })
                   : wrong === 0
-                    ? `Done: every dot right after ${view.steps} steps with ${OPTS[method].label}${batch !== "all" ? `, Looking at ${batch} dot${batch === "1" ? "" : "s"} at a time` : ""}. How wrong: ${total.toFixed(4)}.`
-                    : `After ${view.steps} steps, ${wrong} of ${data.X.length} wrong, how wrong ${total.toFixed(4)}, ${total < late * 0.97 ? "still falling" : "no longer falling much"}.${batch !== "all" ? " The curve is jagged because each step sees only a few dots, so its idea of downhill is noisy. It is also cheaper per step." : ""}`}
+                    ? batch === "all"
+                      ? L("Done: every dot right after {{steps}} steps with {{method}}. How wrong: {{total}}.", { steps: view.steps, method: L(OPTS[method].label), total: total.toFixed(4) })
+                      : batch === "1"
+                        ? L("Done: every dot right after {{steps}} steps with {{method}}, Looking at 1 dot at a time. How wrong: {{total}}.", { steps: view.steps, method: L(OPTS[method].label), total: total.toFixed(4) })
+                        : L("Done: every dot right after {{steps}} steps with {{method}}, Looking at {{batch}} dots at a time. How wrong: {{total}}.", { steps: view.steps, method: L(OPTS[method].label), batch, total: total.toFixed(4) })
+                    : L("After {{steps}} steps, {{wrong}} of {{all}} wrong, how wrong {{total}}, {{trend}}.", { steps: view.steps, wrong, all: data.X.length, total: total.toFixed(4), trend: total < late * 0.97 ? L("still falling") : L("no longer falling much") }) +
+                      (batch !== "all" ? " " + L("The curve is jagged because each step sees only a few dots, so its idea of downhill is noisy. It is also cheaper per step.") : "")}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Method</dt>
-              <dd className="text-right text-foreground/80">{OPTS[method].label}</dd>
-              <dt>Dots looked at before each move</dt>
+              <dt>{L("Method")}</dt>
+              <dd className="text-right text-foreground/80">{L(OPTS[method].label)}</dd>
+              <dt>{L("Dots looked at before each move")}</dt>
               <dd className="text-right text-foreground/80">{batch === "all" ? data.X.length : batch}</dd>
-              <dt>Numbers being moved</dt>
+              <dt>{L("Numbers being moved")}</dt>
               <dd className="text-right text-foreground/80">{flatten(net).length}</dd>
-              <dt>Runs kept on the chart</dt>
+              <dt>{L("Runs kept on the chart")}</dt>
               <dd className="text-right text-foreground/80">{kept.length}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              Plain descent is the ball. Momentum lets it keep rolling so it does not bounce across
-              a narrow valley. Adam gives every number its own step size, shrunk where the slope
-              has been steep. None of them changes where the bottom is; they change how the ball
-              gets there. Try the same problem with each, and read the chart.
+              {L("Plain descent is the ball. Momentum lets it keep rolling so it does not bounce across a narrow valley. Adam gives every number its own step size, shrunk where the slope has been steep. None of them changes where the bottom is; they change how the ball gets there. Try the same problem with each, and read the chart.")}
             </Text>
           </div>
         }

@@ -150,7 +150,7 @@ export function TopicGraph({ topics }: { topics: Card[] }) {
               <div data-text="label" className="mt-4">
                 {topicLabel(topic.number, t)}
               </div>
-              <div data-text="itemTitle" className="mt-1">
+              <div data-text="itemTitle" data-topic-name="" className="mt-1">
                 {topic.title}
               </div>
               <p data-text="note" className="mt-2">
@@ -162,7 +162,7 @@ export function TopicGraph({ topics }: { topics: Card[] }) {
             </>
           );
           return (
-            <li key={topic.slug} className={`self-start ${PLACES[i] ?? ""}`}>
+            <li key={topic.slug} data-topic={topic.number} className={`self-start ${PLACES[i] ?? ""}`}>
               {built ? (
                 <Link
                   ref={(el) => {

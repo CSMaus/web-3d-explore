@@ -16,6 +16,7 @@ import { SKIP_STEPS, USED, text as tokenText, tokenIds, useTiny } from "@/lib/ti
 import { TOPIC } from "@/lib/tokens";
 import { centre, cosine, distance, nearest, project2 } from "@/systems/lm";
 import { rng } from "@/systems/net";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/tokens/play/space")({
   loader: () => api.system(TOPIC, "space"),
@@ -92,23 +93,23 @@ function SpacePage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "Measuring the space"}
-        job="The rows now carry something. The job is to say what, with measurements rather than impressions: how close two tokens are, in two different senses; how much a flat picture of the space lies; whether a direction carries a relation; and how narrow the cone all the vectors sit in."
+        title={system?.name ?? L("Measuring the space")}
+        job={L("The rows now carry something. The job is to say what, with measurements rather than impressions: how close two tokens are, in two different senses; how much a flat picture of the space lies; whether a direction carries a relation; and how narrow the cone all the vectors sit in.")}
         input={
           <div className="space-y-3">
-            <div data-text="note">Two tokens to compare</div>
+            <div data-text="note">{L("Two tokens to compare")}</div>
             <Choices options={PICKS} value={a} onPick={setA} />
             <Choices options={PICKS} value={b} onPick={setB} />
-            <div data-text="note">The analogy: first minus second plus this</div>
+            <div data-text="note">{L("The analogy: first minus second plus this")}</div>
             <Choices options={PICKS} value={c} onPick={setC} />
-            {!ready ? <Text kind="warning" as="p">The vectors are still training ({steps.toLocaleString("en")} of {SKIP_STEPS.toLocaleString("en")} steps); the numbers below move until that finishes.</Text> : null}
+            {!ready ? <Text kind="warning" as="p">{L("The vectors are still training ({{done}} of {{total}} steps); the numbers below move until that finishes.", { done: steps.toLocaleString("en"), total: SKIP_STEPS.toLocaleString("en") })}</Text> : null}
           </div>
         }
         run={
           <RunBar
             running={runner.running}
             count={pairsSeen}
-            what="random pairs measured"
+            what={L("random pairs measured")}
             limit={3000}
             onToggle={() => {
               if (!runner.running && pairsSeen >= 3000) reset();
@@ -147,7 +148,7 @@ function SpacePage() {
                     pen.arrow(pc[0], pc[1], pa[0] - pb[0], pa[1] - pb[1], SKY);
                   }}
                 />
-              </div><Caption>{`Flat picture: ${(proj.kept * 100).toFixed(0)} % of the spread kept`}. White: second to first.  Sky: same arrow, from the third</Caption></div>
+              </div><Caption>{L("Flat picture: {{kept}} % of the spread kept. White: second to first.  Sky: same arrow, from the third", { kept: (proj.kept * 100).toFixed(0) })}</Caption></div>
               <div><div data-slot="plot" className="h-[300px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
@@ -169,15 +170,15 @@ function SpacePage() {
                     pen.line([[0, 0], [0, 0.85]], FAINT, 1);
                   }}
                 />
-              </div><Caption>Cosine of random pairs: -1 left, 1 right. {`Rose: raw, mean ${hist.rawMean.toFixed(2)}.  Sky: centred, mean ${hist.cenMean.toFixed(2)}`}</Caption></div>
+              </div><Caption>{L("Cosine of random pairs: -1 left, 1 right. Rose: raw, mean {{raw}}.  Sky: centred, mean {{centred}}", { raw: hist.rawMean.toFixed(2), centred: hist.cenMean.toFixed(2) })}</Caption></div>
             </div>
             <div data-text="caption" className="rounded border border-border p-3">
-              <div className="text-muted-foreground">The analogy {visible(a)} − {visible(b)} + {visible(c)} = ?</div>
+              <div className="text-muted-foreground">{L("The analogy {{a}} − {{b}} + {{c}} = ?", { a: visible(a), b: visible(b), c: visible(c) })}</div>
               <div className="mt-1 text-foreground/80">
-                Nearest, with the three inputs excluded by hand as is usual: {analogy.list.map((n) => `${visible(tokenText(n.id))} (${n.cos.toFixed(2)})`).join(", ")}
+                {L("Nearest, with the three inputs excluded by hand as is usual: {{list}}", { list: analogy.list.map((n) => `${visible(tokenText(n.id))} (${n.cos.toFixed(2)})`).join(", ") })}
               </div>
               <div className="mt-1 text-foreground/80">
-                Nearest, with nothing excluded: {analogy.honest.map((n) => `${visible(tokenText(n.id))} (${n.cos.toFixed(2)})`).join(", ")}
+                {L("Nearest, with nothing excluded: {{list}}", { list: analogy.honest.map((n) => `${visible(tokenText(n.id))} (${n.cos.toFixed(2)})`).join(", ") })}
               </div>
             </div>
           </section>
@@ -185,29 +186,25 @@ function SpacePage() {
         result={
           <div className="space-y-2">
             <Verdict>
-              {visible(a)} and {visible(b)}: Cosine {cos.toFixed(3)}, Distance {dist.toFixed(3)}. In the flat picture they are {flatDist.toFixed(2)} apart, which is {flatDist < dist * 0.8 ? "closer than they really are" : "about as far as they really are"}; The picture keeps {(proj.kept * 100).toFixed(0)} per cent of the spread and hides the rest.
-              {pairsSeen > 0 ? ` Over ${pairsSeen} random pairs the raw cosines average ${hist.rawMean.toFixed(2)}: the vectors lean one way together, a cone rather than a cloud. Take the average vector away and the same pairs average ${hist.cenMean.toFixed(2)}.` : " Press run to measure the cone."}
+              {L("{{a}} and {{b}}: Cosine {{cos}}, Distance {{dist}}. In the flat picture they are {{flat}} apart, which is {{which}}; The picture keeps {{kept}} per cent of the spread and hides the rest.", { a: visible(a), b: visible(b), cos: cos.toFixed(3), dist: dist.toFixed(3), flat: flatDist.toFixed(2), which: flatDist < dist * 0.8 ? L("closer than they really are") : L("about as far as they really are"), kept: (proj.kept * 100).toFixed(0) })}
+              {pairsSeen > 0 ? ` ${L("Over {{n}} random pairs the raw cosines average {{raw}}: the vectors lean one way together, a cone rather than a cloud. Take the average vector away and the same pairs average {{centred}}.", { n: pairsSeen, raw: hist.rawMean.toFixed(2), centred: hist.cenMean.toFixed(2) })}` : ` ${L("Press run to measure the cone.")}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Cosine: the angle between them, blind to length</dt>
+              <dt>{L("Cosine: the angle between them, blind to length")}</dt>
               <dd className="text-right text-foreground/80">{cos.toFixed(4)}</dd>
-              <dt>Distance: how far apart, which grows with length</dt>
+              <dt>{L("Distance: how far apart, which grows with length")}</dt>
               <dd className="text-right text-foreground/80">{dist.toFixed(4)}</dd>
-              <dt>Length of {visible(a)}, Length of {visible(b)}</dt>
+              <dt>{L("Length of {{a}}, Length of {{b}}", { a: visible(a), b: visible(b) })}</dt>
               <dd className="text-right text-foreground/80">{Math.hypot(...E[ids.a]).toFixed(2)}, {Math.hypot(...E[ids.b]).toFixed(2)}</dd>
-              <dt>Nearest to {visible(a)} by cosine</dt>
+              <dt>{L("Nearest to {{token}} by cosine", { token: visible(a) })}</dt>
               <dd className="text-right text-foreground/80">{nearest(E, ids.a, 3, (i) => USED.includes(i)).map((n) => visible(tokenText(n.id))).join(", ")}</dd>
-              <dt>The analogy's usual answer</dt>
+              <dt>{L("The analogy's usual answer")}</dt>
               <dd className="text-right text-foreground/80">{analogy.list[0] ? visible(tokenText(analogy.list[0].id)) : "-"}</dd>
-              <dt>The honest answer, nothing excluded</dt>
+              <dt>{L("The honest answer, nothing excluded")}</dt>
               <dd className="text-right text-foreground/80">{analogy.honest[0] ? visible(tokenText(analogy.honest[0].id)) : "-"}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              The famous arithmetic works when the inputs are removed from the candidates by hand,
-              which is what every demonstration of it does. With nothing removed the answer is
-              usually one of the inputs. On a text this small it barely works either way, and on a
-              large one it works for curated examples. No axis of this space was given a meaning;
-              a direction that seems to mean something was found afterwards.
+              {L("The famous arithmetic works when the inputs are removed from the candidates by hand, which is what every demonstration of it does. With nothing removed the answer is usually one of the inputs. On a text this small it barely works either way, and on a large one it works for curated examples. No axis of this space was given a meaning; a direction that seems to mean something was found afterwards.")}
             </Text>
           </div>
         }

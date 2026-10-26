@@ -13,6 +13,7 @@ import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { MOTIONS, slopeBetween, trace } from "@/systems/calc";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/networks/play/rate")({
   loader: () => api.system(TOPIC, "rate"),
@@ -64,8 +65,8 @@ function RatePage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "How fast is it going"}
-        job="A car drives along a road. Where it is can be seen at every moment. The job is to say how fast it is going, using nothing but where it is."
+        title={system?.name ?? L("How fast is it going")}
+        job={L("A car drives along a road. Where it is can be seen at every moment. The job is to say how fast it is going, using nothing but where it is.")}
         input={
           <div className="space-y-3">
             <div className="flex flex-wrap gap-1.5">
@@ -80,13 +81,13 @@ function RatePage() {
                   }}
                   aria-pressed={motion === id}
                 >
-                  {MOTIONS[id].label}
+                  {L(MOTIONS[id].label)}
                 </Button>
               ))}
             </div>
-            <Text kind="note" as="p">{m.what}</Text>
+            <Text kind="note" as="p">{L(m.what)}</Text>
             <Slider
-              label="The gap"
+              label={L("The gap")}
               min={0.05}
               max={4}
               step={0.05}
@@ -95,8 +96,7 @@ function RatePage() {
               onChange={setGap}
             />
             <Text kind="note" as="p">
-              The gap is how far apart the two positions are that the speed is worked out from.
-              Pinch it down and watch the number from two positions settle on the true speed.
+              {L("The gap is how far apart the two positions are that the speed is worked out from. Pinch it down and watch the number from two positions settle on the true speed.")}
             </Text>
           </div>
         }
@@ -104,7 +104,7 @@ function RatePage() {
           <RunBar
             running={runner.running}
             count={Math.round(t * 10) / 10}
-            what="seconds"
+            what={L("seconds")}
             limit={T_END}
             onToggle={() => {
               if (!runner.running && tick >= TICKS) {
@@ -136,7 +136,7 @@ function RatePage() {
                     pen.text(`${x} m`, x, -0.55, "#5b616b", "center");
                   }
                   pen.dot(position, 0.02, 9, "#a5e3a0");
-                  pen.text(started ? `${position.toFixed(1)} m` : "The road", position, 0.45, "#a5e3a0", "center");
+                  pen.text(started ? `${position.toFixed(1)} m` : L("The road"), position, 0.45, "#a5e3a0", "center");
                 }}
               />
             </div>
@@ -162,7 +162,7 @@ function RatePage() {
                   pen.dot(t, position, 5, "#e8e8ea");
                 }}
               />
-            </div><Caption>Where the car is, against time. {`The line through two positions ${gap.toFixed(2)} s apart. Its steepness is the speed.`}</Caption></div>
+            </div><Caption>{L("Where the car is, against time.")} {L("The line through two positions {{gap}} s apart. Its steepness is the speed.", { gap: gap.toFixed(2) })}</Caption></div>
             <div><div data-slot="plot" className="h-[190px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -177,31 +177,37 @@ function RatePage() {
                   pen.ring(t, fromTwo, 6, "#c75ab0", 2);
                 }}
               />
-            </div><Caption>The speed, against time: the steepness of the curve above, at every moment Ring: from two positions.  Dot: exact.</Caption></div>
+            </div><Caption>{L("The speed, against time: the steepness of the curve above, at every moment Ring: from two positions.  Dot: exact.")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={started ? Math.abs(fromTwo - exact) < 0.05 * Math.max(1, Math.abs(exact)) : undefined}>
               {!started
-                ? "Press run and the car sets off. The speed will be read from where it is, and only from where it is."
-                : `At ${t.toFixed(1)} s the car is at ${position.toFixed(1)} m and going ${exact.toFixed(2)} m/s. From two positions ${gap.toFixed(2)} s apart, the speed comes out as ${fromTwo.toFixed(2)} m/s, ${Math.abs(fromTwo - exact) < 0.05 * Math.max(1, Math.abs(exact)) ? "which is right" : "which is off, because the gap is too wide for a curve that bends this much"}.`}
+                ? L("Press run and the car sets off. The speed will be read from where it is, and only from where it is.")
+                : L("At {{t}} s the car is at {{x}} m and going {{v}} m/s. From two positions {{gap}} s apart, the speed comes out as {{est}} m/s, {{judge}}.", {
+                    t: t.toFixed(1),
+                    x: position.toFixed(1),
+                    v: exact.toFixed(2),
+                    gap: gap.toFixed(2),
+                    est: fromTwo.toFixed(2),
+                    judge: Math.abs(fromTwo - exact) < 0.05 * Math.max(1, Math.abs(exact)) ? L("which is right") : L("which is off, because the gap is too wide for a curve that bends this much"),
+                  })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Moved between the two positions</dt>
+              <dt>{L("Moved between the two positions")}</dt>
               <dd className="text-right text-foreground/80">{(m.at(tB) - m.at(tA)).toFixed(3)} m</dd>
-              <dt>In</dt>
+              <dt>{L("In")}</dt>
               <dd className="text-right text-foreground/80">{(tB - tA).toFixed(3)} s</dd>
-              <dt>So the speed is that divided by this</dt>
+              <dt>{L("So the speed is that divided by this")}</dt>
               <dd className="text-right text-foreground/80">{fromTwo.toFixed(4)} M/s</dd>
-              <dt>The exact speed at this instant</dt>
+              <dt>{L("The exact speed at this instant")}</dt>
               <dd className="text-right text-foreground/80">{exact.toFixed(4)} M/s</dd>
-              <dt>The gap between the two answers</dt>
+              <dt>{L("The gap between the two answers")}</dt>
               <dd className="text-right text-foreground/80">{Math.abs(fromTwo - exact).toExponential(2)}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              That is the whole of a derivative: a change in one thing divided by the change in
-              another, with the gap made as small as wanted. Every page after this one uses it.
+              {L("That is the whole of a derivative: a change in one thing divided by the change in another, with the gap made as small as wanted. Every page after this one uses it.")}
             </Text>
           </div>
         }

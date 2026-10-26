@@ -8,13 +8,14 @@ import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/chaos";
 import { useHere } from "@/lib/here";
 import { useRise } from "@/lib/reveal";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/chaos/theory")({
   loader: () => api.theory(TOPIC),
   component: TheoryPage,
 });
 
-const HEADING = "The mathematics, all of it";
+const HEADING = L("The mathematics, all of it");
 
 function TheoryPage() {
   const theory = Route.useLoaderData();
@@ -22,7 +23,7 @@ function TheoryPage() {
   const items = useMemo(() => {
     if (!theory) return [];
     return [
-      { id: "measuring", label: "How a system is measured" },
+      { id: "measuring", label: L("How a system is measured") },
       ...theory.systems.map((s) => ({ id: s.id, label: s.name })),
     ];
   }, [theory]);
@@ -34,7 +35,7 @@ function TheoryPage() {
       <div>
         <Heading level={1} className="mt-6">{HEADING}</Heading>
         <div className="mt-6">
-          <Offline what="This page is nothing but the equations, so it has nothing to show until the backend answers. The play pages draw their fractals without it." />
+          <Offline what={L("This page is nothing but the equations, so it has nothing to show until the backend answers. The play pages draw their fractals without it.")} />
         </div>
       </div>
     );
@@ -47,14 +48,12 @@ function TheoryPage() {
       <div className="min-w-0">
         <Heading level={1} className="mt-6">{HEADING}</Heading>
         <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-          Every equation this topic rests on. Each one also sits on the page of the system it
-          belongs to, and every number quoted in a note was measured by the code rather than
-          copied from a reference.
+          {L("Every equation this topic rests on. Each one also sits on the page of the system it belongs to, and every number quoted in a note was measured by the code rather than copied from a reference.")}
         </Text>
 
         <section id="measuring" className="mt-12 scroll-mt-24">
           <Heading level={2}>
-            How a system is measured
+            {L("How a system is measured")}
           </Heading>
           <div className="mt-4 space-y-6">
             {theory.definitions.map((d, i) => (
@@ -70,7 +69,7 @@ function TheoryPage() {
         </section>
 
         <section className="mt-16">
-          <Heading level={2}>The systems</Heading>
+          <Heading level={2}>{L("The systems")}</Heading>
           <div className="mt-4 space-y-10">
             {theory.systems.map((s, i) => (
               <div key={s.id} id={s.id} className="scroll-mt-24">

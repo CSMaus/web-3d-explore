@@ -357,6 +357,95 @@ function NameSelect({ value, names, onChange, label }: NameSelectProps) {
   );
 }
 
+/**
+ * the theme a visitor reads in: a button with the sign and name of the one in use, opening a list
+ * of every theme, each sign and name lit in that theme's own light. arrows move through the list,
+ * enter or a click chooses, escape or a click outside closes it.
+ */
+export function ThemeSwitch({
+  value,
+  options,
+  onChange,
+  label,
+}: {
+  value: string;
+  options: { id: string; name: string; sign: React.ReactNode; light: string }[];
+  onChange: (id: string) => void;
+  label: string;
+}) {
+  const [open, setOpen] = React.useState(false);
+  const [at, setAt] = React.useState(0);
+  const box = React.useRef<HTMLSpanElement | null>(null);
+  const current = options.find((o) => o.id === value) ?? options[0];
+
+  React.useEffect(() => {
+    if (!open) return;
+    const away = (e: PointerEvent) => {
+      if (box.current && !box.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", away);
+    return () => document.removeEventListener("pointerdown", away);
+  }, [open]);
+
+  const lit = (light: string) => ({ "--theme-light": light }) as React.CSSProperties;
+  const choose = (id: string) => {
+    setOpen(false);
+    if (id !== value) onChange(id);
+  };
+  const keys = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") setOpen(false);
+    else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      if (!open) {
+        setOpen(true);
+        setAt(Math.max(0, options.indexOf(current)));
+      } else setAt((i) => (i + (e.key === "ArrowDown" ? 1 : options.length - 1)) % options.length);
+    } else if ((e.key === "Enter" || e.key === " ") && open) {
+      e.preventDefault();
+      choose(options[at].id);
+    }
+  };
+
+  return (
+    <span ref={box} data-slot="theme-switch" onKeyDown={keys}>
+      <button
+        type="button"
+        data-slot="theme-current"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`${label}: ${current?.name ?? ""}`}
+        onClick={() => {
+          setOpen((o) => !o);
+          setAt(Math.max(0, options.indexOf(current)));
+        }}
+        style={lit(current?.light ?? "currentColor")}
+      >
+        <span data-slot="theme-sign" aria-hidden="true">{current?.sign}</span>
+        <span>{current?.name}</span>
+        <span aria-hidden="true">▾</span>
+      </button>
+      {open ? (
+        <ul role="listbox" aria-label={label} data-slot="theme-list">
+          {options.map((o, i) => (
+            <li
+              key={o.id}
+              role="option"
+              aria-selected={o.id === value}
+              data-active={i === at || undefined}
+              style={lit(o.light)}
+              onPointerEnter={() => setAt(i)}
+              onClick={() => choose(o.id)}
+            >
+              <span data-slot="theme-sign" aria-hidden="true">{o.sign}</span>
+              <span>{o.name}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </span>
+  );
+}
+
 /** light or dark: one button that shows the mode it would switch to. */
 export function ModeSwitch({ mode, onChange, labels }: { mode: "light" | "dark"; onChange: (m: "light" | "dark") => void; labels: { light: string; dark: string } }) {
   const next = mode === "dark" ? "light" : "dark";

@@ -16,7 +16,7 @@ export function TopicHead({ topic }: { topic: BuiltTopic }) {
   const shape = SHAPES[topic.slug];
   const line = t(`front.lines.${topic.slug}`, { defaultValue: "" });
   return (
-    <section data-slot="hero" data-size="page" className="mb-2" onMouseEnter={() => setLit(true)} onMouseLeave={() => setLit(false)}>
+    <section data-slot="hero" data-size="page" data-topic={topic.number} className="mb-2" onMouseEnter={() => setLit(true)} onMouseLeave={() => setLit(false)}>
       {shape ? (
         <div data-slot="hero-picture">
           <SolidFigure kind={shape} lit={lit} className="h-full w-full" />
@@ -26,7 +26,7 @@ export function TopicHead({ topic }: { topic: BuiltTopic }) {
         <div data-slot="hero-eyebrow">
           <Label as="div">{topicLabel(topic.number, t)}</Label>
         </div>
-        <p data-slot="display">{topic.title}</p>
+        <p data-slot="display" data-topic-name="">{topic.title}</p>
         {line ? <p data-slot="lede">{line}</p> : null}
       </div>
     </section>

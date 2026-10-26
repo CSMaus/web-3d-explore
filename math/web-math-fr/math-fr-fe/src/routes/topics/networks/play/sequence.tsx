@@ -15,6 +15,7 @@ import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { rng } from "@/systems/net";
 import { FORGETFUL, REMEMBER, runCell, runPlain, type CellWeights } from "@/systems/shapes";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/networks/play/sequence")({
   loader: () => api.system(TOPIC, "sequence"),
@@ -22,13 +23,13 @@ export const Route = createFileRoute("/topics/networks/play/sequence")({
 });
 
 const WIRINGS: { id: string; label: string; w: CellWeights; what: string }[] = [
-  { id: "remember", label: "Gates set to hold", w: REMEMBER, what: "The forget gate stays open and the input gate shuts after the first step, so what went in first is kept" },
-  { id: "forget", label: "Gates set to drop", w: FORGETFUL, what: "The forget gate stays shut, so the memory is emptied every step and only the latest input is in it" },
+  { id: "remember", label: L("Gates set to hold"), w: REMEMBER, what: L("The forget gate stays open and the input gate shuts after the first step, so what went in first is kept") },
+  { id: "forget", label: L("Gates set to drop"), w: FORGETFUL, what: L("The forget gate stays shut, so the memory is emptied every step and only the latest input is in it") },
 ];
 const RESTS = [
-  { id: "noise", label: "Random numbers" },
-  { id: "zeros", label: "Silence" },
-  { id: "opposite", label: "The opposite, repeated" },
+  { id: "noise", label: L("Random numbers") },
+  { id: "zeros", label: L("Silence") },
+  { id: "opposite", label: L("The opposite, repeated") },
 ];
 
 function SequencePage() {
@@ -62,19 +63,17 @@ function SequencePage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "The same job on a sequence"}
-        job="Numbers arrive one at a time. At the end, the job is to say what the first one was. A unit that feeds its own answer back to itself can carry something forward, but each new number overwrites it. A cell with gates decides, at every step, how much to keep, how much to let in, and how much to show. Watch the two side by side."
+        title={system?.name ?? L("The same job on a sequence")}
+        job={L("Numbers arrive one at a time. At the end, the job is to say what the first one was. A unit that feeds its own answer back to itself can carry something forward, but each new number overwrites it. A cell with gates decides, at every step, how much to keep, how much to let in, and how much to show. Watch the two side by side.")}
         input={
           <div className="space-y-3">
-            <Slider label="First number" min={0.2} max={1} step={0.05} value={first} format={(v) => v.toFixed(2)} onChange={(v) => { setFirst(v); reset(); }} />
-            <Slider label="Then how many" min={2} max={16} step={1} value={length} format={(v) => `${Math.round(v)} steps`} onChange={(v) => { setLength(Math.round(v)); reset(); }} />
+            <Slider label={L("First number")} min={0.2} max={1} step={0.05} value={first} format={(v) => v.toFixed(2)} onChange={(v) => { setFirst(v); reset(); }} />
+            <Slider label={L("Then how many")} min={2} max={16} step={1} value={length} format={(v) => L("{{n}} steps", { n: Math.round(v) })} onChange={(v) => { setLength(Math.round(v)); reset(); }} />
             <Choices options={RESTS} value={rest} onPick={(id) => { setRest(id); reset(); }} />
             <Choices options={WIRINGS} value={wiring} onPick={(id) => { setWiring(id); reset(); }} />
             <Text kind="note" as="p">{w.what}.</Text>
             <Text kind="note" as="p">
-              The first number is positive because this cell's gates are set by hand and read
-              the sign of what they hold. A trained cell has as many units as it needs and no
-              such limit.
+              {L("The first number is positive because this cell's gates are set by hand and read the sign of what they hold. A trained cell has as many units as it needs and no such limit.")}
             </Text>
           </div>
         }
@@ -82,7 +81,7 @@ function SequencePage() {
           <RunBar
             running={runner.running}
             count={at}
-            what="numbers seen"
+            what={L("numbers seen")}
             limit={length}
             onToggle={() => {
               if (!runner.running && at >= length) reset();
@@ -132,23 +131,23 @@ function SequencePage() {
                   }
                 };
                 const rowH = 90;
-                bar(10, rowH, xs, SKY, at, "What arrives", "One number a step");
+                bar(10, rowH, xs, SKY, at, L("What arrives"), L("One number a step"));
                 // the first number ringed
                 ctx.strokeStyle = INK;
                 ctx.lineWidth = 1.2;
                 ctx.strokeRect(left + colW * 0.1, 12, colW * 0.8, rowH - 4);
                 ctx.fillStyle = MUTED;
-                ctx.fillText("This one has to survive", left + colW + 6, 24);
-                bar(120, rowH, gated.map((g) => g.cell), ONE, at, "The gated cell's memory", "Kept plus let in, each step");
-                bar(230, rowH, plain, TWO, at, "The plain loop's state", "Fed back and overwritten");
+                ctx.fillText(L("This one has to survive"), left + colW + 6, 24);
+                bar(120, rowH, gated.map((g) => g.cell), ONE, at, L("The gated cell's memory"), L("Kept plus let in, each step"));
+                bar(230, rowH, plain, TWO, at, L("The plain loop's state"), L("Fed back and overwritten"));
                 // the gates at the current step, as four meters
                 const gy = 340;
                 ctx.fillStyle = MUTED;
                 const names: [string, number, string][] = now
                   ? [
-                      ["Forget: how much of the memory to keep", now.forget, "0 empties it, 1 keeps all"],
-                      ["Input: how much of the new number to let in", now.input, "0 ignores it, 1 takes it whole"],
-                      ["Output: how much of the memory to show", now.output, "The next layer sees memory times this"],
+                      [L("Forget: how much of the memory to keep"), now.forget, L("0 empties it, 1 keeps all")],
+                      [L("Input: how much of the new number to let in"), now.input, L("0 ignores it, 1 takes it whole")],
+                      [L("Output: how much of the memory to show"), now.output, L("The next layer sees memory times this")],
                     ]
                   : [];
                 names.forEach(([name, v, note], i) => {
@@ -179,36 +178,33 @@ function SequencePage() {
                 if (H < 10) ctx.fillText("", 0, 0);
               }}
             />
-          </div><Caption>{at > 0 ? `The gates at step ${at}` : "The gates, once it starts"}</Caption></section>
+          </div><Caption>{at > 0 ? L("The gates at step {{at}}", { at }) : L("The gates, once it starts")}</Caption></section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={at < 2 ? undefined : wiring === "remember" ? drift < 0.02 : false}>
               {at === 0
-                ? `The first number will be ${first.toFixed(2)}. Press run and the numbers arrive one a step. The question at the end: what was the first one?`
+                ? L("The first number will be {{first}}. Press run and the numbers arrive one a step. The question at the end: what was the first one?", { first: first.toFixed(2) })
                 : at === 1
-                  ? `Step 1. The input gate is ${now!.input.toFixed(2)}, so the first number goes almost entirely into the memory: ${now!.cell.toFixed(3)}. The plain loop holds it too: ${plain[0].toFixed(3)}.`
+                  ? L("Step 1. The input gate is {{input}}, so the first number goes almost entirely into the memory: {{cell}}. The plain loop holds it too: {{plain}}.", { input: now!.input.toFixed(2), cell: now!.cell.toFixed(3), plain: plain[0].toFixed(3) })
                   : wiring === "remember"
-                    ? `Step ${at}. The gated memory is ${now!.cell.toFixed(3)}, set at step 1 and moved by ${drift.toFixed(4)} since: the forget gate is ${now!.forget.toFixed(2)} and the input gate has been ${now!.input.toFixed(2)} since step 2, so nothing new gets in and nothing old leaks out. The plain loop's state is ${plain[at - 1].toFixed(3)}, which is about the last few numbers. Asked for the first number, the gated cell can answer. The plain loop cannot.`
-                    : `Step ${at}. With the forget gate at ${now!.forget.toFixed(2)} the memory is emptied every step and refilled with the newest number: ${now!.cell.toFixed(3)}. The first number is gone from both. The gates are the same machinery either way; what they are set to is what training decides.`}
+                    ? L("Step {{at}}. The gated memory is {{cell}}, set at step 1 and moved by {{drift}} since: the forget gate is {{forget}} and the input gate has been {{input}} since step 2, so nothing new gets in and nothing old leaks out. The plain loop's state is {{plain}}, which is about the last few numbers. Asked for the first number, the gated cell can answer. The plain loop cannot.", { at, cell: now!.cell.toFixed(3), drift: drift.toFixed(4), forget: now!.forget.toFixed(2), input: now!.input.toFixed(2), plain: plain[at - 1].toFixed(3) })
+                    : L("Step {{at}}. With the forget gate at {{forget}} the memory is emptied every step and refilled with the newest number: {{cell}}. The first number is gone from both. The gates are the same machinery either way; what they are set to is what training decides.", { at, forget: now!.forget.toFixed(2), cell: now!.cell.toFixed(3) })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>The first number</dt>
+              <dt>{L("The first number")}</dt>
               <dd className="text-right text-foreground/80">{first.toFixed(3)}</dd>
-              <dt>What the gated memory held after step 1</dt>
+              <dt>{L("What the gated memory held after step 1")}</dt>
               <dd className="text-right text-foreground/80">{setAt1.toFixed(4)}</dd>
-              <dt>What it holds now</dt>
+              <dt>{L("What it holds now")}</dt>
               <dd className="text-right text-foreground/80">{now ? now.cell.toFixed(4) : "-"}</dd>
-              <dt>The plain loop's state now</dt>
+              <dt>{L("The plain loop's state now")}</dt>
               <dd className="text-right text-foreground/80">{at > 0 ? plain[at - 1].toFixed(4) : "-"}</dd>
-              <dt>Numbers in this cell's wiring</dt>
+              <dt>{L("Numbers in this cell's wiring")}</dt>
               <dd className="text-right text-foreground/80">12</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              The memory is added to, not replaced: kept part plus let-in part. That one plus sign
-              is why a value can cross many steps unharmed, and why blame can flow back across
-              them without shrinking to nothing at each squash. This is a long short-term memory
-              cell, with its gates set by hand so the mechanism is visible.
+              {L("The memory is added to, not replaced: kept part plus let-in part. That one plus sign is why a value can cross many steps unharmed, and why blame can flow back across them without shrinking to nothing at each squash. This is a long short-term memory cell, with its gates set by hand so the mechanism is visible.")}
             </Text>
           </div>
         }

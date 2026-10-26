@@ -19,6 +19,7 @@ import { FAINT, INK, MUTED, plate, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
 import { boxDimension, integrate, kaplanYorke, localMax, lorenz, lyapunov, meanDivergence, orbitDiagram } from "@/systems/flow";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/chaos/play/lorenz")({
   loader: () => api.system(TOPIC, "lorenz"),
@@ -35,9 +36,9 @@ const TICKS = STEPS / PER;
 /** the gap at which the two are on different wings as often as not: parted for good */
 const PARTED = 5;
 const PRESETS = [
-  { id: "rest", label: "At rest", sigma: 10, rho: 5, beta: 8 / 3 },
-  { id: "steady", label: "Steady convection", sigma: 10, rho: 20, beta: 8 / 3 },
-  { id: "attractor", label: "The attractor", sigma: 10, rho: 28, beta: 8 / 3 },
+  { id: "rest", label: L("At rest"), sigma: 10, rho: 5, beta: 8 / 3 },
+  { id: "steady", label: L("Steady convection"), sigma: 10, rho: 20, beta: 8 / 3 },
+  { id: "attractor", label: L("The attractor"), sigma: 10, rho: 28, beta: 8 / 3 },
 ];
 
 const RHO: [number, number] = [0.5, 60];
@@ -128,8 +129,8 @@ function LorenzPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "The Lorenz system"}
-        job="Lorenz wrote these three equations in 1963 as a stripped-down model of the weather, and they are the reason a forecast has a horizon: the standard example of a system that is fully determined and still unpredictable. Three equations for a layer of heated fluid, and two starting states so close that no measurement could tell them apart. The job is to follow both forward and watch what happens to the gap between them. That, and not the shape, is what the word chaos means."
+        title={system?.name ?? L("The Lorenz system")}
+        job={L("Lorenz wrote these three equations in 1963 as a stripped-down model of the weather, and they are the reason a forecast has a horizon: the standard example of a system that is fully determined and still unpredictable. Three equations for a layer of heated fluid, and two starting states so close that no measurement could tell them apart. The job is to follow both forward and watch what happens to the gap between them. That, and not the shape, is what the word chaos means.")}
         input={
           <div className="space-y-3">
             <Choices options={PRESETS} value={preset} onPick={(id) => { const p = PRESETS.find((x) => x.id === id)!; setLook((was) => ({ ...was, sigma: p.sigma, rho: p.rho, beta: p.beta })); reset(); }} />
@@ -137,13 +138,11 @@ function LorenzPage() {
             <Slider label="Rho" min={0.5} max={60} step={0.1} value={look.rho} format={(v) => v.toFixed(1)} onChange={(v) => { set("rho")(v); reset(); }} />
             <Slider label="Beta" min={0.5} max={6} step={0.01} value={look.beta} format={(v) => v.toFixed(2)} onChange={(v) => { set("beta")(v); reset(); }} />
             <Text kind="note" as="p">
-              Rho is the heating. Below one the fluid is at rest; past one it convects steadily in
-              one of two directions; past about 24.7 both of those lose stability and there is
-              nowhere left to settle.
+              {L("Rho is the heating. Below one the fluid is at rest; past one it convects steadily in one of two directions; past about 24.7 both of those lose stability and there is nowhere left to settle.")}
             </Text>
-            <Choices options={[{ id: "two", label: "Two starts" }, { id: "one", label: "One start" }]} value={twin ? "two" : "one"} onPick={(id) => { setTwin(id === "two"); reset(); }} />
+            <Choices options={[{ id: "two", label: L("Two starts") }, { id: "one", label: L("One start") }]} value={twin ? "two" : "one"} onPick={(id) => { setTwin(id === "two"); reset(); }} />
             {twin ? (
-              <Slider label="How far apart" min={-14} max={-2} step={0.5} value={Math.log10(gap)} format={(v) => `1e${v.toFixed(1)}`} onChange={(v) => { setGap(Math.pow(10, v)); reset(); }} />
+              <Slider label={L("How far apart")} min={-14} max={-2} step={0.5} value={Math.log10(gap)} format={(v) => `1e${v.toFixed(1)}`} onChange={(v) => { setGap(Math.pow(10, v)); reset(); }} />
             ) : null}
             <PaletteBar />
           </div>
@@ -152,7 +151,7 @@ function LorenzPage() {
           <RunBar
             running={runner.running}
             count={Math.round(t * 10) / 10}
-            what="time units"
+            what={L("time units")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 20, max: 360, step: 10 }}
@@ -225,7 +224,7 @@ function LorenzPage() {
                   pen.line([[look.rho, sweepBox.y0], [look.rho, sweepBox.y1]], INK, 1);
                 }}
               />
-            </div><Caption>The flow's bifurcation diagram: rho along the bottom, the height of each peak of z above. Click to set rho. A steady state is one point, a cycle a few, the attractor a smear with windows in it.</Caption></div>
+            </div><Caption>{L("The flow's bifurcation diagram: rho along the bottom, the height of each peak of z above. Click to set rho. A steady state is one point, a cycle a few, the attractor a smear with windows in it.")}</Caption></div>
             <div><div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -238,7 +237,7 @@ function LorenzPage() {
                     pen.text(`1e${g}`, seriesBox.x1 * 0.985, g + 0.16, "#3f4650", "right");
                   }
                   if (!apart.length) {
-                    plate(pen, "Two starts are needed for this plot", seriesBox.x1 * 0.28, (seriesBox.y0 + seriesBox.y1) / 2, MUTED);
+                    plate(pen, L("Two starts are needed for this plot"), seriesBox.x1 * 0.28, (seriesBox.y0 + seriesBox.y1) / 2, MUTED);
                     return;
                   }
                   pen.line(apart.filter((p) => p[0] <= t), colours[1], 1.6);
@@ -251,7 +250,7 @@ function LorenzPage() {
                   pen.line([[0, from], [until, from + decades * until]], "#6f7883", 1);
                 }}
               />
-            </div><Caption>The gap between the two, against time, one power of ten a line. Grey: the measured exponent as a slope</Caption></div>
+            </div><Caption>{L("The gap between the two, against time, one power of ten a line. Grey: the measured exponent as a slope")}</Caption></div>
           </section>
         }
         result={
@@ -259,35 +258,34 @@ function LorenzPage() {
             <Verdict good={upTo === 0 ? undefined : twin && distanceNow >= PARTED ? false : undefined}>
               {upTo === 0
                 ? twin
-                  ? `Two states ${gap.toExponential(0)} apart, closer than any measurement could tell apart. Press run and both are followed; the dots are where they are now.`
-                  : "One state, followed forward. Press run and watch it circle one wing, cross, circle the other, never crossing its own path and never repeating."
+                  ? L("Two states {{gap}} apart, closer than any measurement could tell apart. Press run and both are followed; the dots are where they are now.", { gap: gap.toExponential(0) })
+                  : L("One state, followed forward. Press run and watch it circle one wing, cross, circle the other, never crossing its own path and never repeating.")
                 : !twin
-                  ? `${t.toFixed(1)} time units in. ${settled === "attractor" ? "The state keeps switching wings with no pattern to the switching, and the curve never closes: it is drawn on the attractor, a set of no volume that the state never leaves and never repeats on." : settled === "steady" ? "The state spirals in to one of the two convecting states and stays: steady convection." : "The state falls to the origin and stays: the fluid is at rest."}`
+                  ? `${L("{{t}} time units in.", { t: t.toFixed(1) })} ${settled === "attractor" ? L("The state keeps switching wings with no pattern to the switching, and the curve never closes: it is drawn on the attractor, a set of no volume that the state never leaves and never repeats on.") : settled === "steady" ? L("The state spirals in to one of the two convecting states and stays: steady convection.") : L("The state falls to the origin and stays: the fluid is at rest.")}`
                   : distanceNow >= PARTED
-                    ? `${t.toFixed(1)} time units in, the two are ${distanceNow.toFixed(1)} apart: as far as the attractor is wide, on different wings as often as not. They parted for good at about ${partedAt?.toFixed(1)} time units. Beyond that, knowing the first start to ${gap.toExponential(0)} says nothing about where the second is.`
+                    ? L("{{t}} time units in, the two are {{distance}} apart: as far as the attractor is wide, on different wings as often as not. They parted for good at about {{parted}} time units. Beyond that, knowing the first start to {{gap}} says nothing about where the second is.", { t: t.toFixed(1), distance: distanceNow.toFixed(1), parted: partedAt?.toFixed(1) ?? "undefined", gap: gap.toExponential(0) })
                     : distanceNow > gap * 30
-                      ? `${t.toFixed(1)} time units in, the gap has grown from ${gap.toExponential(0)} to ${distanceNow.toExponential(1)}: ${tenfold ? `tenfold every ${tenfold.toFixed(1)} time units, a straight climb on the logarithmic plot. ` : ""}the dots still look together; they will not for long.`
-                      : `${t.toFixed(1)} time units in, the two dots are ${distanceNow.toExponential(1)} apart: still on top of each other, as they would be in any system. The difference is what comes next.`}
+                      ? tenfold
+                        ? L("{{t}} time units in, the gap has grown from {{gap}} to {{distance}}: tenfold every {{tenfold}} time units, a straight climb on the logarithmic plot. the dots still look together; they will not for long.", { t: t.toFixed(1), gap: gap.toExponential(0), distance: distanceNow.toExponential(1), tenfold: tenfold.toFixed(1) })
+                        : L("{{t}} time units in, the gap has grown from {{gap}} to {{distance}}: the dots still look together; they will not for long.", { t: t.toFixed(1), gap: gap.toExponential(0), distance: distanceNow.toExponential(1) })
+                      : L("{{t}} time units in, the two dots are {{distance}} apart: still on top of each other, as they would be in any system. The difference is what comes next.", { t: t.toFixed(1), distance: distanceNow.toExponential(1) })}
             </Verdict>
             <Readout
               rows={[
-                ["Largest Lyapunov exponent", measured.l.lambda.toFixed(4)],
-                ["So the gap grows tenfold every", tenfold ? `${tenfold.toFixed(2)} time units` : "Never: it shrinks"],
-                ["Prediction horizon", horizon ? `${horizon.toFixed(1)} time units from a start known to ${gap.toExponential(0)}` : "No separation to lose"],
-                ["Ten times better measurement buys", measured.l.lambda > 0 ? `${(Math.LN10 / measured.l.lambda).toFixed(2)} more time units` : "-"],
-                ["Mean divergence", measured.md.toFixed(4)],
-                ["Exactly", `-(sigma + 1 + beta) = ${(-(look.sigma + 1 + look.beta)).toFixed(4)}`],
-                ["Third exponent", measured.ky.lambda3.toFixed(4)],
-                ["Kaplan-Yorke dimension", Number.isFinite(measured.ky.dimension) ? measured.ky.dimension.toFixed(3) : "-"],
-                ["Box counting, on this sample", `${measured.box.dimension.toFixed(3)} over box sizes ${measured.box.sizes[measured.box.window[1]].toFixed(2)} to ${measured.box.sizes[measured.box.window[0]].toFixed(1)}`],
-                ["Trajectory", `${STEPS.toLocaleString("en")} states at a step of ${DT}, ${upTo.toLocaleString("en")} drawn`],
+                [L("Largest Lyapunov exponent"), measured.l.lambda.toFixed(4)],
+                [L("So the gap grows tenfold every"), tenfold ? L("{{n}} time units", { n: tenfold.toFixed(2) }) : L("Never: it shrinks")],
+                [L("Prediction horizon"), horizon ? L("{{n}} time units from a start known to {{gap}}", { n: horizon.toFixed(1), gap: gap.toExponential(0) }) : L("No separation to lose")],
+                [L("Ten times better measurement buys"), measured.l.lambda > 0 ? L("{{n}} more time units", { n: (Math.LN10 / measured.l.lambda).toFixed(2) }) : "-"],
+                [L("Mean divergence"), measured.md.toFixed(4)],
+                [L("Exactly"), `-(sigma + 1 + beta) = ${(-(look.sigma + 1 + look.beta)).toFixed(4)}`],
+                [L("Third exponent"), measured.ky.lambda3.toFixed(4)],
+                [L("Kaplan-Yorke dimension"), Number.isFinite(measured.ky.dimension) ? measured.ky.dimension.toFixed(3) : "-"],
+                [L("Box counting, on this sample"), L("{{dimension}} over box sizes {{from}} to {{to}}", { dimension: measured.box.dimension.toFixed(3), from: measured.box.sizes[measured.box.window[1]].toFixed(2), to: measured.box.sizes[measured.box.window[0]].toFixed(1) })],
+                [L("Trajectory"), L("{{steps}} states at a step of {{dt}}, {{drawn}} drawn", { steps: STEPS.toLocaleString("en"), dt: DT, drawn: upTo.toLocaleString("en") })],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              The exponent is the slope of the climb, measured by following a neighbour and pulling
-              it back each time it drifts. The volume shrinks at a fixed rate, so the set the state
-              lives on has no volume at all, and its dimension, counted two ways, comes out a little
-              above two.
+              {L("The exponent is the slope of the climb, measured by following a neighbour and pulling it back each time it drifts. The volume shrinks at a fixed rate, so the set the state lives on has no volume at all, and its dimension, counted two ways, comes out a little above two.")}
             </Text>
           </div>
         }

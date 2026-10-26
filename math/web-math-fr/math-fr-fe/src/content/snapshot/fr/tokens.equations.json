@@ -1,0 +1,454 @@
+{
+ "systems": [
+  {
+   "id": "bytes",
+   "name": "Une chaîne, trois façons",
+   "summary": "Ce que l'œil lit, les points de code qui le désignent, les octets qui le stockent : trois comptes qui coïncident en anglais courant et divergent partout ailleurs",
+   "blocks": [
+    {
+     "label": "Un point de code",
+     "tex": "c \\in \\{0, 1, \\ldots, \\mathrm{10FFFF}_{16}\\}",
+     "note": "Un entier par caractère dans la table de la norme. La page affiche chacun sous la forme U+ suivi de son numéro en hexadécimal"
+    },
+    {
+     "label": "Ses octets",
+     "tex": "\\text{bytes}(c) = \\begin{cases} 1 & c < 2^{7} \\\\ 2 & c < 2^{11} \\\\ 3 & c < 2^{16} \\\\ 4 & \\text{otherwise} \\end{cases}",
+     "note": "UTF-8 : un petit point de code tient sur un octet, un grand sur quatre au plus. Le premier octet indique combien d'octets suivent, ce que marquent les couleurs de la page"
+    },
+    {
+     "label": "Deux écritures, une lettre",
+     "tex": "\\text{e} + \\text{U+0301} \\neq \\text{U+00E9}, \\qquad \\mathrm{NFC}(\\cdot) \\text{ makes them equal}",
+     "note": "Une lettre de base avec un signe combinant, ou la lettre composée : identiques à l'œil, différentes en tant que chaînes, égales seulement après normalisation"
+    }
+   ],
+   "dimension": {
+    "label": "Pourquoi aucun des deux n'est l'unité",
+    "tex": "|\\text{bytes}| \\gg |\\text{words}|, \\qquad |\\text{alphabet}| \\ll \\text{what a row can carry}",
+    "note": "Les octets rendent une phrase longue de plusieurs centaines et laissent chaque mot à réassembler ; les caractères donnent un vocabulaire trop petit pour avoir un sens. L'unité est choisie entre les deux"
+   }
+  },
+  {
+   "id": "merge",
+   "name": "Construire un vocabulaire",
+   "summary": "Le codage par paires d'octets sur un petit texte, une fusion par pas : compter les paires voisines, joindre la plus fréquente en un nouveau symbole, recommencer. La liste des fusions est tout le résultat",
+   "blocks": [
+    {
+     "label": "Un pas",
+     "tex": "(a, b)^{*} = \\arg\\max_{(a,b)} \\#\\{a\\,b \\text{ adjacent}\\}, \\qquad a\\,b \\rightarrow s_{\\text{new}}",
+     "note": "La paire adjacente la plus fréquente devient un seul symbole partout où elle apparaît. Le diagramme en barres de la page montre le compte ; la barre du haut est la paire jointe ensuite"
+    },
+    {
+     "label": "Le vocabulaire après k fusions",
+     "tex": "|V| = 256 + k",
+     "note": "L'alphabet est formé des 256 valeurs d'octet, donc toute chaîne est représentable et rien n'est inconnu. Chaque fusion ajoute exactement un symbole"
+    },
+    {
+     "label": "Le texte raccourcit",
+     "tex": "\\text{tokens}_{k+1} = \\text{tokens}_{k} - \\#\\{(a,b)^{*}\\}",
+     "note": "Chaque fusion retire un jeton par occurrence de la paire. Sur le texte de la page, 2039 octets deviennent environ 516 jetons après 150 fusions"
+    }
+   ],
+   "dimension": {
+    "label": "Une espace reste avec le mot qui la suit",
+    "tex": "\\text{``the cat''} \\rightarrow [\\text{``the''},\\ \\text{``\\textvisiblespace cat''}]",
+    "note": "Les mots sont séparés avant les fusions, avec l'espace initiale attachée, donc les fusions ne franchissent jamais une limite de mot et un jeton peut porter son espace"
+   }
+  },
+  {
+   "id": "segment",
+   "name": "Découper une phrase",
+   "summary": "Les fusions rejouées dans l'ordre sur un texte que le vocabulaire n'a jamais vu. La même phrase sous quatre vocabulaires, l'espace à l'intérieur du jeton, et le chemin exact du retour",
+   "blocks": [
+    {
+     "label": "Encoder, c'est rejouer",
+     "tex": "\\text{encode}(x) = m_k \\circ \\cdots \\circ m_2 \\circ m_1 (\\text{bytes}(x))",
+     "note": "Appliquer les fusions dans l'ordre où elles ont été apprises. Déterministe : le même texte se découpe toujours de la même façon avec la même liste"
+    },
+    {
+     "label": "Décoder, c'est concaténer",
+     "tex": "\\text{decode}(t_1, \\ldots, t_n) = \\text{bytes}(t_1) \\| \\cdots \\| \\text{bytes}(t_n)",
+     "note": "Chaque symbole représente une chaîne d'octets fixe ; les symboles sont joints bout à bout. Avec un alphabet d'octets, l'aller-retour est exact, et la page le vérifie"
+    },
+    {
+     "label": "Un mot que le texte n'avait pas",
+     "tex": "\\text{pieces}(w) > 1 \\iff w \\notin \\text{training text}",
+     "note": "Aucune fusion ne l'a jamais couvert, il reste donc en morceaux quel que soit le nombre de fusions. La phrase par défaut de la page contient un tel mot"
+    }
+   ],
+   "dimension": {
+    "label": "Les identifiants sont tout ce que reçoit le modèle",
+    "tex": "x \\mapsto (t_1, \\ldots, t_n) \\in V^{n}",
+    "note": "Des entiers dans l'ordre du vocabulaire. Leurs valeurs numériques ne portent rien ; le groupe de pages suivant traite de la manière de leur donner quelque chose"
+   }
+  },
+  {
+   "id": "cost",
+   "name": "Ce que coûte un jeton",
+   "summary": "Une phrase en onze écritures sous un seul vocabulaire entraîné sur l'anglais : les jetons face aux caractères, et pourquoi ce rapport est ce qui est facturé et ce qui remplit la fenêtre",
+   "blocks": [
+    {
+     "label": "Le rapport",
+     "tex": "r = \\frac{\\#\\text{tokens}}{\\#\\text{characters}}",
+     "note": "Environ 0,23 pour l'anglais avec ce vocabulaire, et plus de 1 pour une écriture que le vocabulaire n'a jamais vue, où chaque caractère fait plusieurs octets et chaque octet est un jeton"
+    },
+    {
+     "label": "Ce qu'il multiplie",
+     "tex": "\\text{cost}_{\\text{attention}} \\propto n^{2}, \\qquad \\text{cache} \\propto n",
+     "note": "La matrice des scores a une case par paire de positions. La même phrase avec quatre fois plus de jetons coûte seize fois plus d'attention"
+    },
+    {
+     "label": "Combien tiennent",
+     "tex": "\\left\\lfloor \\frac{W}{n} \\right\\rfloor",
+     "note": "Le nombre de copies de la phrase qui tiennent dans une fenêtre de W jetons. La fenêtre se compte en jetons, donc sa taille en mots dépend de la langue"
+    }
+   ],
+   "dimension": {
+    "label": "Un nombre, découpé selon la fréquence",
+    "tex": "1234567 \\rightarrow [12][34][567] \\text{ or } [1][2345][67]",
+    "note": "La valeur de position peut chevaucher une limite de jeton, selon les paires de chiffres que le texte d'entraînement contenait le plus. La dernière page rassemble ces cas"
+   }
+  },
+  {
+   "id": "table",
+   "name": "D'un nombre à un vecteur",
+   "summary": "Un identifiant de jeton sous forme de ligne one-hot, une matrice qui choisit une ligne quand elle est multipliée par elle, et la table qui rend ce choix peu coûteux. La largeur est fixe ; c'est le nombre qui augmente",
+   "blocks": [
+    {
+     "label": "One-hot",
+     "tex": "e_t \\in \\{0,1\\}^{|V|}, \\qquad (e_t)_i = [i = t]",
+     "note": "Aussi long que le vocabulaire, nul partout sauf à un endroit. Deux vecteurs one-hot distincts sont toujours à exactement racine de deux l'un de l'autre, il porte donc l'identité et rien d'autre"
+    },
+    {
+     "label": "Multiplier par une matrice choisit une ligne",
+     "tex": "e_t^{\\top} E = E_{t,:}",
+     "note": "La couche de plongement est une couche entièrement connectée à entrée one-hot, et elle est implémentée comme un index parce que c'est la même chose, gratuitement"
+    },
+    {
+     "label": "La table",
+     "tex": "E \\in \\mathbb{R}^{|V| \\times d}, \\qquad |V| \\cdot d \\text{ trainable numbers}",
+     "note": "Une ligne par entrée du vocabulaire, d'une largeur choisie une fois pour toutes. Les lignes partent au hasard et sont entraînées comme n'importe quels autres poids"
+    },
+    {
+     "label": "La forme d'une entrée",
+     "tex": "X = \\begin{pmatrix} E_{t_1,:} \\\\ \\vdots \\\\ E_{t_n,:} \\end{pmatrix} \\in \\mathbb{R}^{n \\times d}",
+     "note": "Il y a n lignes pour n jetons, chacune de largeur d. Seul n change avec l'entrée. C'est la réponse à la question de la longueur fixe du vecteur d'un jeton"
+    }
+   ],
+   "dimension": {
+    "label": "De quoi dépend une ligne",
+    "tex": "E_{t,:} \\text{ depends on } t \\text{ alone}",
+    "note": "Ni de la phrase autour, ni de la longueur de l'entrée. Le vecteur d'un jeton est une recherche par identité, et tout ce qui dépend du contexte vient plus tard"
+   }
+  },
+  {
+   "id": "meaning",
+   "name": "D'où vient le sens",
+   "summary": "Les lignes entraînées à prédire les jetons voisins de chacun et à repousser d'autres jetons au hasard, observées pendant qu'elles forment une carte. Quelles lignes ont bougé souvent et lesquelles presque jamais",
+   "blocks": [
+    {
+     "label": "Skip-gram avec échantillonnage négatif",
+     "tex": "L = -\\log \\sigma(e_c \\cdot c_o) - \\sum_{k=1}^{K} \\log \\sigma(-e_c \\cdot c_{n_k})",
+     "note": "La ligne du jeton central face au vecteur de contexte de son voisin, rapprochés ; face à K jetons au hasard, éloignés. Une seule ligne de la table bouge par pas"
+    },
+    {
+     "label": "La mise à jour",
+     "tex": "e_c \\leftarrow e_c - \\eta \\left[(\\sigma(e_c \\cdot c_o) - 1)\\,c_o + \\sum_k \\sigma(e_c \\cdot c_{n_k})\\,c_{n_k}\\right]",
+     "note": "La descente du thème 3 sur la seule ligne. La page compte combien de fois chaque ligne a été touchée : le jeton le plus courant des milliers de fois, le plus rare une poignée"
+    },
+    {
+     "label": "Le principe",
+     "tex": "\\text{context}(a) \\approx \\text{context}(b) \\Rightarrow e_a \\approx e_b",
+     "note": "Les jetons trouvés aux mêmes endroits reçoivent des lignes semblables. Chat et chien finissent proches parce que le texte les place dans les mêmes phrases. Un mot à deux sens reçoit une seule ligne entre les deux"
+    }
+   ],
+   "dimension": {
+    "label": "Pas d'objectif propre",
+    "tex": "\\nabla_E L_{\\text{downstream}}",
+    "note": "Une table tire sa structure de la perte placée après elle, quelle qu'elle soit. La table d'un modèle génératif est entraînée par la seule prédiction du jeton suivant, ce qu'utilisent les pages suivantes"
+   }
+  },
+  {
+   "id": "space",
+   "name": "Mesurer l'espace",
+   "summary": "Le cosinus face à la distance, une image plate qui ne garde qu'une partie de la dispersion, la direction comme porteuse de relation, et le cône étroit où se trouve toute table entraînée",
+   "blocks": [
+    {
+     "label": "Deux lectures de la proximité",
+     "tex": "\\cos(a, b) = \\frac{a \\cdot b}{\\|a\\|\\,\\|b\\|}, \\qquad d(a, b) = \\|a - b\\|",
+     "note": "L'angle entre eux, aveugle à la longueur ; et leur écartement, qui croît avec la longueur. La page donne les deux pour deux jetons quelconques"
+    },
+    {
+     "label": "L'image plate",
+     "tex": "\\text{kept} = \\frac{\\lambda_1 + \\lambda_2}{\\sum_i \\lambda_i}",
+     "note": "Les deux directions de plus grande dispersion, obtenues par la méthode de la puissance itérée sur la covariance. La part conservée est indiquée sur la page, et le reste est ce que l'image cache ou invente"
+    },
+    {
+     "label": "L'arithmétique des analogies",
+     "tex": "\\arg\\max_{w \\notin \\{a, b, c\\}} \\cos(e_a - e_b + e_c,\\ e_w)",
+     "note": "La célèbre démonstration exclut les trois entrées à la main. La page montre la réponse avec et sans cette exclusion ; sans elle, la réponse est en général une des entrées"
+    },
+    {
+     "label": "Le cône, et le centrage",
+     "tex": "\\bar{e} = \\frac{1}{|V|}\\sum_t e_t, \\qquad e_t' = e_t - \\bar{e}",
+     "note": "Les cosinus entre paires au hasard ont une moyenne bien au-dessus de zéro : les vecteurs penchent ensemble du même côté. Retirer la moyenne les disperse, et l'histogramme de la page montre les deux"
+    }
+   ],
+   "dimension": {
+    "label": "Ce que l'espace ne contient pas",
+    "tex": "\\text{no axis } i \\text{ has an assigned meaning}",
+    "note": "Une direction qui semble signifier quelque chose a été trouvée après coup, pas conçue. L'espace porte ce que la perte y a mis et rien d'autre"
+   }
+  },
+  {
+   "id": "order",
+   "name": "L'ordre doit être fourni",
+   "summary": "Une phrase et sa version mélangée donnent une seule et même réponse sous tout mélange symétrique, tant qu'une position n'est pas ajoutée à chaque vecteur",
+   "blocks": [
+    {
+     "label": "Le problème",
+     "tex": "\\frac{1}{n}\\sum_i x_{\\pi(i)} = \\frac{1}{n}\\sum_i x_i \\quad \\text{for every permutation } \\pi",
+     "note": "Une moyenne ne se soucie pas de l'ordre, pas plus qu'aucun mécanisme qui traite toutes les positions de la même façon. La page additionne une phrase et sa version mélangée et obtient le même vecteur à la précision machine"
+    },
+    {
+     "label": "Un vecteur appris par indice",
+     "tex": "x_i = E_{t_i,:} + P_{i,:}, \\qquad P \\in \\mathbb{R}^{n_{\\max} \\times d}",
+     "note": "Une ligne entraînable par position, ajoutée à celle du jeton. Le petit modèle de ces pages fait ainsi. La limite : aucune ligne n'existe après la dernière"
+    },
+    {
+     "label": "Sinus et cosinus",
+     "tex": "P_{i, 2j} = \\sin\\!\\left(\\frac{i}{10000^{2j/d}}\\right), \\qquad P_{i, 2j+1} = \\cos\\!\\left(\\frac{i}{10000^{2j/d}}\\right)",
+     "note": "Une fonction fixe de l'indice à de nombreuses fréquences. Tout indice en a une. Deux positions séparées d'une distance fixe sont reliées par la même rotation où qu'elles soient"
+    },
+    {
+     "label": "Faire tourner la requête et la clé",
+     "tex": "q_i \\cdot k_j \\text{ after rotating each by } i\\theta,\\ j\\theta \\text{ depends on } i - j \\text{ only}",
+     "note": "La norme actuelle : la position entre comme une rotation de la requête et de la clé, donc le score dépend de la distance entre les positions plutôt que de chacune d'elles"
+    }
+   ],
+   "dimension": {
+    "label": "La largeur du flux",
+    "tex": "x_i \\in \\mathbb{R}^{d} \\text{ for the whole depth}",
+    "note": "La représentation courante est un vecteur par position, de la largeur du plongement, lu et écrit par chaque bloc. Au départ, c'est la ligne plus la position"
+   }
+  },
+  {
+   "id": "attend",
+   "name": "L'attention, avec les nombres",
+   "summary": "Requête, clé et valeur tirées du flux, la matrice des scores, le masque, les poids et le mélange réécrit, sur une vraie invite passée dans le petit modèle entraîné sur ces pages",
+   "blocks": [
+    {
+     "label": "Trois projections",
+     "tex": "Q = X W_Q, \\qquad K = X W_K, \\qquad V = X W_V",
+     "note": "Chaque ligne du flux devient une requête, une clé et une valeur, chacune étant une multiplication matricielle de la même ligne"
+    },
+    {
+     "label": "Les scores, mis à l'échelle",
+     "tex": "S_{ij} = \\frac{q_i \\cdot k_j}{\\sqrt{d}}",
+     "note": "Une case par paire de positions, n au carré en tout. Diviser par la racine de la largeur empêche les scores de croître avec elle, ce qui pousserait chaque ligne du softmax vers un seul un"
+    },
+    {
+     "label": "Le masque, puis les poids",
+     "tex": "S_{ij} \\leftarrow -\\infty \\text{ for } j > i, \\qquad A_{i,:} = \\mathrm{softmax}(S_{i,:})",
+     "note": "Aucune position ne peut lire une position ultérieure. Après le softmax, chaque ligne est positive et fait un au total, et la page affiche la dernière ligne en pourcentages"
+    },
+    {
+     "label": "Le mélange, réécrit",
+     "tex": "Z = A V, \\qquad H = X + Z",
+     "note": "Les poids appliqués aux valeurs, ajoutés à ce que contenait le flux. C'est le seul moyen pour les jetons précédents d'atteindre les suivants, et il est recalculé à chaque position"
+    }
+   ],
+   "dimension": {
+    "label": "Le coût",
+    "tex": "|S| = n^{2}",
+    "note": "La raison pour laquelle la fenêtre est finie. Le curseur de la page le calcule pour toute longueur ; à mille jetons, c'est un million de scores par tête et par couche"
+   }
+  },
+  {
+   "id": "predict",
+   "name": "Le jeton suivant",
+   "summary": "Le dernier vecteur comparé à chaque ligne de la table, passé au softmax pour former une liste classée. Regardez-la s'affiner à mesure que le modèle s'entraîne, comparée à ce que le texte disait réellement",
+   "blocks": [
+    {
+     "label": "Un score par entrée du vocabulaire",
+     "tex": "z_t = h_n \\cdot E_{t,:}",
+     "note": "La couche de sortie est la table transposée, donc un score mesure à quel point le vecteur courant s'aligne sur la ligne propre d'un jeton. Les lier économise toute une table de nombres"
+    },
+    {
+     "label": "La distribution",
+     "tex": "p_t = \\frac{e^{z_t}}{\\sum_{t'} e^{z_{t'}}}",
+     "note": "Le softmax du thème 3 sur le vocabulaire. La page montre les douze premiers sous forme de liste classée plutôt que de graphique, parce que c'est ainsi que la forme se lit"
+    },
+    {
+     "label": "La perte, à chaque position à la fois",
+     "tex": "L = -\\frac{1}{n-1}\\sum_{i=1}^{n-1} \\log p^{(i)}_{t_{i+1}}",
+     "note": "L'entropie croisée par rapport au jeton qui a réellement suivi, un terme par position du texte. La courbe de la page est cette perte, qui baisse"
+    },
+    {
+     "label": "Perplexité",
+     "tex": "\\mathrm{PPL} = e^{L}",
+     "note": "L'exponentielle de la perte moyenne : comme un choix parmi autant de jetons également probables. Sans entraînement, elle vaut environ la taille du vocabulaire ; entraînée sur ce petit texte, elle tombe à une poignée"
+    }
+   ],
+   "dimension": {
+    "label": "Ce que sait le modèle",
+    "tex": "\\text{one text of } \\approx 500 \\text{ tokens}",
+    "note": "La liste classée est ce que ce texte a rendu probable et rien d'autre. Les pages suivantes génèrent à partir d'elle, et ce qu'elles génèrent est ce texte réarrangé"
+   }
+  },
+  {
+   "id": "generate",
+   "name": "Un jeton à la fois",
+   "summary": "Exécuter, choisir un jeton, l'ajouter, exécuter à nouveau. Le jeton ajouté entre comme n'importe quel autre, la fenêtre se remplit, le plus ancien en sort, et rien ne peut être révisé",
+   "blocks": [
+    {
+     "label": "La boucle",
+     "tex": "t_{n+1} \\sim p(\\cdot \\mid t_{1..n}), \\qquad n \\leftarrow n + 1",
+     "note": "Quatre étapes : découper l'invite en jetons, exécuter la pile, choisir dans la distribution à la dernière position, ajouter. Le jeton ajouté ne se distingue pas de ceux de l'invite"
+    },
+    {
+     "label": "Pourquoi cela correspond à l'entraînement",
+     "tex": "p(t_{i+1} \\mid t_{1..i}) \\text{ used only } j \\le i \\text{ in training too}",
+     "note": "Le masque causal a rendu chaque prédiction d'entraînement dépendante des seules positions précédentes, ce qui est exactement la situation au moment de la génération"
+    },
+    {
+     "label": "Le cache",
+     "tex": "\\text{keep } K_{1..n}, V_{1..n}; \\text{ compute only } q_{n+1}, k_{n+1}, v_{n+1}",
+     "note": "Les clés et valeurs des positions précédentes ne changent pas, elles sont donc stockées. Le travail par nouveau jeton passe de la séquence entière à une seule position"
+    },
+    {
+     "label": "Ce que coûte le cache",
+     "tex": "\\text{depth} \\times \\text{heads} \\times 2 \\times d_{\\text{head}} \\times n",
+     "note": "Linéaire en la longueur, et en pratique la vraie limite de la durée d'une génération. La page le compte pour sa tête unique et sa couche unique"
+    }
+   ],
+   "dimension": {
+    "label": "La fenêtre",
+    "tex": "n \\le W",
+    "note": "Au-delà de W jetons, les plus anciens sortent et disparaissent. Le curseur de la page réduit la fenêtre pour que cela se voie sur un texte court ; un vrai modèle tronque ou résume"
+   }
+  },
+  {
+   "id": "sample",
+   "name": "Choisir dans la distribution",
+   "summary": "Le choix glouton se répète ; la température, le top-k et l'échantillonnage par noyau remodèlent la même distribution avant le tirage, et ce choix change le texte autant que le modèle",
+   "blocks": [
+    {
+     "label": "Glouton",
+     "tex": "t_{n+1} = \\arg\\max_t p_t",
+     "note": "Toujours le plus probable. Déterministe, et sur un petit modèle il trouve un cycle et y reste, ce que la page montre dans la colonne de droite"
+    },
+    {
+     "label": "Température",
+     "tex": "p_t \\propto e^{z_t / T}",
+     "note": "Diviser les scores avant le softmax. En dessous de un, cela accentue ; au-dessus de un, cela aplatit ; les limites sont le choix glouton et tous les jetons à égalité"
+    },
+    {
+     "label": "Top-k et noyau",
+     "tex": "\\text{keep the } k \\text{ largest}; \\quad \\text{keep the fewest with } \\sum p_t \\ge P; \\quad \\text{renormalise}",
+     "note": "Couper la queue, puis renormaliser ce qui reste. Le noyau adapte le nombre à la confiance de la distribution ; la page grise ce que chaque règle a retiré"
+    },
+    {
+     "label": "Une pénalité sur ce qui a été écrit",
+     "tex": "z_t \\leftarrow z_t - \\lambda \\,[t \\text{ already emitted}]",
+     "note": "Abaisser le score des jetons déjà présents dans le texte, ce qui est le remède grossier au cycle glouton"
+    }
+   ],
+   "dimension": {
+    "label": "Deux systèmes, pas un",
+    "tex": "\\text{text} = \\text{decode}(\\text{model}, \\text{rule})",
+    "note": "Le modèle n'a pas changé entre les deux colonnes ; seule la règle a changé. La recherche en faisceau est l'autre forme, réservée à la traduction, où il existe une bonne réponse à trouver"
+   }
+  },
+  {
+   "id": "pool",
+   "name": "Un seul vecteur pour tout un passage",
+   "summary": "Les vecteurs par position, réduits volontairement à un seul de deux façons, et ce que ce vecteur unique ne sait pas distinguer",
+   "blocks": [
+    {
+     "label": "Deux réductions",
+     "tex": "v = \\frac{1}{n}\\sum_i h_i \\qquad \\text{or} \\qquad v = h_n",
+     "note": "Faire la moyenne de toutes les positions, ou lire une position désignée. Pour un modèle causal, le choix naturel est la dernière position, la seule à avoir tout vu"
+    },
+    {
+     "label": "Comparaison",
+     "tex": "\\cos(v_A, v_B)",
+     "note": "La page compare trois paires : le même sens en d'autres mots, le sens contraire avec les mêmes mots, et un sujet différent. La paire contraire se retrouve proche"
+    },
+    {
+     "label": "La perte qu'utilise plutôt un modèle de recherche",
+     "tex": "L = -\\log \\frac{e^{\\cos(v_A, v_{A^{+}})/\\tau}}{\\sum_{B} e^{\\cos(v_A, v_B)/\\tau}}",
+     "note": "Les paires qui vont ensemble sont rapprochées, les autres éloignées. Une autre perte sur le même genre de vecteur, pas un autre genre de vecteur"
+    }
+   ],
+   "dimension": {
+    "label": "La troisième partie de la correction",
+    "tex": "\\text{one vector per passage is a construction, not a property of the embedding}",
+    "note": "La largeur fixe vient de la table ; le nombre de vecteurs vient de l'entrée ; un vecteur unique pour l'ensemble n'existe que lorsque ce nombre est volontairement réduit. Un modèle génératif ne le construit jamais"
+   }
+  },
+  {
+   "id": "artefacts",
+   "name": "Ce qu'expliquent les premières pages",
+   "summary": "Compter des lettres, un long nombre, une espace en trop, un mot rare : quatre échecs que les gens rencontrent, chacun ramené à une page antérieure à l'arrivée de tout modèle",
+   "blocks": [
+    {
+     "label": "Les lettres dans un jeton",
+     "tex": "\\text{``windowsill''} \\rightarrow 3 \\text{ ids}; \\quad \\#\\text{letters} \\notin \\text{input}",
+     "note": "L'unité est le jeton, et ses lettres n'ont jamais été représentées séparément. Les compter, épeler et inverser échouent tous pour cette seule raison"
+    },
+    {
+     "label": "Un nombre, découpé de trois façons",
+     "tex": "\\text{tokens}(1234567) \\neq \\text{tokens}(1{,}234{,}567) \\neq \\text{tokens}(\\textvisiblespace 1234567)",
+     "note": "La valeur de position est coupée là où sont tombées les fusions, et différemment dans chaque écriture. L'arithmétique sur les morceaux n'est pas l'arithmétique sur les chiffres"
+    },
+    {
+     "label": "Une espace en trop",
+     "tex": "\\text{id}(\\text{``the''}) \\neq \\text{id}(\\text{``\\textvisiblespace the''})",
+     "note": "L'espace voyage à l'intérieur du jeton, donc c'est une autre ligne de la table qui entre et tout ce qui suit est calculé à partir d'autres nombres"
+    },
+    {
+     "label": "Les lignes d'un mot rare",
+     "tex": "\\#\\text{updates}(t) \\propto \\#\\text{occurrences}(t)",
+     "note": "Les morceaux d'un mot rare ont été déplacés une poignée de fois ou jamais pendant l'entraînement, ils portent donc peu. La page sur le sens l'a compté"
+    }
+   ],
+   "dimension": {
+    "label": "Le point final",
+    "tex": "\\text{every failure above} \\Leftarrow \\text{pages 1 to 4}",
+    "note": "L'unité, la façon de la choisir, la place de l'espace, l'endroit où un nombre est coupé : tout est décidé avant l'apparition de tout réseau. Rien de cela n'est un mystère sur le modèle"
+   }
+  }
+ ],
+ "definitions": [
+  {
+   "id": "softmax",
+   "name": "Le softmax",
+   "tex": "\\mathrm{softmax}(z)_i = \\frac{e^{z_i}}{\\sum_j e^{z_j}}",
+   "note": "Utilisé trois fois dans ce thème : sur les scores d'une position pour obtenir les poids d'attention, sur le vocabulaire pour obtenir la distribution du jeton suivant, et avec une température sous les scores pour la remodeler"
+  },
+  {
+   "id": "crossentropy",
+   "name": "Entropie croisée",
+   "tex": "L = -\\log p_{t^{*}}",
+   "note": "La perte d'une prédiction est l'opposé du logarithme de la probabilité donnée au jeton qui a réellement suivi. Moyennée sur toutes les positions du texte à la fois, c'est ce que le modèle descend"
+  },
+  {
+   "id": "cosine",
+   "name": "Similarité cosinus",
+   "tex": "\\cos(a, b) = \\frac{a \\cdot b}{\\|a\\|\\,\\|b\\|}",
+   "note": "L'angle entre deux vecteurs, aveugle à leurs longueurs. La lecture de la proximité utilisée pour les plus proches voisins, pour l'arithmétique des analogies et pour comparer des vecteurs de passages"
+  },
+  {
+   "id": "onehot",
+   "name": "Le vecteur one-hot",
+   "tex": "(e_t)_i = [i = t], \\qquad \\|e_a - e_b\\| = \\sqrt{2} \\text{ for } a \\neq b",
+   "note": "Un entier sous forme de vecteur qu'une matrice peut multiplier. Toutes les paires sont à égale distance, il porte donc l'identité et rien d'autre, et le multiplier par une matrice sélectionne une ligne"
+  },
+  {
+   "id": "utf8",
+   "name": "L'alphabet d'octets",
+   "tex": "|\\Sigma| = 256",
+   "note": "Avec les octets pour alphabet, toute chaîne est représentable, aucun jeton n'est inconnu et le décodage est une concaténation exacte. Le prix à payer : une écriture que le vocabulaire n'a jamais vue coûte un jeton par octet"
+  }
+ ]
+}

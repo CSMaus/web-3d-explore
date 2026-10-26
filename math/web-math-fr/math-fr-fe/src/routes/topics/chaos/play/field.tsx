@@ -17,6 +17,7 @@ import { INK, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
 import { integrate, type Field, type Method } from "@/systems/flow";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/chaos/play/field")({
   loader: () => api.system(TOPIC, "field"),
@@ -26,42 +27,42 @@ export const Route = createFileRoute("/topics/chaos/play/field")({
 /** three equations whose closed form is known, so the stepping can be scored. */
 const KIND = {
   decay: {
-    label: "Decay",
+    label: L("Decay"),
     rule: (k: number): Field => ([x]) => [-k * x],
     exact: (k: number, x0: number) => (t: number) => x0 * Math.exp(-k * t),
     tex: "x' = -k x",
     closed: "x(t) = x_0 e^{-kt}",
     box: { x0: 0, x1: 6, y0: -0.2, y1: 2.2 } as Box,
     start: 2,
-    what: "The rate of loss is a fixed fraction of what is left. The further down the curve, the flatter it gets",
+    what: L("The rate of loss is a fixed fraction of what is left. The further down the curve, the flatter it gets"),
   },
   cooling: {
-    label: "Cooling",
+    label: L("Cooling"),
     rule: (k: number): Field => ([x]) => [-k * (x - 0.4)],
     exact: (k: number, x0: number) => (t: number) => 0.4 + (x0 - 0.4) * Math.exp(-k * t),
     tex: "x' = -k(x - A),\\ A = 0.4",
     closed: "x(t) = A + (x_0 - A)e^{-kt}",
     box: { x0: 0, x1: 6, y0: -0.2, y1: 2.2 } as Box,
     start: 2,
-    what: "The same, towards the temperature of the room rather than towards zero. Every start ends at 0.4",
+    what: L("The same, towards the temperature of the room rather than towards zero. Every start ends at 0.4"),
   },
   crowded: {
-    label: "Crowded growth",
+    label: L("Crowded growth"),
     rule: (k: number): Field => ([x]) => [k * x * (1 - x)],
     exact: (k: number, x0: number) => (t: number) => x0 / (x0 + (1 - x0) * Math.exp(-k * t)),
     tex: "x' = k x (1 - x)",
     closed: "x(t) = \\dfrac{x_0}{x_0 + (1 - x_0)e^{-kt}}",
     box: { x0: 0, x1: 6, y0: -0.2, y1: 1.6 } as Box,
     start: 0.08,
-    what: "Growth that slows as it fills. Small starts climb slowly, then fast, then level off at one",
+    what: L("Growth that slows as it fills. Small starts climb slowly, then fast, then level off at one"),
   },
 } as const;
 type KindId = keyof typeof KIND;
 const KINDS = (Object.keys(KIND) as KindId[]).map((id) => ({ id, label: KIND[id].label }));
 const METHODS: { id: Method; label: string }[] = [
-  { id: "euler", label: "Euler: follow the stroke" },
-  { id: "midpoint", label: "Midpoint" },
-  { id: "rk4", label: "Runge-Kutta" },
+  { id: "euler", label: L("Euler: follow the stroke") },
+  { id: "midpoint", label: L("Midpoint") },
+  { id: "rk4", label: L("Runge-Kutta") },
 ];
 
 function FieldPage() {
@@ -106,20 +107,19 @@ function FieldPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "One equation, and its field"}
-        job="An equation that says, at every state and time, how fast the state is changing, and nothing else. Drawn as short strokes it is a field, and a solution is any curve that follows the strokes. The job is to pick a start, step along the strokes, and see how far the stepping drifts from the true curve, which for these three equations is known exactly."
+        title={system?.name ?? L("One equation, and its field")}
+        job={L("An equation that says, at every state and time, how fast the state is changing, and nothing else. Drawn as short strokes it is a field, and a solution is any curve that follows the strokes. The job is to pick a start, step along the strokes, and see how far the stepping drifts from the true curve, which for these three equations is known exactly.")}
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); setStart(KIND[id].start); reset(); }} />
             <Text kind="note" as="p">{spec.what}.</Text>
-            <Slider label="Rate k" min={0.1} max={3} step={0.01} value={rate} format={(v) => v.toFixed(2)} onChange={(v) => { setRate(v); reset(); }} />
-            <Slider label="Start x0" min={0.02} max={2} step={0.01} value={start} format={(v) => v.toFixed(2)} onChange={(v) => { setStart(v); reset(); }} />
+            <Slider label={L("Rate k")} min={0.1} max={3} step={0.01} value={rate} format={(v) => v.toFixed(2)} onChange={(v) => { setRate(v); reset(); }} />
+            <Slider label={L("Start x0")} min={0.02} max={2} step={0.01} value={start} format={(v) => v.toFixed(2)} onChange={(v) => { setStart(v); reset(); }} />
             <Choices options={METHODS} value={how} onPick={(id) => { setHow(id); reset(); }} />
-            <Slider label="Step h" min={0.05} max={1} step={0.05} value={step} format={(v) => v.toFixed(2)} onChange={(v) => { setStep(v); reset(); }} />
-            <Slider label="Curves shown" min={0} max={21} step={1} value={curves} format={(v) => String(Math.round(v))} onChange={(v) => setCurves(Math.round(v))} />
+            <Slider label={L("Step h")} min={0.05} max={1} step={0.05} value={step} format={(v) => v.toFixed(2)} onChange={(v) => { setStep(v); reset(); }} />
+            <Slider label={L("Curves shown")} min={0} max={21} step={1} value={curves} format={(v) => String(Math.round(v))} onChange={(v) => setCurves(Math.round(v))} />
             <Text kind="note" as="p">
-              Click the picture to choose the start. Euler reads the stroke where it stands and
-              walks straight along it for one step; the other two look ahead inside the step first.
+              {L("Click the picture to choose the start. Euler reads the stroke where it stands and walks straight along it for one step; the other two look ahead inside the step first.")}
             </Text>
             <PaletteBar />
           </div>
@@ -128,7 +128,7 @@ function FieldPage() {
           <RunBar
             running={runner.running}
             count={n}
-            what="steps"
+            what={L("steps")}
             limit={count - 1}
             onToggle={() => {
               if (!runner.running && n >= count - 1) reset();
@@ -197,29 +197,33 @@ function FieldPage() {
                 pen.dot(0, start, 5, INK);
               }}
             />
-          </div><Caption>Green: the true curve.  Dots: the steps.  White arrow: the stroke under the last step.  Rose: the error</Caption></section>
+          </div><Caption>{L("Green: the true curve.  Dots: the steps.  White arrow: the stroke under the last step.  Rose: the error")}</Caption></section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={n === 0 ? undefined : errNow < 0.02 * Math.max(Math.abs(truth(tNow)), 0.05)}>
               {n === 0
-                ? `Start at ${start.toFixed(2)}. The stroke there says the rate is ${spec.rule(rate)([start], 0)[0].toFixed(3)} a time unit, so a step of ${step.toFixed(2)} along it lands at ${(start + step * spec.rule(rate)([start], 0)[0]).toFixed(3)}. Press run.`
-                : `After ${n} step${n === 1 ? "" : "s"} of ${step.toFixed(2)}, at t = ${tNow.toFixed(2)}, the stepping says ${walk[n][1].toFixed(4)} and the true curve says ${truth(tNow).toFixed(4)}: off by ${errNow.toExponential(2)}. ${how === "euler" ? "Euler follows the stroke where it stands, and the true curve bends away underneath it before the step is over; every step adds a little of that." : how === "midpoint" ? "The midpoint rule looks half a step ahead and uses the stroke there, so it follows the bend much more closely." : "Runge-Kutta samples the stroke four times inside each step and weighs them; the error is far below what the picture can show."} ${errNow < 0.02 * Math.max(Math.abs(truth(tNow)), 0.05) ? "Close enough to call right." : `That is ${(100 * errNow / Math.max(Math.abs(truth(tNow)), 1e-9)).toFixed(0)} per cent of the true value. Narrow the step and watch this number.`}`}
+                ? L("Start at {{start}}. The stroke there says the rate is {{rate}} a time unit, so a step of {{step}} along it lands at {{land}}. Press run.", { start: start.toFixed(2), rate: spec.rule(rate)([start], 0)[0].toFixed(3), step: step.toFixed(2), land: (start + step * spec.rule(rate)([start], 0)[0]).toFixed(3) })
+                : [
+                    n === 1
+                      ? L("After {{n}} step of {{step}}, at t = {{t}}, the stepping says {{walked}} and the true curve says {{truth}}: off by {{error}}.", { n, step: step.toFixed(2), t: tNow.toFixed(2), walked: walk[n][1].toFixed(4), truth: truth(tNow).toFixed(4), error: errNow.toExponential(2) })
+                      : L("After {{n}} steps of {{step}}, at t = {{t}}, the stepping says {{walked}} and the true curve says {{truth}}: off by {{error}}.", { n, step: step.toFixed(2), t: tNow.toFixed(2), walked: walk[n][1].toFixed(4), truth: truth(tNow).toFixed(4), error: errNow.toExponential(2) }),
+                    how === "euler" ? L("Euler follows the stroke where it stands, and the true curve bends away underneath it before the step is over; every step adds a little of that.") : how === "midpoint" ? L("The midpoint rule looks half a step ahead and uses the stroke there, so it follows the bend much more closely.") : L("Runge-Kutta samples the stroke four times inside each step and weighs them; the error is far below what the picture can show."),
+                    errNow < 0.02 * Math.max(Math.abs(truth(tNow)), 0.05) ? L("Close enough to call right.") : L("That is {{share}} per cent of the true value. Narrow the step and watch this number.", { share: (100 * errNow / Math.max(Math.abs(truth(tNow)), 1e-9)).toFixed(0) }),
+                  ].join(" ")}
             </Verdict>
             <Readout
               rows={[
-                ["The equation", spec.tex.replace(/\\/g, "")],
-                ["Closed form", spec.closed.replace(/\\dfrac/g, "").replace(/[{}\\]/g, "")],
-                ["Steps taken", `${n} of ${count - 1}`],
-                ["Error now", n > 0 ? errNow.toExponential(2) : "-"],
-                ["Worst error over the whole run", worst.toExponential(2)],
-                ["Error per step, on average", (worst / (count - 1)).toExponential(2)],
+                [L("The equation"), spec.tex.replace(/\\/g, "")],
+                [L("Closed form"), spec.closed.replace(/\\dfrac/g, "").replace(/[{}\\]/g, "")],
+                [L("Steps taken"), L("{{n}} of {{total}}", { n, total: count - 1 })],
+                [L("Error now"), n > 0 ? errNow.toExponential(2) : "-"],
+                [L("Worst error over the whole run"), worst.toExponential(2)],
+                [L("Error per step, on average"), (worst / (count - 1)).toExponential(2)],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              Halve the step and Euler's error halves; halve it for Runge-Kutta and the error falls
-              sixteenfold. The next page measures that on an equation whose answer comes back to
-              its start exactly.
+              {L("Halve the step and Euler's error halves; halve it for Runge-Kutta and the error falls sixteenfold. The next page measures that on an equation whose answer comes back to its start exactly.")}
             </Text>
           </div>
         }

@@ -15,6 +15,7 @@ import { useRunner } from "@/lib/runner";
 import { nudge } from "@/systems/depth";
 import { dataset } from "@/systems/learn";
 import { ACTS } from "@/systems/net";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/networks/play/nudge")({
   loader: () => api.system(TOPIC, "nudge"),
@@ -82,16 +83,13 @@ function NudgePage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "A small change, and what it does"}
-        job="The perceptron on the last page was corrected by a rule that only works for a straight line. Every method after it works by moving a number a little and seeing what that did to the answer. This page moves one weight by the same small amount, again and again, on two units that share the three numbers: the perceptron's hard yes-or-no, and a unit that squashes its total smoothly instead. What each answer does under the nudges is the reason for everything that follows."
+        title={system?.name ?? L("A small change, and what it does")}
+        job={L("The perceptron on the last page was corrected by a rule that only works for a straight line. Every method after it works by moving a number a little and seeing what that did to the answer. This page moves one weight by the same small amount, again and again, on two units that share the three numbers: the perceptron's hard yes-or-no, and a unit that squashes its total smoothly instead. What each answer does under the nudges is the reason for everything that follows.")}
         input={
           <div className="space-y-3">
-            <Slider label="One nudge" min={0.002} max={0.05} step={0.002} value={size} format={(v) => v.toFixed(3)} onChange={(v) => { setSize(v); restart(); }} />
+            <Slider label={L("One nudge")} min={0.002} max={0.05} step={0.002} value={size} format={(v) => v.toFixed(3)} onChange={(v) => { setSize(v); restart(); }} />
             <Text kind="note" as="p">
-              Each step adds this much to the weight on x, the way that moves the ringed dot's
-              answer towards its own colour. Nothing else changes. Click a dot to watch that dot
-              instead; the ringed one starts as the dot nearest the line that the hard unit has
-              wrong.
+              {L("Each step adds this much to the weight on x, the way that moves the ringed dot's answer towards its own colour. Nothing else changes. Click a dot to watch that dot instead; the ringed one starts as the dot nearest the line that the hard unit has wrong.")}
             </Text>
           </div>
         }
@@ -99,7 +97,7 @@ function NudgePage() {
           <RunBar
             running={runner.running}
             count={k}
-            what="nudges"
+            what={L("nudges")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 50, max: 1000, step: 50 }}
@@ -142,10 +140,10 @@ function NudgePage() {
                   pen.line([[v.x0, -(w1 * v.x0 + B) / W[1]], [v.x1, -(w1 * v.x1 + B) / W[1]]], INK, 1.5);
                   for (let n = 0; n < data.X.length; n++) pen.dot(data.X[n][0], data.X[n][1], 4.5, data.Y[n][0] ? ONE : TWO);
                   pen.ring(x[0], x[1], 11, SKY, 2);
-                  plate(pen, "White line: where the hard unit flips", v.x0 + (v.x1 - v.x0) * 0.03, v.y1 - (v.y1 - v.y0) * 0.05, MUTED);
+                  plate(pen, L("White line: where the hard unit flips"), v.x0 + (v.x1 - v.x0) * 0.03, v.y1 - (v.y1 - v.y0) * 0.05, MUTED);
                 }}
               />
-            </div><Caption>The plane coloured by the smooth unit's answer. Sky ring: the dot whose answers are traced at right</Caption></div>
+            </div><Caption>{L("The plane coloured by the smooth unit's answer. Sky ring: the dot whose answers are traced at right")}</Caption></div>
             <div><div data-slot="plot" className="h-[400px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -157,37 +155,46 @@ function NudgePage() {
                   pen.line(hardSteps, TWO, 1.6);
                   pen.line(out.smooth.map((a, i) => [i, a] as [number, number]), ONE, 2);
                   const v = pen.box;
-                  plate(pen, "Green: the smooth unit", v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.05, ONE);
-                  plate(pen, "Rose: the hard unit", v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.11, TWO);
+                  plate(pen, L("Green: the smooth unit"), v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.05, ONE);
+                  plate(pen, L("Rose: the hard unit"), v.x0 + (v.x1 - v.x0) * 0.04, v.y1 - (v.y1 - v.y0) * 0.11, TWO);
                 }}
               />
-            </div><Caption>The ringed dot's answer from each unit, after every nudge</Caption></div>
+            </div><Caption>{L("The ringed dot's answer from each unit, after every nudge")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={k > 0 ? true : undefined}>
               {k === 0
-                ? `The ringed dot is ${want ? "green" : "rose"} and its total is ${z0.toFixed(3)}. The smooth unit answers ${a0.toFixed(3)}; the hard unit answers ${out.hard[0]}${(out.hard[0] === want) ? ", which is right" : ", which is wrong"}. Press run: every nudge adds ${push.toFixed(3)} to the weight on x and touches nothing else.`
-                : `After ${k} nudges the smooth unit's answer went from ${a0.toFixed(3)} to ${ak.toFixed(3)}, about ${Math.abs(per).toFixed(4)} per nudge, a small amount every single time. The hard unit's answer ${flip < 0 ? `has not moved at all in ${k} nudges` : `did not move for ${flip - 1} nudges, then jumped from ${out.hard[0]} to ${out.hard[flip]} at nudge ${flip}${flip < k ? " and has not moved since" : ""}`}. A rule for learning needs the first kind: move a number a little, get a small change in a readable direction, and the way to move is known. Nothing or a jump says nothing about which way to go.`}
+                ? (out.hard[0] === want
+                  ? L("The ringed dot is {{colour}} and its total is {{total}}. The smooth unit answers {{smooth}}; the hard unit answers {{hard}}, which is right. Press run: every nudge adds {{push}} to the weight on x and touches nothing else.", { colour: want ? L("green") : L("rose"), total: z0.toFixed(3), smooth: a0.toFixed(3), hard: out.hard[0], push: push.toFixed(3) })
+                  : L("The ringed dot is {{colour}} and its total is {{total}}. The smooth unit answers {{smooth}}; the hard unit answers {{hard}}, which is wrong. Press run: every nudge adds {{push}} to the weight on x and touches nothing else.", { colour: want ? L("green") : L("rose"), total: z0.toFixed(3), smooth: a0.toFixed(3), hard: out.hard[0], push: push.toFixed(3) }))
+                : L("After {{k}} nudges the smooth unit's answer went from {{from}} to {{to}}, about {{per}} per nudge, a small amount every single time. The hard unit's answer {{hard}}. A rule for learning needs the first kind: move a number a little, get a small change in a readable direction, and the way to move is known. Nothing or a jump says nothing about which way to go.", {
+                    k,
+                    from: a0.toFixed(3),
+                    to: ak.toFixed(3),
+                    per: Math.abs(per).toFixed(4),
+                    hard: flip < 0
+                      ? L("has not moved at all in {{k}} nudges", { k })
+                      : flip < k
+                        ? L("did not move for {{still}} nudges, then jumped from {{from}} to {{to}} at nudge {{flip}} and has not moved since", { still: flip - 1, from: out.hard[0], to: out.hard[flip], flip })
+                        : L("did not move for {{still}} nudges, then jumped from {{from}} to {{to}} at nudge {{flip}}", { still: flip - 1, from: out.hard[0], to: out.hard[flip], flip }),
+                  })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Weight on x now</dt>
+              <dt>{L("Weight on x now")}</dt>
               <dd className="text-right text-foreground/80">{w1.toFixed(3)}</dd>
-              <dt>The smooth unit's answer for the ringed dot</dt>
+              <dt>{L("The smooth unit's answer for the ringed dot")}</dt>
               <dd className="text-right text-foreground/80">{ak.toFixed(4)}</dd>
-              <dt>The hard unit's answer for it</dt>
+              <dt>{L("The hard unit's answer for it")}</dt>
               <dd className="text-right text-foreground/80">{out.hard[k]}</dd>
-              <dt>Change per nudge, smooth unit</dt>
-              <dd className="text-right text-foreground/80">{k > 0 ? per.toFixed(5) : "not yet nudged"}</dd>
-              <dt>Wrong over all {data.X.length} dots, smooth and hard</dt>
+              <dt>{L("Change per nudge, smooth unit")}</dt>
+              <dd className="text-right text-foreground/80">{k > 0 ? per.toFixed(5) : L("not yet nudged")}</dd>
+              <dt>{L("Wrong over all {{all}} dots, smooth and hard", { all: data.X.length })}</dt>
               <dd className="text-right text-foreground/80">{out.smoothWrong[k]}, {out.hardWrong[k]}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              The smooth unit's change per nudge is the slope of its squash at this dot's total,
-              times the dot's x. That slope is the derivative from the first page, and it exists
-              because the curve has no corner. The hard unit's rule has a corner and nothing else,
-              so its slope is zero everywhere except at the jump, where it is not a number at all.
+              {L("The smooth unit's change per nudge is the slope of its squash at this dot's total, times the dot's x. That slope is the derivative from the first page, and it exists because the curve has no corner. The hard unit's rule has a corner and nothing else, so its slope is zero everywhere except at the jump, where it is not a number at all.")}
             </Text>
           </div>
         }

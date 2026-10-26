@@ -1,11 +1,20 @@
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { applyMode, applyPalette, kitTheme, readMode } from "@kit/index";
+import { applyMode, applyPalette, KIT_CASE, kitTheme, readMode } from "@kit/index";
 import { routeTree } from "@/routeTree.gen";
 import "@/styles.css";
 import "@/i18n";
 
+// the theme in force (the visitor's choice when it is one the product ships), which the sheet follows
+document.documentElement.dataset.case = KIT_CASE;
+// a case whose fonts come from another server brings them itself, so no other case loads them
+for (const href of kitTheme.type.imports ?? []) {
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = href;
+  document.head.appendChild(link);
+}
 applyMode(readMode(kitTheme.colours.default));
 if (kitTheme.palettes && kitTheme.palette) applyPalette(kitTheme.palette);
 

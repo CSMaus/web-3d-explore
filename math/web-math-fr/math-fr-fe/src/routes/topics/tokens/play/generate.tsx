@@ -19,6 +19,7 @@ import { decode } from "@/systems/bpe";
 import { GREEDY, draw, forward, shape, softmax, type Decoding } from "@/systems/lm";
 import { rng } from "@/systems/net";
 import { Input } from "@kit/index";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/tokens/play/generate")({
   loader: () => api.system(TOPIC, "generate"),
@@ -26,8 +27,8 @@ export const Route = createFileRoute("/topics/tokens/play/generate")({
 });
 
 const RULES: { id: string; label: string; rule: Decoding }[] = [
-  { id: "greedy", label: "Always the most likely", rule: GREEDY },
-  { id: "warm", label: "Draw, temperature 0.8", rule: { temperature: 0.8, topK: 0, topP: 1, penalty: 0 } },
+  { id: "greedy", label: L("Always the most likely"), rule: GREEDY },
+  { id: "warm", label: L("Draw, temperature 0.8"), rule: { temperature: 0.8, topK: 0, topP: 1, penalty: 0 } },
 ];
 const MOST = 40;
 
@@ -96,28 +97,27 @@ function GeneratePage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "One token at a time"}
-        job="A distribution over the next token is one token, and a paragraph is not. The rest is a loop short enough to write on one line: run the model, choose one token from the distribution at the last position, append it, run again. The appended token goes in as an ordinary token, no different from the prompt's."
+        title={system?.name ?? L("One token at a time")}
+        job={L("A distribution over the next token is one token, and a paragraph is not. The rest is a loop short enough to write on one line: run the model, choose one token from the distribution at the last position, append it, run again. The appended token goes in as an ordinary token, no different from the prompt's.")}
         input={
           <div className="space-y-3">
             <label className="block">
-              <span data-text="note">The prompt</span>
+              <span data-text="note">{L("The prompt")}</span>
               <Input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className="mt-1" />
             </label>
             <Choices options={RULES} value={ruleId} onPick={(id) => { setRuleId(id); reset(); }} />
-            <Slider label="The window" min={3} max={CONTEXT} step={1} value={window} format={(v) => `${Math.round(v)} tokens`} onChange={(v) => { setWindow(Math.round(v)); reset(); }} />
+            <Slider label={L("The window")} min={3} max={CONTEXT} step={1} value={window} format={(v) => L("{{n}} tokens", { n: Math.round(v) })} onChange={(v) => { setWindow(Math.round(v)); reset(); }} />
             <Text kind="note" as="p">
-              The model can attend over this many tokens at once and no more; it was trained with a
-              window of {CONTEXT}. When the text is longer, the oldest tokens fall out and are gone.
+              {L("The model can attend over this many tokens at once and no more; it was trained with a window of {{n}}. When the text is longer, the oldest tokens fall out and are gone.", { n: CONTEXT })}
             </Text>
-            {!trained ? <Text kind="warning" as="p">The model is still training ({store.model.steps} of {MODEL_STEPS} steps). What it writes will improve as that finishes; start again to see.</Text> : null}
+            {!trained ? <Text kind="warning" as="p">{L("The model is still training ({{done}} of {{total}} steps). What it writes will improve as that finishes; start again to see.", { done: store.model.steps, total: MODEL_STEPS })}</Text> : null}
           </div>
         }
         run={
           <RunBar
             running={runner.running}
             count={made.length}
-            what="tokens generated"
+            what={L("tokens generated")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 10, max: 200, step: 10 }}
@@ -135,7 +135,7 @@ function GeneratePage() {
         picture={
           <section ref={stage} className="space-y-2">
             <div className="rounded border border-border p-3">
-              <div data-text="caption">The text so far. Dim: fallen out of the window. Sky border: the prompt. Green border: generated.</div>
+              <div data-text="caption">{L("The text so far. Dim: fallen out of the window. Sky border: the prompt. Green border: generated.")}</div>
               <div className="mt-2 flex flex-wrap gap-1">
                 {all.map((id, i) => (
                   <span
@@ -172,11 +172,11 @@ function GeneratePage() {
                     ctx.fillRect(120, y, ((W - 240) * r.p) / top, 18);
                     ctx.globalAlpha = 1;
                     ctx.fillStyle = MUTED;
-                    ctx.fillText(`${(r.p * 100).toFixed(1)} %${chosen ? "   chosen, appended, goes in next" : ""}`, 126 + ((W - 240) * r.p) / top, y + 14);
+                    ctx.fillText(chosen ? L("{{pct}} %   chosen, appended, goes in next", { pct: (r.p * 100).toFixed(1) }) : `${(r.p * 100).toFixed(1)} %`, 126 + ((W - 240) * r.p) / top, y + 14);
                   });
                 }}
               />
-            </div><Caption>The distribution the last token was drawn from will appear here. {`Step ${made.length}: the model's distribution at the last position, and the token the rule chose`}</Caption></div>
+            </div><Caption>{L("The distribution the last token was drawn from will appear here.")} {L("Step {{n}}: the model's distribution at the last position, and the token the rule chose", { n: made.length })}</Caption></div>
             <div data-text="body" className="rounded border border-border p-3">
               {decode(VOCAB, all)}
             </div>
@@ -186,27 +186,23 @@ function GeneratePage() {
           <div className="space-y-2">
             <Verdict good={repeated ? false : undefined}>
               {!last
-                ? `The prompt is ${prompt.length} tokens. Press run: each step runs the model over the window, draws one token, and appends it.`
-                : `Step ${made.length}: the model was run over ${Math.min(window, all.length - 1)} tokens and ${ruleId === "greedy" ? "took its most likely token" : "drew"} ${visible(tokenText(last.id))}, which it gave ${(last.p * 100).toFixed(0)} %. It is now token ${all.length} of the text and will be read next step like any other.${dropped > 0 ? ` The window is full: ${dropped} token${dropped === 1 ? " has" : "s have"} fallen out of it, prompt included, and the model has no memory of them.` : ""}${repeated ? ` The last ${repeated} tokens repeat the ${repeated} before them: with the most likely token always chosen, the loop has found a cycle and will stay in it.` : ""}`}
+                ? L("The prompt is {{n}} tokens. Press run: each step runs the model over the window, draws one token, and appends it.", { n: prompt.length })
+                : `${L("Step {{step}}: the model was run over {{seen}} tokens and {{how}} {{token}}, which it gave {{pct}} %. It is now token {{pos}} of the text and will be read next step like any other.", { step: made.length, seen: Math.min(window, all.length - 1), how: ruleId === "greedy" ? L("took its most likely token") : L("drew"), token: visible(tokenText(last.id)), pct: (last.p * 100).toFixed(0), pos: all.length })}${dropped > 0 ? ` ${dropped === 1 ? L("The window is full: {{n}} token has fallen out of it, prompt included, and the model has no memory of them.", { n: dropped }) : L("The window is full: {{n}} tokens have fallen out of it, prompt included, and the model has no memory of them.", { n: dropped })}` : ""}${repeated ? ` ${L("The last {{n}} tokens repeat the {{n}} before them: with the most likely token always chosen, the loop has found a cycle and will stay in it.", { n: repeated })}` : ""}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Tokens in the text now</dt>
-              <dd className="text-right text-foreground/80">{all.length} ({prompt.length} prompt, {made.length} generated)</dd>
-              <dt>Tokens the model can see</dt>
-              <dd className="text-right text-foreground/80">{Math.min(window, all.length)} of {all.length}</dd>
-              <dt>Keys and values it keeps rather than recomputes</dt>
-              <dd className="text-right text-foreground/80">{Math.min(window, all.length)} positions x {WIDTH} x 2 = {cache.toLocaleString("en")} numbers</dd>
-              <dt>Work per new token, with that cache</dt>
-              <dd className="text-right text-foreground/80">One position, not {Math.min(window, all.length)}</dd>
-              <dt>Tokens that can be revised</dt>
-              <dd className="text-right text-foreground/80">None</dd>
+              <dt>{L("Tokens in the text now")}</dt>
+              <dd className="text-right text-foreground/80">{all.length} {L("({{prompt}} prompt, {{made}} generated)", { prompt: prompt.length, made: made.length })}</dd>
+              <dt>{L("Tokens the model can see")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{a}} of {{b}}", { a: Math.min(window, all.length), b: all.length })}</dd>
+              <dt>{L("Keys and values it keeps rather than recomputes")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{n}} positions x {{width}} x 2 = {{total}} numbers", { n: Math.min(window, all.length), width: WIDTH, total: cache.toLocaleString("en") })}</dd>
+              <dt>{L("Work per new token, with that cache")}</dt>
+              <dd className="text-right text-foreground/80">{L("One position, not {{n}}", { n: Math.min(window, all.length) })}</dd>
+              <dt>{L("Tokens that can be revised")}</dt>
+              <dd className="text-right text-foreground/80">{L("None")}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              The mask from the attention page is why this works: during training the prediction at
-              each position used only earlier positions, which is exactly the situation here. An
-              emitted token is conditioned on for the rest of the generation and cannot be taken
-              back. The prompt is the only conditioning there is; the model does not know which of
-              its tokens were an instruction and which were data.
+              {L("The mask from the attention page is why this works: during training the prediction at each position used only earlier positions, which is exactly the situation here. An emitted token is conditioned on for the rest of the generation and cannot be taken back. The prompt is the only conditioning there is; the model does not know which of its tokens were an instruction and which were data.")}
             </Text>
           </div>
         }

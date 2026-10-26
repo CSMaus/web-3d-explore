@@ -1,5 +1,6 @@
 /**
- * turns the config scripts into src/theme.css. run from ui-kit:
+ * turns the config scripts into src/theme.css (the case in use, alone) and src/themes.css (every
+ * case a visitor can choose, each under html[data-case], which the site loads). run from ui-kit:
  *
  *   npm run theme
  *
@@ -11,7 +12,11 @@
  * mode switches the whole page without a second sheet.
  */
 import { writeFileSync } from "node:fs";
+import { CASE as NAMED } from "../config/case.ts";
+import { cases, type CaseName } from "../config/cases.ts";
 import { CASE as KIT_CASE, theme } from "../config/index.ts";
+import { SHIPPED } from "../config/shipped.ts";
+import { combine } from "./scope.ts";
 import { TEXT_SLOTS, type Look, type Palette, type Swatch, type TextStyle, type Theme } from "../config/kinds.ts";
 
 const px = (n: number) => `${n}px`;
@@ -114,7 +119,17 @@ function paletteVars(p: Palette): string {
   --c-success: ${p.success ?? p.primary};
   --c-input: ${p.input ?? "transparent"};
   --c-ring: ${p.ring ?? p.primary};
-${chart.map((x, i) => `  --c-chart-${i + 1}: ${x};`).join("\n")}`;
+${chart.map((x, i) => `  --c-chart-${i + 1}: ${x};`).join("\n")}
+${topicLights(p).map((x, i) => `  --c-topic-${i + 1}: ${x};`).join("\n")}`;
+}
+
+/** how many topics carry a light of their own */
+const TOPIC_LIGHTS = 6;
+
+/** the light of every topic: the palette's own, else the chart colours in turn */
+function topicLights(p: Palette): string[] {
+  const chart = [...p.chart, p.primary, p.secondary];
+  return Array.from({ length: TOPIC_LIGHTS }, (_, i) => p.topics?.[i] ?? chart[i % chart.length]);
 }
 
 function tokens(t: Theme): string {
@@ -763,7 +778,15 @@ function tileLight(f: Theme["figures"]): string {
 [data-slot="edge-figure"]${sel} .edge-tail { stroke-dasharray: ${dash(1)}; stroke-opacity: 0.8; }
 [data-slot="edge-figure"]${sel} .edge-halo { stroke-dasharray: ${dash(0.6)}; }`;
   };
-  return walk('[data-kind="line"]', f.tile ?? { lightLength: 0.28, seconds: 12 }) + walk("[data-solid]", f.solid ?? { lightLength: 0.35, seconds: 16 });
+  // the Lorenz curve is one long line wound many times over itself: its light is cut into three,
+  // evenly spaced, so some part of the curve is always lit
+  const solid = f.solid ?? { lightLength: 0.35, seconds: 16 };
+  const thirds = (k: number) => `${((solid.lightLength * k) / 3).toFixed(4)} ${((1 - solid.lightLength * k) / 3).toFixed(4)}`;
+  const lorenz = `
+[data-slot="edge-figure"][data-kind="lorenz"] .edge-core { stroke-dasharray: ${thirds(0.5)}; }
+[data-slot="edge-figure"][data-kind="lorenz"] .edge-tail { stroke-dasharray: ${thirds(1)}; }
+[data-slot="edge-figure"][data-kind="lorenz"] .edge-halo { stroke-dasharray: ${thirds(0.6)}; }`;
+  return walk('[data-kind="line"]', f.tile ?? { lightLength: 0.28, seconds: 12 }) + walk("[data-solid]", solid) + lorenz;
 }
 
 function readouts(t: Theme): string {
@@ -845,6 +868,89 @@ function pieces(t: Theme): string {
   font: inherit;
   padding: 4px 2px;
   cursor: pointer;
+}
+
+[data-slot="theme-sign"] {
+  display: inline-flex;
+  color: var(--theme-light, ${v("glow")});
+  filter: drop-shadow(0 0 4px color-mix(in oklab, var(--theme-light, ${v("glow")}) 60%, transparent));
+}
+
+[data-slot="theme-switch"] {
+  position: relative;
+  display: inline-flex;
+}
+
+[data-slot="theme-current"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 2px;
+  border: 0;
+  background: transparent;
+  color: ${v("muted-foreground")};
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  cursor: pointer;
+}
+
+[data-slot="theme-current"] > span:nth-child(2) {
+  color: var(--theme-light);
+}
+
+[data-slot="theme-list"] {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 70;
+  min-width: 190px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: ${v("card")};
+  border: 1px solid ${v("border")};
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+[data-slot="theme-list"] > li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--theme-light);
+  text-shadow: 0 0 10px color-mix(in oklab, var(--theme-light) 55%, transparent);
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  cursor: pointer;
+}
+
+[data-slot="theme-list"] > li[data-active] {
+  background: color-mix(in oklab, var(--theme-light) 14%, transparent);
+}
+
+[data-slot="theme-list"] > li[aria-selected="true"]::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: var(--theme-light);
+  box-shadow: 0 0 8px var(--theme-light);
+}
+
+[data-slot="kitten"] {
+  position: fixed;
+  right: 76px;
+  bottom: 10px;
+  z-index: 40;
+  pointer-events: none;
+}
+
+[data-slot="theme-sign"] svg {
+  width: 15px;
+  height: 15px;
 }
 
 [data-slot="panel-head"] {
@@ -1193,8 +1299,16 @@ a[data-tile]:is(:hover, :focus-visible) [data-slot="edge-figure"] :is(.edge-core
 `;
 }
 
+/** a topic's own light: whatever carries the topic's number takes its light (the figure, the marker, the current name), and the name marked as the topic's glows in it; the name's attribute is written twice so it outweighs the band's heading style */
+function topicGlow(): string {
+  const each = Array.from({ length: TOPIC_LIGHTS }, (_, i) => `[data-topic="${i}"] { --c-glow: var(--c-topic-${i + 1}); --c-selected: var(--c-topic-${i + 1}); }`);
+  return `${each.join("\n")}
+[data-topic] [data-topic-name][data-topic-name], [data-topic][data-topic-name][data-topic-name] { color: var(--c-glow); text-shadow: 0 0 12px color-mix(in oklab, var(--c-glow) 55%, transparent), 0 0 2px color-mix(in oklab, var(--c-glow) 35%, transparent); }
+`;
+}
+
 export function render(t: Theme): string {
-  const parts = [tokens(t), text(t), page(t), topbar(t), buttons(t), tabs(t), sliders(t), inputs(t), panels(t), plots(t), figures(t), readouts(t), pieces(t), sidenav(), hero(t), graph(), fractal(t), screens(t), motion(t)];
+  const parts = [tokens(t), text(t), page(t), topbar(t), buttons(t), tabs(t), sliders(t), inputs(t), panels(t), plots(t), figures(t), readouts(t), pieces(t), sidenav(), hero(t), graph(), topicGlow(), fractal(t), screens(t), motion(t)];
   const imports = (t.type.imports ?? []).map((u) => `@import url("${u}");`).join("\n");
   return `/* generated by build/theme.ts from the config folder. edit the config, not this file. */\n${imports}\n${parts.join("\n")}\n`
     .split("\n")
@@ -1202,8 +1316,16 @@ export function render(t: Theme): string {
     .join("\n");
 }
 
+/** the cases in the product's sheet: those a visitor can choose, and the one case.ts names */
+export function shippedCases(): CaseName[] {
+  return [...new Set<CaseName>([NAMED, ...SHIPPED])];
+}
+
 if (process.argv[1]?.endsWith("theme.ts")) {
   const out = process.argv[2] ?? new URL("../src/theme.css", import.meta.url);
   writeFileSync(out, render(theme));
   console.log(`${typeof out === "string" ? out : "src/theme.css"} written (case ${KIT_CASE})`);
+  const all = shippedCases();
+  writeFileSync(new URL("../src/themes.css", import.meta.url), combine(all.map((name) => ({ name, css: render(cases[name]) })), NAMED));
+  console.log(`src/themes.css written (cases ${all.join(", ")}; ${NAMED} by default)`);
 }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Text, Heading } from "@kit/index";
 import { api } from "@/lib/api";
+import { L } from "@/lib/lang";
 import { TOPIC, routeOf, type ComplexRoute, SYSTEMS } from "@/lib/complex";
 import { PlayTile } from "@/components/PlayTile";
 import { useRise } from "@/lib/reveal";
@@ -12,13 +13,13 @@ export const Route = createFileRoute("/topics/complex/play/")({
 
 /** the same names and summaries the backend serves, so the page stands alone. */
 export const LOCAL: { id: string; name: string; summary: string }[] = [
-  { id: "line", name: "Numbers on a line, and the one question they cannot answer", summary: "Adding slides the line, multiplying stretches it, minus one flips it. Try every number: none of them squares to minus one." },
-  { id: "turn", name: "What 𝑖 is", summary: "Minus one is a half turn. The number that does half of that, a quarter turn, is 𝑖, and twice is minus one. Watch it go round." },
-  { id: "add", name: "Complex numbers: adding", summary: "Every number is an arrow. Add two by walking one out from the other's tip. The two parts never mix." },
-  { id: "multiply", name: "Complex numbers: multiplying", summary: "Lengths multiply, angles add. Watch one arrow turned and stretched into the product." },
-  { id: "square", name: "Julia set", summary: "Square a number over and over: inside the circle it falls to zero, outside it runs away. Add a shift each time and the boundary is a Julia set." },
-  { id: "round", name: "Euler's formula", summary: "Growth at an imaginary rate does not grow: it circles. Its two shadows are the sine and the cosine, and at half a turn it lands on minus one." },
-  { id: "quaternions", name: "Quaternions", summary: "Three units for the three axes of space. Pick an axis and an angle, turn the house step by step, and read the four numbers that do it." },
+  { id: "line", name: L("Numbers on a line, and the one question they cannot answer"), summary: L("Adding slides the line, multiplying stretches it, minus one flips it. Try every number: none of them squares to minus one.") },
+  { id: "turn", name: L("What 𝑖 is"), summary: L("Minus one is a half turn. The number that does half of that, a quarter turn, is 𝑖, and twice is minus one. Watch it go round.") },
+  { id: "add", name: L("Complex numbers: adding"), summary: L("Every number is an arrow. Add two by walking one out from the other's tip. The two parts never mix.") },
+  { id: "multiply", name: L("Complex numbers: multiplying"), summary: L("Lengths multiply, angles add. Watch one arrow turned and stretched into the product.") },
+  { id: "square", name: L("Julia set"), summary: L("Square a number over and over: inside the circle it falls to zero, outside it runs away. Add a shift each time and the boundary is a Julia set.") },
+  { id: "round", name: L("Euler's formula"), summary: L("Growth at an imaginary rate does not grow: it circles. Its two shadows are the sine and the cosine, and at half a turn it lands on minus one.") },
+  { id: "quaternions", name: L("Quaternions"), summary: L("Three units for the three axes of space. Pick an axis and an angle, turn the house step by step, and read the four numbers that do it.") },
 ];
 
 function ComplexIndex() {
@@ -26,14 +27,12 @@ function ComplexIndex() {
   const items = (theory?.systems.length ? theory.systems : LOCAL).filter((s) => SYSTEMS.some((p) => p.id === s.id));
   return (
     <>
-      <Heading level={1} className="mt-4">The pages, in order</Heading>
+      <Heading level={1} className="mt-4">{L("The pages, in order")}</Heading>
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-        For a reader who has never met an imaginary number. Every page has the same three parts in
-        the same places: what goes in, run, what came out. By the last page the Julia set on the
-        fractals pages is something that can be read.
+        {L("For a reader who has never met an imaginary number. Every page has the same three parts in the same places: what goes in, run, what came out. By the last page the Julia set on the fractals pages is something that can be read.")}
       </Text>
       {!theory ? (
-        <Text kind="note" as="p" className="mt-3">The descriptions come from the backend, which is not answering; this page needs nothing from it.</Text>
+        <Text kind="note" as="p" className="mt-3">{L("The descriptions come from the backend, which is not answering; this page needs nothing from it.")}</Text>
       ) : null}
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {items.map((s, i) => (

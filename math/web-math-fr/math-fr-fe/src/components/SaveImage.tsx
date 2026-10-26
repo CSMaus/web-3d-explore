@@ -1,5 +1,6 @@
 import { useState, type RefObject } from "react";
 import { Button, Text } from "@kit/index";
+import { L } from "@/lib/lang";
 
 type Props = { stage: RefObject<HTMLElement | null>; name: string };
 
@@ -30,10 +31,10 @@ export function SaveImage({ stage, name }: Props) {
         type="button"
         onClick={save}
       >
-        Save image
+        {L("Save image")}
       </Button>
       {trouble ? (
-        <Text kind="warning" as="p" className="mt-1">The picture could not be read back</Text>
+        <Text kind="warning" as="p" className="mt-1">{L("The picture could not be read back")}</Text>
       ) : null}
     </div>
   );

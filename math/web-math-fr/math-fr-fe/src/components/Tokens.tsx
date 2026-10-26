@@ -1,6 +1,7 @@
 import { kitTheme, useMode } from "@kit/index";
 import type { Token } from "@/systems/bpe";
 import { hue, visible } from "@/lib/tokenText";
+import { L } from "@/lib/lang";
 
 type Props = {
   tokens: Token[];
@@ -26,7 +27,7 @@ export function TokenRow({ tokens, ids = false, mark = null, dimFrom, size = "md
             key={i}
             className={`inline-flex flex-col items-center rounded border px-1.5 py-0.5 font-mono text-foreground ${size === "sm" ? "text-[11px]" : "text-[13px]"} ${mark === i ? "border-selected" : dim ? "border-dashed border-border" : "border-transparent"}`}
             style={dim ? undefined : { background: hue(t.id, mode === "light") }}
-            title={`Token ${t.id}, ${t.bytes.length} byte${t.bytes.length === 1 ? "" : "s"}`}
+            title={t.bytes.length === 1 ? L("Token {{id}}, {{n}} byte", { id: t.id, n: t.bytes.length }) : L("Token {{id}}, {{n}} bytes", { id: t.id, n: t.bytes.length })}
           >
             <span>{visible(t.text)}</span>
             {ids ? <span data-text="note" style={{ color: "inherit" }}>{t.id}</span> : null}

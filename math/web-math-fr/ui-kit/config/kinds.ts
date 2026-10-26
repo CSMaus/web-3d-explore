@@ -87,6 +87,8 @@ export type Palette = {
   input?: Hex;
   /** the focus ring; the primary when left out */
   ring?: Hex;
+  /** the light of each topic, by the topic's number (the first is topic 0): its name and its figure glow in it; the chart colours when left out */
+  topics?: Hex[];
 };
 
 /** the greys of a palette: shared by every palette of a case, one set per mode */

@@ -40,8 +40,15 @@ const DARK = {
   border: "#2d2a26",
 } as const;
 
-// one palette: its lights for the light page and for the dark page; "light" is the mode a visitor starts in
-const palette = (light: Hues, dark: Hues): Colours => defineColours({ default: "light", light: { ...LIGHT, ...light }, dark: { ...DARK, ...dark } });
+// the light of each topic, by topic number (0 complex numbers, 1 fractals, 2 chaos, 3 networks,
+// 4 tokens, 5 the primes aside): its name and its turning figure glow in it. warm hues only:
+// amber, orange, copper, deep orange, peach, caramel.
+const TOPICS_LIGHT: Hues["chart"] = ["#a8661a", "#c0551f", "#9c4a1c", "#b35a12", "#b0623a", "#8f6224"];
+const TOPICS_DARK: Hues["chart"] = ["#f2b35e", "#ff8a5c", "#e0763f", "#f59a4a", "#f5a97f", "#d9a066"];
+
+// one palette: its lights for the light page and for the dark page; "dark" is the mode a visitor starts in
+const palette = (light: Hues, dark: Hues): Colours =>
+  defineColours({ default: "dark", light: { ...LIGHT, topics: TOPICS_LIGHT, ...light }, dark: { ...DARK, topics: TOPICS_DARK, ...dark } });
 
 export const PALETTES: Record<string, Colours> = {
   T_GD: palette(

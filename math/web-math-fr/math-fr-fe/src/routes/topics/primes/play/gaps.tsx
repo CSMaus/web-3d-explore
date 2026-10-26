@@ -16,6 +16,7 @@ import { TOPIC } from "@/lib/primes";
 import { useRunner } from "@/lib/runner";
 import { logistic, orbit } from "@/systems/maps";
 import { firstPrimes, gaps, histogram, predictability, returnPairs, shuffled } from "@/systems/primes";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/primes/play/gaps")({
   loader: () => api.system(TOPIC, "gaps"),
@@ -23,8 +24,8 @@ export const Route = createFileRoute("/topics/primes/play/gaps")({
 });
 
 const RIVALS = [
-  { id: "logistic", label: "Compare with the logistic map at r = 4" },
-  { id: "shuffled", label: "Compare with the same gaps shuffled" },
+  { id: "logistic", label: L("Compare with the logistic map at r = 4") },
+  { id: "shuffled", label: L("Compare with the same gaps shuffled") },
 ];
 
 function GapsPage() {
@@ -70,17 +71,14 @@ function GapsPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "The gaps between primes, as a return map"}
-        job="The primes look patternless, and so does a chaotic sequence. This page tells them apart with the picture the Rossler page used: each gap between consecutive primes plotted against the next. A sequence that follows a rule, however sensitive, lands on a curve. Beside it, for comparison, a sequence that really has a rule, or the same gaps with their order destroyed."
+        title={system?.name ?? L("The gaps between primes, as a return map")}
+        job={L("The primes look patternless, and so does a chaotic sequence. This page tells them apart with the picture the Rossler page used: each gap between consecutive primes plotted against the next. A sequence that follows a rule, however sensitive, lands on a curve. Beside it, for comparison, a sequence that really has a rule, or the same gaps with their order destroyed.")}
         input={
           <div className="space-y-3">
-            <Slider label="Primes" min={200} max={20000} step={200} value={count} format={(v) => v.toLocaleString("en")} onChange={(v) => { setCount(Math.round(v)); reset(); }} />
+            <Slider label={L("Primes")} min={200} max={20000} step={200} value={count} format={(v) => v.toLocaleString("en")} onChange={(v) => { setCount(Math.round(v)); reset(); }} />
             <Choices options={RIVALS} value={rival} onPick={setRival} />
             <Text kind="note" as="p">
-              The left picture is always the real primes, found by a sieve as the run goes. The
-              right picture is the chosen comparison: the logistic map at r = 4, which is
-              chaotic and follows a rule, or the real gaps again with their order shuffled, to
-              test whether the order in which the gaps come carries anything.
+              {L("The left picture is always the real primes, found by a sieve as the run goes. The right picture is the chosen comparison: the logistic map at r = 4, which is chaotic and follows a rule, or the real gaps again with their order shuffled, to test whether the order in which the gaps come carries anything.")}
             </Text>
           </div>
         }
@@ -89,7 +87,7 @@ function GapsPage() {
             running={runner.running}
             count={n}
             limit={all.length}
-            what="gaps placed"
+            what={L("gaps placed")}
             onToggle={() => {
               if (!runner.running && n >= all.length) reset();
               runner.toggle();
@@ -121,7 +119,7 @@ function GapsPage() {
                     }}
                   />
                 </div>
-                <Caption>The real primes. Along the bottom: a gap between two consecutive primes. Up: the gap that comes right after it. One dot a pair, {pairs.length.toLocaleString("en")} so far. Every dot sits on a grid of even numbers, and no curve runs through them.</Caption>
+                <Caption>{L("The real primes. Along the bottom: a gap between two consecutive primes. Up: the gap that comes right after it. One dot a pair, {{n}} so far. Every dot sits on a grid of even numbers, and no curve runs through them.", { n: pairs.length.toLocaleString("en") })}</Caption>
               </div>
               <div>
                 <div data-slot="plot" className="h-[300px] overflow-hidden">
@@ -139,8 +137,8 @@ function GapsPage() {
                 </div>
                 <Caption>
                   {rival === "logistic"
-                    ? "The comparison: the logistic map at r = 4 for the same number of steps. Along the bottom: a value. Up: the next value. Chaotic, and every point on one curve, because there is a rule."
-                    : "The comparison: the same real gaps, only in a random order, drawn the same way. The cloud is the same cloud, so the order the gaps come in carries nothing this picture can see."}
+                    ? L("The comparison: the logistic map at r = 4 for the same number of steps. Along the bottom: a value. Up: the next value. Chaotic, and every point on one curve, because there is a rule.")
+                    : L("The comparison: the same real gaps, only in a random order, drawn the same way. The cloud is the same cloud, so the order the gaps come in carries nothing this picture can see.")}
                 </Caption>
               </div>
             </div>
@@ -161,7 +159,7 @@ function GapsPage() {
                   }}
                 />
               </div>
-              <Caption>The real primes again. Along the bottom: the size of a gap, 2, 4, 6 and so on. Up: how many times a gap of that size has occurred so far. Six is the commonest for a long way; the largest so far is {largest}.</Caption>
+              <Caption>{L("The real primes again. Along the bottom: the size of a gap, 2, 4, 6 and so on. Up: how many times a gap of that size has occurred so far. Six is the commonest for a long way; the largest so far is {{largest}}.", { largest })}</Caption>
             </div>
           </section>
         }
@@ -169,25 +167,22 @@ function GapsPage() {
           <div className="space-y-2">
             <Verdict>
               {n === 0
-                ? `${count.toLocaleString("en")} primes are ready. Press run and the gaps are placed one at a time.`
-                : `After ${n.toLocaleString("en")} gaps, knowing one gap narrows the next to ${(rho.ratio * 100).toFixed(0)} per cent of its usual spread: ${rho.ratio > 0.9 ? "almost nothing is gained" : "a little is gained"}. ${rival === "logistic" ? "For the logistic map the same number is zero: this value fixes the next exactly, and the picture is a curve." : `For the shuffled gaps it is ${(rhoRival.ratio * 100).toFixed(0)} per cent, the same within noise: the order of the primes carries no rule the next gap can be read from.`} The primes are not chaotic. They are something else: a fixed list with no rule of this kind behind it.`}
+                ? L("{{n}} primes are ready. Press run and the gaps are placed one at a time.", { n: count.toLocaleString("en") })
+                : `${L("After {{n}} gaps, knowing one gap narrows the next to {{pct}} per cent of its usual spread: {{gain}}.", { n: n.toLocaleString("en"), pct: (rho.ratio * 100).toFixed(0), gain: rho.ratio > 0.9 ? L("almost nothing is gained") : L("a little is gained") })} ${rival === "logistic" ? L("For the logistic map the same number is zero: this value fixes the next exactly, and the picture is a curve.") : L("For the shuffled gaps it is {{pct}} per cent, the same within noise: the order of the primes carries no rule the next gap can be read from.", { pct: (rhoRival.ratio * 100).toFixed(0) })} ${L("The primes are not chaotic. They are something else: a fixed list with no rule of this kind behind it.")}`}
             </Verdict>
             <Readout
               rows={[
-                ["Primes placed", `${Math.min(n + 1, primes.length).toLocaleString("en")} of ${primes.length.toLocaleString("en")}`],
-                ["Largest prime so far", n > 0 ? primes[n].toLocaleString("en") : "-"],
-                ["Mean gap so far", meanGap.toFixed(2)],
-                ["Log of the largest prime, the expected spacing", lnP.toFixed(2)],
-                ["Largest gap so far", String(largest)],
-                ["Spread of the next gap, knowing this one", `${(rho.ratio * 100).toFixed(1)} per cent of the spread knowing nothing`],
-                ["The same for the comparison", rival === "logistic" ? "0 per cent: a rule" : `${(rhoRival.ratio * 100).toFixed(1)} per cent`],
+                [L("Primes placed"), L("{{a}} of {{b}}", { a: Math.min(n + 1, primes.length).toLocaleString("en"), b: primes.length.toLocaleString("en") })],
+                [L("Largest prime so far"), n > 0 ? primes[n].toLocaleString("en") : "-"],
+                [L("Mean gap so far"), meanGap.toFixed(2)],
+                [L("Log of the largest prime, the expected spacing"), lnP.toFixed(2)],
+                [L("Largest gap so far"), String(largest)],
+                [L("Spread of the next gap, knowing this one"), L("{{pct}} per cent of the spread knowing nothing", { pct: (rho.ratio * 100).toFixed(1) })],
+                [L("The same for the comparison"), rival === "logistic" ? L("0 per cent: a rule") : L("{{pct}} per cent", { pct: (rhoRival.ratio * 100).toFixed(1) })],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              Chaos is a rule with a positive exponent: the Lorenz page followed two starts a hair
-              apart along the same rule and watched them part. The primes offer no rule to follow
-              and no start to nudge, so neither an exponent nor a return map applies. Looking random
-              and being chaotic are different things, and this picture is the test.
+              {L("Chaos is a rule with a positive exponent: the Lorenz page followed two starts a hair apart along the same rule and watched them part. The primes offer no rule to follow and no start to nudge, so neither an exponent nor a return map applies. Looking random and being chaotic are different things, and this picture is the test.")}
             </Text>
           </div>
         }

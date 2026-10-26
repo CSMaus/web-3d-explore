@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { L } from "@/lib/lang";
 
 export type RailItem = { id: string; label: string; accent?: string };
 
@@ -31,7 +32,7 @@ export function Rail({ items, here, onPick, className }: Props) {
   };
 
   return (
-    <nav className={cn("sticky top-24 self-start", className)} aria-label="On this page">
+    <nav className={cn("sticky top-24 self-start", className)} aria-label={L("On this page")}>
       <ol className="space-y-2.5">
         {items.map((item) => {
           const on = item.id === here;

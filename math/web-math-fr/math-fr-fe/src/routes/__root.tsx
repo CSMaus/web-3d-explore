@@ -1,13 +1,14 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Outlet, createRootRoute, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { FractalBackground, Heading, kitTheme, Page, SkipLink, useMode } from "@kit/index";
+import { FractalBackground, Heading, KIT_CASE, Kitten, kitTheme, Page, SkipLink, useMode } from "@kit/index";
 import { BackToTop } from "@/components/BackToTop";
 import { Consent } from "@/components/Consent";
 import { Menu } from "@/components/Menu";
 import { Offline } from "@/components/Offline";
 import { SearchBox } from "@/components/Search";
-import { BRAND } from "@/lib/site";
+import { L } from "@/lib/lang";
+import { BRAND, KITTEN_CASES } from "@/lib/site";
 import { useLook } from "@/lib/store";
 
 export const Route = createRootRoute({
@@ -20,9 +21,9 @@ function Broke({ error }: { error: unknown }) {
     <div className="min-h-full">
       <Menu />
       <Page className="pb-24">
-        <Heading level={1} data-tone="destructive">This page did not load</Heading>
+        <Heading level={1} data-tone="destructive">{L("This page did not load")}</Heading>
         <div className="mt-6">
-          <Offline title="Something went wrong on this page" what={error instanceof Error ? error.message : "The reason was not reported"} />
+          <Offline title={L("Something went wrong on this page")} what={error instanceof Error ? error.message : L("The reason was not reported")} />
         </div>
       </Page>
     </div>
@@ -33,6 +34,7 @@ function Shell() {
   const { t } = useTranslation();
   const mode = useMode(kitTheme.colours.default);
   const shell = useRef<HTMLDivElement | null>(null);
+  const front = useRouterState({ select: (s) => s.location.pathname === "/" });
   useEffect(() => {
     document.title = BRAND;
   }, []);
@@ -63,6 +65,7 @@ function Shell() {
   return (
     <>
       <FractalBackground settings={kitTheme.fractal} of={shell} />
+      {KITTEN_CASES.includes(KIT_CASE) && front ? <Kitten /> : null}
       <div ref={shell} className="relative z-[1] min-h-full">
       <SkipLink>{t("nav.skip")}</SkipLink>
       <Menu />

@@ -4,6 +4,7 @@ import { Tex } from "@/components/Tex";
 import { pagesOf } from "@/lib/rail";
 import { useRailIndex } from "@/lib/railIndex";
 import type { BuiltTopic } from "@/lib/topic";
+import { L } from "@/lib/lang";
 
 const UNDER_MENU = 96;
 
@@ -16,7 +17,7 @@ const UNDER_MENU = 96;
 export function TopicRail({ topic }: { topic: BuiltTopic }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const index = useRailIndex();
-  const name = `${topic.number === 0 ? "Start here" : `Topic ${topic.number}`} - ${topic.title}`;
+  const name = `${topic.number === 0 ? L("Start here") : L("Topic {{n}}", { n: topic.number })} - ${topic.title}`;
   const jump = (id: string) => (event: React.MouseEvent) => {
     const node = document.getElementById(id);
     if (!node) return;
@@ -30,7 +31,7 @@ export function TopicRail({ topic }: { topic: BuiltTopic }) {
     <SideNav label={name}>
       <div data-slot="side-nav-title">
         <Link to="/topics" data-text="crumb" activeOptions={{ exact: true }}>
-          Topics
+          {L("Topics")}
         </Link>
         <span data-text="topic">{name}</span>
       </div>
@@ -77,7 +78,7 @@ export function TopicRail({ topic }: { topic: BuiltTopic }) {
                 </ul>
               ) : null}
               {longPage ? (
-                <ul data-slot="side-nav-pages" aria-label="On this page">
+                <ul data-slot="side-nav-pages" aria-label={L("On this page")}>
                   <li>
                     <ul>
                       {index.items.map((item) => (

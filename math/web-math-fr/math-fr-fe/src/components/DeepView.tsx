@@ -1,15 +1,16 @@
 import type { Stage, Tile } from "@/lib/deep";
+import { L } from "@/lib/lang";
 
 type Props = { tile: Tile | null; stage: Stage; className?: string };
 
 const WORD: Record<Stage["kind"], string> = {
-  idle: "Not started",
-  opening: "Opening the connection",
-  working: "rendering",
-  done: "finished",
-  refused: "refused",
-  busy: "The server is busy",
-  lost: "The connection was lost",
+  idle: L("Not started"),
+  opening: L("Opening the connection"),
+  working: L("rendering"),
+  done: L("finished"),
+  refused: L("refused"),
+  busy: L("The server is busy"),
+  lost: L("The connection was lost"),
 };
 
 /**
@@ -20,7 +21,7 @@ const WORD: Record<Stage["kind"], string> = {
 export function DeepView({ tile, stage, className }: Props) {
   const note =
     stage.kind === "working"
-      ? `${WORD.working}, pass ${stage.done} of 4`
+      ? L("rendering, pass {{done}} of 4", { done: stage.done })
       : stage.kind === "refused" || stage.kind === "busy" || stage.kind === "lost"
         ? `${WORD[stage.kind]}: ${stage.reason}`
         : WORD[stage.kind];
@@ -30,7 +31,7 @@ export function DeepView({ tile, stage, className }: Props) {
       {tile ? (
         <img
           src={`data:image/png;base64,${tile.png}`}
-          alt="The set rendered on the server"
+          alt={L("The set rendered on the server")}
           className="h-full w-full object-contain"
         />
       ) : (
@@ -42,7 +43,7 @@ export function DeepView({ tile, stage, className }: Props) {
         <div data-text="caption" className="pointer-events-none absolute inset-x-0 bottom-0 flex items-baseline justify-between bg-background/70 px-2 py-1">
           <span>{note}</span>
           <span>
-            {tile.width} by {tile.height}
+            {L("{{w}} by {{h}}", { w: tile.width, h: tile.height })}
           </span>
         </div>
       ) : null}

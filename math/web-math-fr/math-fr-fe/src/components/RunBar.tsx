@@ -1,5 +1,6 @@
 import { Button } from "@kit/index";
 import { Slider } from "@/components/Slider";
+import { L } from "@/lib/lang";
 
 type Props = {
   running: boolean;
@@ -35,7 +36,7 @@ export function RunBar({
   onReset,
   perFrame,
   onSpeed,
-  what = "steps",
+  what = L("steps"),
   pace = "fast",
   onLimit,
   limitRange,
@@ -48,20 +49,20 @@ export function RunBar({
     <div>
       <div className="flex flex-wrap items-center gap-2">
         <Button onClick={onToggle} variant={running ? "destructive" : "default"}>
-          {running ? "Pause" : done ? "Run again" : "Run"}
+          {running ? L("Pause") : done ? L("Run again") : L("Run")}
         </Button>
         <Button variant="outline" size="sm" onClick={() => onStep(1)} disabled={done}>
-          One step
+          {L("One step")}
         </Button>
         <Button variant="outline" size="sm" onClick={() => onStep(10)} disabled={done}>
-          Ten steps
+          {L("Ten steps")}
         </Button>
         <Button variant="outline" size="sm" onClick={onReset}>
-          Reset
+          {L("Reset")}
         </Button>
         <span data-text="caption" className="ml-auto">
           {fmt(count)} / {fmt(limit)} {what}
-          {done ? <span className="text-selected"> done</span> : null}
+          {done ? <span className="text-selected"> {L("done")}</span> : null}
         </span>
       </div>
       <div className="mt-2 h-0.5 w-full overflow-hidden rounded bg-border">
@@ -70,7 +71,7 @@ export function RunBar({
       <div className="mt-3 space-y-2">
         {onLimit && limitRange ? (
           <Slider
-            label="Stop after"
+            label={L("Stop after")}
             min={limitRange.min}
             max={limitRange.max}
             step={limitRange.step}
@@ -81,17 +82,17 @@ export function RunBar({
         ) : null}
         {pace === "slow" ? (
           <Slider
-            label="Speed"
+            label={L("Speed")}
             min={0.02}
             max={4}
             step={0.02}
             value={perFrame}
-            format={(v) => (v < 1 ? `every ${Math.round(1 / v)} frames` : `x${v.toFixed(0)}`)}
+            format={(v) => (v < 1 ? L("every {{n}} frames", { n: Math.round(1 / v) }) : `x${v.toFixed(0)}`)}
             onChange={onSpeed}
           />
         ) : (
           <Slider
-            label="Speed"
+            label={L("Speed")}
             min={1}
             max={200}
             step={1}

@@ -15,18 +15,19 @@ import { TOPIC } from "@/lib/networks";
 import { useRunner } from "@/lib/runner";
 import { SETS, dataset, type SetKind } from "@/systems/learn";
 import { ACTS, backward, clone, loss, make, predict, type Act, type Net } from "@/systems/net";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/networks/play/unit")({
   loader: () => api.system(TOPIC, "unit"),
   component: UnitPage,
 });
 
-const KINDS: { id: SetKind; label: string }[] = (["split", "xor", "rings"] as SetKind[]).map((id) => ({ id, label: SETS[id].label }));
+const KINDS: { id: SetKind; label: string }[] = (["split", "xor", "rings"] as SetKind[]).map((id) => ({ id, label: L(SETS[id].label) }));
 const SQUASHES: { id: Act; label: string }[] = [
-  { id: "sigmoid", label: "Squash to 0..1" },
-  { id: "tanh", label: "Squash to -1..1" },
-  { id: "relu", label: "Cut below zero" },
-  { id: "linear", label: "No squash" },
+  { id: "sigmoid", label: L("Squash to 0..1") },
+  { id: "tanh", label: L("Squash to -1..1") },
+  { id: "relu", label: L("Cut below zero") },
+  { id: "linear", label: L("No squash") },
 ];
 const MOST = 3000;
 
@@ -107,20 +108,18 @@ function UnitPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "Inside one unit"}
-        job="The same dots, the same line. This page opens the machine that draws it. One unit takes the two coordinates of a dot, multiplies each by a weight, adds a bias, and squashes the total to a number between zero and one. That number is its answer: green or rose. The three numbers are moved by hand first, and then handed over."
+        title={system?.name ?? L("Inside one unit")}
+        job={L("The same dots, the same line. This page opens the machine that draws it. One unit takes the two coordinates of a dot, multiplies each by a weight, adds a bias, and squashes the total to a number between zero and one. That number is its answer: green or rose. The three numbers are moved by hand first, and then handed over.")}
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); restart(); }} />
             <Choices options={SQUASHES} value={act} onPick={(id) => { setAct(id); restart(id); }} />
-            <Slider label="Weight on x" min={-4} max={4} step={0.05} value={w1} format={(v) => v.toFixed(2)} onChange={(v) => setParam(0, v)} />
-            <Slider label="Weight on y" min={-4} max={4} step={0.05} value={w2} format={(v) => v.toFixed(2)} onChange={(v) => setParam(1, v)} />
-            <Slider label="Bias" min={-4} max={4} step={0.05} value={b} format={(v) => v.toFixed(2)} onChange={(v) => setParam(2, v)} />
-            <Slider label="Step size" min={0.05} max={4} step={0.05} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
+            <Slider label={L("Weight on x")} min={-4} max={4} step={0.05} value={w1} format={(v) => v.toFixed(2)} onChange={(v) => setParam(0, v)} />
+            <Slider label={L("Weight on y")} min={-4} max={4} step={0.05} value={w2} format={(v) => v.toFixed(2)} onChange={(v) => setParam(1, v)} />
+            <Slider label={L("Bias")} min={-4} max={4} step={0.05} value={b} format={(v) => v.toFixed(2)} onChange={(v) => setParam(2, v)} />
+            <Slider label={L("Step size")} min={0.05} max={4} step={0.05} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
             <Text kind="note" as="p">
-              Move the three sliders and watch the colours on the plane move with them. Click a
-              dot to see its own numbers go through the unit. Then press run: the unit takes
-              over the sliders and moves them itself, downhill on how wrong it is.
+              {L("Move the three sliders and watch the colours on the plane move with them. Click a dot to see its own numbers go through the unit. Then press run: the unit takes over the sliders and moves them itself, downhill on how wrong it is.")}
             </Text>
           </div>
         }
@@ -128,7 +127,7 @@ function UnitPage() {
           <RunBar
             running={runner.running}
             count={steps}
-            what="steps"
+            what={L("steps")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 100, max: 6000, step: 100 }}
@@ -177,7 +176,7 @@ function UnitPage() {
 
                 }}
               />
-            </div><Caption>The plane, coloured by the unit's answer White ring: wrong.  Sky ring: the dot shown at right</Caption></div>
+            </div><Caption>{L("The plane, coloured by the unit's answer White ring: wrong.  Sky ring: the dot shown at right")}</Caption></div>
             <div><div data-slot="plot" className="h-[420px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -219,7 +218,7 @@ function UnitPage() {
                   };
                   wire(inX, y1, sumX, sumY, w1, `x ${w1.toFixed(2)}`);
                   wire(inX, y2, sumX, sumY, w2, `x ${w2.toFixed(2)}`);
-                  wire(sumX, sumY, outX, sumY, 1, "squash");
+                  wire(sumX, sumY, outX, sumY, 1, L("squash"));
                   circle(inX, y1, probe[0].toFixed(2), GROUND, SKY);
                   circle(inX, y2, probe[1].toFixed(2), GROUND, SKY);
                   circle(sumX, sumY, z.toFixed(2), GROUND, INK);
@@ -228,8 +227,8 @@ function UnitPage() {
                   ctx.textAlign = "center";
                   ctx.fillText("x", inX, y1 - 28);
                   ctx.fillText("y", inX, y2 + 28);
-                  ctx.fillText(`+ Bias ${b.toFixed(2)}`, sumX, sumY + 30);
-                  ctx.fillText("Answer", outX, sumY - 28);
+                  ctx.fillText(L("+ Bias {{b}}", { b: b.toFixed(2) }), sumX, sumY + 30);
+                  ctx.fillText(L("Answer"), outX, sumY - 28);
                   // the squash itself, with the point this dot lands on
                   const gx0 = 30;
                   const gx1 = W - 30;
@@ -268,35 +267,36 @@ function UnitPage() {
                   ctx.textBaseline = "alphabetic";
                 }}
               />
-            </div><Caption>{`The squash: total ${z.toFixed(2)} in, ${a.toFixed(2)} out`}</Caption></div>
+            </div><Caption>{L("The squash: total {{z}} in, {{a}} out", { z: z.toFixed(2), a: a.toFixed(2) })}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={wrong === 0}>
               {wrong === 0
-                ? `The unit answers every one of the ${data.X.length} dots correctly${steps > 0 ? `, after ${steps} steps of moving its own three numbers` : ""}.`
+                ? steps > 0
+                  ? L("The unit answers every one of the {{all}} dots correctly, after {{steps}} steps of moving its own three numbers.", { all: data.X.length, steps })
+                  : L("The unit answers every one of the {{all}} dots correctly.", { all: data.X.length })
                 : kind === "xor" && steps > 200
-                  ? `After ${steps} steps the unit still has ${wrong} of 4 wrong, and the sliders have stopped moving. One unit is one line, and no line does exclusive or. The answer is more units, on the next page.`
+                  ? L("After {{steps}} steps the unit still has {{wrong}} of 4 wrong, and the sliders have stopped moving. One unit is one line, and no line does exclusive or. The answer is more units, on the next page.", { steps, wrong })
                   : kind === "rings" && steps > 200
-                    ? `After ${steps} steps the unit still has ${wrong} of ${data.X.length} wrong. Its boundary is a straight line and the shape it needs is a circle. More units, next page.`
-                    : `The unit gets ${wrong} of ${data.X.length} dots wrong${steps > 0 ? ` after ${steps} steps` : ""}. How wrong, as one number: ${total.toFixed(4)}.`}
+                    ? L("After {{steps}} steps the unit still has {{wrong}} of {{all}} wrong. Its boundary is a straight line and the shape it needs is a circle. More units, next page.", { steps, wrong, all: data.X.length })
+                    : steps > 0
+                      ? L("The unit gets {{wrong}} of {{all}} dots wrong after {{steps}} steps. How wrong, as one number: {{total}}.", { wrong, all: data.X.length, steps, total: total.toFixed(4) })
+                      : L("The unit gets {{wrong}} of {{all}} dots wrong. How wrong, as one number: {{total}}.", { wrong, all: data.X.length, total: total.toFixed(4) })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>The ringed dot: {probe[0].toFixed(2)} times {w1.toFixed(2)} plus {probe[1].toFixed(2)} times {w2.toFixed(2)} plus {b.toFixed(2)}</dt>
+              <dt>{L("The ringed dot: {{x}} times {{w1}} plus {{y}} times {{w2}} plus {{b}}", { x: probe[0].toFixed(2), w1: w1.toFixed(2), y: probe[1].toFixed(2), w2: w2.toFixed(2), b: b.toFixed(2) })}</dt>
               <dd className="text-right text-foreground/80">{z.toFixed(3)}</dd>
-              <dt>Squashed</dt>
-              <dd className="text-right text-foreground/80">{a.toFixed(3)}, So {toUnit(a) > 0.5 ? "green" : "rose"}</dd>
-              <dt>How wrong over all dots (average squared miss)</dt>
+              <dt>{L("Squashed")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{a}}, So {{colour}}", { a: a.toFixed(3), colour: toUnit(a) > 0.5 ? L("green") : L("rose") })}</dd>
+              <dt>{L("How wrong over all dots (average squared miss)")}</dt>
               <dd className="text-right text-foreground/80">{total.toFixed(5)}</dd>
-              <dt>Numbers the unit can change</dt>
+              <dt>{L("Numbers the unit can change")}</dt>
               <dd className="text-right text-foreground/80">3</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              The line from the last page is where the total is exactly zero, so the squash gives
-              one half: neither colour. The squash is what the perceptron did not have. Its
-              answer changes smoothly with the sliders, so how wrong it is has a slope, and the
-              hill page's ball can roll down it. Each run step is one roll step, on three numbers.
+              {L("The line from the last page is where the total is exactly zero, so the squash gives one half: neither colour. The squash is what the perceptron did not have. Its answer changes smoothly with the sliders, so how wrong it is has a slope, and the hill page's ball can roll down it. Each run step is one roll step, on three numbers.")}
             </Text>
           </div>
         }

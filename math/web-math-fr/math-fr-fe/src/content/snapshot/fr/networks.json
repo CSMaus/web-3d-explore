@@ -1,0 +1,13 @@
+{
+ "slug": "networks",
+ "number": 3,
+ "title": "Du calcul différentiel à un premier réseau de neurones",
+ "summary": "Le perceptron, le neurone qu'il est devenu, un réseau écrit comme un système d'équations, et toutes les méthodes qui l'entraînent, pour finir sur la dérivée et l'intégrale, les deux objets à partir desquels tout cela est construit",
+ "state": "writing",
+ "parts": 0,
+ "beats": 0,
+ "seconds": 0,
+ "systems": 17,
+ "aside": false,
+ "part_list": []
+}

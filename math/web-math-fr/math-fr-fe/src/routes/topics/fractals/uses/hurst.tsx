@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Label, Button, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
@@ -23,8 +24,8 @@ export const Route = createFileRoute("/topics/fractals/uses/hurst")({
 
 const N = 1024;
 const BESIDE = [
-  { id: "shuffled", label: "Beside it: the same steps shuffled" },
-  { id: "coin", label: "Beside it: a coin-toss walk" },
+  { id: "shuffled", label: L("Beside it: the same steps shuffled") },
+  { id: "coin", label: L("Beside it: a coin-toss walk") },
 ];
 
 function HurstPage() {
@@ -103,22 +104,20 @@ function HurstPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "A line that remembers: the Hurst exponent"}
-        job="A price, a river level, the traffic on a cable: each is a line that wanders, and the question is whether its steps remember the steps before them. In 1951 Hurst found that the Nile's floods do: wet years come in runs. One number, H, says how much. A coin-toss walk has H of one half; above it a run tends to go on, below it to reverse. The job is to grow such a walk one step at a time, measure H from the steps alone, compare it with the same steps in a random order, and see what the memory buys a forecast: not the next value, but how wide the future is."
+        title={system?.name ?? L("A line that remembers: the Hurst exponent")}
+        job={L("A price, a river level, the traffic on a cable: each is a line that wanders, and the question is whether its steps remember the steps before them. In 1951 Hurst found that the Nile's floods do: wet years come in runs. One number, H, says how much. A coin-toss walk has H of one half; above it a run tends to go on, below it to reverse. The job is to grow such a walk one step at a time, measure H from the steps alone, compare it with the same steps in a random order, and see what the memory buys a forecast: not the next value, but how wide the future is.")}
         input={
           <div className="space-y-3">
-            <Slider label="H set" min={0.2} max={0.9} step={0.05} value={H} format={(v) => v.toFixed(2)} onChange={(v) => { setH(Math.round(v * 20) / 20); reset(); }} />
+            <Slider label={L("H set")} min={0.2} max={0.9} step={0.05} value={H} format={(v) => v.toFixed(2)} onChange={(v) => { setH(Math.round(v * 20) / 20); reset(); }} />
             <Choices options={BESIDE} value={beside} onPick={(id) => { setBeside(id); reset(); }} />
-            <Slider label="Horizon" min={10} max={400} step={10} value={horizon} format={(v) => `${Math.round(v)} steps ahead`} onChange={(v) => setHorizon(Math.round(v))} />
+            <Slider label={L("Horizon")} min={10} max={400} step={10} value={horizon} format={(v) => L("{{n}} steps ahead", { n: Math.round(v) })} onChange={(v) => setHorizon(Math.round(v))} />
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" type="button" onClick={() => { setSeed((s) => s + 1); reset(); }}>
-                Draw another sample
+                {L("Draw another sample")}
               </Button>
             </div>
             <Text kind="note" as="p">
-              The steps are drawn exactly from the model with memory, fractional Gaussian noise, so
-              a run can grow one step at a time and still be a true sample. Shuffling the same steps
-              keeps every step and destroys the order, which is where the memory lives.
+              {L("The steps are drawn exactly from the model with memory, fractional Gaussian noise, so a run can grow one step at a time and still be a true sample. Shuffling the same steps keeps every step and destroys the order, which is where the memory lives.")}
             </Text>
           </div>
         }
@@ -127,7 +126,7 @@ function HurstPage() {
             running={runner.running}
             count={n}
             limit={N}
-            what="steps"
+            what={L("steps")}
             onToggle={() => {
               if (!runner.running && n >= N) reset();
               runner.toggle();
@@ -140,34 +139,19 @@ function HurstPage() {
         }
         more={
           <section data-slot="panel">
-            <Label>WHERE IT IS USED</Label>
+            <Label>{L("WHERE IT IS USED")}</Label>
             <ul data-text="note" className="mt-2 space-y-2">
               <li>
-                Rivers and reservoirs. Hurst, 1951: across 690 records of the Nile, rainfall, tree
-                rings and lake beds the exponent came out near 0.72, not 0.5. A reservoir sized by the
-                coin-toss rule runs dry in a long drought, because droughts cluster. Koutsoyiannis in
-                2002 argued the same for flood risk: the classical statistics understate the long run.
+                {L("Rivers and reservoirs. Hurst, 1951: across 690 records of the Nile, rainfall, tree rings and lake beds the exponent came out near 0.72, not 0.5. A reservoir sized by the coin-toss rule runs dry in a long drought, because droughts cluster. Koutsoyiannis in 2002 argued the same for flood risk: the classical statistics understate the long run.")}
               </li>
               <li>
-                Prices. Mandelbrot, 1963, on a century of cotton prices: the big moves are far more
-                common than a bell curve allows and the picture looks the same at every time scale.
-                Mandelbrot and Van Ness gave the model its name in 1968. Today the memory is used for
-                the size of moves rather than their direction: Calvet and Fisher in 2004 forecast
-                volatility ten to fifty days out better than the standard models with a model built
-                on scaling.
+                {L("Prices. Mandelbrot, 1963, on a century of cotton prices: the big moves are far more common than a bell curve allows and the picture looks the same at every time scale. Mandelbrot and Van Ness gave the model its name in 1968. Today the memory is used for the size of moves rather than their direction: Calvet and Fisher in 2004 forecast volatility ten to fifty days out better than the standard models with a model built on scaling.")}
               </li>
               <li>
-                Cables. Leland, Taqqu, Willinger and Wilson, 1994: traffic on an Ethernet is
-                self-similar, with no natural burst size, so adding more traffic does not smooth it
-                out as the old telephone models assumed. Buffers and capacity are now sized with the
-                walk on this page, after Norros, 1995.
+                {L("Cables. Leland, Taqqu, Willinger and Wilson, 1994: traffic on an Ethernet is self-similar, with no natural burst size, so adding more traffic does not smooth it out as the old telephone models assumed. Buffers and capacity are now sized with the walk on this page, after Norros, 1995.")}
               </li>
               <li>
-                What it cannot do. H says how risk grows with the horizon and whether runs continue.
-                It does not say what the next value is: the correlation between one step and the next
-                is small even at high H. And H is hard to read off a short series: Lo showed in 1991
-                that the memory claimed in stock returns can vanish once short-range effects are
-                allowed for. The measured value below is honest about that: it moves as the run grows.
+                {L("What it cannot do. H says how risk grows with the horizon and whether runs continue. It does not say what the next value is: the correlation between one step and the next is small even at high H. And H is hard to read off a short series: Lo showed in 1991 that the memory claimed in stock returns can vanish once short-range effects are allowed for. The measured value below is honest about that: it moves as the run grows.")}
               </li>
             </ul>
           </section>
@@ -195,7 +179,7 @@ function HurstPage() {
                     }}
                   />
                 </div>
-                <Caption>{`The walk with memory, H set to ${H.toFixed(2)}. Ahead of the last point: the spread the future could take over the next ${horizon} steps. Green: from the H measured so far. Grey: a coin's square-root rule. Beyond the run, not a forecast of where, only of how wide.`}</Caption>
+                <Caption>{L("The walk with memory, H set to {{h}}. Ahead of the last point: the spread the future could take over the next {{horizon}} steps. Green: from the H measured so far. Grey: a coin's square-root rule. Beyond the run, not a forecast of where, only of how wide.", { h: H.toFixed(2), horizon })}</Caption>
               </div>
               <div>
                 <div data-slot="plot" className="h-[240px] overflow-hidden">
@@ -216,7 +200,7 @@ function HurstPage() {
                     }}
                   />
                 </div>
-                <Caption>{beside === "shuffled" ? "The same steps in a random order, added up. Every step is the same size as on the left; only the order has gone, and with it the runs." : "A coin-toss walk, H one half, for comparison, from a different draw of the same size."}</Caption>
+                <Caption>{beside === "shuffled" ? L("The same steps in a random order, added up. Every step is the same size as on the left; only the order has gone, and with it the runs.") : L("A coin-toss walk, H one half, for comparison, from a different draw of the same size.")}</Caption>
               </div>
             </div>
             <div>
@@ -246,7 +230,7 @@ function HurstPage() {
                   }}
                 />
               </div>
-              <Caption>{`Both axes logarithmic. Along the bottom: the size of a block of steps. Up: how much the block sums vary. The slope is twice H. Green: this walk, slope ${fit ? (2 * fit.slope).toFixed(2) : "-"}. Rose: the comparison, slope ${fitOther ? (2 * fitOther.slope).toFixed(2) : "-"}. Grey: the coin's slope of one.`}</Caption>
+              <Caption>{L("Both axes logarithmic. Along the bottom: the size of a block of steps. Up: how much the block sums vary. The slope is twice H. Green: this walk, slope {{a}}. Rose: the comparison, slope {{b}}. Grey: the coin's slope of one.", { a: fit ? (2 * fit.slope).toFixed(2) : "-", b: fitOther ? (2 * fitOther.slope).toFixed(2) : "-" })}</Caption>
             </div>
           </section>
         }
@@ -254,29 +238,25 @@ function HurstPage() {
           <div className="space-y-2">
             <Verdict>
               {n === 0
-                ? `H is set to ${H.toFixed(2)}: ${H > 0.55 ? "runs tend to continue" : H < 0.45 ? "runs tend to reverse" : "a coin toss, no memory"}. Press run and the walk grows one step at a time, with H measured from the steps as they come.`
+                ? L("H is set to {{h}}: {{what}}. Press run and the walk grows one step at a time, with H measured from the steps as they come.", { h: H.toFixed(2), what: H > 0.55 ? L("runs tend to continue") : H < 0.45 ? L("runs tend to reverse") : L("a coin toss, no memory") })
                 : !fit
-                  ? `${n} steps so far. The measurement needs 64 steps to say anything.`
-                  : `After ${n} steps the exponent measured from the steps is ${fit.slope.toFixed(2)} against ${H.toFixed(2)} set: ${fit.slope > 0.58 ? "persistent, a run tends to go on" : fit.slope < 0.42 ? "anti-persistent, a run tends to reverse" : "close to a coin"}. ${beside === "shuffled" ? `The same steps shuffled measure ${fitOther?.slope.toFixed(2)}: the memory was in the order, and nothing else.` : `The coin-toss walk measures ${fitOther?.slope.toFixed(2)}.`} ${horizon} steps ahead the spread is ${horizonSpread(sd, fit.slope, horizon).toFixed(1)} against ${horizonSpread(sd, 0.5, horizon).toFixed(1)} for a coin, ${(Math.pow(horizon, fit.slope - 0.5)).toFixed(2)} times ${fit.slope > 0.5 ? "wider" : "narrower"}. The next step on its own is barely more predictable: its correlation with the last is ${lag1.toFixed(2)}.`}
+                  ? L("{{n}} steps so far. The measurement needs 64 steps to say anything.", { n })
+                  : `${L("After {{n}} steps the exponent measured from the steps is {{m}} against {{h}} set: {{kind}}.", { n, m: fit.slope.toFixed(2), h: H.toFixed(2), kind: fit.slope > 0.58 ? L("persistent, a run tends to go on") : fit.slope < 0.42 ? L("anti-persistent, a run tends to reverse") : L("close to a coin") })} ${beside === "shuffled" ? L("The same steps shuffled measure {{m}}: the memory was in the order, and nothing else.", { m: String(fitOther?.slope.toFixed(2)) }) : L("The coin-toss walk measures {{m}}.", { m: String(fitOther?.slope.toFixed(2)) })} ${L("{{horizon}} steps ahead the spread is {{a}} against {{b}} for a coin, {{ratio}} times {{dir}}. The next step on its own is barely more predictable: its correlation with the last is {{lag}}.", { horizon, a: horizonSpread(sd, fit.slope, horizon).toFixed(1), b: horizonSpread(sd, 0.5, horizon).toFixed(1), ratio: (Math.pow(horizon, fit.slope - 0.5)).toFixed(2), dir: fit.slope > 0.5 ? L("wider") : L("narrower"), lag: lag1.toFixed(2) })}`}
             </Verdict>
             <Readout
               rows={[
-                ["H set", H.toFixed(2)],
-                ["H measured, block variances", fit ? fit.slope.toFixed(3) : "-"],
-                ["H measured, Hurst's rescaled range", rs ? `${rs.slope.toFixed(3)}, a second reading; the two disagree on a short series, which is the difficulty Lo pointed at` : "-"],
-                ["The comparison's H", fitOther ? fitOther.slope.toFixed(3) : "-"],
-                ["Correlation of one step with the next", n >= 10 ? `${lag1.toFixed(3)} measured, ${autocorrelation(H, 1).toFixed(3)} exact` : "-"],
-                ["Dimension of the graph, box counting", dim ? `${dim.slope.toFixed(2)} measured, 2 - H = ${(2 - H).toFixed(2)}` : "needs 128 steps"],
-                ["Spread of one step", sd.toFixed(3)],
-                [`Spread ${horizon} steps ahead`, fit ? `${horizonSpread(sd, fit.slope, horizon).toFixed(2)}, a coin ${horizonSpread(sd, 0.5, horizon).toFixed(2)}` : "-"],
+                [L("H set"), H.toFixed(2)],
+                [L("H measured, block variances"), fit ? fit.slope.toFixed(3) : "-"],
+                [L("H measured, Hurst's rescaled range"), rs ? L("{{v}}, a second reading; the two disagree on a short series, which is the difficulty Lo pointed at", { v: rs.slope.toFixed(3) }) : "-"],
+                [L("The comparison's H"), fitOther ? fitOther.slope.toFixed(3) : "-"],
+                [L("Correlation of one step with the next"), n >= 10 ? L("{{m}} measured, {{e}} exact", { m: lag1.toFixed(3), e: autocorrelation(H, 1).toFixed(3) }) : "-"],
+                [L("Dimension of the graph, box counting"), dim ? L("{{m}} measured, 2 - H = {{e}}", { m: dim.slope.toFixed(2), e: (2 - H).toFixed(2) }) : L("needs 128 steps")],
+                [L("Spread of one step"), sd.toFixed(3)],
+                [L("Spread {{horizon}} steps ahead", { horizon }), fit ? L("{{a}}, a coin {{b}}", { a: horizonSpread(sd, fit.slope, horizon).toFixed(2), b: horizonSpread(sd, 0.5, horizon).toFixed(2) }) : "-"],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              The graph of this walk is a fractal curve of dimension two minus H: the persistent walk
-              is the smoother line, the anti-persistent one the rougher, and the same box count that
-              measured the coastline measures it. That is the whole link between this page and the
-              rest of the topic: a scaling law, an exponent read off a slope, and roughness that does
-              not go away on looking closer.
+              {L("The graph of this walk is a fractal curve of dimension two minus H: the persistent walk is the smoother line, the anti-persistent one the rougher, and the same box count that measured the coastline measures it. That is the whole link between this page and the rest of the topic: a scaling law, an exponent read off a slope, and roughness that does not go away on looking closer.")}
             </Text>
           </div>
         }

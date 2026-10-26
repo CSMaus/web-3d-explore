@@ -1,0 +1,338 @@
+{
+ "systems": [
+  {
+   "id": "field",
+   "name": "방정식 하나와 그 장",
+   "summary": "미지수가 수가 아니라 함수인 방정식입니다. 모든 상태에서 변화율을 정해 주며, 아무것도 풀기 전에 이를 그릴 수 있습니다",
+   "blocks": [
+    {
+     "label": "대상",
+     "tex": "\\frac{dx}{dt} = f(x, t), \\qquad x(t_0) = x_0",
+     "note": "규칙은 상태가 얼마나 빨리 변하는지만 말하고, 그 밖에는 아무것도 말하지 않습니다"
+    },
+    {
+     "label": "변수분리형, 양변을 적분해 풉니다",
+     "tex": "\\frac{dx}{g(x)} = h(t)\\,dt \\;\\Longrightarrow\\; \\int\\!\\frac{dx}{g(x)} = \\int\\! h(t)\\,dt + C",
+     "note": "임의의 상수는 모습을 바꾼 초기 조건입니다"
+    },
+    {
+     "label": "1계 선형, 적분 인자로 풉니다",
+     "tex": "x' + a(t)x = b(t), \\qquad x(t) = e^{-A(t)}\\!\\left(\\int\\! e^{A(t)}b(t)\\,dt + C\\right),\\; A = \\!\\int\\! a",
+     "note": "시작에 대한 기억이 점점 사라지는 부분과 외부 구동항에 대한 응답의 합입니다"
+    },
+    {
+     "label": "상수 계수 선형, 특성방정식으로 풉니다",
+     "tex": "x'' + 2\\zeta\\omega x' + \\omega^2 x = 0, \\qquad \\lambda^2 + 2\\zeta\\omega\\lambda + \\omega^2 = 0",
+     "note": "실근은 지수함수를 주고, 복소근은 진동을 줍니다"
+    },
+    {
+     "label": "닫힌 형태가 멈추는 곳",
+     "tex": "\\theta'' + \\frac{g}{L}\\sin\\theta = 0",
+     "note": "작은 각 근사를 하지 않은 진자입니다. 초등적인 해가 없으며, 뒤따르는 모든 수치 계산은 이 때문입니다"
+    }
+   ],
+   "dimension": {
+    "label": "해란 무엇인가",
+    "tex": "x(t)\\ \\text{such that}\\ x'(t) - f(x(t), t) \\equiv 0",
+    "note": "대입해 확인하는 것만이 해임을 보증합니다"
+   }
+  },
+  {
+   "id": "solvers",
+   "name": "한 걸음씩 풀기",
+   "summary": "공식은 없고 현재 상태의 변화율만 있습니다. 궤적은 작은 걸음을 하나씩 내디뎌 만들며, 걸음의 크기가 그 궤적이 얼마나 진짜인지를 정합니다",
+   "blocks": [
+    {
+     "label": "전진 오일러법, 장을 글자 그대로 따르기",
+     "tex": "x_{n+1} = x_n + h\\,f(x_n, t_n)",
+     "note": "지금 자리에서 변화율을 읽고, 그 방향을 따라 걷습니다"
+    },
+    {
+     "label": "중점법, 한 번의 보정",
+     "tex": "x_{n+1} = x_n + h\\,f\\!\\left(x_n + \\tfrac{h}{2}f(x_n,t_n),\\; t_n + \\tfrac{h}{2}\\right)",
+     "note": "걸음의 중간에서 변화율을 한 번 더 읽습니다"
+    },
+    {
+     "label": "4차 룽게-쿠타법, 일꾼",
+     "tex": "x_{n+1} = x_n + \\frac{h}{6}\\left(k_1 + 2k_2 + 2k_3 + k_4\\right),\\qquad\\begin{aligned} k_1 &= f(x_n, t_n) \\\\ k_2 &= f(x_n + \\tfrac{h}{2}k_1,\\; t_n + \\tfrac{h}{2}) \\\\ k_3 &= f(x_n + \\tfrac{h}{2}k_2,\\; t_n + \\tfrac{h}{2}) \\\\ k_4 &= f(x_n + h k_3,\\; t_n + h) \\end{aligned}",
+     "note": "한 걸음에 변화율을 네 번 읽습니다"
+    },
+    {
+     "label": "방법의 차수",
+     "tex": "\\lVert x_N - x(T) \\rVert = O(h^{\\,p}) \\quad\\Longrightarrow\\quad p = \\log_2\\!\\frac{e(h)}{e(h/2)}",
+     "note": "걸음을 절반으로 줄이면 오차는 2의 차수 제곱으로 나누어져야 합니다. 정확한 답을 아는 진동자에서 측정한 값은 오일러법 1.03, 중점법 2.00, 룽게-쿠타법 4.00입니다"
+    },
+    {
+     "label": "방법이 보존하지 않는 것",
+     "tex": "E = \\tfrac{1}{2}\\!\\left(x^2 + v^2\\right) \\ \\text{constant for}\\ x'' + x = 0",
+     "note": "걸음 0.01로 백 바퀴를 돌면, 답이 0.5인데 오일러법은 에너지를 267.67로 내놓고 룽게-쿠타법은 0.500000을 내놓습니다"
+    }
+   ],
+   "dimension": {
+    "label": "인용하지 않고 측정한 차수",
+    "tex": "p \\approx \\log_2\\!\\left(e(h)\\,/\\,e(h/2)\\right)",
+    "note": "계산의 끝이 정확히 온전한 주기에 떨어져야 합니다. 그렇지 않으면 끝 시각의 어긋남이 방법의 효과를 덮어 버립니다"
+   }
+  },
+  {
+   "id": "phase",
+   "name": "미지수 둘, 그리고 위상 평면",
+   "summary": "하나의 시계에 딸린 여러 미지 함수입니다. 상태 전체가 한 점이 되고, 그 역사는 한 곡선이 되며, 시계는 축에서 아예 사라집니다",
+   "blocks": [
+    {
+     "label": "시스템",
+     "tex": "\\dot{\\mathbf{x}} = \\mathbf{f}(\\mathbf{x}), \\qquad \\mathbf{x} \\in \\mathbb{R}^2",
+     "note": "미지수 묶음 전체에 대한 규칙 하나입니다"
+    },
+    {
+     "label": "고계 방정식을 시스템으로",
+     "tex": "x'' = g(x, x') \\;\\Longleftrightarrow\\; \\begin{cases} \\dot{x} = v \\\\ \\dot{v} = g(x, v)\\end{cases}",
+     "note": "각 도함수에 새 상태 변수라는 이름을 붙일 뿐, 그 밖에는 아무것도 하지 않습니다"
+    },
+    {
+     "label": "평형점, 그리고 그 곁의 선형 대역",
+     "tex": "\\mathbf{f}(\\mathbf{x}^{*}) = \\mathbf{0}, \\qquad J_{ij} = \\left.\\frac{\\partial f_i}{\\partial x_j}\\right|_{\\mathbf{x}^{*}}",
+     "note": "야코비 행렬과 시스템의 관계는 접선과 곡선의 관계와 같습니다"
+    },
+    {
+     "label": "평형점을 분류하는 고윳값",
+     "tex": "\\lambda_{1,2} = \\frac{\\tau \\pm \\sqrt{\\tau^2 - 4\\Delta}}{2}, \\qquad \\tau = \\operatorname{tr} J,\\ \\ \\Delta = \\det J",
+     "note": "부호가 같은 실수이면 마디점, 부호가 반대이면 안장점, 복소수이면 나선점, 순허수이면 중심점입니다. 중심점에서는 선형 그림이 아무것도 결정하지 못합니다"
+    },
+    {
+     "label": "부피, 그리고 부피가 새는가",
+     "tex": "\\nabla\\!\\cdot\\!\\mathbf{f} = \\operatorname{tr} J = \\frac{1}{V}\\frac{dV}{dt}",
+     "note": "부피를 잃는 시스템만 끌개를 가질 수 있습니다"
+    },
+    {
+     "label": "판데르폴 진동자와 그 극한 순환",
+     "tex": "\\ddot{x} - \\mu\\!\\left(1 - x^2\\right)\\dot{x} + x = 0",
+     "note": "이웃 궤적들이 나선을 그리며 감겨드는 고립된 닫힌 궤적입니다"
+    },
+    {
+     "label": "왜 2차원으로는 부족한가",
+     "tex": "\\text{Poincar\\'e-Bendixson: a bounded planar orbit tends to an equilibrium or a closed orbit}",
+     "note": "그래서 평면에서는 혼돈이 불가능하며, 세 번째 변수는 호기심거리가 아니라 필수입니다"
+    }
+   ],
+   "dimension": {
+    "label": "두 고윳값에 따른 분류",
+    "tex": "\\operatorname{sign}(\\operatorname{Re}\\lambda_i),\\quad \\operatorname{Im}\\lambda_i \\ne 0\\,?",
+    "note": "뉴턴법이 찾은 모든 평형점에서 측정하며, 그림을 보고 짐작하지 않습니다"
+   }
+  },
+  {
+   "id": "lorenz",
+   "name": "로렌츠 시스템",
+   "summary": "1963년에 아래에서 가열되는 유체층의 대류를 크게 줄여 만든 모형으로 적은 세 방정식입니다. 혼돈이 살 수 있는 가장 작고 정직한 자리입니다",
+   "blocks": [
+    {
+     "label": "세 방정식",
+     "tex": "\\begin{aligned} \\dot{x} &= \\sigma\\,(y - x) \\\\ \\dot{y} &= x\\,(\\rho - z) - y \\\\ \\dot{z} &= x y - \\beta z \\end{aligned}",
+     "note": "고전적인 값은 시그마 = 10, 로 = 28, 베타 = 8/3입니다"
+    },
+    {
+     "label": "평형점",
+     "tex": "\\mathbf{0}, \\qquad \\left(\\pm\\sqrt{\\beta(\\rho-1)},\\ \\pm\\sqrt{\\beta(\\rho-1)},\\ \\rho-1\\right)",
+     "note": "원점은 정지한 유체이고, 대칭인 한 쌍은 정상 대류입니다. 로 = 28에 이르면 둘 다 안정성을 잃습니다"
+    },
+    {
+     "label": "어디서나 같은 비율로 잃는 부피",
+     "tex": "\\nabla\\!\\cdot\\!\\mathbf{f} = -(\\sigma + 1 + \\beta) = -13.6\\overline{66}",
+     "note": "상수이므로 한 점의 값이 곧 평균입니다. 측정값은 -13.6667입니다"
+    },
+    {
+     "label": "이웃이 얼마나 빨리 멀어지는가",
+     "tex": "\\lambda_1 = \\lim_{T\\to\\infty}\\frac{1}{T}\\ln\\frac{\\lVert \\delta(T)\\rVert}{\\lVert\\delta(0)\\rVert}",
+     "note": "이웃 점을 풀어 놓고 거리를 재정규화해 측정한 값은 0.9043이고, 발표된 값은 0.906입니다"
+    },
+    {
+     "label": "여기서 나오는 예측 지평",
+     "tex": "T \\approx \\frac{1}{\\lambda_1}\\ln\\frac{\\Delta}{\\delta_0}",
+     "note": "측정 정밀도를 열 배 높이면 ln(10)/0.904, 즉 시간 단위로 약 2.5만큼 더 얻을 뿐, 그 이상은 얻지 못합니다"
+    }
+   ],
+   "dimension": {
+    "label": "캐플런-요크 차원",
+    "tex": "D = 2 + \\frac{\\lambda_1}{\\lvert\\lambda_3\\rvert}, \\qquad \\lambda_1 + \\lambda_2 + \\lambda_3 = \\nabla\\!\\cdot\\!\\mathbf{f},\\ \\ \\lambda_2 = 0",
+    "note": "가운데 지수는 0입니다. 궤적을 따라 움직이면 거리가 늘지도 줄지도 않기 때문입니다. 그래서 세 번째 지수는 발산에서 나옵니다. 측정값은 2.062로 발표된 값과 같습니다. 유한한 표본에 상자 세기를 하면 1.911이 나오며, 이는 불일치가 아니라 정의가 다른 것입니다"
+   }
+  },
+  {
+   "id": "rossler",
+   "name": "뢰슬러 시스템",
+   "summary": "1976년에 같은 행동을 보이는 가장 단순한 시스템이 되도록 일부러 만들었습니다. 세 방정식 가운데 둘은 선형이고, 선형이 아닌 항은 하나뿐입니다",
+   "blocks": [
+    {
+     "label": "세 방정식",
+     "tex": "\\begin{aligned} \\dot{x} &= -y - z \\\\ \\dot{y} &= x + a y \\\\ \\dot{z} &= b + z\\,(x - c) \\end{aligned}",
+     "note": "고전적인 값은 a = 0.2, b = 0.2, c = 5.7입니다. 비선형 항은 z x 하나뿐입니다"
+    },
+    {
+     "label": "늘이기와 접기를 한 동작으로",
+     "tex": "\\text{spiral outward in the } (x,y) \\text{ plane} \\;\\longrightarrow\\; \\text{lifted by } z \\;\\longrightarrow\\; \\text{folded back inward}",
+     "note": "이 주제의 모든 혼돈 시스템 뒤에 있는 메커니즘이며, 여기서는 그것을 보는 데 방해되는 것이 없습니다"
+    },
+    {
+     "label": "잃는 부피, 그리고 그것은 곳마다 다르다",
+     "tex": "\\nabla\\!\\cdot\\!\\mathbf{f} = a + x - c",
+     "note": "상태에 따라 달라지므로 한 점의 값은 수축률이 아닙니다. (1,1,1)에서는 -4.500이고, 끌개를 따라 평균하면 -5.325입니다"
+    },
+    {
+     "label": "흐름을 사상으로 줄이는 단면",
+     "tex": "\\Sigma = \\{\\,y = 0,\\ \\dot{y} > 0\\,\\}, \\qquad P : \\Sigma \\to \\Sigma",
+     "note": "평면이 차원 하나를 없애고, 교차점만 보는 것으로 시계를 없앱니다"
+    }
+   ],
+   "dimension": {
+    "label": "캐플런-요크 차원",
+    "tex": "D = 2 + \\frac{\\lambda_1}{\\lvert\\lambda_3\\rvert}",
+    "note": "측정한 최대 지수 0.0702(발표값 0.0714)와 측정한 평균 발산 -5.325로부터 D = 2.013을 얻으며, 발표값은 2.01입니다"
+   }
+  },
+  {
+   "id": "logistic",
+   "name": "로지스틱 사상",
+   "summary": "한 수에서 다음 수로, 되풀이해 넘어갑니다. 흐름은 혼돈이 되려면 3차원이 필요하지만 사상은 1차원이면 되므로, 사상에 관한 모든 것을 적은 비용으로 계산하고 그릴 수 있습니다",
+   "blocks": [
+    {
+     "label": "사상",
+     "tex": "x_{n+1} = r\\,x_n\\,(1 - x_n), \\qquad x \\in [0, 1]",
+     "note": "붐빔이 억제하는 성장이며, 매개변수는 하나입니다"
+    },
+    {
+     "label": "고정점, 그리고 고정점이 유지되는 때",
+     "tex": "x^{*} = 0,\\ \\ 1 - \\tfrac{1}{r}; \\qquad \\text{stable while } \\lvert f'(x^{*})\\rvert < 1,\\ \\ f'(x) = r\\,(1 - 2x)",
+     "note": "고정점에서의 기울기는 야코비 행렬 고윳값의 1차원 경우입니다"
+    },
+    {
+     "label": "한 사상의 순환은 다른 사상의 고정점이다",
+     "tex": "f_r^{(2)}(x) = f_r\\!\\left(f_r(x)\\right)",
+     "note": "이 덕분에 주기 배가는 신비가 아니라 기계적인 현상이 됩니다"
+    },
+    {
+     "label": "기울기에 대한 조건으로 본 주기 배가",
+     "tex": "\\frac{d}{dx}f_r^{(2^{n})}\\!\\left(x^{*}\\right) = -1",
+     "note": "순환이 안정성을 잃고 주기가 두 배인 순환이 나타납니다"
+    },
+    {
+     "label": "임계점이 순환 위에 있는 초안정 상태",
+     "tex": "f_R^{(2^{n})}(\\tfrac{1}{2}) = \\tfrac{1}{2}",
+     "note": "이분법으로 찾은 위치는 R = 2, 3.236068, 3.498562, 3.554641, 3.566667, 3.569244, 3.569795, 3.569913입니다"
+    }
+   ],
+   "dimension": {
+    "label": "사상의 랴푸노프 지수",
+    "tex": "\\lambda = \\lim_{N\\to\\infty}\\frac{1}{N}\\sum_{n=0}^{N-1}\\ln\\bigl\\lvert f'(x_n)\\bigr\\rvert",
+    "note": "순환에서는 음수, 모든 분기점에서는 0, 혼돈 띠에서는 양수입니다. r = 4에서는 정확히 ln 2이며, 측정값은 0.6931입니다"
+   }
+  },
+  {
+   "id": "bifurcation",
+   "name": "분기 도표",
+   "summary": "한 축에 모든 매개변수 값을 놓고, 그 위에 궤도가 방문하는 모든 값을 놓습니다. 질적 변화의 목록이 그림 한 장이 됩니다",
+   "blocks": [
+    {
+     "label": "만드는 방법",
+     "tex": "\\text{for each } r: \\ \\text{iterate, discard the transient, plot what remains}",
+     "note": "보여 주기만 하는 것이 아니라 계산해 만들므로, 손으로 그린 부분은 하나도 없습니다"
+    },
+    {
+     "label": "국소 그림들, 그리고 목록이 짧은 이유",
+     "tex": "\\dot{x} = r - x^2 \\ \\ (\\text{saddle-node}), \\qquad \\dot{x} = rx - x^3 \\ \\ (\\text{pitchfork}), \\qquad \\operatorname{Re}\\lambda_{1,2} : - \\to + \\ \\ (\\text{Hopf})",
+     "note": "표준형이 국소적 가능성을 모두 다루므로 그 수가 이렇게 적습니다"
+    },
+    {
+     "label": "연쇄, 그리고 그 간격 속의 상수",
+     "tex": "\\delta = \\lim_{n\\to\\infty}\\frac{R_{n} - R_{n-1}}{R_{n+1} - R_{n}} = 4.669\\,201\\ldots",
+     "note": "주기가 4에서 128까지 두 배씩 늘어나는 동안 측정한 비는 4.7089, 4.6808, 4.6630, 4.6684, 4.6690, 4.6692입니다"
+    },
+    {
+     "label": "주장하지 않고 확인한 보편성",
+     "tex": "x_{n+1} = r\\sin(\\pi x_n)",
+     "note": "매끄러운 최댓값이 하나인 다른 함수족입니다. 같은 방법으로 4.6690을 얻고, 연쇄는 3.569913이 아니라 0.865571에 모입니다"
+    },
+    {
+     "label": "간격이 아니라 폭에 있는 두 번째 상수",
+     "tex": "\\alpha = 2.502\\,907\\ldots",
+     "note": "누적점에서 도표가 자기 닮음을 이루는 배율이며, 바로 여기서 이 주제와 프랙털 주제는 같은 주제가 됩니다"
+    }
+   ],
+   "dimension": {
+    "label": "두 함수족에서 측정한 파이겐바움 델타",
+    "tex": "\\delta \\approx \\frac{R_{n} - R_{n-1}}{R_{n+1} - R_{n}}",
+    "note": "로지스틱 함수족에서 4.6692, 사인 함수족에서 4.6690이며, 둘 다 같은 코드에서 나왔습니다"
+   }
+  },
+  {
+   "id": "control",
+   "name": "실제 심장: 정상 박동, 부정맥, 그리고 회복",
+   "summary": "MIT-BIH 부정맥 데이터베이스의 기록 207번, 한 사람의 심장 박동을 30분 동안 기록한 것을 표시된 박동 사이의 간격으로 봅니다. 정상 리듬, 저절로 시작했다 멈추는 심실 조동 구간, 그리고 전환의 회귀 사상을 다룹니다",
+   "blocks": [
+    {
+     "label": "간격",
+     "tex": "I_{n} = t_{n+1} - t_{n}",
+     "note": "표시된 한 박동에서 다음 박동까지의 시간을 밀리초로 잰 것으로, 초당 360 표본으로 된 심장 전문의의 주석 파일에서 가져왔습니다. 조동 중에는 조동파 하나하나가 표시된 박동입니다"
+    },
+    {
+     "label": "회귀 사상",
+     "tex": "(I_{n},\\, I_{n+1})",
+     "note": "각 간격을 그다음 간격에 대해 찍습니다. 뢰슬러 페이지가 소개하고 1992년 실험이 쓴 그림입니다. 반복되는 리듬은 한 점이고, 전환은 구름 사이의 도약입니다"
+    },
+    {
+     "label": "한 간격이 다음 간격에 대해 얼마나 알려 주는가",
+     "tex": "\\rho = \\frac{\\overline{\\sigma(I_{n+1} \\mid I_n \\in \\text{bin})}}{\\sigma(I_{n+1})}",
+     "note": "자기 간격이 같은 20 ms 칸에 든 박동들 사이에서 다음 간격의 퍼짐을, 아무것도 모를 때의 퍼짐으로 나눈 값입니다. 1이면 도움이 없고, 0이면 규칙입니다. 소수 여담에서 쓰는 것과 같은 척도입니다"
+    },
+    {
+     "label": "간격에서 구한 박동수",
+     "tex": "\\text{beats a minute} = \\frac{60000}{\\bar{I}}",
+     "note": "이 환자의 정상 리듬과 조동을 각각 평균 간격에서 구한 박동수로 나타냅니다"
+    }
+   ],
+   "dimension": {
+    "label": "기록에 대하여",
+    "tex": "\\text{MIT-BIH 207: 47 patients, 1975-1979, ODC-BY 1.0}",
+    "note": "Moody와 Mark, IEEE Eng Med Biol 20(3), 2001; Goldberger 외, Circulation 101(23), 2000; PhysioNet doi 10.13026/C2F305. 페이지의 어떤 것도 생성된 데이터가 아닙니다"
+   }
+  }
+ ],
+ "definitions": [
+  {
+   "id": "upo",
+   "name": "불안정 주기 궤도, 그리고 살짝 밀어 주는 제어",
+   "tex": "x^{*} = f(x^{*}), \\quad |f'(x^{*})| > 1",
+   "note": "규칙이 정확히 되돌아오지만 근처의 상태들은 떠나 버리는 점입니다. 혼돈 끌개에는 이런 점이 가득 꿰어 있으며, 그래서 리듬은 일정한 박동 가까이를 계속 지나가면서도 그 박동을 결코 유지하지 못합니다. 오트, 그레보기, 요크는 1990년에 상태가 가까이 올 때마다 작고 시기적절한 변화를 주면 상태를 그곳에 붙잡아 둘 수 있음을 보였습니다. 가핑클, 스파노, 디토, 와이스는 1992년에 박동을 짧게만 할 수 있는 자극으로 심장 조직에서 이를 해냈습니다."
+  },
+  {
+   "id": "lyapunov",
+   "name": "랴푸노프 지수",
+   "tex": "\\lambda = \\lim_{T\\to\\infty}\\frac{1}{T}\\ln\\frac{\\lVert\\delta(T)\\rVert}{\\lVert\\delta(0)\\rVert}",
+   "note": "이웃한 상태들이 멀어지는 평균 지수 비율입니다. 그 부호가 혼돈의 실용적 정의이며, 한 쌍의 거리가 끌개의 폭에서 포화되지 않도록 거리를 재정규화해 측정합니다"
+  },
+  {
+   "id": "divergence",
+   "name": "장의 발산",
+   "tex": "\\nabla\\!\\cdot\\!\\mathbf{f} = \\sum_i \\frac{\\partial f_i}{\\partial x_i} = \\frac{1}{V}\\frac{dV}{dt}",
+   "note": "작은 상태 부피가 커지거나 줄어드는 비율입니다. 지수들의 합과 같으므로, 이를 이용해 세 번째 지수를 나머지 둘에서 구할 수 있습니다"
+  },
+  {
+   "id": "kaplanyorke",
+   "name": "캐플런-요크 차원",
+   "tex": "D = k + \\frac{\\sum_{i=1}^{k}\\lambda_i}{\\lvert\\lambda_{k+1}\\rvert}, \\qquad k = \\max\\Bigl\\{\\,j : \\textstyle\\sum_{i\\le j}\\lambda_i \\ge 0\\,\\Bigr\\}",
+   "note": "늘이기가 버텨 내는 온전한 방향의 수에, 다음 방향에서 닿는 비율을 더한 값입니다. 이상한 끌개에 대해 보통 인용하는 수가 이것입니다"
+  },
+  {
+   "id": "boxcount",
+   "name": "상자 세기 차원",
+   "tex": "d = \\lim_{\\varepsilon\\to 0}\\frac{\\log N(\\varepsilon)}{\\log(1/\\varepsilon)}",
+   "note": "프랙털 주제가 해안선에서 측정한 것과 같은 정의입니다. 궤적에서는 상자가 기록된 상태 사이의 간격보다 클 때만 적용되므로, 그 구간에서 맞춤을 하고 답과 함께 구간을 밝힙니다"
+  },
+  {
+   "id": "feigenbaum",
+   "name": "파이겐바움 상수",
+   "tex": "\\delta = 4.669\\,201\\ldots, \\qquad \\alpha = 2.502\\,907\\ldots",
+   "note": "연쇄에서 매개변수 간격이 줄어드는 비, 그리고 가지 폭이 줄어드는 비입니다. 매끄러운 2차 최댓값이 하나인 사상이면 다른 점이 어떻든 같은 두 수가 나옵니다"
+  }
+ ]
+}

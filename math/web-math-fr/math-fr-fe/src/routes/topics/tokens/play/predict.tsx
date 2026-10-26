@@ -18,6 +18,7 @@ import { TOPIC } from "@/lib/tokens";
 import { CORPUS, encode } from "@/systems/bpe";
 import { dot, forward, perplexity } from "@/systems/lm";
 import { Input } from "@kit/index";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/tokens/play/predict")({
   loader: () => api.system(TOPIC, "predict"),
@@ -83,19 +84,17 @@ function PredictPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "The next token"}
-        job="The stream turns one vector per position into another vector per position. The only thing left is to turn the last of them into a statement about what comes next: one score per vocabulary entry, softmaxed into a distribution, read as a ranked list. The job is to watch that list sharpen as the model trains, and to score it against what the text actually said."
+        title={system?.name ?? L("The next token")}
+        job={L("The stream turns one vector per position into another vector per position. The only thing left is to turn the last of them into a statement about what comes next: one score per vocabulary entry, softmaxed into a distribution, read as a ranked list. The job is to watch that list sharpen as the model trains, and to score it against what the text actually said.")}
         input={
           <div className="space-y-3">
             <Choices options={PROMPTS} value={pick} onPick={(id) => { setPick(id); setText(PROMPTS.find((p) => p.id === id)!.text); }} />
             <label className="block">
-              <span data-text="note">Or type a prompt</span>
+              <span data-text="note">{L("Or type a prompt")}</span>
               <Input value={text} onChange={(e) => { setText(e.target.value); setPick(""); }} className="mt-1" />
             </label>
             <Text kind="note" as="p">
-              Run trains the shared model by predicting the next token at every position of the
-              text from the vocabulary page. The same trained model is used on the pages after this
-              one, and starting again resets it everywhere.
+              {L("Run trains the shared model by predicting the next token at every position of the text from the vocabulary page. The same trained model is used on the pages after this one, and starting again resets it everywhere.")}
             </Text>
           </div>
         }
@@ -103,7 +102,7 @@ function PredictPage() {
           <RunBar
             running={runner.running}
             count={steps}
-            what="training steps"
+            what={L("training steps")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 250, max: 6000, step: 250 }}
@@ -146,11 +145,11 @@ function PredictPage() {
                     ctx.fillRect(120, y, ((W - 260) * r.p) / top, 16);
                     ctx.globalAlpha = 1;
                     ctx.fillStyle = MUTED;
-                    ctx.fillText(`${(r.p * 100).toFixed(1)} %   score ${r.z.toFixed(2)}`, 126 + ((W - 260) * r.p) / top, y + 13);
+                    ctx.fillText(L("{{pct}} %   score {{z}}", { pct: (r.p * 100).toFixed(1), z: r.z.toFixed(2) }), 126 + ((W - 260) * r.p) / top, y + 13);
                   });
                 }}
               />
-            </div><Caption>{`The twelve most likely next tokens, of ${VOCAB.bytes.length}. Green: the one the text actually had.`}</Caption></div>
+            </div><Caption>{L("The twelve most likely next tokens, of {{n}}. Green: the one the text actually had.", { n: VOCAB.bytes.length })}</Caption></div>
             <div><div data-slot="plot" className="h-[120px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -162,36 +161,32 @@ function PredictPage() {
                   pen.line(store.history, ONE, 1.8);
                 }}
               />
-            </div><Caption>How wrong about the next token, averaged over the text, against training steps</Caption></div>
+            </div><Caption>{L("How wrong about the next token, averaged over the text, against training steps")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={steps === 0 ? undefined : truthRank === 0 ? true : truthRank > 0 && truthRank < 3 ? undefined : steps > 500 ? false : undefined}>
               {steps === 0
-                ? `Untrained: every one of the ${VOCAB.bytes.length} tokens is about equally likely, so the top one has ${(shown[0].p * 100).toFixed(1)} % and the perplexity is ${perplexity(model.loss || Math.log(VOCAB.bytes.length)).toFixed(0)}: as good as guessing among ${VOCAB.bytes.length}. Press run.`
-                : `After ${steps} steps the model gives ${visible(tokenText(shown[0].id))} ${(shown[0].p * 100).toFixed(0)} %, then ${visible(tokenText(shown[1].id))} ${(shown[1].p * 100).toFixed(0)} % and ${visible(tokenText(shown[2].id))} ${(shown[2].p * 100).toFixed(0)} %; the top three hold ${(inTop * 100).toFixed(0)} % and the other ${VOCAB.bytes.length - 3} tokens share the rest. ${truth === null ? "This prompt is not in the text, so there is no right answer to score against." : `In the text this prompt was followed by ${visible(tokenText(truth))}, which the model ranks ${truthRank + 1}${truthRank === 0 ? "St" : truthRank === 1 ? "Nd" : truthRank === 2 ? "Rd" : "Th"}: its loss on this one prediction is ${lossHere!.toFixed(2)}.`}`}
+                ? L("Untrained: every one of the {{n}} tokens is about equally likely, so the top one has {{pct}} % and the perplexity is {{perplexity}}: as good as guessing among {{n}}. Press run.", { n: VOCAB.bytes.length, pct: (shown[0].p * 100).toFixed(1), perplexity: perplexity(model.loss || Math.log(VOCAB.bytes.length)).toFixed(0) })
+                : `${L("After {{steps}} steps the model gives {{a}} {{pa}} %, then {{b}} {{pb}} % and {{c}} {{pc}} %; the top three hold {{top}} % and the other {{rest}} tokens share the rest.", { steps, a: visible(tokenText(shown[0].id)), pa: (shown[0].p * 100).toFixed(0), b: visible(tokenText(shown[1].id)), pb: (shown[1].p * 100).toFixed(0), c: visible(tokenText(shown[2].id)), pc: (shown[2].p * 100).toFixed(0), top: (inTop * 100).toFixed(0), rest: VOCAB.bytes.length - 3 })} ${truth === null ? L("This prompt is not in the text, so there is no right answer to score against.") : L(truthRank === 0 ? "In the text this prompt was followed by {{token}}, which the model ranks {{rank}}St: its loss on this one prediction is {{loss}}." : truthRank === 1 ? "In the text this prompt was followed by {{token}}, which the model ranks {{rank}}Nd: its loss on this one prediction is {{loss}}." : truthRank === 2 ? "In the text this prompt was followed by {{token}}, which the model ranks {{rank}}Rd: its loss on this one prediction is {{loss}}." : "In the text this prompt was followed by {{token}}, which the model ranks {{rank}}Th: its loss on this one prediction is {{loss}}.", { token: visible(tokenText(truth)), rank: truthRank + 1, loss: lossHere!.toFixed(2) })}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Output width, one score a vocabulary entry</dt>
+              <dt>{L("Output width, one score a vocabulary entry")}</dt>
               <dd className="text-right text-foreground/80">{VOCAB.bytes.length}</dd>
-              <dt>The score for {visible(tokenText(shown[0].id))}: Last vector dotted with its own table row</dt>
+              <dt>{L("The score for {{token}}: Last vector dotted with its own table row", { token: visible(tokenText(shown[0].id)) })}</dt>
               <dd className="text-right text-foreground/80">{dot(pass.h[last], model.E[shown[0].id]).toFixed(3)} = {shown[0].z.toFixed(3)}</dd>
-              <dt>Numbers saved by tying the output to the table</dt>
+              <dt>{L("Numbers saved by tying the output to the table")}</dt>
               <dd className="text-right text-foreground/80">{(VOCAB.bytes.length * WIDTH).toLocaleString("en")}</dd>
-              <dt>Average loss over the text, smoothed</dt>
+              <dt>{L("Average loss over the text, smoothed")}</dt>
               <dd className="text-right text-foreground/80">{model.loss.toFixed(3)}</dd>
-              <dt>Perplexity: as if choosing among this many</dt>
+              <dt>{L("Perplexity: as if choosing among this many")}</dt>
               <dd className="text-right text-foreground/80">{perplexity(model.loss || Math.log(VOCAB.bytes.length)).toFixed(1)}</dd>
-              <dt>Text the model is trained on</dt>
-              <dd className="text-right text-foreground/80">{IDS.length} tokens, {CORPUS.split(/\s+/).length} words</dd>
+              <dt>{L("Text the model is trained on")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{tokens}} tokens, {{words}} words", { tokens: IDS.length, words: CORPUS.split(/\s+/).length })}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              The training loss is the cross entropy from topic 3, against the token that actually
-              followed, at every position of the text at once. The output layer is the table again,
-              transposed: a score is how well the running vector lines up with a token's own row,
-              which closes the loop back to the lookup page. The model knows this one text and
-              nothing else, and that is exactly what the pages after this one show.
+              {L("The training loss is the cross entropy from topic 3, against the token that actually followed, at every position of the text at once. The output layer is the table again, transposed: a score is how well the running vector lines up with a token's own row, which closes the loop back to the lookup page. The model knows this one text and nothing else, and that is exactly what the pages after this one show.")}
             </Text>
           </div>
         }

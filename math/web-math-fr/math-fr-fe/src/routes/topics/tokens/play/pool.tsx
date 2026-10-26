@@ -17,6 +17,7 @@ import { TOPIC } from "@/lib/tokens";
 import { encode } from "@/systems/bpe";
 import { cosine, forward } from "@/systems/lm";
 import { Input } from "@kit/index";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/tokens/play/pool")({
   loader: () => api.system(TOPIC, "pool"),
@@ -24,13 +25,13 @@ export const Route = createFileRoute("/topics/tokens/play/pool")({
 });
 
 const WAYS = [
-  { id: "mean", label: "Average every position" },
-  { id: "last", label: "Read off the last position" },
+  { id: "mean", label: L("Average every position") },
+  { id: "last", label: L("Read off the last position") },
 ];
 const PAIRS = [
-  { id: "same", label: "Same meaning, other words", a: "the cat sleeps on the warm mat", b: "the cat is asleep on the mat" },
-  { id: "opposite", label: "Opposite meaning, same words", a: "the cat likes the warm mat", b: "the cat does not like the warm mat" },
-  { id: "far", label: "Different subject", a: "the cat sleeps on the warm mat", b: "the man walks to the river with the dog" },
+  { id: "same", label: L("Same meaning, other words"), a: "the cat sleeps on the warm mat", b: "the cat is asleep on the mat" },
+  { id: "opposite", label: L("Opposite meaning, same words"), a: "the cat likes the warm mat", b: "the cat does not like the warm mat" },
+  { id: "far", label: L("Different subject"), a: "the cat sleeps on the warm mat", b: "the man walks to the river with the dog" },
 ];
 
 function signed(v: number, scale = 1) {
@@ -87,28 +88,28 @@ function PoolPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "One vector for a whole passage"}
-        job="Everything since the lookup page has been one vector per position, and yet people say the embedding of a document. That object has to be made on purpose: the per-position vectors collapsed into one. The job is to make it, two ways, for two passages, and to measure what the one vector can and cannot tell apart."
+        title={system?.name ?? L("One vector for a whole passage")}
+        job={L("Everything since the lookup page has been one vector per position, and yet people say the embedding of a document. That object has to be made on purpose: the per-position vectors collapsed into one. The job is to make it, two ways, for two passages, and to measure what the one vector can and cannot tell apart.")}
         input={
           <div className="space-y-3">
             <Choices options={PAIRS} value={pair} onPick={(id) => { const p = PAIRS.find((x) => x.id === id)!; setPair(id); setA(p.a); setB(p.b); reset(); }} />
             <label className="block">
-              <span data-text="note">Passage one</span>
+              <span data-text="note">{L("Passage one")}</span>
               <Input value={a} onChange={(e) => { setA(e.target.value); setPair(""); reset(); }} className="mt-1" />
             </label>
             <label className="block">
-              <span data-text="note">Passage two</span>
+              <span data-text="note">{L("Passage two")}</span>
               <Input value={b} onChange={(e) => { setB(e.target.value); setPair(""); reset(); }} className="mt-1" />
             </label>
             <Choices options={WAYS} value={way} onPick={(id) => { setWay(id); reset(); }} />
-            {!trained ? <Text kind="warning" as="p">The model is still training ({store.model.steps} of {MODEL_STEPS} steps).</Text> : null}
+            {!trained ? <Text kind="warning" as="p">{L("The model is still training ({{done}} of {{total}} steps).", { done: store.model.steps, total: MODEL_STEPS })}</Text> : null}
           </div>
         }
         run={
           <RunBar
             running={runner.running}
             count={at}
-            what="positions folded in"
+            what={L("positions folded in")}
             limit={most}
             onToggle={() => {
               if (!runner.running && at >= most) reset();
@@ -123,9 +124,9 @@ function PoolPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            {[{ label: "Passage one", t: ta, h: ha, v: va }, { label: "Passage two", t: tb, h: hb, v: vb }].map((side) => (
+            {[{ label: L("Passage one"), t: ta, h: ha, v: va }, { label: L("Passage two"), t: tb, h: hb, v: vb }].map((side) => (
               <div key={side.label} className="rounded border border-border p-3">
-                <div data-text="caption">{side.label}: {side.t.length} positions, {side.t.length} vectors of {WIDTH}</div>
+                <div data-text="caption">{side.label}: {L("{{n}} positions, {{n}} vectors of {{width}}", { n: side.t.length, width: WIDTH })}</div>
                 <div className="mt-2"><TokenRow tokens={side.t} size="sm" dimFrom={at} /></div>
                 <div><div className="mt-2 h-[120px]">
                   <Plot
@@ -155,7 +156,7 @@ function PoolPage() {
                       ctx.fillText(at > 0 ? side.v.slice(0, 6).map((v) => v.toFixed(2)).join(" ") + " ..." : "", x0, 72);
                     }}
                   />
-                </div><Caption>{way === "mean" ? "Collapsed: the average" : "Collapsed: the last row"}</Caption></div>
+                </div><Caption>{way === "mean" ? L("Collapsed: the average") : L("Collapsed: the last row")}</Caption></div>
               </div>
             ))}
           </section>
@@ -164,27 +165,22 @@ function PoolPage() {
           <div className="space-y-2">
             <Verdict good={at === 0 ? undefined : pair === "opposite" ? false : undefined}>
               {at === 0
-                ? `Two passages, ${ta.length} and ${tb.length} tokens, so ${ta.length} and ${tb.length} vectors. Press run to fold them into one vector each and compare.`
-                : `After folding in ${at} position${at === 1 ? "" : "s"} the two passage vectors have cosine ${cos.toFixed(3)}.${at >= most ? ` Across the three pairs, ${way === "mean" ? "averaging" : "the last position"} gives: ${all.map((p) => `${p.label} ${p.cos.toFixed(2)}`).join("; ")}. ${all[1].cos > all[2].cos ? "The pair with opposite meaning sits closer than the pair with a different subject: the one vector is a summary of the words used, and a single \"not\" barely moves it." : "On this model the different subject is furthest, and the opposite pair is not far behind the same-meaning pair."}` : ""}`}
+                ? L("Two passages, {{a}} and {{b}} tokens, so {{a}} and {{b}} vectors. Press run to fold them into one vector each and compare.", { a: ta.length, b: tb.length })
+                : `${L(at === 1 ? "After folding in {{n}} position the two passage vectors have cosine {{cos}}." : "After folding in {{n}} positions the two passage vectors have cosine {{cos}}.", { n: at, cos: cos.toFixed(3) })}${at >= most ? ` ${L("Across the three pairs, {{how}} gives: {{list}}.", { how: way === "mean" ? L("averaging") : L("the last position"), list: all.map((p) => `${p.label} ${p.cos.toFixed(2)}`).join("; ") })} ${all[1].cos > all[2].cos ? L("The pair with opposite meaning sits closer than the pair with a different subject: the one vector is a summary of the words used, and a single \"not\" barely moves it.") : L("On this model the different subject is furthest, and the opposite pair is not far behind the same-meaning pair.")}` : ""}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Vectors before collapsing</dt>
-              <dd className="text-right text-foreground/80">{ta.length} and {tb.length}, Each {WIDTH} wide</dd>
-              <dt>Vectors after</dt>
-              <dd className="text-right text-foreground/80">1 and 1, each {WIDTH} wide</dd>
-              <dt>Cosine between them now</dt>
+              <dt>{L("Vectors before collapsing")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{a}} and {{b}}, Each {{width}} wide", { a: ta.length, b: tb.length, width: WIDTH })}</dd>
+              <dt>{L("Vectors after")}</dt>
+              <dd className="text-right text-foreground/80">{L("1 and 1, each {{width}} wide", { width: WIDTH })}</dd>
+              <dt>{L("Cosine between them now")}</dt>
               <dd className="text-right text-foreground/80">{at > 0 ? cos.toFixed(4) : "-"}</dd>
               {all.map((p) => (
-                <Row key={p.id} label={`${p.label}, fully folded`} value={p.cos.toFixed(3)} />
+                <Row key={p.id} label={L("{{pair}}, fully folded", { pair: p.label })} value={p.cos.toFixed(3)} />
               ))}
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              A retrieval model makes exactly this vector, but trains for it: pairs that belong
-              together are pulled close and pairs that do not are pushed apart, a different loss
-              on the same kind of vector. Searching a store of passages is then nearest neighbours
-              over these. The weakness shown here survives that training in weaker form: the vector
-              is a lossy summary, and passages that share words and structure sit close whatever
-              they say. A generative model never makes this vector at all.
+              {L("A retrieval model makes exactly this vector, but trains for it: pairs that belong together are pulled close and pairs that do not are pushed apart, a different loss on the same kind of vector. Searching a store of passages is then nearest neighbours over these. The weakness shown here survives that training in weaker form: the vector is a lossy summary, and passages that share words and structure sit close whatever they say. A generative model never makes this vector at all.")}
             </Text>
           </div>
         }

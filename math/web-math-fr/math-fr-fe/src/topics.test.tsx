@@ -115,11 +115,10 @@ describe("The topic index", () => {
     expect(hrefs).toContain("/topics/networks/play");
     // tokens has pages now, so it links to them even though the card still says planned
     expect(hrefs).toContain("/topics/tokens/play");
-    // the aside links to its one page from its own block under the list
+    // the primes are one card under the list, opening their one page
     expect(hrefs).toContain("/topics/primes/play/gaps");
     expect(hrefs.length).toBe(5);
-    expect(screen.getByRole("link", { name: "Open the aside" })).toBeTruthy();
-    expect(screen.getByText("Asides")).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Prime numbers/ })).toBeTruthy();
   });
 
   it("Says plainly what exists on each, rather than pretending either way", async () => {

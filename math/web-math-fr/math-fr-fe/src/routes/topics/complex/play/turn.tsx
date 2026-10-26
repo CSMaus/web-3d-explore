@@ -11,6 +11,7 @@ import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/complex";
+import { L } from "@/lib/lang";
 import { INK, MUTED, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { abs, mul, show, turns, type C } from "@/systems/complex";
@@ -56,15 +57,14 @@ function TurnPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "What 𝑖 is"}
-        job="Multiplying by minus one is a half turn about zero. The last page asked for a number that does half of that, so that doing it twice is a half turn. Give the line a second direction, up, and a quarter turn is available. The number that turns an arrow by a quarter is written i. The job is to multiply by it again and again and watch what happens."
+        title={system?.name ?? L("What 𝑖 is")}
+        job={L("Multiplying by minus one is a half turn about zero. The last page asked for a number that does half of that, so that doing it twice is a half turn. Give the line a second direction, up, and a quarter turn is available. The number that turns an arrow by a quarter is written i. The job is to multiply by it again and again and watch what happens.")}
         input={
           <div className="space-y-3">
-            <Slider label="Start, along" min={-2} max={2} step={0.1} value={start[0]} format={(v) => v.toFixed(1)} onChange={(v) => { setStart([v, start[1]]); reset(); }} />
-            <Slider label="Start, up" min={-2} max={2} step={0.1} value={start[1]} format={(v) => v.toFixed(1)} onChange={(v) => { setStart([start[0], v]); reset(); }} />
+            <Slider label={L("Start, along")} min={-2} max={2} step={0.1} value={start[0]} format={(v) => v.toFixed(1)} onChange={(v) => { setStart([v, start[1]]); reset(); }} />
+            <Slider label={L("Start, up")} min={-2} max={2} step={0.1} value={start[1]} format={(v) => v.toFixed(1)} onChange={(v) => { setStart([start[0], v]); reset(); }} />
             <Text kind="note" as="p">
-              Click the picture to put the starting arrow anywhere. Each step multiplies it by 𝑖,
-              which turns it a quarter of the way round and leaves its length alone.
+              {L("Click the picture to put the starting arrow anywhere. Each step multiplies it by 𝑖, which turns it a quarter of the way round and leaves its length alone.")}
             </Text>
           </div>
         }
@@ -73,7 +73,7 @@ function TurnPage() {
             running={runner.running}
             count={done}
             limit={MOST}
-            what="multiplications by 𝑖"
+            what={L("multiplications by 𝑖")}
             onToggle={() => {
               if (!runner.running && at >= MOST * FRAMES) reset();
               runner.toggle();
@@ -113,37 +113,41 @@ function TurnPage() {
                     pen.arrow(0, 0, now[0], now[1], INK);
                     pen.dot(now[0], now[1], 4, INK);
                   }
-                  pen.text("Along", BOX.x1 - 0.5, -0.3, SKY, "center");
-                  pen.text("Up", 0.25, BOX.y1 - 0.4, TWO, "left");
+                  pen.text(L("Along"), BOX.x1 - 0.5, -0.3, SKY, "center");
+                  pen.text(L("Up"), 0.25, BOX.y1 - 0.4, TWO, "left");
                 }}
               />
             </div>
-            <Caption>The plane: the old number line runs along, the new direction runs up. Green: the arrow after the multiplications so far. White: the turn in progress. The grey circle is the arrow's length, which never changes.</Caption>
+            <Caption>{L("The plane: the old number line runs along, the new direction runs up. Green: the arrow after the multiplications so far. White: the turn in progress. The grey circle is the arrow's length, which never changes.")}</Caption>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={done >= 4 ? true : undefined}>
               {done === 0 && within === 0
-                ? `The arrow starts at ${show(start)}. Press run: times 𝑖, four times.`
+                ? L("The arrow starts at {{z}}. Press run: times 𝑖, four times.", { z: show(start) })
                 : done < MOST && within > 0
-                  ? `Turning: multiplication ${done + 1} is a quarter of the way round, ${(within * 100).toFixed(0)} per cent done.`
-                  : `After ${done} multiplication${done === 1 ? "" : "s"} by 𝑖 the arrow is at ${show(chain[done])}, the same length as it started, turned ${done} quarter${done === 1 ? "" : "s"}. ${done === 2 ? "Two quarter turns is a half turn: the arrow points the opposite way, which is what times minus one does. So 𝑖 times 𝑖 is minus one, and the last page's question has its answer." : done === 4 ? "Four quarters is a whole turn: back where it started. Times 𝑖 four times is times one." : done > 4 ? "Past four it repeats: the pattern is 1, 𝑖, minus 1, minus 𝑖, and round again." : ""}`}
+                  ? L("Turning: multiplication {{n}} is a quarter of the way round, {{p}} per cent done.", { n: done + 1, p: (within * 100).toFixed(0) })
+                  : (done === 1
+                      ? L("After {{n}} multiplication by 𝑖 the arrow is at {{z}}, the same length as it started, turned {{n}} quarter. {{more}}", { n: done, z: show(chain[done]), more: "" })
+                      : L("After {{n}} multiplications by 𝑖 the arrow is at {{z}}, the same length as it started, turned {{n}} quarters. {{more}}", {
+                          n: done,
+                          z: show(chain[done]),
+                          more: done === 2 ? L("Two quarter turns is a half turn: the arrow points the opposite way, which is what times minus one does. So 𝑖 times 𝑖 is minus one, and the last page's question has its answer.") : done === 4 ? L("Four quarters is a whole turn: back where it started. Times 𝑖 four times is times one.") : done > 4 ? L("Past four it repeats: the pattern is 1, 𝑖, minus 1, minus 𝑖, and round again.") : "",
+                        }))}
             </Verdict>
             <Readout
               rows={[
-                ["Start", show(start)],
-                ["After 1: times 𝑖", show(chain[1])],
-                ["After 2: times 𝑖, twice", `${show(chain[2])}, which is minus the start`],
-                ["After 3", show(chain[3])],
-                ["After 4", `${show(chain[4])}, the start again`],
-                ["Length, throughout", abs(start).toFixed(3)],
+                [L("Start"), show(start)],
+                [L("After 1: times 𝑖"), show(chain[1])],
+                [L("After 2: times 𝑖, twice"), L("{{z}}, which is minus the start", { z: show(chain[2]) })],
+                [L("After 3"), show(chain[3])],
+                [L("After 4"), L("{{z}}, the start again", { z: show(chain[4]) })],
+                [L("Length, throughout"), abs(start).toFixed(3)],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              A number is now a place in the plane: so much along, so much up, written a + bi. The
-              old numbers are the ones with nothing up. The word imaginary was an insult from the
-              seventeenth century that stuck; nothing on the up axis is less real than a length.
+              {L("A number is now a place in the plane: so much along, so much up, written a + bi. The old numbers are the ones with nothing up. The word imaginary was an insult from the seventeenth century that stuck; nothing on the up axis is less real than a length.")}
             </Text>
           </div>
         }

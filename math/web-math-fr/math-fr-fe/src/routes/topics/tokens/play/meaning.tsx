@@ -15,6 +15,7 @@ import { useRunner } from "@/lib/runner";
 import { SKIP_STEPS, USED, countOf, resetSkip, stepSkip, text as tokenText, tokenIds, useTiny } from "@/lib/tiny";
 import { TOPIC } from "@/lib/tokens";
 import { nearest, project2 } from "@/systems/lm";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/tokens/play/meaning")({
   loader: () => api.system(TOPIC, "meaning"),
@@ -68,18 +69,16 @@ function MeaningPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "Where the meaning comes from"}
-        job="The table's rows are random. The job is to give them meaning, and there is only one place meaning can come from: a loss. Here the loss is a small one of its own: from a token's row, predict the tokens that occur near it in the text, and push apart the ones that do not. Watch the rows move, and watch which words end up near which."
+        title={system?.name ?? L("Where the meaning comes from")}
+        job={L("The table's rows are random. The job is to give them meaning, and there is only one place meaning can come from: a loss. Here the loss is a small one of its own: from a token's row, predict the tokens that occur near it in the text, and push apart the ones that do not. Watch the rows move, and watch which words end up near which.")}
         input={
           <div className="space-y-3">
             <Choices options={PROBES} value={probe} onPick={setProbe} />
             <Text kind="note" as="p">
-              The ringed token is the one whose nearest neighbours are listed. The map is a flat
-              picture of vectors with eight numbers each; the next page says how much it hides.
+              {L("The ringed token is the one whose nearest neighbours are listed. The map is a flat picture of vectors with eight numbers each; the next page says how much it hides.")}
             </Text>
             <Text kind="note" as="p">
-              This is skip-gram with negative sampling, run on the text from the vocabulary page.
-              Each step looks at one token and one neighbour, and moves one row of the table.
+              {L("This is skip-gram with negative sampling, run on the text from the vocabulary page. Each step looks at one token and one neighbour, and moves one row of the table.")}
             </Text>
           </div>
         }
@@ -87,7 +86,7 @@ function MeaningPage() {
           <RunBar
             running={runner.running}
             count={steps}
-            what="training steps"
+            what={L("training steps")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 5000, max: 120000, step: 5000 }}
@@ -126,7 +125,7 @@ function MeaningPage() {
                   });
                 }}
               />
-            </div><Caption>{`The forty commonest tokens, their vectors flattened to two axes (${(proj.kept * 100).toFixed(0)} % of the spread kept)`}. Green: the chosen token.  Sky: its five nearest by cosine.</Caption></div>
+            </div><Caption>{L("The forty commonest tokens, their vectors flattened to two axes ({{kept}} % of the spread kept). Green: the chosen token.  Sky: its five nearest by cosine.", { kept: (proj.kept * 100).toFixed(0) })}</Caption></div>
             <div><div data-slot="plot" className="h-[130px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -138,32 +137,28 @@ function MeaningPage() {
                   pen.line(store.skipHistory, ONE, 1.8);
                 }}
               />
-            </div><Caption>How wrong the neighbour predictions are, against steps</Caption></div>
+            </div><Caption>{L("How wrong the neighbour predictions are, against steps")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={steps === 0 ? undefined : catDog > 0.6}>
               {steps === 0
-                ? `Nothing trained: the rows are random, so the nearest tokens to ${visible(probe)} are whichever happened to land nearby: ${near.map((n) => visible(tokenText(n.id))).join(", ")}. Press run.`
-                : `After ${steps.toLocaleString("en")} steps the nearest tokens to ${visible(probe)} are ${near.map((n) => `${visible(tokenText(n.id))} (${n.cos.toFixed(2)})`).join(", ")}. Cat and dog now sit at cosine ${catDog.toFixed(2)}${catDog > 0.6 ? ": They occur in the same places in the text, so the loss pushed their rows together" : "; More steps will bring them together, because they occur in the same places in the text"}.`}
+                ? L("Nothing trained: the rows are random, so the nearest tokens to {{probe}} are whichever happened to land nearby: {{near}}. Press run.", { probe: visible(probe), near: near.map((n) => visible(tokenText(n.id))).join(", ") })
+                : `${L("After {{steps}} steps the nearest tokens to {{probe}} are {{near}}.", { steps: steps.toLocaleString("en"), probe: visible(probe), near: near.map((n) => `${visible(tokenText(n.id))} (${n.cos.toFixed(2)})`).join(", ") })} ${catDog > 0.6 ? L("Cat and dog now sit at cosine {{cos}}: They occur in the same places in the text, so the loss pushed their rows together.", { cos: catDog.toFixed(2) }) : L("Cat and dog now sit at cosine {{cos}}; More steps will bring them together, because they occur in the same places in the text.", { cos: catDog.toFixed(2) })}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Times the row for {visible(tokenText(frequent))} was moved</dt>
-              <dd className="text-right text-foreground/80">{sg.touched[frequent]} (It occurs {countOf(frequent)} times in the text)</dd>
-              <dt>Times the row for {visible(tokenText(rare))} was moved</dt>
-              <dd className="text-right text-foreground/80">{sg.touched[rare]} (It occurs {countOf(rare)} time{countOf(rare) === 1 ? "" : "s"})</dd>
-              <dt>Rows never moved at all</dt>
-              <dd className="text-right text-foreground/80">{sg.touched.filter((t) => t === 0).length} of {sg.touched.length}</dd>
-              <dt>How wrong, smoothed</dt>
+              <dt>{L("Times the row for {{token}} was moved", { token: visible(tokenText(frequent)) })}</dt>
+              <dd className="text-right text-foreground/80">{sg.touched[frequent]} {L("(It occurs {{n}} times in the text)", { n: countOf(frequent) })}</dd>
+              <dt>{L("Times the row for {{token}} was moved", { token: visible(tokenText(rare)) })}</dt>
+              <dd className="text-right text-foreground/80">{sg.touched[rare]} {countOf(rare) === 1 ? L("(It occurs {{n}} time)", { n: countOf(rare) }) : L("(It occurs {{n}} times)", { n: countOf(rare) })}</dd>
+              <dt>{L("Rows never moved at all")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{a}} of {{b}}", { a: sg.touched.filter((t) => t === 0).length, b: sg.touched.length })}</dd>
+              <dt>{L("How wrong, smoothed")}</dt>
               <dd className="text-right text-foreground/80">{sg.loss.toFixed(3)}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              A step moves only the rows of the tokens it looked at. A common token's row is moved
-              thousands of times and a rare one's a handful, and a token that never occurs keeps its
-              random row for ever. The premise underneath is that tokens found in the same places
-              mean similar things; it gives a word with two meanings one row between them, which is
-              what the later pages fix.
+              {L("A step moves only the rows of the tokens it looked at. A common token's row is moved thousands of times and a rare one's a handful, and a token that never occurs keeps its random row for ever. The premise underneath is that tokens found in the same places mean similar things; it gives a word with two meanings one row between them, which is what the later pages fix.")}
             </Text>
           </div>
         }

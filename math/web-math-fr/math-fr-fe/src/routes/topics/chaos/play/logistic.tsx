@@ -17,6 +17,7 @@ import { FAINT, INK, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
 import { SEED, cobweb, compose, exponent, logistic, logisticSlope, orbit, period } from "@/systems/maps";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/chaos/play/logistic")({
   loader: () => api.system(TOPIC, "logistic"),
@@ -27,12 +28,12 @@ const UNIT: Box = { x0: -0.02, x1: 1.02, y0: -0.02, y1: 1.02 };
 const MOST = 120;
 const TWIN = 1e-6;
 const PRESETS = [
-  { id: "2.8", label: "Settles" },
-  { id: "3.2", label: "Two values" },
-  { id: "3.5", label: "Four" },
-  { id: "3.56995", label: "The edge" },
-  { id: "3.7", label: "Chaos" },
-  { id: "3.83", label: "A window" },
+  { id: "2.8", label: L("Settles") },
+  { id: "3.2", label: L("Two values") },
+  { id: "3.5", label: L("Four") },
+  { id: "3.56995", label: L("The edge") },
+  { id: "3.7", label: L("Chaos") },
+  { id: "3.83", label: L("A window") },
   { id: "4", label: "r = 4" },
 ];
 
@@ -76,19 +77,16 @@ function LogisticPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? "The logistic map"}
-        job="The logistic map is the simplest model of a population that grows when small and is held back when crowded: next year's number is r times this year's, times the room left. It is the standard first example of a plain rule producing chaos, and every later idea in this topic can be seen in it. One number between zero and one, and one rule: multiply it by r and by one minus itself, and that is the next number. The job is to apply the rule again and again and say where the number ends up. On the left, iteration as a picture: up to the curve, across to the diagonal, repeat. On the right, the same numbers in order."
+        title={system?.name ?? L("The logistic map")}
+        job={L("The logistic map is the simplest model of a population that grows when small and is held back when crowded: next year's number is r times this year's, times the room left. It is the standard first example of a plain rule producing chaos, and every later idea in this topic can be seen in it. One number between zero and one, and one rule: multiply it by r and by one minus itself, and that is the next number. The job is to apply the rule again and again and say where the number ends up. On the left, iteration as a picture: up to the curve, across to the diagonal, repeat. On the right, the same numbers in order.")}
         input={
           <div className="space-y-3">
             <Choices options={PRESETS} value={preset} onPick={(id) => { setR(Number(id)); reset(); }} />
             <Slider label="r" min={0.5} max={4} step={0.001} value={r} format={(v) => v.toFixed(3)} onChange={(v) => { setR(v); reset(); }} />
-            <Slider label="Start x0" min={0.01} max={0.99} step={0.005} value={x0} format={(v) => v.toFixed(3)} onChange={(v) => { setX0(v); reset(); }} />
-            <Slider label="Iterate" min={1} max={8} step={1} value={iterate} format={(v) => `f applied ${Math.round(v)}x`} onChange={(v) => { setIterate(Math.round(v)); reset(); }} />
+            <Slider label={L("Start x0")} min={0.01} max={0.99} step={0.005} value={x0} format={(v) => v.toFixed(3)} onChange={(v) => { setX0(v); reset(); }} />
+            <Slider label={L("Iterate")} min={1} max={8} step={1} value={iterate} format={(v) => L("f applied {{n}}x", { n: Math.round(v) })} onChange={(v) => { setIterate(Math.round(v)); reset(); }} />
             <Text kind="note" as="p">
-              Click on the left picture to choose the start. Iterate draws the rule composed with
-              itself: a two-cycle of the rule is a fixed point of the rule applied twice, which is
-              why doubling is mechanical. A second start, one millionth away, runs faintly beside
-              the first on the right.
+              {L("Click on the left picture to choose the start. Iterate draws the rule composed with itself: a two-cycle of the rule is a fixed point of the rule applied twice, which is why doubling is mechanical. A second start, one millionth away, runs faintly beside the first on the right.")}
             </Text>
             <PaletteBar />
           </div>
@@ -97,7 +95,7 @@ function LogisticPage() {
           <RunBar
             running={runner.running}
             count={n}
-            what="steps"
+            what={L("steps")}
             limit={MOST}
             onToggle={() => {
               if (!runner.running && n >= MOST) reset();
@@ -140,7 +138,7 @@ function LogisticPage() {
                   else pen.ring(x0, 0, 7, INK, 1.5);
                 }}
               />
-            </div><Caption>{iterate === 1 ? "The rule f(x) = r x (1 - x), and the diagonal" : `f applied ${iterate} times, and the diagonal`}. Up to the curve, across to the diagonal: one step</Caption></div>
+            </div><Caption>{iterate === 1 ? L("The rule f(x) = r x (1 - x), and the diagonal") : L("f applied {{n}} times, and the diagonal", { n: iterate })}{L(". Up to the curve, across to the diagonal: one step")}</Caption></div>
             <div><div data-slot="plot" className="h-[min(440px,calc(100vh-22rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -162,37 +160,40 @@ function LogisticPage() {
                   if (n > 0) pen.dot(n, series[n], 4.5, INK);
                 }}
               />
-            </div><Caption>The numbers in order. Faint: a second start one millionth away. {`Blue lines: the cycle it settles on, period ${cycle}`}</Caption></div>
+            </div><Caption>{L("The numbers in order. Faint: a second start one millionth away.")} {L("Blue lines: the cycle it settles on, period {{period}}", { period: cycle })}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={n === 0 ? undefined : cycle && nearest !== null && Math.abs(nearest - xNow) < 1e-3 ? true : cycle === 0 && gapNow > 0.05 ? false : undefined}>
               {n === 0
-                ? `Start at ${x0.toFixed(3)} with r = ${r.toFixed(3)}. Press run, or one step, and follow the number up to the curve and across to the diagonal.`
+                ? L("Start at {{x0}} with r = {{r}}. Press run, or one step, and follow the number up to the curve and across to the diagonal.", { x0: x0.toFixed(3), r: r.toFixed(3) })
                 : cycle === 1
-                  ? `After ${n} steps the number is ${xNow.toFixed(4)}, ${Math.abs(xNow - fixed) < 1e-3 ? "sitting on" : "closing on"} the fixed point 1 - 1/r = ${fixed.toFixed(4)}, where the curve crosses the diagonal. The slope there is ${(2 - r).toFixed(2)}, inside one, so the steps shrink and it stays.`
+                  ? Math.abs(xNow - fixed) < 1e-3
+                    ? L("After {{n}} steps the number is {{x}}, sitting on the fixed point 1 - 1/r = {{fixed}}, where the curve crosses the diagonal. The slope there is {{slope}}, inside one, so the steps shrink and it stays.", { n, x: xNow.toFixed(4), fixed: fixed.toFixed(4), slope: (2 - r).toFixed(2) })
+                    : L("After {{n}} steps the number is {{x}}, closing on the fixed point 1 - 1/r = {{fixed}}, where the curve crosses the diagonal. The slope there is {{slope}}, inside one, so the steps shrink and it stays.", { n, x: xNow.toFixed(4), fixed: fixed.toFixed(4), slope: (2 - r).toFixed(2) })
                   : cycle > 1 && cycle <= 16
-                    ? `After ${n} steps the number is ${xNow.toFixed(4)}. It ${nearest !== null && Math.abs(nearest - xNow) < 1e-3 ? "has settled" : "is settling"} into a cycle of ${cycle} values: ${levels.map((v) => v.toFixed(3)).join(", ")}. The fixed point is still there at ${fixed.toFixed(3)}, but the slope there is ${(2 - r).toFixed(2)}, past one, so the number is thrown off it.`
-                    : `After ${n} steps the number is ${xNow.toFixed(4)} and it has settled on nothing. The second start, one millionth away, is now ${gapNow.toFixed(gapNow < 0.001 ? 6 : 3)} away${gapNow > 0.05 ? ": the two have parted completely, and no step of this rule was random" : ", and the gap is growing"}. The exponent is ${lambda.toFixed(3)}: positive, so neighbours separate.`}
+                    ? nearest !== null && Math.abs(nearest - xNow) < 1e-3
+                      ? L("After {{n}} steps the number is {{x}}. It has settled into a cycle of {{cycle}} values: {{values}}. The fixed point is still there at {{fixed}}, but the slope there is {{slope}}, past one, so the number is thrown off it.", { n, x: xNow.toFixed(4), cycle, values: levels.map((v) => v.toFixed(3)).join(", "), fixed: fixed.toFixed(3), slope: (2 - r).toFixed(2) })
+                      : L("After {{n}} steps the number is {{x}}. It is settling into a cycle of {{cycle}} values: {{values}}. The fixed point is still there at {{fixed}}, but the slope there is {{slope}}, past one, so the number is thrown off it.", { n, x: xNow.toFixed(4), cycle, values: levels.map((v) => v.toFixed(3)).join(", "), fixed: fixed.toFixed(3), slope: (2 - r).toFixed(2) })
+                    : gapNow > 0.05
+                      ? L("After {{n}} steps the number is {{x}} and it has settled on nothing. The second start, one millionth away, is now {{gap}} away: the two have parted completely, and no step of this rule was random. The exponent is {{lambda}}: positive, so neighbours separate.", { n, x: xNow.toFixed(4), gap: gapNow.toFixed(gapNow < 0.001 ? 6 : 3), lambda: lambda.toFixed(3) })
+                      : L("After {{n}} steps the number is {{x}} and it has settled on nothing. The second start, one millionth away, is now {{gap}} away, and the gap is growing. The exponent is {{lambda}}: positive, so neighbours separate.", { n, x: xNow.toFixed(4), gap: gapNow.toFixed(gapNow < 0.001 ? 6 : 3), lambda: lambda.toFixed(3) })}
             </Verdict>
             <Readout
               rows={[
                 ["R", r.toFixed(4)],
-                ["What it settles on", cycle ? `a cycle of period ${cycle}` : "Nothing periodic within 64"],
-                ["Lyapunov exponent", lambda.toFixed(4)],
-                ["Which means", lambda > 0.005 ? "Neighbours separate: chaos" : lambda < -0.005 ? "Neighbours converge: a stable cycle" : "Neither: a bifurcation point"],
-                ["Fixed point 1 - 1/r", r > 1 ? fixed.toFixed(4) : "Not in range"],
-                ["Slope there", r > 1 ? (2 - r).toFixed(4) : "-"],
-                ["Stable while the slope is inside one", r > 1 ? (Math.abs(2 - r) < 1 ? "yes" : "No, so it has doubled") : "-"],
-                ["Gap between the two starts now", n > 0 ? gapNow.toExponential(2) : TWIN.toExponential(0)],
+                [L("What it settles on"), cycle ? L("a cycle of period {{period}}", { period: cycle }) : L("Nothing periodic within 64")],
+                [L("Lyapunov exponent"), lambda.toFixed(4)],
+                [L("Which means"), lambda > 0.005 ? L("Neighbours separate: chaos") : lambda < -0.005 ? L("Neighbours converge: a stable cycle") : L("Neither: a bifurcation point")],
+                [L("Fixed point 1 - 1/r"), r > 1 ? fixed.toFixed(4) : L("Not in range")],
+                [L("Slope there"), r > 1 ? (2 - r).toFixed(4) : "-"],
+                [L("Stable while the slope is inside one"), r > 1 ? (Math.abs(2 - r) < 1 ? L("yes") : L("No, so it has doubled")) : "-"],
+                [L("Gap between the two starts now"), n > 0 ? gapNow.toExponential(2) : TWIN.toExponential(0)],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              A stable fixed point pulls the steps in because the curve is shallower than the
-              diagonal there. Steepen it past one and the point repels; a two-cycle takes over and
-              is stable in turn, until it doubles. The next page turns r up slowly and records what
-              the number settles on at every value.
+              {L("A stable fixed point pulls the steps in because the curve is shallower than the diagonal there. Steepen it past one and the point repels; a two-cycle takes over and is stable in turn, until it doubles. The next page turns r up slowly and records what the number settles on at every value.")}
             </Text>
           </div>
         }

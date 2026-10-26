@@ -1,0 +1,74 @@
+[
+ {
+  "slug": "complex",
+  "number": 0,
+  "title": "허수",
+  "summary": "i를 처음 접하는 독자를 위한 입문입니다. 수직선과 수직선이 답하지 못하는 단 하나의 질문, 4분의 1 회전, 화살표로 보는 덧셈, 회전과 늘이기로 보는 곱셈, 쥘리아 집합이 나타날 때까지 되풀이하는 제곱, 그리고 원을 따라 도는 지수함수를 다룹니다",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 7,
+  "aside": false
+ },
+ {
+  "slug": "fractals",
+  "number": 1,
+  "title": "프랙털",
+  "summary": "가까이 들여다보아도 매끄러워지지 않는 거칠기를 감상하는 대신 측정합니다. 정수가 아닌 차원, 그리고 시리즈의 모든 모양을 만들어 내는 몇 가지 규칙을 다룹니다",
+  "state": "ready",
+  "parts": 11,
+  "beats": 57,
+  "seconds": 1309.9,
+  "systems": 10,
+  "aside": false
+ },
+ {
+  "slug": "chaos",
+  "number": 2,
+  "title": "미분방정식, 끌개, 혼돈",
+  "summary": "미지수가 함수인 방정식을 닫힌 형태로 풀 수 있는 데까지 풀고, 그다음은 수치적으로 풉니다. 시스템이 자리 잡는 끌개, 결정론적 혼돈, 주기 배가를 거쳐 혼돈에 이르는 길, 그리고 이 사슬 전체가 실제로 쓰인 단 하나의 실험을 다룹니다",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 8,
+  "aside": false
+ },
+ {
+  "slug": "networks",
+  "number": 3,
+  "title": "미적분에서 첫 신경망까지",
+  "summary": "퍼셉트론, 퍼셉트론이 발전한 뉴런, 연립방정식으로 적은 신경망, 그리고 신경망을 학습시키는 모든 방법을 다룹니다. 마지막에는 이 모든 것을 이루는 두 대상인 도함수와 적분으로 끝납니다",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 17,
+  "aside": false
+ },
+ {
+  "slug": "tokens",
+  "number": 4,
+  "title": "토큰, 임베딩, 생성",
+  "summary": "숫자로 바뀐 텍스트, 그 숫자가 띠게 되는 의미, 앞의 텍스트가 뒤의 텍스트를 만드는 방식, 그리고 토큰을 하나씩 이어 문단이 되는 과정을 다룹니다",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 14,
+  "aside": false
+ },
+ {
+  "slug": "primes",
+  "number": 5,
+  "title": "여담: 소수 사이의 간격",
+  "summary": "연속한 소수 사이의 간격을 혼돈 흐름의 회귀 사상처럼 그리고, 규칙이 있는 사상 옆에 놓아 혼돈이 무엇이 아닌지 보여 줍니다",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 1,
+  "aside": true
+ }
+]

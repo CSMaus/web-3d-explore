@@ -49,6 +49,27 @@ export type Language = { code: string; label: string; name: string };
  * the languages the interface offers. adding one is a file under
  * src/locales/<code>/common.json, an import in i18n.ts, and a line here.
  */
-export const LANGUAGES: Language[] = [{ code: "en", label: "EN", name: "English" }];
+export const LANGUAGES: Language[] = [
+  { code: "en", label: "EN", name: "English" },
+  { code: "ru", label: "RU", name: "Русский" },
+  { code: "ko", label: "KO", name: "한국어" },
+  { code: "fr", label: "FR", name: "Français" },
+];
 
 export const LANGUAGE_KEY = "mathfr_lang";
+
+/**
+ * the themes a visitor can choose in the bar, in order; the first is the one a first visit gets
+ * (config/case.ts in the kit names the same). `case` is the kit's case, `sign` the small figure
+ * beside the name, translated where it is shown (this file is read before the translations). a
+ * theme listed here must be in the kit's config/shipped.ts.
+ */
+export const THEMES: { case: string; name: string; sign: "sun" | "prompt" | "flake" | "cat" }[] = [
+  { case: "edge_light", name: "Warm", sign: "sun" },
+  { case: "old_code", name: "Green", sign: "prompt" },
+  { case: "base", name: "Cool", sign: "flake" },
+  { case: "pixel_art_cute", name: "Pixel", sign: "cat" },
+];
+
+/** the cases whose front page carries the kitten asleep in the corner */
+export const KITTEN_CASES: string[] = ["pixel_art_cute"];

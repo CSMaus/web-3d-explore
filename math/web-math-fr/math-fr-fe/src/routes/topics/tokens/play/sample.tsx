@@ -18,6 +18,7 @@ import { decode } from "@/systems/bpe";
 import { GREEDY, draw, forward, shape, softmax, type Decoding } from "@/systems/lm";
 import { rng } from "@/systems/net";
 import { Input } from "@kit/index";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/tokens/play/sample")({
   loader: () => api.system(TOPIC, "sample"),
@@ -28,11 +29,11 @@ const MOST = 30;
 type Kept = { label: string; text: string };
 
 function describe(r: Decoding) {
-  if (r.temperature <= 0) return "greedy";
-  const parts = [`temperature ${r.temperature.toFixed(2)}`];
-  if (r.topK > 0) parts.push(`top ${r.topK}`);
-  if (r.topP < 1) parts.push(`nucleus ${r.topP.toFixed(2)}`);
-  if (r.penalty > 0) parts.push(`penalty ${r.penalty.toFixed(1)}`);
+  if (r.temperature <= 0) return L("greedy");
+  const parts = [L("temperature {{t}}", { t: r.temperature.toFixed(2) })];
+  if (r.topK > 0) parts.push(L("top {{k}}", { k: r.topK }));
+  if (r.topP < 1) parts.push(L("nucleus {{p}}", { p: r.topP.toFixed(2) }));
+  if (r.penalty > 0) parts.push(L("penalty {{x}}", { x: r.penalty.toFixed(1) }));
   return parts.join(", ");
 }
 
@@ -101,32 +102,29 @@ function SamplePage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "Choosing from the distribution"}
-        job="The loop says choose one token, and every page so far has left the choice open. Always taking the most likely one is a choice; drawing at random from the distribution is another; and the distribution itself can be reshaped before the draw. The job is to run the same model on the same prompt under different rules and read what changes."
+        title={system?.name ?? L("Choosing from the distribution")}
+        job={L("The loop says choose one token, and every page so far has left the choice open. Always taking the most likely one is a choice; drawing at random from the distribution is another; and the distribution itself can be reshaped before the draw. The job is to run the same model on the same prompt under different rules and read what changes.")}
         input={
           <div className="space-y-3">
             <label className="block">
-              <span data-text="note">The prompt</span>
+              <span data-text="note">{L("The prompt")}</span>
               <Input value={text} onChange={(e) => { setText(e.target.value); reset(false); }} className="mt-1" />
             </label>
-            <Slider label="Temperature" min={0} max={2.5} step={0.05} value={temperature} format={(v) => (v === 0 ? "0: greedy" : v.toFixed(2))} onChange={(v) => { setTemperature(v); if (mine.length) reset(); }} />
-            <Slider label="Top k" min={0} max={20} step={1} value={topK} format={(v) => (v === 0 ? "off" : `keep ${Math.round(v)}`)} onChange={(v) => { setTopK(Math.round(v)); if (mine.length) reset(); }} />
-            <Slider label="Nucleus" min={0.1} max={1} step={0.05} value={topP} format={(v) => (v >= 1 ? "off" : `mass ${v.toFixed(2)}`)} onChange={(v) => { setTopP(v); if (mine.length) reset(); }} />
-            <Slider label="Repeat penalty" min={0} max={4} step={0.1} value={penalty} format={(v) => (v === 0 ? "off" : v.toFixed(1))} onChange={(v) => { setPenalty(v); if (mine.length) reset(); }} />
+            <Slider label={L("Temperature")} min={0} max={2.5} step={0.05} value={temperature} format={(v) => (v === 0 ? L("0: greedy") : v.toFixed(2))} onChange={(v) => { setTemperature(v); if (mine.length) reset(); }} />
+            <Slider label={L("Top k")} min={0} max={20} step={1} value={topK} format={(v) => (v === 0 ? L("off") : L("keep {{n}}", { n: Math.round(v) }))} onChange={(v) => { setTopK(Math.round(v)); if (mine.length) reset(); }} />
+            <Slider label={L("Nucleus")} min={0.1} max={1} step={0.05} value={topP} format={(v) => (v >= 1 ? L("off") : L("mass {{m}}", { m: v.toFixed(2) }))} onChange={(v) => { setTopP(v); if (mine.length) reset(); }} />
+            <Slider label={L("Repeat penalty")} min={0} max={4} step={0.1} value={penalty} format={(v) => (v === 0 ? L("off") : v.toFixed(1))} onChange={(v) => { setPenalty(v); if (mine.length) reset(); }} />
             <Text kind="note" as="p">
-              Temperature divides the scores before the softmax: below one sharpens, above one
-              flattens. Top k keeps the k most likely; nucleus keeps the fewest whose mass reaches
-              the threshold; the penalty lowers the score of tokens already written. Changing a
-              rule mid-run keeps the run's text below and starts a new one.
+              {L("Temperature divides the scores before the softmax: below one sharpens, above one flattens. Top k keeps the k most likely; nucleus keeps the fewest whose mass reaches the threshold; the penalty lowers the score of tokens already written. Changing a rule mid-run keeps the run's text below and starts a new one.")}
             </Text>
-            {!trained ? <Text kind="warning" as="p">The model is still training ({store.model.steps} of {MODEL_STEPS} steps).</Text> : null}
+            {!trained ? <Text kind="warning" as="p">{L("The model is still training ({{done}} of {{total}} steps).", { done: store.model.steps, total: MODEL_STEPS })}</Text> : null}
           </div>
         }
         run={
           <RunBar
             running={runner.running}
             count={made}
-            what="tokens, both rules"
+            what={L("tokens, both rules")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 10, max: 200, step: 10 }}
@@ -167,20 +165,20 @@ function SamplePage() {
                   });
                 }}
               />
-            </div><Caption>The next-token distribution now. Dim: as the model gave it.  Green: after the rule.  Rose: cut away by the rule.</Caption></div>
+            </div><Caption>{L("The next-token distribution now. Dim: as the model gave it.  Green: after the rule.  Rose: cut away by the rule.")}</Caption></div>
             <div className="grid gap-2 lg:grid-cols-2">
               <div className="rounded border border-border p-3">
-                <div data-text="caption" style={{ color: "var(--c-selected)" }}>The rule: {describe(rule)}</div>
+                <div data-text="caption" style={{ color: "var(--c-selected)" }}>{L("The rule: {{rule}}", { rule: describe(rule) })}</div>
                 <Text kind="caption" as="p" className="mt-2">{decode(VOCAB, mine.length ? mine : prompt)}</Text>
               </div>
               <div className="rounded border border-border p-3">
-                <div data-text="caption" style={{ color: "var(--c-secondary)" }}>Greedy, for comparison</div>
+                <div data-text="caption" style={{ color: "var(--c-secondary)" }}>{L("Greedy, for comparison")}</div>
                 <Text kind="caption" as="p" className="mt-2">{decode(VOCAB, greedy.length ? greedy : prompt)}</Text>
               </div>
             </div>
             {kept.length ? (
               <div className="rounded border border-border p-3">
-                <div data-text="caption">Earlier runs, same model, same prompt</div>
+                <div data-text="caption">{L("Earlier runs, same model, same prompt")}</div>
                 <ul className="mt-2 space-y-1.5">
                   {kept.map((k, i) => (
                     <li key={i} data-text="caption">
@@ -197,25 +195,21 @@ function SamplePage() {
           <div className="space-y-2">
             <Verdict>
               {made === 0
-                ? `Under ${describe(rule)} the next token is drawn from ${live} candidate${live === 1 ? "" : "s"} of ${VOCAB.bytes.length}; the model itself gave ${raw.filter((v) => v > 0.01).length} of them more than one per cent. Press run to generate under the rule and under greedy side by side.`
-                : `${made} tokens under each rule. Greedy is the same every time and ${greedy.length > prompt.length + 12 && decode(VOCAB, greedy).split(". ").length < 3 ? "has settled into a loop" : "repeats whatever the text repeats"}; the rule draws from ${live} candidate${live === 1 ? "" : "s"} at this step${temperature > 1.3 ? " and at this temperature it wanders, because unlikely tokens are given a real chance" : temperature > 0 && temperature < 0.5 ? " and at this temperature it is nearly greedy" : ""}. The model did not change between the two columns; only the choosing did.`}
+                ? L(live === 1 ? "Under {{rule}} the next token is drawn from {{live}} candidate of {{n}}; the model itself gave {{big}} of them more than one per cent. Press run to generate under the rule and under greedy side by side." : "Under {{rule}} the next token is drawn from {{live}} candidates of {{n}}; the model itself gave {{big}} of them more than one per cent. Press run to generate under the rule and under greedy side by side.", { rule: describe(rule), live, n: VOCAB.bytes.length, big: raw.filter((v) => v > 0.01).length })
+                : `${L(live === 1 ? "{{made}} tokens under each rule. Greedy is the same every time and {{greedy}}; the rule draws from {{live}} candidate at this step" : "{{made}} tokens under each rule. Greedy is the same every time and {{greedy}}; the rule draws from {{live}} candidates at this step", { made, greedy: greedy.length > prompt.length + 12 && decode(VOCAB, greedy).split(". ").length < 3 ? L("has settled into a loop") : L("repeats whatever the text repeats"), live })}${temperature > 1.3 ? ` ${L("and at this temperature it wanders, because unlikely tokens are given a real chance")}` : temperature > 0 && temperature < 0.5 ? ` ${L("and at this temperature it is nearly greedy")}` : ""}. ${L("The model did not change between the two columns; only the choosing did.")}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Candidates left after the rule</dt>
-              <dd className="text-right text-foreground/80">{live} of {VOCAB.bytes.length}</dd>
-              <dt>Most likely token, raw and after the rule</dt>
+              <dt>{L("Candidates left after the rule")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{a}} of {{b}}", { a: live, b: VOCAB.bytes.length })}</dd>
+              <dt>{L("Most likely token, raw and after the rule")}</dt>
               <dd className="text-right text-foreground/80">{visible(tokenText(order[0]))}: {(raw[order[0]] * 100).toFixed(1)} % → {(shaped[order[0]] * 100).toFixed(1)} %</dd>
-              <dt>The two limits of temperature</dt>
-              <dd className="text-right text-foreground/80">0 is greedy; very large is every token alike</dd>
-              <dt>Runs kept below</dt>
+              <dt>{L("The two limits of temperature")}</dt>
+              <dd className="text-right text-foreground/80">{L("0 is greedy; very large is every token alike")}</dd>
+              <dt>{L("Runs kept below")}</dt>
               <dd className="text-right text-foreground/80">{kept.length}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              Beam search is the other shape: keep several partial texts and score whole
-              continuations. It suits translation, where there is a right answer to find, and not
-              open writing, where it finds the blandest one. The decoding rule is a second system
-              sitting on top of the model, and its settings change the text as much as a change of
-              model would.
+              {L("Beam search is the other shape: keep several partial texts and score whole continuations. It suits translation, where there is a right answer to find, and not open writing, where it finds the blandest one. The decoding rule is a second system sitting on top of the model, and its settings change the text as much as a change of model would.")}
             </Text>
           </div>
         }

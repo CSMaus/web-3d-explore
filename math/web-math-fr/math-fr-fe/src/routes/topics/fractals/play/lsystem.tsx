@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Label, Input, Textarea, Text, Heading } from "@kit/index";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Chips } from "@/components/Chips";
@@ -93,54 +94,52 @@ function LsystemPage() {
 
   return (
     <div>
-      <Heading level={1} className="mt-4">{system?.name ?? "Rewriting systems"}</Heading>
+      <Heading level={1} className="mt-4">{system?.name ?? L("Rewriting systems")}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
         <div className="space-y-4">
           <section data-slot="panel">
-            <Label>PRESET</Label>
+            <Label>{L("PRESET")}</Label>
             <div className="mt-3">
-              <Chips items={Object.keys(LSYS_PRESETS)} active={preset} onPick={pickPreset} />
+              <Chips items={Object.keys(LSYS_PRESETS).map((k) => L(k))} active={L(preset)} onPick={(item) => pickPreset(Object.keys(LSYS_PRESETS).find((k) => L(k) === item) ?? item)} />
             </div>
           </section>
 
           <section data-slot="panel">
-            <Label>AXIOM AND RULES</Label>
+            <Label>{L("AXIOM AND RULES")}</Label>
             <div className="mt-3 space-y-2">
               <Input
                 value={axiom}
                 onChange={(e) => setAxiom(e.target.value)}
                 spellCheck={false}
-                aria-label="Axiom, the starting string"
+                aria-label={L("Axiom, the starting string")}
               />
               <Textarea
                 value={rules}
                 onChange={(e) => setRules(e.target.value)}
                 spellCheck={false}
                 rows={3}
-                aria-label="Rules, one a line"
+                aria-label={L("Rules, one a line")}
               />
               <Text kind="note" as="p">
-                One rule a line, as symbol = replacement. Any capital letter draws a step except X
-                and Y, which only carry the rule along. Plus and minus turn, brackets remember and
-                return to a point.
+                {L("One rule a line, as symbol = replacement. Any capital letter draws a step except X and Y, which only carry the rule along. Plus and minus turn, brackets remember and return to a point.")}
               </Text>
             </div>
           </section>
 
           <section data-slot="panel">
-            <Label>TURTLE</Label>
+            <Label>{L("TURTLE")}</Label>
             <div className="mt-3 space-y-2">
               <Slider
-                label="Azimuth"
+                label={L("Azimuth")}
                 min={0}
                 max={120}
                 step={0.5}
                 value={angle}
-                format={(v) => `${v.toFixed(1)} deg`}
+                format={(v) => L("{{v}} deg", { v: v.toFixed(1) })}
                 onChange={setAngle}
               />
               <Slider
-                label="Passes"
+                label={L("Passes")}
                 min={0}
                 max={14}
                 step={1}
@@ -149,7 +148,7 @@ function LsystemPage() {
                 onChange={(v) => setPasses(Math.round(v))}
               />
               <Slider
-                label="Jitter"
+                label={L("Jitter")}
                 min={0}
                 max={0.6}
                 step={0.01}
@@ -158,7 +157,7 @@ function LsystemPage() {
                 onChange={setJitter}
               />
               <Slider
-                label="Seed"
+                label={L("Seed")}
                 min={1}
                 max={200}
                 step={1}
@@ -185,15 +184,15 @@ function LsystemPage() {
           <SaveImage stage={stage} name="rewriting" />
           <Readout
             rows={[
-              ["Word length", grown.word.length.toLocaleString()],
-              ["segments", segs.length.toLocaleString()],
-              ["Passes drawn", `${grown.reached} of ${passes}`],
-              ["Deepest branch", String(deepest)],
+              [L("Word length"), grown.word.length.toLocaleString()],
+              [L("segments"), segs.length.toLocaleString()],
+              [L("Passes drawn"), L("{{reached}} of {{passes}}", { reached: grown.reached, passes })],
+              [L("Deepest branch"), String(deepest)],
             ]}
           />
           {grown.capped ? (
             <Text kind="warning" as="p">
-              The word passed the limit, so it stopped expanding early - lower the passes
+              {L("The word passed the limit, so it stopped expanding early - lower the passes")}
             </Text>
           ) : null}
         </div>

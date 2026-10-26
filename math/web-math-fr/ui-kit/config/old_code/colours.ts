@@ -1,4 +1,4 @@
-import { defineColours, type Colours, type Hues } from "../kinds.ts";
+import { defineColours, type Colours, type Hex, type Hues } from "../kinds.ts";
 
 // the palettes of old_code, by short name: the phosphors of the old monitors, chosen the
 // same way as in edge_light (VITE_KIT_PALETTE, or the select in development). a console
@@ -46,7 +46,24 @@ const DAY_WHITE = {
 
 type Greys = Record<"background" | "card" | "foreground" | "muted-foreground" | "border", `#${string}`>;
 
-const palette = (light: Hues, dark: Hues, day: Greys = PAPER): Colours => defineColours({ default: "dark", light: { ...day, ...light }, dark: { ...DARK, ...dark } });
+// the light of each topic, by topic number (0 complex numbers, 1 fractals, 2 chaos, 3 networks,
+// 4 tokens, 5 the primes aside): its name and its turning figure glow in it. every topic keeps the
+// palette's own light (its glow, else its primary), a very little lighter or darker, so the
+// topics are told apart without leaving the phosphor's colour.
+const SHADES = [0, 0.1, -0.08, 0.18, -0.15, 0.05];
+
+/** a colour moved a little towards white (above zero) or black (below zero), its hue kept */
+function shade(hex: Hex, k: number): Hex {
+  const n = parseInt(hex.slice(1), 16);
+  const part = (v: number) => Math.round(k >= 0 ? v + (255 - v) * k : v * (1 + k));
+  const rgb = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(part);
+  return `#${rgb.map((v) => v.toString(16).padStart(2, "0")).join("")}`;
+}
+
+const topics = (h: Hues): Hex[] => SHADES.map((k) => shade(h.glow ?? h.primary, k));
+
+const palette = (light: Hues, dark: Hues, day: Greys = PAPER): Colours =>
+  defineColours({ default: "dark", light: { ...day, topics: topics(light), ...light }, dark: { ...DARK, topics: topics(dark), ...dark } });
 
 export const PALETTES: Record<string, Colours> = {
   T_GN: palette(

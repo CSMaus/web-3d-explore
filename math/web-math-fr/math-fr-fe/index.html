@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>M / Math</title>
+    <!-- the chosen theme and mode before the first paint, so a page never shows the default first -->
+    <script>
+      try {
+        var saved = localStorage.getItem("kit_case");
+        var mode = localStorage.getItem("kit_mode");
+        if (saved) document.documentElement.dataset.case = saved;
+        if (mode === "light" || mode === "dark") document.documentElement.dataset.mode = mode;
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

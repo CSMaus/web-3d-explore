@@ -1,0 +1,580 @@
+{
+ "systems": [
+  {
+   "id": "rate",
+   "name": "À quelle vitesse il avance",
+   "summary": "Une voiture sur une route. Sa vitesse, lue uniquement à partir de sa position : un changement divisé par un changement, avec un écart aussi petit que voulu. C'est la dérivée",
+   "blocks": [
+    {
+     "label": "La vitesse à partir de deux positions",
+     "tex": "v \\approx \\frac{s(t + h/2) - s(t - h/2)}{h}",
+     "note": "La distance parcourue, divisée par le temps mis. Le curseur de la page est h"
+    },
+    {
+     "label": "Et la limite",
+     "tex": "v(t) = s'(t) = \\lim_{h \\to 0} \\frac{s(t + h/2) - s(t - h/2)}{h}",
+     "note": "Le même rapport avec un écart réduit à rien. L'anneau se pose sur le point"
+    },
+    {
+     "label": "L'erreur de la vitesse à deux positions",
+     "tex": "\\frac{s(t+h/2) - s(t-h/2)}{h} = s'(t) + \\frac{h^{2}}{24}\\,s^{(3)}(t) + \\ldots",
+     "note": "L'erreur varie comme le carré de l'écart : écart divisé par deux, erreur divisée par quatre. Pour une voiture à vitesse constante ou qui freine, la dérivée troisième est nulle et il n'y a aucune erreur"
+    }
+   ],
+   "dimension": {
+    "label": "Les cinq mouvements de la page",
+    "tex": "s = 4t,\\quad 0.4t^{2},\\quad 10t - \\tfrac{1}{2}t^{2},\\quad 12\\sin(t/2),\\quad 3t + 2\\sin(1.4t)",
+    "note": "Régulier, en accélération, au freinage, aller et retour, avec arrêts. Les vitesses exactes auxquelles la page compare les réponses sont leurs dérivées"
+   }
+  },
+  {
+   "id": "rate2",
+   "name": "Accélère-t-il ou ralentit-il",
+   "summary": "Le même rapport, appliqué à la vitesse au lieu de la position. L'accélération, son signe, et l'allure d'un changement de changement",
+   "blocks": [
+    {
+     "label": "La dérivée seconde",
+     "tex": "a(t) = v'(t) = s''(t)",
+     "note": "La raideur de la courbe de vitesse, c'est-à-dire la raideur de la raideur de la courbe de position"
+    },
+    {
+     "label": "À partir de trois positions",
+     "tex": "a \\approx \\frac{s(t+h) - 2s(t) + s(t-h)}{h^{2}}",
+     "note": "Deux vitesses séparées d'un écart, chacune tirée de deux positions séparées d'un écart, donnent cette formule. La page fait le calcul en entier pour que les deux étapes soient visibles"
+    },
+    {
+     "label": "Ce que dit le signe",
+     "tex": "a > 0 \\Rightarrow v \\text{ rising}, \\qquad a < 0 \\Rightarrow v \\text{ falling}",
+     "note": "La flèche rose pointe à l'opposé de la verte pendant que la voiture freine, alors que la voiture avance toujours"
+    }
+   ],
+   "dimension": {
+    "label": "Au point de demi-tour",
+    "tex": "v(t^{*}) = 0,\\quad a(t^{*}) \\neq 0",
+    "note": "Là où la voiture fait demi-tour, sa vitesse est nulle et son accélération ne l'est pas : la vitesse passe par zéro, elle ne s'y arrête pas"
+   }
+  },
+  {
+   "id": "accumulate",
+   "name": "Tout additionner à nouveau",
+   "summary": "Avec seulement la vitesse, la distance : des tranches « vitesse fois durée », additionnées. L'intégrale, et le fait qu'elle défait la dérivée",
+   "blocks": [
+    {
+     "label": "Une tranche",
+     "tex": "\\Delta s_i = v\\!\\left(t_i + \\tfrac{\\Delta t}{2}\\right)\\Delta t",
+     "note": "La vitesse fois la durée donne la distance. La vitesse est lue au milieu de la tranche"
+    },
+    {
+     "label": "Toutes les tranches",
+     "tex": "s(T) - s(0) \\approx \\sum_{i} v\\!\\left(t_i + \\tfrac{\\Delta t}{2}\\right)\\Delta t \\;\\longrightarrow\\; \\int_{0}^{T} v(t)\\,dt",
+     "note": "La somme, avec des tranches aussi fines que voulu. L'escalier devient la courbe"
+    },
+    {
+     "label": "L'erreur de la méthode du point milieu",
+     "tex": "\\left|\\text{sum} - \\int\\right| \\le \\frac{T\\,\\Delta t^{2}}{24}\\max|v''|",
+     "note": "Deux fois plus de tranches, et l'erreur est divisée par quatre. Pour une vitesse en ligne droite l'erreur est nulle, donc la page s'ouvre sur une vitesse qui se courbe"
+    },
+    {
+     "label": "La dérivée défaite",
+     "tex": "\\frac{d}{dT}\\int_{0}^{T} v(t)\\,dt = v(T)",
+     "note": "La raideur de la distance accumulée est la vitesse qui a été additionnée. La première page à l'envers"
+    }
+   ],
+   "dimension": {
+    "label": "Aire algébrique",
+    "tex": "v < 0 \\Rightarrow \\Delta s_i < 0",
+    "note": "Au retour, les tranches comptent en négatif et le total redescend : c'est un déplacement, pas une distance parcourue"
+   }
+  },
+  {
+   "id": "growth",
+   "name": "Ce qui croît d'autant plus qu'il y en a",
+   "summary": "De l'argent placé à intérêt, une population qui a de la place. La croissance est une fraction fixe de la quantité, et cette seule règle désigne l'exponentielle",
+   "blocks": [
+    {
+     "label": "La règle",
+     "tex": "\\frac{dA}{dt} = r\\,A",
+     "note": "La vitesse de croissance est le taux fois la quantité présente. Le graphique du bas de la page est le quotient des deux membres de cette égalité, et il ne bouge jamais"
+    },
+    {
+     "label": "La seule courbe qui la respecte",
+     "tex": "A(t) = A_0\\,e^{rt}",
+     "note": "Le nombre e est la base pour laquelle la raideur est exactement égale à la hauteur, de sorte que la constante est le taux et rien d'autre"
+    },
+    {
+     "label": "Temps de doublement",
+     "tex": "t_{2} = \\frac{\\ln 2}{r}",
+     "note": "Le même pour chaque doublement, ce qui explique les graduations régulièrement espacées sur la page"
+    },
+    {
+     "label": "Quand atteint-il une cible",
+     "tex": "t^{*} = \\frac{1}{r}\\ln\\frac{A^{*}}{A_0}",
+     "note": "Le logarithme, lu comme une question sur le temps"
+    }
+   ],
+   "dimension": {
+    "label": "Face à une droite",
+    "tex": "A_0(1 + rt) \\le A_0 e^{rt}",
+    "note": "Une croissance d'une quantité fixe par an, calée sur la vitesse du premier instant, prend du retard tout de suite et ne le rattrape jamais"
+   }
+  },
+  {
+   "id": "slope",
+   "name": "Par où descendre",
+   "summary": "Une balle sur un relief, qui ne connaît que le sol sous ses pieds. Le gradient, et le pas dans le sens opposé",
+   "blocks": [
+    {
+     "label": "Deux pentes, une pour chaque direction de déplacement",
+     "tex": "\\frac{\\partial h}{\\partial x} \\approx \\frac{h(x+\\epsilon, y) - h(x-\\epsilon, y)}{2\\epsilon}, \\qquad \\frac{\\partial h}{\\partial y} \\approx \\frac{h(x, y+\\epsilon) - h(x, y-\\epsilon)}{2\\epsilon}",
+     "note": "Le rapport de la première page, pris une fois par direction, tout le reste étant tenu fixe"
+    },
+    {
+     "label": "Le gradient",
+     "tex": "\\nabla h = \\left(\\frac{\\partial h}{\\partial x}, \\frac{\\partial h}{\\partial y}\\right)",
+     "note": "Les deux pentes réunies en une flèche. Elle pointe vers la montée la plus raide, et sa longueur indique la raideur"
+    },
+    {
+     "label": "Un pas",
+     "tex": "(x, y) \\leftarrow (x, y) - \\eta\\,\\nabla h(x, y)",
+     "note": "À l'opposé de la flèche, de la taille du pas fois la raideur. La descente de gradient"
+    },
+    {
+     "label": "Quand le pas est trop grand",
+     "tex": "\\eta > \\frac{2}{\\lambda_{\\max}} \\Rightarrow \\text{diverges}",
+     "note": "Dans la vallée étroite, la pente transversale est douze fois la pente longitudinale, donc un pas adapté au fond dépasse les parois. La balle rebondit plus haut à chaque fois"
+    }
+   ],
+   "dimension": {
+    "label": "Plat ne veut pas dire fond",
+    "tex": "\\nabla h = 0 \\;\\not\\Rightarrow\\; \\text{minimum}",
+    "note": "Au milieu de la selle, la balle s'arrête alors que le sol descend de part et d'autre. Les quatre reliefs de la page sont une cuvette, une vallée étroite, une selle et deux collines"
+   }
+  },
+  {
+   "id": "line",
+   "name": "Tracer la droite à la main",
+   "summary": "Des points de deux couleurs. Le lecteur trace la droite de séparation, puis le perceptron de Rosenblatt essaie, une correction à la fois, et se heurte au mur qu'il a heurté en 1969",
+   "blocks": [
+    {
+     "label": "Une droite en trois nombres",
+     "tex": "w_1 x + w_2 y + b = 0",
+     "note": "Les deux poids donnent la direction perpendiculaire à la droite et le biais sa distance à l'origine. Les deux poignées de la droite blanche sont converties en ces nombres"
+    },
+    {
+     "label": "Le neurone",
+     "tex": "\\hat{y} = \\begin{cases} 1 & w_1 x + w_2 y + b > 0 \\\\ 0 & \\text{otherwise}\\end{cases}",
+     "note": "De quel côté de la droite. Une somme pondérée et un seuil strict, rien d'autre"
+    },
+    {
+     "label": "Une correction",
+     "tex": "w \\leftarrow w + \\eta\\,(y - \\hat{y})\\,x, \\qquad b \\leftarrow b + \\eta\\,(y - \\hat{y})",
+     "note": "Regarder un point ; s'il est du mauvais côté, tourner un peu la droite vers lui. Le point entouré sur la page est ce point"
+    },
+    {
+     "label": "Il s'arrête, s'il le peut",
+     "tex": "\\text{updates} \\le \\left(\\frac{R}{\\gamma}\\right)^{2}",
+     "note": "Quand une droite de séparation existe, la règle en trouve une en un nombre fini de corrections. Sur deux nuages de soixante points, la page en compte deux"
+    },
+    {
+     "label": "Et quand il ne le peut pas",
+     "tex": "\\mathrm{xor}(0,0)=0,\\ \\mathrm{xor}(0,1)=1,\\ \\mathrm{xor}(1,0)=1,\\ \\mathrm{xor}(1,1)=0",
+     "note": "Aucune droite ne place correctement les quatre points, il en reste donc toujours un à corriger et la règle ne s'arrête jamais. Minsky et Papert, 1969"
+    }
+   ],
+   "dimension": {
+    "label": "Ce que le lecteur peut vérifier à la main",
+    "tex": "\\text{wrong} = \\min\\left(\\#\\{\\text{side} \\neq y\\},\\ \\#\\{\\text{side} = y\\}\\right)",
+    "note": "Chaque côté d'une droite tracée à la main peut être de l'une ou l'autre couleur, donc le compte est le plus petit des deux"
+   }
+  },
+  {
+   "id": "nudge",
+   "name": "Un petit changement, et ce qu'il produit",
+   "summary": "Un poids déplacé de la même petite quantité, encore et encore, sur un neurone strict et un neurone lisse qui partagent les mêmes nombres. Une réponse avance doucement, l'autre saute ou ne fait rien. La raison pour laquelle chaque méthode après le perceptron a besoin du neurone lisse",
+   "blocks": [
+    {
+     "label": "Les deux neurones sur les trois mêmes nombres",
+     "tex": "\\hat{y} = \\big[\\,w_1 x + w_2 y + b > 0\\,\\big], \\qquad a = \\sigma(w_1 x + w_2 y + b)",
+     "note": "Le oui ou non strict du perceptron, et le même total passé dans la fonction d'écrasement"
+    },
+    {
+     "label": "Un petit coup de pouce",
+     "tex": "w_1 \\leftarrow w_1 + \\epsilon",
+     "note": "Le curseur de la page est epsilon. Rien d'autre ne change"
+    },
+    {
+     "label": "Ce que fait la réponse lisse",
+     "tex": "\\Delta a \\approx \\sigma'(z)\\,x\\,\\epsilon",
+     "note": "La pente de la fonction d'écrasement au total de ce point, fois le x du point, fois le coup de pouce. Petit, et le même à chaque fois, donc la direction à suivre se lit"
+    },
+    {
+     "label": "Ce que fait la réponse stricte",
+     "tex": "\\Delta \\hat{y} \\in \\{0, \\pm 1\\}",
+     "note": "Rien tant que le total ne franchit pas zéro, puis un saut de un. Aucune pente nulle part, donc aucune direction"
+    }
+   ],
+   "dimension": {
+    "label": "Pourquoi la descente a besoin du neurone lisse",
+    "tex": "\\frac{\\partial L}{\\partial w_1} = (a - y)\\,\\sigma'(z)\\,x",
+    "note": "L'erreur ne varie avec un poids que parce que sigma a une pente. Pour une marche, la même expression est nulle partout et indéfinie au saut"
+   }
+  },
+  {
+   "id": "unit",
+   "name": "À l'intérieur d'un neurone",
+   "summary": "Trois nombres et une fonction d'écrasement. Déplacez-les à la main et regardez le plan changer de couleur, puis laissez le neurone les déplacer lui-même, en descendant la pente de son erreur",
+   "blocks": [
+    {
+     "label": "Le neurone",
+     "tex": "a = g(w_1 x + w_2 y + b)",
+     "note": "Pondérer, additionner, décaler, écraser. Le schéma de la page est cette expression dessinée"
+    },
+    {
+     "label": "Les fonctions d'écrasement proposées",
+     "tex": "\\sigma(z) = \\frac{1}{1+e^{-z}}, \\quad \\tanh(z), \\quad \\max(0, z), \\quad z",
+     "note": "Vers 0..1, vers -1..1, coupure sous zéro, aucune. La première est la courbe de la page sur l'exponentielle, repliée"
+    },
+    {
+     "label": "L'erreur en un seul nombre",
+     "tex": "L = \\frac{1}{2N}\\sum_{n}\\left(a^{(n)} - y^{(n)}\\right)^{2}",
+     "note": "La moyenne des carrés des écarts sur tous les points. C'est la hauteur que la balle descend"
+    },
+    {
+     "label": "Un pas sur trois nombres",
+     "tex": "w_i \\leftarrow w_i - \\eta\\,\\frac{\\partial L}{\\partial w_i}, \\qquad \\frac{\\partial L}{\\partial w_i} = \\frac{1}{N}\\sum_n (a - y)\\,g'(z)\\,x_i",
+     "note": "La page de la colline avec trois directions au lieu de deux. La pente exige que la fonction d'écrasement ait une pente, ce que le seuil strict n'avait pas"
+    }
+   ],
+   "dimension": {
+    "label": "La droite est toujours là",
+    "tex": "a = \\tfrac{1}{2} \\iff w_1 x + w_2 y + b = 0",
+    "note": "Là où la fonction d'écrasement donne un demi se trouve la droite du perceptron. L'écrasement ajoute le degré de certitude, de chaque côté"
+   }
+  },
+  {
+   "id": "layers",
+   "name": "Plusieurs neurones, une réponse",
+   "summary": "Plusieurs neurones côte à côte, chacun traçant sa droite, et un de plus qui pondère leurs réponses. Ce que voit chaque neurone seul, et la frontière courbe faite à partir d'eux",
+   "blocks": [
+    {
+     "label": "La couche du milieu",
+     "tex": "h_j = g\\!\\left(\\sum_i W^{(1)}_{ji} x_i + b^{(1)}_j\\right)",
+     "note": "Chaque neurone du milieu est le neurone de la page précédente avec ses propres trois nombres. Les petites tuiles les montrent, une par neurone"
+    },
+    {
+     "label": "Le dernier neurone",
+     "tex": "\\hat{y} = \\sigma\\!\\left(\\sum_j W^{(2)}_{j} h_j + b^{(2)}\\right)",
+     "note": "Il pondère les réponses du milieu. Sa frontière est là où leur somme pondérée franchit zéro, et ce n'est plus une droite"
+    },
+    {
+     "label": "Combien de nombres",
+     "tex": "P = (2 + 1)\\,H + (H + 1)",
+     "note": "Avec H neurones au milieu. La page les compte sur le réseau plutôt qu'avec cette formule"
+    },
+    {
+     "label": "Un seul neurone au milieu ne suffit pas",
+     "tex": "H = 1 \\Rightarrow \\hat{y} = \\sigma\\!\\left(w\\,g(\\cdot) + b\\right)",
+     "note": "Un écrasement d'un écrasement d'une droite reste une droite, déplacée. Deux droites réalisent le ou exclusif ; un anneau en demande environ trois"
+    }
+   ],
+   "dimension": {
+    "label": "Nombres de départ",
+    "tex": "\\operatorname{Var}(w) = \\frac{2}{n_{\\mathrm{in}} + n_{\\mathrm{out}}}",
+    "note": "La règle de Xavier, pour que les premières réponses ne soient ni toutes égales à un demi ni toutes saturées. Le curseur de la page choisit un autre tirage selon la même règle"
+   }
+  },
+  {
+   "id": "any",
+   "name": "N'importe quelle courbe",
+   "summary": "Une entrée, une rangée de neurones à écrasement et une sortie, chaque neurone étant réglé pour former une marche d'un escalier qui suit une courbe choisie. Plus de neurones, ou des neurones plus raides, et l'escalier suit la courbe d'aussi près que voulu. Ce qu'un réseau peut dessiner, avant tout apprentissage",
+   "blocks": [
+    {
+     "label": "Un neurone caché, une marche",
+     "tex": "h_k(x) = \\sigma\\big(s\\,(x - c_k)\\big), \\qquad c_k = \\frac{k}{n+1}",
+     "note": "Le poids qui entre dans le neurone est la raideur s et son biais vaut moins s fois la position c_k. Quand s grandit, l'écrasement devient une marche nette en c_k"
+    },
+    {
+     "label": "La sortie additionne les marches",
+     "tex": "\\hat{f}(x) = b + \\sum_{k=1}^{n} r_k\\,h_k(x)",
+     "note": "Le poids de sortie r_k est la hauteur de la marche k : la cible au milieu d'un intervalle moins la cible au milieu du précédent. Le biais b est la cible sur le premier intervalle"
+    },
+    {
+     "label": "À quel point c'est proche",
+     "tex": "\\max_{x \\in [0,1]} \\big|\\hat{f}(x) - f(x)\\big|",
+     "note": "Le plus grand écart de la page, mesuré sur 401 points de l'entrée"
+    },
+    {
+     "label": "Le théorème derrière la page",
+     "tex": "\\forall\\, \\varepsilon > 0\\ \\ \\exists\\, n, s:\\quad \\max_x \\big|\\hat{f}(x) - f(x)\\big| < \\varepsilon",
+     "note": "Pour toute f continue. Le théorème d'approximation universelle, montré ici en construisant le réseau plutôt que par une preuve ; la même construction fonctionne avec n'importe quel nombre d'entrées"
+    }
+   ],
+   "dimension": {
+    "label": "Les nombres du réseau",
+    "tex": "P = 2n + n + 1 = 3n + 1",
+    "note": "Deux par neurone caché à l'entrée, un chacun à la sortie, et le biais de sortie. La page les compte sur le réseau"
+   }
+  },
+  {
+   "id": "learn",
+   "name": "Comment il apprend, et à quelle vitesse",
+   "summary": "La taille du pas, le nombre de points avant chaque mouvement et les astuces habituelles, les essais terminés restant sur un même graphique. Et la formule en un coup, qui ne marche que lorsque rien ne se courbe",
+   "blocks": [
+    {
+     "label": "Descente simple",
+     "tex": "p \\leftarrow p - \\eta\\,\\nabla L",
+     "note": "La balle. Un pas fixe vers le bas de la pente, sur tous les nombres à la fois"
+    },
+    {
+     "label": "Quelques points à la fois",
+     "tex": "\\nabla L \\approx \\frac{1}{B}\\sum_{n \\in \\text{batch}} \\nabla L_n",
+     "note": "La pente estimée sur B points au lieu de tous. Moins coûteux et plus bruité, d'où la courbe en dents de scie"
+    },
+    {
+     "label": "Moment",
+     "tex": "v \\leftarrow \\beta v + \\nabla L, \\qquad p \\leftarrow p - \\eta\\,v",
+     "note": "La balle garde une partie de sa vitesse, elle cesse donc de rebondir d'une paroi à l'autre d'une vallée étroite et roule le long de celle-ci"
+    },
+    {
+     "label": "Adam",
+     "tex": "p \\leftarrow p - \\eta\\,\\frac{\\hat{v}}{\\sqrt{\\hat{s}} + \\epsilon}",
+     "note": "Chaque nombre reçoit sa propre taille de pas, réduite là où sa pente a été raide. Adagrad et RMSProp sont les deux moitiés de cette méthode"
+    },
+    {
+     "label": "La réponse en un coup, quand rien ne se courbe",
+     "tex": "p^{*} = (A^{\\top}A)^{-1}A^{\\top}y",
+     "note": "Sans fonctions d'écrasement, le réseau est une seule droite et la meilleure a une formule. La ligne pointillée de la page est cette droite, et elle ne peut pas se courber"
+    }
+   ],
+   "dimension": {
+    "label": "Quand l'essai explose",
+    "tex": "\\eta > \\frac{2}{\\lambda_{\\max}(H)}",
+    "note": "Le pas dépasse le long de la direction la plus raide de la colline et retombe plus haut à chaque fois. La page montre la courbe qui monte au lieu de descendre"
+   }
+  },
+  {
+   "id": "blame",
+   "name": "La correction, un point à la fois",
+   "summary": "Une correction en six moments : le point avance, l'écart est mesuré, la responsabilité remonte le long des fils, chaque nombre bouge. La rétropropagation, vérifiée par petits coups de pouce",
+   "blocks": [
+    {
+     "label": "L'écart, et la responsabilité à la sortie",
+     "tex": "\\delta^{(2)} = \\left(a^{(2)} - y\\right)\\sigma'\\!\\left(z^{(2)}\\right)",
+     "note": "L'écart de la réponse, fois la vitesse à laquelle la dernière fonction d'écrasement variait à cet endroit. Une fonction saturée ne transmet presque aucune responsabilité"
+    },
+    {
+     "label": "La responsabilité qui remonte",
+     "tex": "\\delta^{(1)}_j = \\left(\\sum_i W^{(2)}_{ij}\\,\\delta^{(2)}_i\\right) g'\\!\\left(z^{(1)}_j\\right)",
+     "note": "La part de chaque neurone du milieu est proportionnelle à son fil vers la sortie, fois la pente de sa propre fonction d'écrasement. La règle de dérivation en chaîne, une fois par couche"
+    },
+    {
+     "label": "Ce que chaque poids en fait",
+     "tex": "\\Delta W^{(l)}_{ij} = -\\eta\\,\\delta^{(l)}_i\\,a^{(l-1)}_j, \\qquad \\Delta b^{(l)}_i = -\\eta\\,\\delta^{(l)}_i",
+     "note": "La responsabilité du neurone qu'il alimente, fois la valeur qui est passée par lui. Les halos de la page représentent ces valeurs"
+    },
+    {
+     "label": "Vérifié, pas supposé",
+     "tex": "\\frac{\\partial L}{\\partial w} \\approx \\frac{L(w+\\epsilon) - L(w-\\epsilon)}{2\\epsilon}",
+     "note": "Chaque pente est aussi calculée en poussant le nombre à la main. La page indique le plus grand désaccord, qui tourne autour de 1e-7 avec tanh au milieu"
+    }
+   ],
+   "dimension": {
+    "label": "Le coût",
+    "tex": "\\text{backward} \\approx 2 \\times \\text{forward}",
+    "note": "Treize pentes en une seule passe arrière, au lieu de treize coups de pouce séparés qui demandent chacun deux passes avant"
+   }
+  },
+  {
+   "id": "slow",
+   "name": "Partir sûr de soi et dans l'erreur",
+   "summary": "Un neurone qui part presque certain de la mauvaise réponse, entraîné deux fois avec la même descente : sur le carré de l'écart et sur l'entropie croisée. Le premier bouge à peine pendant longtemps. La raison pour laquelle la perte d'une réponse oui ou non est choisie ainsi",
+   "blocks": [
+    {
+     "label": "Le neurone",
+     "tex": "a = \\sigma(w x + b), \\qquad x = 1,\\quad y = 0",
+     "note": "Une entrée, un poids, un biais, et la bonne réponse est zéro. Le curseur de départ fixe la première réponse a"
+    },
+    {
+     "label": "Le carré de l'écart, et le mouvement qu'il demande",
+     "tex": "L = \\tfrac{1}{2}(a - y)^2, \\qquad \\frac{\\partial L}{\\partial w} = (a - y)\\,\\sigma'(z)\\,x",
+     "note": "Le mouvement contient la pente de la fonction d'écrasement, qui vaut au plus un quart et presque zéro loin sur le plat, exactement là où se trouve un neurone sûr de lui et dans l'erreur"
+    },
+    {
+     "label": "L'entropie croisée, et le mouvement qu'elle demande",
+     "tex": "L = -\\big[\\,y \\ln a + (1 - y)\\ln(1 - a)\\,\\big], \\qquad \\frac{\\partial L}{\\partial w} = (a - y)\\,x",
+     "note": "La pente de la fonction d'écrasement se simplifie : la pente propre de la perte par rapport à a vaut (a - y) sur a(1 - a), et la pente de la fonction d'écrasement vaut a(1 - a). Il reste l'écart"
+    },
+    {
+     "label": "La pente loin sur le plat",
+     "tex": "\\sigma'(z) = a\\,(1 - a)",
+     "note": "Pour une première réponse de 0,98, cela vaut 0,0196, donc le carré de l'écart déplace les nombres cinquante fois moins que l'écart seul"
+    }
+   ],
+   "dimension": {
+    "label": "Les pas pour admettre l'erreur",
+    "tex": "t_{\\text{squared}} \\gg t_{\\text{cross entropy}}",
+    "note": "La page compte les pas que met chaque copie pour arriver à moins de 0,1 de la bonne réponse, depuis le même départ avec la même taille de pas"
+   }
+  },
+  {
+   "id": "fade",
+   "name": "La première couche apprend en dernier",
+   "summary": "Plusieurs couches empilées sur l'anneau dans un anneau, et la responsabilité mesurée pendant qu'elle les traverse en remontant. Elle s'affaiblit à chaque fonction d'écrasement, donc la couche qui voit les points bouge le moins. La disparition du gradient, et les deux remèdes présents sur la page",
+   "blocks": [
+    {
+     "label": "La responsabilité, une couche plus tôt",
+     "tex": "\\delta^{(l)} = \\big(W^{(l+1)\\top}\\delta^{(l+1)}\\big) \\odot g'\\!\\big(z^{(l)}\\big)",
+     "note": "La règle de la page sur la correction, une fois par couche : multiplier par les poids, puis par la pente de la fonction d'écrasement à chaque neurone"
+    },
+    {
+     "label": "Ce par quoi une couche multiplie",
+     "tex": "\\big|\\delta^{(l)}\\big| \\lesssim \\big\\|W^{(l+1)}\\big\\|\\,\\max g'\\,\\big|\\delta^{(l+1)}\\big|, \\qquad \\max \\sigma' = \\tfrac{1}{4}",
+     "note": "Avec de petits poids et un écrasement vers 0..1, chaque couche en arrière réduit la responsabilité d'un facteur quatre ou plus, et les facteurs se multiplient"
+    },
+    {
+     "label": "Ce que mesurent les barres",
+     "tex": "\\left\\|\\frac{\\partial L}{\\partial W^{(l)}}\\right\\|_{\\mathrm{rms}}",
+     "note": "La moyenne quadratique des pentes sur les poids d'une couche : de combien cette couche bougera au pas suivant"
+    },
+    {
+     "label": "Les deux remèdes de la page",
+     "tex": "\\mathrm{relu}'(z) = 1 \\ \\ (z > 0), \\qquad \\operatorname{Var}(w) = \\frac{2}{n_{\\mathrm{in}}}",
+     "note": "Une fonction d'écrasement dont la pente vaut exactement un partout où elle est active, et un départ dimensionné pour que le signal garde sa taille à travers chaque couche. Les connexions résiduelles sont le troisième remède et ne figurent pas sur la page"
+    }
+   ],
+   "dimension": {
+    "label": "Dernière sur première",
+    "tex": "\\frac{\\|\\partial L / \\partial W^{(L)}\\|}{\\|\\partial L / \\partial W^{(1)}\\|}",
+    "note": "Le rapport indiqué par la page. Au-delà de cent, la première couche est pratiquement figée et apprend en dernier, si elle apprend"
+   }
+  },
+  {
+   "id": "pictures",
+   "name": "Le même travail sur une image",
+   "summary": "Un petit motif glissé sur un dessin, les meilleures correspondances conservées, la forme la plus proche nommée. Une convolution, le pooling, et pourquoi la forme peut bouger et être quand même trouvée",
+   "blocks": [
+    {
+     "label": "Une position",
+     "tex": "o_{rc} = \\max\\!\\left(0,\\ \\sum_{i,j} k_{ij}\\,x_{r+i,\\,c+j}\\right)",
+     "note": "Le morceau sous le motif, fois le motif, additionné, coupé sous zéro. La page le montre une position à la fois"
+    },
+    {
+     "label": "La carte entière",
+     "tex": "(N - K + 1)^{2} \\text{ positions from } K^{2} \\text{ weights}",
+     "note": "Cent nombres à partir de neuf poids, parce que les neuf mêmes servent partout. Un neurone relié à chaque pixel demanderait un poids par paire"
+    },
+    {
+     "label": "Le pooling",
+     "tex": "p_{rc} = \\max_{i,j \\in \\{0,1\\}} o_{2r+i,\\,2c+j}",
+     "note": "Garder le plus grand de chaque bloc et oublier où il se trouvait dans le bloc. C'est ce qui permet à la forme de bouger d'un pixel"
+    },
+    {
+     "label": "La forme la plus proche",
+     "tex": "\\hat{c} = \\arg\\min_c \\left\\| p - p^{(c)} \\right\\|",
+     "note": "La carte après pooling face à la carte après pooling de chaque forme mémorisée. Un réseau entraîné apprendrait aussi cette dernière étape ; ici, elle est écrite à la main"
+    }
+   ],
+   "dimension": {
+    "label": "Les motifs de la page",
+    "tex": "\\begin{pmatrix} 1 & 0 & -1 \\\\ 2 & 0 & -2 \\\\ 1 & 0 & -1 \\end{pmatrix}",
+    "note": "Le motif de bord vertical : grand là où la gauche d'un morceau est plus claire que sa droite. Les autres sont sa rotation, un flou, un renforcement de netteté et un coin"
+   }
+  },
+  {
+   "id": "sequence",
+   "name": "Le même travail sur une suite",
+   "summary": "Des nombres arrivent un par pas ; donnez le premier à la fin. Une cellule de mémoire à portes à côté d'une boucle simple, les portes étant réglées à la main pour que le mécanisme soit visible",
+   "blocks": [
+    {
+     "label": "La boucle simple",
+     "tex": "h_t = \\tanh(w_x x_t + w_h h_{t-1} + b)",
+     "note": "La réponse est réinjectée. Chaque pas écrase l'état, donc le premier nombre s'efface en quelques pas"
+    },
+    {
+     "label": "Trois portes",
+     "tex": "f_t = \\sigma(\\cdot), \\quad i_t = \\sigma(\\cdot), \\quad o_t = \\sigma(\\cdot)",
+     "note": "Chacune est un petit neurone qui regarde le nouveau nombre et la dernière sortie : combien garder, combien laisser entrer, combien montrer"
+    },
+    {
+     "label": "La mémoire",
+     "tex": "c_t = f_t\\,c_{t-1} + i_t\\,\\tanh(\\cdot)",
+     "note": "Partie gardée plus partie admise. Tout repose sur le signe plus : la mémoire reçoit un ajout, elle n'est pas remplacée"
+    },
+    {
+     "label": "Ce qui est montré",
+     "tex": "h_t = o_t\\,\\tanh(c_t)",
+     "note": "La mémoire peut garder une valeur sans la montrer, et la montrer plus tard"
+    }
+   ],
+   "dimension": {
+    "label": "Pourquoi le premier nombre survit",
+    "tex": "f_t \\approx 1,\\ i_t \\approx 0 \\text{ for } t > 1 \\Rightarrow c_t \\approx c_1",
+    "note": "Avec les portes réglées pour retenir, la mémoire n'est plus touchée après le premier pas. La responsabilité qui remonte à travers le signe plus ne diminue pas à chaque pas, ce dont une boucle simple est incapable"
+   }
+  },
+  {
+   "id": "words",
+   "name": "Le même travail sur des mots",
+   "summary": "Chaque mot décide quels mots écouter, et à quel point. Une tête d'attention, câblée à la main pour que le motif se lise",
+   "blocks": [
+    {
+     "label": "Une question, une clé et une valeur pour chaque mot",
+     "tex": "q_i = W_q x_i, \\qquad k_j = W_k x_j, \\qquad v_j = W_v x_j",
+     "note": "Trois projections du même vecteur. Le vecteur porte la position comme un point sur un cercle et le mot comme quelques nombres"
+    },
+    {
+     "label": "À quel point i écoute j",
+     "tex": "\\alpha_{ij} = \\frac{\\exp(q_i \\cdot k_j / \\sqrt{d})}{\\sum_{j'} \\exp(q_i \\cdot k_{j'} / \\sqrt{d})}",
+     "note": "La correspondance entre une question et une clé, écrasée pour que chaque ligne fasse un au total. La courbe de la page sur l'exponentielle, à nouveau"
+    },
+    {
+     "label": "Ce que le mot emporte",
+     "tex": "z_i = \\sum_j \\alpha_{ij}\\,v_j",
+     "note": "Les valeurs des mots écoutés, pondérées comme le montre le tableau"
+    },
+    {
+     "label": "Ne regarder qu'en arrière",
+     "tex": "j > i \\Rightarrow \\alpha_{ij} = 0",
+     "note": "Un modèle qui écrit un mot à la fois n'a encore aucun mot devant lui. Les cases sombres du tableau le traduisent"
+    }
+   ],
+   "dimension": {
+    "label": "Une tête qui signifie « le mot précédent »",
+    "tex": "q_i = R(-\\theta)\\,\\mathrm{pos}_i, \\qquad k_j = \\mathrm{pos}_j \\;\\Rightarrow\\; q_i \\cdot k_j \\text{ largest at } j = i - 1",
+    "note": "Tournez la position de la question d'un pas en arrière et elle s'aligne sur la clé située une position plus tôt. Une tête entraînée qui fait cela fait la même chose avec des nombres qu'elle a trouvés elle-même"
+   }
+  }
+ ],
+ "definitions": [
+  {
+   "id": "chain",
+   "name": "La règle de dérivation en chaîne",
+   "tex": "\\frac{d}{dx}f\\!\\left(g(x)\\right) = f'\\!\\left(g(x)\\right)g'(x)",
+   "note": "Toute la rétropropagation est cela, appliqué une fois par couche depuis la sortie vers l'arrière, les valeurs intermédiaires étant conservées depuis la passe avant plutôt que recalculées"
+  },
+  {
+   "id": "gradient",
+   "name": "Le gradient",
+   "tex": "\\nabla L = \\left(\\frac{\\partial L}{\\partial p_1}, \\ldots, \\frac{\\partial L}{\\partial p_P}\\right)",
+   "note": "La dérivée d'un nombre par rapport à plusieurs. Il pointe vers la montée la plus raide de la surface, et c'est la seule raison pour laquelle marcher dans l'autre sens constitue l'algorithme"
+  },
+  {
+   "id": "jacobian",
+   "name": "La hessienne, et la courbure qu'elle porte",
+   "tex": "H_{ij} = \\frac{\\partial^2 L}{\\partial p_i \\partial p_j}",
+   "note": "Les dérivées secondes. Sa plus grande valeur propre fixe la longueur que peut avoir un pas avant que la descente diverge, et ses signes disent si un point plat est un minimum, un maximum ou une selle"
+  },
+  {
+   "id": "difference",
+   "name": "La différence finie, et ses deux erreurs",
+   "tex": "\\frac{L(p+\\epsilon) - L(p-\\epsilon)}{2\\epsilon} = \\frac{\\partial L}{\\partial p} + O(\\epsilon^2) + O\\!\\left(\\frac{\\varepsilon_{\\mathrm{machine}}}{\\epsilon}\\right)",
+   "note": "La définition d'une dérivée, calculée. Une erreur diminue quand le pas rétrécit et l'autre augmente, il existe donc un meilleur pas, autour de 1e-4 plutôt qu'aussi petit que possible"
+  },
+  {
+   "id": "variance",
+   "name": "La variance qu'une couche transmet",
+   "tex": "\\operatorname{Var}\\!\\left(z^{(l)}\\right) = n_{l-1}\\operatorname{Var}(w)\\operatorname{Var}\\!\\left(a^{(l-1)}\\right)",
+   "note": "C'est pourquoi le nombre d'entrées apparaît dans chaque schéma d'initialisation : la variance des poids doit le compenser, sinon le signal grandit ou diminue du même facteur à chaque couche"
+  }
+ ]
+}

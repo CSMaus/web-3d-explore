@@ -83,10 +83,19 @@ async function send<T>(path: string, body?: unknown): Promise<T> {
 
 // the snapshot: one file per content route, loaded only when asked for, so a
 // build with a backend never carries them
-const snapshot = import.meta.glob<{ default: unknown }>("../content/snapshot/*.json");
+const snapshot = import.meta.glob<{ default: unknown }>(["../content/snapshot/*.json", "../content/snapshot/*/*.json"]);
 
-async function fromSnapshot<T>(name: string): Promise<T | null> {
-  const load = snapshot[`../content/snapshot/${name}.json`];
+/** the reader's language, two letters; the content in that language is a snapshot of its own */
+function readerLanguage(): string {
+  try {
+    return (window.localStorage.getItem("mathfr_lang") || document.documentElement.lang || "en").slice(0, 2);
+  } catch {
+    return "en";
+  }
+}
+
+async function fromSnapshot<T>(name: string, lang = "en"): Promise<T | null> {
+  const load = (lang !== "en" ? snapshot[`../content/snapshot/${lang}/${name}.json`] : undefined) ?? snapshot[`../content/snapshot/${name}.json`];
   if (!load) return null;
   return (await load()).default as T;
 }
@@ -101,6 +110,12 @@ async function soft<T>(work: Promise<T>): Promise<T | null> {
 
 /** content comes from the backend when it answers, and from the snapshot otherwise, so the site reads the same with or without a server */
 async function content<T>(path: string, name: string): Promise<T | null> {
+  // the backend serves the English; another language reads its own snapshot first
+  const lang = readerLanguage();
+  if (lang !== "en") {
+    const translated = await fromSnapshot<T>(name, lang);
+    if (translated) return translated;
+  }
   const live = HAS_BACKEND ? await soft(get<T>(path)) : null;
   return live ?? fromSnapshot<T>(name);
 }
@@ -110,6 +125,11 @@ export const api = {
   topic: (slug: string) => content<Topic>(`/topics/${slug}`, slug),
   theory: (slug: string) => content<Theory>(`/topics/${slug}/equations`, `${slug}.equations`),
   system: async (slug: string, id: string) => {
+    const lang = readerLanguage();
+    if (lang !== "en") {
+      const translated = (await fromSnapshot<Theory>(`${slug}.equations`, lang))?.systems.find((s) => s.id === id);
+      if (translated) return translated;
+    }
     const live = HAS_BACKEND ? await soft(get<System>(`/topics/${slug}/equations/${id}`)) : null;
     if (live) return live;
     const theory = await fromSnapshot<Theory>(`${slug}.equations`);

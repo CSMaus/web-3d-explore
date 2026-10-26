@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Band, Choices, Heading, Hero, Page, SolidFigure } from "@kit/index";
 import { PlayTile } from "@/components/PlayTile";
+import { PrimesCard } from "@/components/PrimesCard";
+import { L } from "@/lib/lang";
 import { api } from "@/lib/api";
 import { SYSTEMS as CHAOS_PAGES } from "@/lib/chaos";
 import { SYSTEMS as COMPLEX_PAGES } from "@/lib/complex";
@@ -74,7 +76,7 @@ function Play() {
         style={{ borderImage: "linear-gradient(color-mix(in oklab, var(--c-background) 92%, transparent) 0 0) fill 0 / / 0 100vmax" }}
       >
         <Choices
-          options={TOPICS.map((b) => ({ id: b.slug, label: b.slug === "primes" ? b.title : topicLabel(b.number, t) }))}
+          options={TOPICS.map((b) => ({ id: b.slug, label: b.slug === "primes" ? L("Prime numbers") : topicLabel(b.number, t) }))}
           value={here}
           onPick={go}
         />
@@ -84,15 +86,18 @@ function Play() {
         const shape = SHAPES[topic.slug];
         return (
           <Band key={topic.slug} id={bandId(topic.slug)} tone={i % 2 === 0 ? "card" : "page"} className={i === 0 ? "mt-8" : ""} style={{ scrollMarginTop: "calc(var(--topbar-height) + 64px)" }}>
+            {topic.slug === "primes" ? (
+              <PrimesCard to={pages[0].to as never} />
+            ) : (
             <div className="grid gap-10 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:gap-16">
-              <div>
+              <div data-topic={topic.number}>
                 {shape ? (
                   <div className="aspect-square w-full max-w-[200px] lg:max-w-[260px]">
                     <SolidFigure kind={shape} className="h-full w-full" />
                   </div>
                 ) : null}
                 <div data-text="label" className="mt-6">{topicLabel(topic.number, t)}</div>
-                <Heading level={2} className="mt-3">{topic.title}</Heading>
+                <Heading level={2} data-topic-name="" className="mt-3">{topic.title}</Heading>
               </div>
               <ol className="grid content-start gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {pages.map((p, n) => (
@@ -102,6 +107,7 @@ function Play() {
                 ))}
               </ol>
             </div>
+            )}
           </Band>
         );
       })}

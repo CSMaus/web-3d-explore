@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Label, Text, Heading } from "@kit/index";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Chips } from "@/components/Chips";
@@ -111,23 +112,23 @@ function IfsPage() {
 
   return (
     <div>
-      <Heading level={1} className="mt-4">{system?.name ?? "Iterated maps"}</Heading>
+      <Heading level={1} className="mt-4">{system?.name ?? L("Iterated maps")}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
         <div className="space-y-4">
           <section data-slot="panel">
-            <Label>PRESET</Label>
+            <Label>{L("PRESET")}</Label>
             <div className="mt-3">
-              <Chips items={Object.keys(IFS_PRESETS)} active={preset} onPick={pickPreset} />
+              <Chips items={Object.keys(IFS_PRESETS).map((k) => L(k))} active={L(preset)} onPick={(item) => pickPreset(Object.keys(IFS_PRESETS).find((k) => L(k) === item) ?? item)} />
             </div>
           </section>
 
           <section data-slot="panel">
-            <Label>MOVE</Label>
+            <Label>{L("MOVE")}</Label>
             <div className="mt-3">
               <Chips
-                items={maps.map((_, i) => `move ${i + 1}`)}
-                active={`move ${spot + 1}`}
-                onPick={(item) => setActive(Number(item.split(" ")[1]) - 1)}
+                items={maps.map((_, i) => L("move {{n}}", { n: i + 1 }))}
+                active={L("move {{n}}", { n: spot + 1 })}
+                onPick={(item) => setActive(maps.findIndex((_, i) => L("move {{n}}", { n: i + 1 }) === item))}
                 tint={(_, i) =>
                   mode === "single" ? undefined : palette.roles[i % palette.roles.length]
                 }
@@ -146,7 +147,7 @@ function IfsPage() {
                 />
               ))}
               <Slider
-                label="Probability"
+                label={L("Probability")}
                 min={0}
                 max={1}
                 step={0.005}
@@ -159,8 +160,8 @@ function IfsPage() {
                 const s = contraction(m);
                 return (
                   <div key={i} className={s < 1 ? "text-muted-foreground" : "text-destructive"}>
-                    {`Move ${i + 1} shrinks by ${s.toFixed(3)}`}
-                    {s < 1 ? "" : "  - Above 1, this one spreads out"}
+                    {L("Move {{n}} shrinks by {{s}}", { n: i + 1, s: s.toFixed(3) })}
+                    {s < 1 ? "" : `  - ${L("Above 1, this one spreads out")}`}
                   </div>
                 );
               })}
@@ -168,11 +169,9 @@ function IfsPage() {
           </section>
 
           <section data-slot="panel">
-            <Label>EQUATIONS</Label>
+            <Label>{L("EQUATIONS")}</Label>
             <Text kind="note" as="p" className="mt-2">
-              Each move is coloured to match the points it puts on the picture, so a change to one
-              of its six numbers is a change to the part of the shape in that colour. Tap one to
-              edit it above.
+              {L("Each move is coloured to match the points it puts on the picture, so a change to one of its six numbers is a change to the part of the shape in that colour. Tap one to edit it above.")}
             </Text>
             <div className="mt-3">
               <MapMaths
@@ -187,12 +186,12 @@ function IfsPage() {
           </section>
 
           <section data-slot="panel">
-            <Label>COLOUR</Label>
+            <Label>{L("COLOUR")}</Label>
             <div className="mt-3 space-y-3">
-              <Chips items={MODES.map((m) => m[0].toUpperCase() + m.slice(1))} active={mode[0].toUpperCase() + mode.slice(1)} onPick={(m) => setMode(m.toLowerCase() as Mode)} />
+              <Chips items={MODES.map((m) => L(m[0].toUpperCase() + m.slice(1)))} active={L(mode[0].toUpperCase() + mode.slice(1))} onPick={(item) => setMode(MODES.find((m) => L(m[0].toUpperCase() + m.slice(1)) === item) ?? mode)} />
               <PaletteBar />
               <Slider
-                label="Points"
+                label={L("Points")}
                 min={2000}
                 max={300000}
                 step={2000}
@@ -201,7 +200,7 @@ function IfsPage() {
                 onChange={(v) => setPoints(Math.round(v))}
               />
               <Slider
-                label="Discard"
+                label={L("Discard")}
                 min={0}
                 max={200}
                 step={5}
@@ -225,24 +224,23 @@ function IfsPage() {
             <Frame draw={draw} className="block h-full w-full" />
             {run.escaped ? (
               <Text kind="warning" as="p" className="absolute inset-x-0 top-1/2 px-8 text-center">
-                The point ran away - at least one move stretches instead of shrinking, so there is
-                no attractor to draw
+                {L("The point ran away - at least one move stretches instead of shrinking, so there is no attractor to draw")}
               </Text>
             ) : null}
           </section>
           <SaveImage stage={stage} name="iterated-maps" />
           <Readout
             rows={[
-              ["Points kept", run.kept.toLocaleString()],
-              ["Measured box dimension", dimension ? dimension.toFixed(3) : "-"],
+              [L("Points kept"), run.kept.toLocaleString()],
+              [L("Measured box dimension"), dimension ? dimension.toFixed(3) : "-"],
               [
-                "Grouped by",
+                L("Grouped by"),
                 mode === "by branch" || mode === "one move"
-                  ? `branch, with move ${carrier + 1} as the carrier`
-                  : "The last move used",
+                  ? L("branch, with move {{n}} as the carrier", { n: carrier + 1 })
+                  : L("The last move used"),
               ],
               ...maps.map(
-                (_, i) => [`points from move ${i + 1}`, tally[i].toLocaleString()] as [string, string],
+                (_, i) => [L("points from move {{n}}", { n: i + 1 }), tally[i].toLocaleString()] as [string, string],
               ),
             ]}
           />

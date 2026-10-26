@@ -3,6 +3,7 @@ import { COMPLEX } from "@/lib/complex";
 import { NETWORKS } from "@/lib/networks";
 import { PRIMES } from "@/lib/primes";
 import { TOKENS } from "@/lib/tokens";
+import { L } from "@/lib/lang";
 
 /**
  * the sections a built topic has. the paths are literals rather than built from
@@ -12,14 +13,14 @@ import { TOKENS } from "@/lib/tokens";
 export const FRACTALS = {
   slug: "fractals",
   number: 1,
-  title: "Fractals",
+  title: L("Fractals"),
   /** where the index sends a reader: the series, since it is filmed */
   landing: "/topics/fractals/parts",
   sections: [
-    { to: "/topics/fractals/parts", label: "Parts" },
-    { to: "/topics/fractals/play", label: "Play" },
-    { to: "/topics/fractals/theory", label: "Mathematics" },
-    { to: "/topics/fractals/uses", label: "Applications" },
+    { to: "/topics/fractals/parts", label: L("Parts") },
+    { to: "/topics/fractals/play", label: L("Play") },
+    { to: "/topics/fractals/theory", label: L("Mathematics") },
+    { to: "/topics/fractals/uses", label: L("Applications") },
   ],
 } as const;
 

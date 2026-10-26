@@ -1,0 +1,13 @@
+{
+ "slug": "primes",
+ "number": 5,
+ "title": "Une parenthèse : les écarts entre nombres premiers",
+ "summary": "Les écarts entre nombres premiers consécutifs, tracés comme l'application de premier retour d'un flot chaotique, à côté d'une application qui a une règle, pour montrer ce que le chaos n'est pas",
+ "state": "writing",
+ "parts": 0,
+ "beats": 0,
+ "seconds": 0,
+ "systems": 1,
+ "aside": true,
+ "part_list": []
+}

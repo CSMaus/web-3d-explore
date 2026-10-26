@@ -1,0 +1,315 @@
+{
+ "systems": [
+  {
+   "id": "ifs",
+   "name": "Applications itérées",
+   "summary": "Un petit ensemble de transformations affines appliquées encore et encore à un point, une seule tirée au hasard à chaque pas, si bien que les points visités s'accumulent sur une seule forme fixe",
+   "blocks": [
+    {
+     "label": "Une transformation",
+     "tex": "f_k(x,y) = \\bigl(a_k x + b_k y + e_k,\\; c_k x + d_k y + f_k\\bigr)",
+     "note": "Quatre nombres font tourner et étirent, deux autres décalent"
+    },
+    {
+     "label": "Le jeu du chaos",
+     "tex": "z_{n+1} = f_{k_n}(z_n), \\qquad \\Pr[k_n = k] = p_k",
+     "note": "La transformation est tirée selon les poids à chaque pas"
+    },
+    {
+     "label": "L'attracteur",
+     "tex": "A = \\bigcup_{k} f_k(A)",
+     "note": "La forme est exactement la réunion de ses propres images"
+    },
+    {
+     "label": "Pourquoi elle se stabilise",
+     "tex": "s_k = \\sigma_{\\max}(M_k) = \\sqrt{\\lambda_{\\max}\\!\\left(M_k^{\\mathsf T} M_k\\right)} < 1",
+     "note": "Chaque transformation rétrécit, donc toute forme de départ est attirée vers la même limite"
+    }
+   ],
+   "dimension": {
+    "label": "Mesurée par comptage de boîtes",
+    "tex": "d = \\lim_{\\varepsilon \\to 0} \\frac{\\log N(\\varepsilon)}{\\log(1/\\varepsilon)}",
+    "note": "La fougère mesure environ 1,78"
+   }
+  },
+  {
+   "id": "lsystem",
+   "name": "Systèmes de réécriture",
+   "summary": "Un court mot de départ réécrit par une poignée de règles, une fois par passe, puis lu comme des instructions de tortue",
+   "blocks": [
+    {
+     "label": "Une production",
+     "tex": "\\omega \\to \\omega', \\qquad w_{n+1} = P(w_n)",
+     "note": "Tous les symboles sont remplacés à la fois, donc le mot grandit d'un facteur fixe"
+    },
+    {
+     "label": "La plante ramifiée",
+     "tex": "X \\to F+[[X]-X]-F[-FX]+X, \\qquad F \\to FF",
+     "note": "F trace un pas, plus et moins font tourner, les crochets mémorisent un point"
+    },
+    {
+     "label": "La tortue",
+     "tex": "\\begin{aligned} p_{n+1} &= p_n + \\ell\\,(\\cos\\theta_n, \\sin\\theta_n) \\\\ \\theta_{n+1} &= \\theta_n \\pm \\alpha \\end{aligned}",
+     "note": "Un seul angle de rotation pour tout le mot"
+    }
+   ],
+   "dimension": {
+    "label": "Lue sur la règle quand les morceaux sont des copies exactes",
+    "tex": "d = \\frac{\\log N}{\\log(1/s)}",
+    "note": "La courbe de Koch donne log 4 sur log 3, environ 1,262"
+   }
+  },
+  {
+   "id": "lichtenberg",
+   "name": "Claquage diélectrique",
+   "summary": "Le champ est calculé sur la grille, et la probabilité qu'un site s'allume ensuite est l'intensité du champ en ce site élevée à une puissance ; c'est la figure qu'une décharge grave dans un isolant",
+   "blocks": [
+    {
+     "label": "Le champ entre deux croissances",
+     "tex": "\\nabla^2 \\phi = 0, \\qquad \\phi = 0 \\text{ on the cluster}",
+     "note": "L'amas est un conducteur, donc le potentiel y est constant"
+    },
+    {
+     "label": "Où le site suivant s'allume",
+     "tex": "p_i = \\frac{\\left|\\nabla\\phi_i\\right|^{\\eta}}{\\sum_{j \\in \\partial} \\left|\\nabla\\phi_j\\right|^{\\eta}}",
+     "note": "Êta est le seul bouton de réglage : à 0, tous les sites du bord sont équiprobables"
+    },
+    {
+     "label": "La relaxation qui la résout",
+     "tex": "\\phi^{(m+1)}_{r,c} = \\tfrac{1}{4}\\left(\\phi^{(m)}_{r-1,c} + \\phi^{(m)}_{r+1,c} + \\phi^{(m)}_{r,c-1} + \\phi^{(m)}_{r,c+1}\\right)",
+     "note": "Balayée jusqu'à ce que le champ ne bouge plus, puis quelques balayages après chaque croissance"
+    }
+   ],
+   "dimension": {
+    "label": "Mesurée par comptage de boîtes, et elle suit le bouton",
+    "tex": "d(\\eta): \\; 1.58 \\;\\text{at}\\; \\eta = 0.6 \\;\\longrightarrow\\; 1.27 \\;\\text{at}\\; \\eta = 2",
+    "note": "Un amas touffu mesure haut, une aiguille fine mesure bas"
+   }
+  },
+  {
+   "id": "dla",
+   "name": "Particules errantes",
+   "summary": "Un germe, et des particules lâchées une à une qui avancent au hasard jusqu'à toucher l'amas et s'y coller",
+   "blocks": [
+    {
+     "label": "Un pas de la marche",
+     "tex": "\\Pr\\bigl[(y,x) \\to (y \\pm 1, x)\\bigr] = \\Pr\\bigl[(y,x) \\to (y, x \\pm 1)\\bigr] = \\tfrac14",
+     "note": "Ni direction ni mémoire"
+    },
+    {
+     "label": "Le collage",
+     "tex": "\\text{stop at the first site with a neighbour already in the cluster}",
+     "note": "Les bras protègent l'intérieur, donc les arrivées se posent à l'extérieur"
+    },
+    {
+     "label": "La loi masse-rayon",
+     "tex": "N(r) = k\\,r^{d} \\qquad \\Longleftrightarrow \\qquad \\log N = d \\log r + \\log k",
+     "note": "La pente sur des axes logarithmiques est la dimension"
+    }
+   ],
+   "dimension": {
+    "label": "Mesurée à partir de l'ajustement masse-rayon",
+    "tex": "d \\approx 1.67 \\;\\text{measured}, \\qquad d \\to 1.71 \\;\\text{for large clusters}",
+    "note": "Les petits amas donnent une valeur basse"
+   }
+  },
+  {
+   "id": "julia",
+   "name": "Ensembles de Julia",
+   "summary": "Pour un c fixé, les points de départ dont le parcours, sous un carré et un décalage, ne s'échappe jamais",
+   "blocks": [
+    {
+     "label": "La règle",
+     "tex": "z_{n+1} = z_n^{2} + c",
+     "note": "Une rotation avec étirement, puis un glissement"
+    },
+    {
+     "label": "L'ensemble",
+     "tex": "K_c = \\left\\{ z_0 \\in \\mathbb{C} \\;:\\; \\sup_n |z_n| < \\infty \\right\\}",
+     "note": "L'ensemble de Julia proprement dit est la frontière de ce corps"
+    },
+    {
+     "label": "Le test d'échappement, et il est définitif",
+     "tex": "|z_n| > 2 \\;\\Longrightarrow\\; |z_{n+k}| \\to \\infty",
+     "note": "Une seule traversée suffit, et c'est ce qui rend l'image calculable"
+    },
+    {
+     "label": "Pourquoi le carré seul ne suffit pas",
+     "tex": "c = 0: \\; |z_0| < 1 \\Rightarrow z_n \\to 0, \\quad |z_0| > 1 \\Rightarrow z_n \\to \\infty",
+     "note": "La frontière est alors exactement le cercle unité, qui est lisse"
+    }
+   ],
+   "dimension": {
+    "label": "Mesurée par comptage de boîtes sur la frontière",
+    "tex": "1 \\le \\dim_{\\mathrm{B}} \\partial K_c \\le 2",
+    "note": "Elle dépend de c, et atteint 2 pour certaines valeurs"
+   }
+  },
+  {
+   "id": "mandelbrot",
+   "name": "L'ensemble de Mandelbrot",
+   "summary": "La même règle avec le départ fixé à zéro et c qui varie sur toute l'image ; elle indique exactement quels ensembles de Julia tiennent en un seul morceau",
+   "blocks": [
+    {
+     "label": "L'ensemble",
+     "tex": "M = \\left\\{ c \\in \\mathbb{C} \\;:\\; \\sup_n \\left|z_n\\right| < \\infty, \\; z_0 = 0 \\right\\}",
+     "note": "Une seule image répond à la question pour tous les c à la fois"
+    },
+    {
+     "label": "La même condition, lue de deux façons",
+     "tex": "c \\in M \\iff K_c \\text{ is connected}",
+     "note": "L'intérieur donne un seul morceau, l'extérieur donne de la poussière"
+    },
+    {
+     "label": "Coloration par temps d'échappement",
+     "tex": "\\nu(c) = \\min\\{ n : |z_n| > R \\}",
+     "note": "Les bandes de couleur sont ce compte"
+    }
+   ],
+   "dimension": {
+    "label": "Démontrée, pas mesurée",
+    "tex": "\\dim_{\\mathrm{H}} \\partial M = 2",
+    "note": "Le plus rugueux qu'une courbe puisse être ; aucune image finie n'atteint la limite"
+   }
+  },
+  {
+   "id": "mandelbulb",
+   "name": "L'ensemble en trois dimensions",
+   "summary": "Le carré est remplacé par une puissance en coordonnées sphériques, ce qui donne au même test d'échappement un solide à délimiter",
+   "blocks": [
+    {
+     "label": "La puissance qui remplace le carré",
+     "tex": "\\mathbf{v}^{n} = r^{n}\\bigl(\\sin n\\theta \\cos n\\varphi,\\; \\sin n\\theta \\sin n\\varphi,\\; \\cos n\\theta \\bigr)",
+     "note": "Avec r, thêta et phi les coordonnées sphériques du point"
+    },
+    {
+     "label": "L'itération",
+     "tex": "\\mathbf{v}_{k+1} = \\mathbf{v}_k^{\\,n} + \\mathbf{c}",
+     "note": "Pour n égal à 8, le solide a une symétrie d'ordre huit autour de son axe"
+    },
+    {
+     "label": "L'estimation de distance qui permet à un rayon de le trouver",
+     "tex": "\\mathrm{DE} = \\frac{|\\mathbf{v}|\\,\\log|\\mathbf{v}|}{2\\,|\\mathbf{v}'|}",
+     "note": "Un rayon peut avancer de cette quantité sans risque de traverser la surface"
+    }
+   ],
+   "dimension": {
+    "label": "Une surface dans l'espace",
+    "tex": "2 \\le \\dim_{\\mathrm{B}} \\partial \\le 3",
+    "note": "La frontière est une surface, pas une courbe"
+   }
+  },
+  {
+   "id": "hurst",
+   "name": "Une ligne qui se souvient : l'exposant de Hurst",
+   "summary": "Une marche aléatoire dont les pas se souviennent, un seul nombre H disant à quel point ; mesurée comme Hurst a mesuré le Nil, et la dimension du graphe lue sur ce même nombre",
+   "blocks": [
+    {
+     "label": "Des pas qui se souviennent",
+     "tex": "\\rho(k) = \\tfrac{1}{2}\\bigl((k+1)^{2H} - 2k^{2H} + (k-1)^{2H}\\bigr)",
+     "note": "La corrélation entre des pas distants de k dans un bruit gaussien fractionnaire. H = 0,5 est le tirage à pile ou face, sans mémoire ; au-dessus, une série tend à se poursuivre, en dessous, à s'inverser"
+    },
+    {
+     "label": "L'étendue normalisée de Hurst",
+     "tex": "\\frac{R}{S}(m) \\propto m^{H}",
+     "note": "Dans un bloc de m pas, jusqu'où la somme cumulée s'égare, divisé par la variation des pas. Hurst a trouvé 0,72 sur le Nil et soixante-quatorze autres séries, là où une pièce donne 0,5"
+    },
+    {
+     "label": "La dispersion de l'avenir",
+     "tex": "\\sigma(T) = \\sigma\\, T^{H}",
+     "note": "Jusqu'où la marche peut se trouver T pas plus loin. Une pièce donne la racine carrée de T ; une série persistante s'étale plus vite, donc un horizon long est plus risqué que ne le dit la règle de la racine carrée"
+    },
+    {
+     "label": "La dimension du graphe",
+     "tex": "D = 2 - H",
+     "note": "La dimension par comptage de boîtes de la marche tracée comme une ligne : une marche persistante donne une ligne plus lisse, une marche antipersistante une ligne plus rugueuse. Le lien avec la côte"
+    }
+   ],
+   "dimension": {
+    "label": "Ce qu'il ne peut pas faire",
+    "tex": "\\mathbb{E}[X_{n+1} \\mid X_n] \\text{ barely moves}",
+    "note": "H décrit comment le risque croît avec l'horizon et si les séries se poursuivent, pas quelle sera la valeur suivante ; et H est difficile à lire sur une série courte, c'est l'objection de Lo en 1991"
+   }
+  },
+  {
+   "id": "credibility",
+   "name": "Croire le groupe ou croire l'historique : le Bayes de l'actuaire",
+   "summary": "L'historique court d'un client mélangé à celui, long, du groupe ; le poids donné à l'historique est la crédibilité, et avec des sinistres de Poisson et des taux gamma, c'est exactement Bayes",
+   "blocks": [
+    {
+     "label": "Le mélange",
+     "tex": "\\hat{\\lambda} = Z\\,\\bar{x} + (1 - Z)\\,\\mu, \\qquad Z = \\frac{n}{n + k}",
+     "note": "Ici x barre est le taux propre du client sur n années et mu celui du groupe ; Z monte de zéro vers un au fil des années. Whitney 1918, Bailey 1950, Bühlmann 1967"
+    },
+    {
+     "label": "Ce que signifie k",
+     "tex": "k = \\frac{\\mathbb{E}[\\mathrm{Var}(X \\mid \\theta)]}{\\mathrm{Var}(\\mathbb{E}[X \\mid \\theta])}",
+     "note": "Le bruit dans les résultats d'un client, divisé par la dispersion entre clients. Des clients très différents les uns des autres obtiennent vite leur propre taux ; un résultat bruité l'obtient lentement. Z vaut un demi en n = k"
+    },
+    {
+     "label": "Le Bayes exact derrière",
+     "tex": "\\lambda \\sim \\Gamma(a, b),\\quad X \\mid \\lambda \\sim \\mathrm{Poisson}(\\lambda) \\;\\Rightarrow\\; \\lambda \\mid x \\sim \\Gamma(a + x,\\, b + n)",
+     "note": "La moyenne a posteriori (a + x) / (b + n) est le mélange avec k = b et mu = a / b. La page trace cette croyance comme une courbe qui se resserre année après année"
+    }
+   ],
+   "dimension": {
+    "label": "La même forme ailleurs",
+    "tex": "\\text{reserve} = Z\\cdot\\text{chain ladder} + (1 - Z)\\cdot\\text{prior}",
+    "note": "L'argent mis de côté pour les sinistres pas encore payés est mélangé de la même façon, la fraction déclarée jouant le rôle de Z ; les prévisions de mortalité élargissent leurs intervalles de la même façon quand les paramètres sont incertains"
+   }
+  },
+  {
+   "id": "tails",
+   "name": "Des sinistres à queue fractale",
+   "summary": "Des montants de sinistres à queue de Pareto se ressemblent à toute échelle, l'indice de queue jouant le rôle qu'une dimension joue pour une côte ; en dessous de deux, la moyenne ne se stabilise jamais",
+   "blocks": [
+    {
+     "label": "La queue",
+     "tex": "P(X > x) = \\left(\\frac{x_0}{x}\\right)^{\\alpha}, \\quad x \\ge x_0",
+     "note": "Une droite de pente moins alpha sur des axes log-log, là où une queue mince s'infléchit vers le bas. La même loi que Pareto a trouvée pour les revenus en 1896"
+    },
+    {
+     "label": "La même à toute échelle",
+     "tex": "P(X > x \\mid X > u) = \\left(\\frac{u}{x}\\right)^{\\alpha}",
+     "note": "Au-dessus de tout seuil, l'excès suit de nouveau une loi de Pareto de même alpha : le dixième des sinistres les plus gros, remis à l'échelle, se distribue comme l'ensemble. L'autosimilarité, comme pour la côte"
+    },
+    {
+     "label": "La moyenne qui ne se stabilise jamais",
+     "tex": "\\mathbb{E}[X] = \\frac{\\alpha x_0}{\\alpha - 1}\\ (\\alpha > 1), \\qquad \\mathrm{Var}[X] = \\infty\\ (\\alpha \\le 2)",
+     "note": "En dessous de deux, la variance est infinie, et un seul sinistre peut peser plus que tous les autres jusque-là : l'effet Noé de Mandelbrot. La moyenne courante continue de sauter, quel que soit le nombre de sinistres arrivés"
+    }
+   ],
+   "dimension": {
+    "label": "L'indice comme dimension",
+    "tex": "\\alpha = -\\frac{d \\log P(X > x)}{d \\log x}",
+    "note": "Lu sur la pente de la courbe de survie comme une dimension se lit sur le comptage de boîtes : l'exposant d'une loi de puissance qui dit comment un compte change avec l'échelle"
+   }
+  }
+ ],
+ "definitions": [
+  {
+   "id": "box",
+   "name": "Dimension par comptage de boîtes",
+   "tex": "d = \\lim_{\\varepsilon \\to 0} \\frac{\\log N(\\varepsilon)}{\\log(1/\\varepsilon)}",
+   "note": "Des boîtes de côté epsilon sont posées sur la forme et celles qu'elle touche sont comptées ; le compte en fonction de la taille forme une droite sur des axes logarithmiques, et la dimension est sa pente"
+  },
+  {
+   "id": "similarity",
+   "name": "Dimension d'autosimilarité",
+   "tex": "N s^{d} = 1 \\qquad \\Longrightarrow \\qquad d = \\frac{\\log N}{\\log(1/s)}",
+   "note": "Le cas particulier exact, où la forme est un nombre connu de copies réduites"
+  },
+  {
+   "id": "hausdorff",
+   "name": "Dimension de Hausdorff",
+   "tex": "\\mathcal{H}^{p}(S) = \\lim_{\\delta \\to 0} \\inf \\sum_i (\\mathrm{diam}\\,U_i)^{p}, \\qquad d = \\inf\\{ p : \\mathcal{H}^{p}(S) = 0 \\}",
+   "note": "La puissance critique à laquelle la somme des diamètres du recouvrement passe de l'infini à zéro ; le nombre que le comptage de boîtes approche"
+  },
+  {
+   "id": "richardson",
+   "name": "La méthode du compas",
+   "tex": "L(\\varepsilon) \\propto \\varepsilon^{1-d}",
+   "note": "Parcourir une frontière à pas d'ouverture fixe donne une longueur qui croît quand l'ouverture diminue, et la pente porte la dimension"
+  }
+ ]
+}

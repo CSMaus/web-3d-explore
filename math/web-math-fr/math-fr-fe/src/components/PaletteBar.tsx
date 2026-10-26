@@ -1,6 +1,7 @@
 import { PALETTES } from "@/lib/palettes";
 import { useLook } from "@/lib/store";
 import { cn } from "@/lib/cn";
+import { L } from "@/lib/lang";
 
 /** the palettes of the play pages as chips: the ones in code, then the ones added in the browser. */
 export function PaletteBar() {
@@ -10,7 +11,7 @@ export function PaletteBar() {
   const palettes = [...PALETTES, ...saved];
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span data-text="caption">Colour</span>
+      <span data-text="caption">{L("Colour")}</span>
       {palettes.map((p) => (
         <button
           key={p.id}

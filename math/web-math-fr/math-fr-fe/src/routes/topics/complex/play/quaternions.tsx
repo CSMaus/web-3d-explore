@@ -13,6 +13,7 @@ import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/complex";
+import { L } from "@/lib/lang";
 import { EDGE, INK, MUTED, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
@@ -32,10 +33,10 @@ const MARK = 17;
 /** the chart of the four numbers: the whole angle along, minus one to one up */
 const HALF_BOX: Box = { x0: 0, x1: 360, y0: -1.05, y1: 1.05 };
 const AXES: { id: string; label: string; axis: V3; said: string }[] = [
-  { id: "i", label: "About 𝑖, the along axis", axis: [1, 0, 0], said: "𝑖" },
-  { id: "j", label: "About 𝑗, the up axis", axis: [0, 1, 0], said: "𝑗" },
-  { id: "k", label: "About 𝑘, the out axis", axis: [0, 0, 1], said: "𝑘" },
-  { id: "d", label: "About the diagonal, all three at once", axis: [1, 1, 1], said: "the diagonal" },
+  { id: "i", label: L("About 𝑖, the along axis"), axis: [1, 0, 0], said: "𝑖" },
+  { id: "j", label: L("About 𝑗, the up axis"), axis: [0, 1, 0], said: "𝑗" },
+  { id: "k", label: L("About 𝑘, the out axis"), axis: [0, 0, 1], said: "𝑘" },
+  { id: "d", label: L("About the diagonal, all three at once"), axis: [1, 1, 1], said: L("the diagonal") },
 ];
 
 function pathOf(points: V3[]): Path {
@@ -109,18 +110,15 @@ function QuaternionsPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "Quaternions"}
-        job="One imaginary unit, 𝑖, turned the plane. A thing in space can turn about three axes, along, up and out, so space needs three units, 𝑖, 𝑗 and 𝑘, and a turn in space is written with four numbers: one for how far, three for the axis. The job is to pick an axis and an angle, turn the house step by step, and read the four numbers that do it as they grow."
+        title={system?.name ?? L("Quaternions")}
+        job={L("One imaginary unit, 𝑖, turned the plane. A thing in space can turn about three axes, along, up and out, so space needs three units, 𝑖, 𝑗 and 𝑘, and a turn in space is written with four numbers: one for how far, three for the axis. The job is to pick an axis and an angle, turn the house step by step, and read the four numbers that do it as they grow.")}
         input={
           <div className="space-y-3">
-            <Text kind="note" as="p">The axis</Text>
+            <Text kind="note" as="p">{L("The axis")}</Text>
             <Choices options={AXES} value={axisId} onPick={(id) => { setAxisId(id); reset(); }} />
-            <Slider label="Angle" min={0} max={360} step={5} value={angle} format={(v) => `${v} deg`} onChange={(v) => { setAngle(Math.round(v / 5) * 5); reset(); }} />
+            <Slider label={L("Angle")} min={0} max={360} step={5} value={angle} format={(v) => L("{{n}} deg", { n: v })} onChange={(v) => { setAngle(Math.round(v / 5) * 5); reset(); }} />
             <Text kind="note" as="p">
-              Sky is 𝑖, the along axis; green is 𝑗, up; rose is 𝑘, out of the page. The chosen axis is
-              drawn through the house in the text colour. The right end of the roof leaves a trail as
-              the house turns: a circle around the axis, which is what one turn in space is. Drag the
-              picture to look from elsewhere; the wheel brings it closer.
+              {L("Sky is 𝑖, the along axis; green is 𝑗, up; rose is 𝑘, out of the page. The chosen axis is drawn through the house in the text colour. The right end of the roof leaves a trail as the house turns: a circle around the axis, which is what one turn in space is. Drag the picture to look from elsewhere; the wheel brings it closer.")}
             </Text>
           </div>
         }
@@ -129,7 +127,7 @@ function QuaternionsPage() {
             running={runner.running}
             count={at}
             limit={FRAMES}
-            what="steps of the turn"
+            what={L("steps of the turn")}
             pace="slow"
             onToggle={() => {
               if (!runner.running && at >= FRAMES) reset();
@@ -160,7 +158,7 @@ function QuaternionsPage() {
               />
             </div>
             <Caption>
-              {`The house, turned ${turned.toFixed(0)} deg about ${chosen.said} so far. Sky: 𝑖, along. Green: 𝑗, up. Rose: 𝑘, out of the page. The line through the house is the chosen axis; the pale trail is the path of the right end of the roof, a circle around that axis.`}
+              {L("The house, turned {{a}} deg about {{axis}} so far. Sky: 𝑖, along. Green: 𝑗, up. Rose: 𝑘, out of the page. The line through the house is the chosen axis; the pale trail is the path of the right end of the roof, a circle around that axis.", { a: turned.toFixed(0), axis: chosen.said })}
             </Caption>
             <div data-slot="plot" className="mt-3 h-[180px] overflow-hidden">
               <Plot
@@ -181,12 +179,12 @@ function QuaternionsPage() {
                   pen.line([[angle, -1], [angle, 1]], MUTED, 1);
                   pen.dot(turned, Math.cos((turned * Math.PI) / 360), 4, ONE);
                   pen.dot(turned, Math.sin((turned * Math.PI) / 360), 4, TWO);
-                  pen.text("Turn, deg", 350, -0.9, MUTED, "right");
+                  pen.text(L("Turn, deg"), 350, -0.9, MUTED, "right");
                 }}
               />
             </div>
             <Caption>
-              {`The four numbers as the turn grows, against the whole angle along the bottom. Green: the first number, cos of half the angle, which starts at one and falls. Rose: the size of the other three, sin of half the angle, which starts at nothing and rises. The dots are where the run is now; the grey line is the angle chosen.`}
+              {L("The four numbers as the turn grows, against the whole angle along the bottom. Green: the first number, cos of half the angle, which starts at one and falls. Rose: the size of the other three, sin of half the angle, which starts at nothing and rises. The dots are where the run is now; the grey line is the angle chosen.")}
             </Caption>
           </section>
         }
@@ -194,26 +192,30 @@ function QuaternionsPage() {
           <div className="space-y-2">
             <Verdict good={at >= FRAMES ? true : undefined}>
               {at === 0
-                ? `The house stands still. Press run: it turns ${angle} deg about ${chosen.said}, a step at a time, and the four numbers of the turn are read off as it goes.`
+                ? L("The house stands still. Press run: it turns {{a}} deg about {{axis}}, a step at a time, and the four numbers of the turn are read off as it goes.", { a: angle, axis: chosen.said })
                 : at < FRAMES
-                  ? `Turned ${turned.toFixed(0)} deg about ${chosen.said} so far. The quaternion that does it is ${show(q)}: the first number is cos of half the angle, ${half.toFixed(0)} deg, and the other three are sin of half the angle along the axis.`
-                  : `Turned ${angle} deg about ${chosen.said}. The four numbers that did it: ${show(whole)}. Half the angle, ${(angle / 2).toFixed(0)} deg, went into them; on the page about 𝑖 the whole angle did, because one unit in the plane needs no axis. ${axisId === "k" ? "About 𝑘 the house turns in the page's own plane, and this is the turn 𝑖 made there." : "Pick 𝑘, the out axis, and the turn becomes the one 𝑖 made in the plane."}`}
+                  ? L("Turned {{a}} deg about {{axis}} so far. The quaternion that does it is {{q}}: the first number is cos of half the angle, {{h}} deg, and the other three are sin of half the angle along the axis.", { a: turned.toFixed(0), axis: chosen.said, q: show(q), h: half.toFixed(0) })
+                  : L("Turned {{a}} deg about {{axis}}. The four numbers that did it: {{q}}. Half the angle, {{h}} deg, went into them; on the page about 𝑖 the whole angle did, because one unit in the plane needs no axis. {{more}}", {
+                      a: angle,
+                      axis: chosen.said,
+                      q: show(whole),
+                      h: (angle / 2).toFixed(0),
+                      more: axisId === "k" ? L("About 𝑘 the house turns in the page's own plane, and this is the turn 𝑖 made there.") : L("Pick 𝑘, the out axis, and the turn becomes the one 𝑖 made in the plane."),
+                    })}
             </Verdict>
             <Readout
               rows={[
-                ["The turn so far, as a quaternion", show(q)],
-                ["Its first number", `cos ${half.toFixed(0)} deg = ${Math.cos((half * Math.PI) / 180).toFixed(3)}`],
-                ["Its other three", `sin ${half.toFixed(0)} deg = ${Math.sin((half * Math.PI) / 180).toFixed(3)}, along ${v3(axis)}`],
-                ["The roof's end, before and now", `${v3(before)}, ${v3(after)}`],
-                ["How a point is turned", "q, then the point, then q reversed: the sandwich"],
-                ["The three units", "𝑖 𝑖 = 𝑗 𝑗 = 𝑘 𝑘 = 𝑖 𝑗 𝑘 = minus one"],
-                ["Length of the quaternion", `${Math.hypot(...unit(q)).toFixed(3)}, so it turns and does not stretch`],
+                [L("The turn so far, as a quaternion"), show(q)],
+                [L("Its first number"), L("cos {{h}} deg = {{v}}", { h: half.toFixed(0), v: Math.cos((half * Math.PI) / 180).toFixed(3) })],
+                [L("Its other three"), L("sin {{h}} deg = {{v}}, along {{axis}}", { h: half.toFixed(0), v: Math.sin((half * Math.PI) / 180).toFixed(3), axis: v3(axis) })],
+                [L("The roof's end, before and now"), `${v3(before)}, ${v3(after)}`],
+                [L("How a point is turned"), L("q, then the point, then q reversed: the sandwich")],
+                [L("The three units"), L("𝑖 𝑖 = 𝑗 𝑗 = 𝑘 𝑘 = 𝑖 𝑗 𝑘 = minus one")],
+                [L("Length of the quaternion"), L("{{n}}, so it turns and does not stretch", { n: Math.hypot(...unit(q)).toFixed(3) })],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              Two turns about different axes do not commute: first one then the other is not the same as
-              the other way round. The application page under this topic shows it with two houses, and
-              says where these numbers steer spacecraft, robots and phones.
+              {L("Two turns about different axes do not commute: first one then the other is not the same as the other way round. The application page under this topic shows it with two houses, and says where these numbers steer spacecraft, robots and phones.")}
             </Text>
           </div>
         }

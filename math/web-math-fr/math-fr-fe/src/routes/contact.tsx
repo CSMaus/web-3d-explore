@@ -17,7 +17,7 @@ function Contact() {
         {CHANNELS.length === 0 ? (
           <Text kind="intro" as="p">{t("contact.none")}</Text>
         ) : (
-          <Readout rows={CHANNELS.map((c) => [c.label, c.href ? <a key={c.label} data-slot="link" href={c.href}>{c.value}</a> : c.value])} />
+          <Readout rows={CHANNELS.map((c) => [c.label, c.href ? <a key={c.label} data-slot="link" href={c.href} target="_blank" rel="noopener noreferrer">{c.value}</a> : c.value])} />
         )}
       </div>
     </Page>

@@ -1,0 +1,223 @@
+{
+ "systems": [
+  {
+   "id": "line",
+   "name": "Les nombres sur une droite, et la seule question à laquelle ils ne peuvent pas répondre",
+   "summary": "Les nombres ordinaires comme des places sur une droite, l'addition comme un glissement et la multiplication comme un étirement ou un retournement, et la question à laquelle aucune place de la droite ne répond",
+   "blocks": [
+    {
+     "label": "Additionner fait glisser",
+     "tex": "x \\mapsto x + a",
+     "note": "Chaque nombre se déplace de la même distance dans le même sens"
+    },
+    {
+     "label": "Multiplier étire, et multiplier par un nombre négatif retourne",
+     "tex": "x \\mapsto k\\,x, \\qquad x \\mapsto -x",
+     "note": "Multiplier par deux double chaque distance à zéro ; multiplier par moins un fait pivoter toute la droite autour de zéro"
+    },
+    {
+     "label": "La question",
+     "tex": "x^{2} = -1 \\quad \\text{has no } x \\text{ on the line}",
+     "note": "Un nombre multiplié par lui-même n'est jamais en dessous de zéro : la page essaie chaque x et trace le carré, qui ne passe jamais sous l'axe"
+    }
+   ],
+   "dimension": {
+    "label": "Ce qui manque",
+    "tex": "\\text{a number that, applied twice, flips}",
+    "note": "Retourner, c'est ce que fait moins un. La question demande un demi-retournement, et la droite n'a pas de place pour lui"
+   }
+  },
+  {
+   "id": "turn",
+   "name": "Ce qu'est 𝑖",
+   "summary": "Moins un est un demi-tour autour de zéro ; la moitié de cela est donc un quart de tour, et un nombre qui fait tourner d'un quart, c'est cela, i. Appliqué deux fois, il donne un demi-tour, c'est-à-dire moins un",
+   "blocks": [
+    {
+     "label": "La définition",
+     "tex": "i \\cdot i = -1",
+     "note": "Ni astuce ni mystère : un quart de tour suivi d'un quart de tour fait un demi-tour, et un demi-tour, c'est multiplier par moins un"
+    },
+    {
+     "label": "Faire le tour",
+     "tex": "1,\\ i,\\ -1,\\ -i,\\ 1,\\ \\ldots",
+     "note": "La page multiplie par 𝑖 encore et encore, et la flèche tourne d'un quart à chaque fois, revenue à son point de départ au bout de quatre"
+    },
+    {
+     "label": "Un second axe",
+     "tex": "a + b\\,i",
+     "note": "Un nombre est maintenant une place dans un plan : a le long de l'ancienne droite, b le long de la nouvelle. Les anciens nombres sont ceux dont b vaut zéro"
+    }
+   ],
+   "dimension": {
+    "label": "Le nom",
+    "tex": "\\text{imaginary} = \\text{on the second axis}",
+    "note": "Un nom du dix-septième siècle, donné comme une insulte et gardé par habitude. Rien sur cet axe n'est moins réel qu'une longueur"
+   }
+  },
+  {
+   "id": "add",
+   "name": "Nombres complexes : l'addition",
+   "summary": "Chaque nombre est une flèche partant de zéro ; pour en additionner deux, la queue de la seconde flèche se pose sur la pointe de la première. Les parties s'additionnent séparément et ne se mélangent jamais",
+   "blocks": [
+    {
+     "label": "L'addition",
+     "tex": "(a + b\\,i) + (c + d\\,i) = (a + c) + (b + d)\\,i",
+     "note": "La partie horizontale et la partie verticale s'additionnent chacune de leur côté. La page fait partir la seconde flèche de la pointe de la première"
+    },
+    {
+     "label": "La soustraction",
+     "tex": "z - w = z + (-w)",
+     "note": "Le même trajet, avec la seconde flèche retournée"
+    },
+    {
+     "label": "La longueur",
+     "tex": "|a + b\\,i| = \\sqrt{a^{2} + b^{2}}",
+     "note": "Jusqu'où va la flèche : Pythagore appliqué à ses deux parties. Les longueurs de deux flèches ne s'additionnent que si elles pointent dans le même sens"
+    }
+   ],
+   "dimension": {
+    "label": "Ce que l'addition ne fait pas",
+    "tex": "|z + w| \\le |z| + |w|",
+    "note": "L'addition ne fait jamais rien tourner. Toute la rotation est dans la multiplication, à la page suivante"
+   }
+  },
+  {
+   "id": "multiply",
+   "name": "Nombres complexes : la multiplication",
+   "summary": "Pour multiplier deux flèches, additionnez leurs angles et multipliez leurs longueurs. La page fait tourner et étire une flèche jusqu'au produit, sous les yeux du lecteur",
+   "blocks": [
+    {
+     "label": "Les quatre termes",
+     "tex": "(a + b\\,i)(c + d\\,i) = (ac - bd) + (ad + bc)\\,i",
+     "note": "Développez comme pour deux parenthèses quelconques ; le seul terme contenant 𝑖 fois 𝑖 vaut moins un, et c'est de là que vient le moins de ac moins bd"
+    },
+    {
+     "label": "Ce que c'est, en image",
+     "tex": "|z\\,w| = |z|\\,|w|, \\qquad \\angle(z\\,w) = \\angle z + \\angle w",
+     "note": "Les longueurs se multiplient, les angles s'additionnent. La page montre la flèche du produit obtenue en faisant tourner la première de l'angle de la seconde et en l'étirant de sa longueur"
+    },
+    {
+     "label": "Multiplier par i, à nouveau",
+     "tex": "|i| = 1, \\qquad \\angle i = \\tfrac{1}{4} \\text{ turn}",
+     "note": "Multiplier par 𝑖 est donc un quart de tour sans étirement : la définition de la page précédente, lue à partir de la règle de celle-ci"
+    }
+   ],
+   "dimension": {
+    "label": "La longueur et l'angle désignent le nombre aussi bien que les deux parties",
+    "tex": "z = r(\\cos\\theta + i\\sin\\theta)",
+    "note": "Deux façons de dire où pointe une flèche ; la page montre les deux pour chaque flèche qu'elle trace"
+   }
+  },
+  {
+   "id": "square",
+   "name": "Ensemble de Julia",
+   "summary": "Élever au carré double l'angle et met la longueur au carré. En répétant encore et encore, un départ à l'intérieur du cercle unité tombe vers zéro, à l'extérieur il s'échappe, sur le cercle il reste. En ajoutant une constante à chaque fois, la frontière entre chute et échappement devient un ensemble de Julia",
+   "blocks": [
+    {
+     "label": "Un carré",
+     "tex": "|z^{2}| = |z|^{2}, \\qquad \\angle z^{2} = 2\\,\\angle z",
+     "note": "Multiplier un nombre par lui-même : l'angle s'ajoute à lui-même, la longueur se multiplie par elle-même"
+    },
+    {
+     "label": "Répété",
+     "tex": "z_{n+1} = z_n^{2}",
+     "note": "Une longueur inférieure à un, élevée au carré encore et encore, tend vers zéro ; supérieure à un, vers l'infini ; exactement un reste. Le cercle est la frontière"
+    },
+    {
+     "label": "Avec un décalage",
+     "tex": "z_{n+1} = z_n^{2} + c",
+     "note": "À chaque pas, élever au carré, puis décaler de c. La frontière entre rester et partir n'est plus un cercle, et le thème des fractales la trace"
+    }
+   ],
+   "dimension": {
+    "label": "Le test d'échappement",
+    "tex": "|z_n| > 2 \\implies |z_{n+k}| \\to \\infty",
+    "note": "Dès que la longueur dépasse deux, le carré distance le décalage pour toujours ; c'est ainsi que la page décide qu'une orbite est partie"
+   }
+  },
+  {
+   "id": "round",
+   "name": "La formule d'Euler",
+   "summary": "La courbe de croissance du thème 3, avec un taux imaginaire, ne croît pas : elle fait le tour du cercle unité à vitesse constante, et ses deux ombres sont le cosinus et le sinus",
+   "blocks": [
+    {
+     "label": "La formule d'Euler",
+     "tex": "e^{i\\theta} = \\cos\\theta + i\\,\\sin\\theta",
+     "note": "Le point du cercle unité à l'angle thêta. La page fait tourner thêta et trace à côté les deux ombres sous forme d'ondes"
+    },
+    {
+     "label": "Pourquoi elle tourne",
+     "tex": "\\frac{d}{d\\theta} e^{i\\theta} = i\\,e^{i\\theta}",
+     "note": "Le taux de variation est la position tournée d'un quart : toujours de côté, jamais vers l'extérieur, ce qui est exactement se déplacer sur un cercle"
+    },
+    {
+     "label": "Le cas célèbre",
+     "tex": "e^{i\\pi} + 1 = 0",
+     "note": "Un demi-tour arrive sur moins un. La page s'arrête là et le dit"
+    }
+   ],
+   "dimension": {
+    "label": "Où cela sert ensuite",
+    "tex": "\\text{positions in topic 4, oscillations in topic 2}",
+    "note": "Les vecteurs de position sinusoïdaux du thème 4 sont cette formule à de nombreuses vitesses, et l'oscillation du thème 2 en est l'ombre réelle"
+   }
+  },
+  {
+   "id": "quaternions",
+   "name": "Quaternions",
+   "summary": "Les nombres de Hamilton à trois unités imaginaires, un quaternion unitaire étant une rotation dans l'espace ; deux rotations dans un ordre différent n'arrivent pas au même endroit, donc ces nombres ne commutent pas",
+   "blocks": [
+    {
+     "label": "La règle de Hamilton, 1843",
+     "tex": "i^{2} = j^{2} = k^{2} = ijk = -1, \\qquad ij = k,\\ ji = -k",
+     "note": "Trois unités imaginaires au lieu d'une. La seconde ligne découle de la première et constitue toute la différence avec le plan : l'ordre d'un produit compte"
+    },
+    {
+     "label": "Une rotation comme quaternion",
+     "tex": "q = \\cos\\tfrac{\\theta}{2} + \\sin\\tfrac{\\theta}{2}\\,(u_{x} i + u_{y} j + u_{z} k)",
+     "note": "La rotation d'angle thêta autour de l'axe unitaire u. C'est la moitié de l'angle qui intervient, d'où un tour complet égal à moins un et deux tours complets égaux à un"
+    },
+    {
+     "label": "Faire tourner un point",
+     "tex": "v' = q\\, v\\, q^{-1}",
+     "note": "Le point, vu comme un quaternion sans partie réelle, pris en sandwich. Dans le plan, le sandwich se réduit à une seule multiplication, parce que l'ordre n'y comptait pas"
+    },
+    {
+     "label": "Deux rotations",
+     "tex": "q_{2} q_{1} \\neq q_{1} q_{2}",
+     "note": "D'abord q1 puis q2 donne le produit q2 q1. La page trace les deux ordres à la fois, et les deux maisons finissent tournées dans des directions différentes"
+    },
+    {
+     "label": "Le chemin entre deux orientations",
+     "tex": "\\mathrm{slerp}(a, b, t) = \\frac{\\sin((1-t)\\Omega)}{\\sin\\Omega}\\, a + \\frac{\\sin(t\\Omega)}{\\sin\\Omega}\\, b",
+     "note": "Shoemake, 1985 : la rotation régulière la plus courte de a à b, utilisée par tous les moteurs de jeu et par l'animation de cette page"
+    }
+   ],
+   "dimension": {
+    "label": "Seulement trois systèmes de ce genre",
+    "tex": "\\mathbb{R},\\ \\mathbb{C},\\ \\mathbb{H}",
+    "note": "Frobenius, 1878 : les réels, les complexes et les quaternions sont les seuls systèmes finis sur les réels où la division par tout nombre non nul est possible. Les octonions suivent en perdant aussi l'associativité"
+   }
+  }
+ ],
+ "definitions": [
+  {
+   "id": "plane",
+   "name": "Le plan complexe",
+   "tex": "a + b\\,i \\longleftrightarrow (a, b)",
+   "note": "Chaque nombre est une place, ou une flèche de zéro vers cette place. L'ancienne droite des nombres est l'axe horizontal"
+  },
+  {
+   "id": "modulus",
+   "name": "Longueur et angle",
+   "tex": "|z| = \\sqrt{a^{2} + b^{2}}, \\qquad \\angle z = \\operatorname{atan2}(b, a)",
+   "note": "Jusqu'où va la flèche et dans quelle direction elle pointe. La multiplication agit sur ces deux grandeurs ; l'addition agit sur les parties"
+  },
+  {
+   "id": "conjugate",
+   "name": "L'image miroir",
+   "tex": "\\bar{z} = a - b\\,i, \\qquad z\\,\\bar{z} = |z|^{2}",
+   "note": "La même flèche réfléchie par rapport à l'axe horizontal ; un nombre multiplié par son image miroir donne le carré d'une longueur, sans partie imaginaire"
+  }
+ ]
+}

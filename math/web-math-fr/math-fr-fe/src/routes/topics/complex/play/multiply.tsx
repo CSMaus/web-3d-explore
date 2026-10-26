@@ -10,6 +10,7 @@ import { SaveImage } from "@/components/SaveImage";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/complex";
+import { L } from "@/lib/lang";
 import { INK, MUTED, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { abs, fromPolar, mul, show, turns, type C } from "@/systems/complex";
@@ -44,18 +45,16 @@ function MultiplyPage() {
     runner.reset();
     setTick(0);
   };
-  const deg = (t: number) => `${(t * 360).toFixed(0)} deg`;
+  const deg = (t: number) => L("{{n}} deg", { n: (t * 360).toFixed(0) });
 
   return (
     <>
       <TaskPage
-        title={system?.name ?? "Complex numbers: multiplying"}
-        job="Multiply two arrows and the answer has the two lengths multiplied and the two angles added. Nothing else. The job is to watch it happen in two moves: z is first turned by w's angle, then stretched by w's length, and it lands on the product. Drag either tip and run it again."
+        title={system?.name ?? L("Complex numbers: multiplying")}
+        job={L("Multiply two arrows and the answer has the two lengths multiplied and the two angles added. Nothing else. The job is to watch it happen in two moves: z is first turned by w's angle, then stretched by w's length, and it lands on the product. Drag either tip and run it again.")}
         input={
           <Text kind="note" as="p">
-            Green is z, rose is w. Drag either tip. Put w on the up axis at length one, which is 𝑖,
-            and the move is a quarter turn with no stretch: the last page's definition, read from
-            this page's rule.
+            {L("Green is z, rose is w. Drag either tip. Put w on the up axis at length one, which is 𝑖, and the move is a quarter turn with no stretch: the last page's definition, read from this page's rule.")}
           </Text>
         }
         run={
@@ -63,7 +62,7 @@ function MultiplyPage() {
             running={runner.running}
             count={Math.round(f * 100)}
             limit={100}
-            what="per cent: turn, then stretch"
+            what={L("per cent: turn, then stretch")}
             onToggle={() => {
               if (!runner.running && tick >= FRAMES) reset();
               runner.toggle();
@@ -109,39 +108,47 @@ function MultiplyPage() {
                     pen.dot(product[0], product[1], 6, SKY);
                     pen.text(`z w = ${show(product)}`, product[0], product[1] - 0.45, SKY, "center");
                   }
-                  pen.text("Along", BOX.x1 - 0.8, -0.35, MUTED, "center");
-                  pen.text("Up", 0.3, BOX.y1 - 0.5, MUTED, "left");
+                  pen.text(L("Along"), BOX.x1 - 0.8, -0.35, MUTED, "center");
+                  pen.text(L("Up"), 0.3, BOX.y1 - 0.5, MUTED, "left");
                 }}
               />
             </div>
-            <Caption>Green: z. Rose: w. White: z on its way to the product, turned first by w's angle, then stretched by w's length. Sky: the product. The grey circle has length one: anything on it turns without stretching.</Caption>
+            <Caption>{L("Green: z. Rose: w. White: z on its way to the product, turned first by w's angle, then stretched by w's length. Sky: the product. The grey circle has length one: anything on it turns without stretching.")}</Caption>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict>
               {f === 0
-                ? `z is ${show(z)}, length ${abs(z).toFixed(2)} at ${deg(turns(z))}. w is ${show(w)}, length ${abs(w).toFixed(2)} at ${deg(turns(w))}. Press run.`
+                ? L("z is {{z}}, length {{rz}} at {{az}}. w is {{w}}, length {{rw}} at {{aw}}. Press run.", { z: show(z), rz: abs(z).toFixed(2), az: deg(turns(z)), w: show(w), rw: abs(w).toFixed(2), aw: deg(turns(w)) })
                 : f < 0.5
-                  ? `Turning z by w's angle, ${deg(turns(w))}: ${(turnPart * 100).toFixed(0)} per cent of the way. The length has not changed yet.`
+                  ? L("Turning z by w's angle, {{aw}}: {{p}} per cent of the way. The length has not changed yet.", { aw: deg(turns(w)), p: (turnPart * 100).toFixed(0) })
                   : f < 1
-                    ? `Turned. Now stretching by w's length, ${abs(w).toFixed(2)}: the arrow is ${lengthNow.toFixed(2)} long.`
-                    : `z times w is ${show(product)}: length ${abs(z).toFixed(2)} times ${abs(w).toFixed(2)} = ${abs(product).toFixed(2)}, angle ${deg(turns(z))} plus ${deg(turns(w))} = ${deg(turns(product) < turns(z) + turns(w) - 0.5 ? turns(product) + 1 : turns(product))}. Multiplying out the brackets gives the same numbers: ${z[0]}·${w[0]} - ${z[1]}·${w[1]} along, ${z[0]}·${w[1]} + ${z[1]}·${w[0]} up.`}
+                    ? L("Turned. Now stretching by w's length, {{rw}}: the arrow is {{now}} long.", { rw: abs(w).toFixed(2), now: lengthNow.toFixed(2) })
+                    : L("z times w is {{p}}: length {{rz}} times {{rw}} = {{rp}}, angle {{az}} plus {{aw}} = {{ap}}. Multiplying out the brackets gives the same numbers: {{re}} along, {{im}} up.", {
+                        p: show(product),
+                        rz: abs(z).toFixed(2),
+                        rw: abs(w).toFixed(2),
+                        rp: abs(product).toFixed(2),
+                        az: deg(turns(z)),
+                        aw: deg(turns(w)),
+                        ap: deg(turns(product) < turns(z) + turns(w) - 0.5 ? turns(product) + 1 : turns(product)),
+                        re: `${z[0]}·${w[0]} - ${z[1]}·${w[1]}`,
+                        im: `${z[0]}·${w[1]} + ${z[1]}·${w[0]}`,
+                      })}
             </Verdict>
             <Readout
               rows={[
-                ["z: length, angle", `${abs(z).toFixed(3)}, ${deg(turns(z))}`],
-                ["w: length, angle", `${abs(w).toFixed(3)}, ${deg(turns(w))}`],
-                ["Product: length, angle", `${abs(product).toFixed(3)}, ${deg(turns(product))}`],
-                ["Lengths multiplied", (abs(z) * abs(w)).toFixed(3)],
-                ["Angles added", deg((turns(z) + turns(w)) % 1)],
-                ["The four terms", `(${z[0]}·${w[0]} - ${z[1]}·${w[1]}) + (${z[0]}·${w[1]} + ${z[1]}·${w[0]})i = ${show(product)}`],
+                [L("z: length, angle"), `${abs(z).toFixed(3)}, ${deg(turns(z))}`],
+                [L("w: length, angle"), `${abs(w).toFixed(3)}, ${deg(turns(w))}`],
+                [L("Product: length, angle"), `${abs(product).toFixed(3)}, ${deg(turns(product))}`],
+                [L("Lengths multiplied"), (abs(z) * abs(w)).toFixed(3)],
+                [L("Angles added"), deg((turns(z) + turns(w)) % 1)],
+                [L("The four terms"), `(${z[0]}·${w[0]} - ${z[1]}·${w[1]}) + (${z[0]}·${w[1]} + ${z[1]}·${w[0]})i = ${show(product)}`],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              The minus in the along part comes from 𝑖 times 𝑖 being minus one. That one fact,
-              multiplied out, is the whole turn-and-stretch picture. Squaring is multiplying a number
-              by itself: the angle doubles and the length squares, which is the next page.
+              {L("The minus in the along part comes from 𝑖 times 𝑖 being minus one. That one fact, multiplied out, is the whole turn-and-stretch picture. Squaring is multiplying a number by itself: the angle doubles and the length squares, which is the next page.")}
             </Text>
           </div>
         }

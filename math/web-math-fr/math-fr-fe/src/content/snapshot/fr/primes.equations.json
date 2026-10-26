@@ -1,0 +1,50 @@
+{
+ "systems": [
+  {
+   "id": "gaps",
+   "name": "Les écarts entre nombres premiers, comme application de premier retour",
+   "summary": "Chaque écart entre nombres premiers consécutifs porté en fonction du suivant, comme les traversées d'un flot chaotique, à côté d'une application qui a vraiment une règle. Un nuage face à une courbe",
+   "blocks": [
+    {
+     "label": "Les écarts",
+     "tex": "g_n = p_{n+1} - p_n",
+     "note": "Les nombres premiers sont trouvés par un crible, les écarts lus à partir d'eux. Tout écart après le premier est pair"
+    },
+    {
+     "label": "L'application de premier retour",
+     "tex": "(g_n,\\ g_{n+1})",
+     "note": "La même image que la page sur Rössler construit à partir d'un flot. Une règle apparaît comme une courbe ; les écarts apparaissent comme un nuage sur une grille de nombres pairs"
+    },
+    {
+     "label": "À quel point l'écart suivant est prévisible",
+     "tex": "\\rho = \\frac{\\mathbb{E}\\big[\\operatorname{sd}(g_{n+1} \\mid g_n)\\big]}{\\operatorname{sd}(g_{n+1})}",
+     "note": "La dispersion de l'écart suivant une fois celui-ci connu, divisée par la dispersion sans rien connaître. Une règle donne zéro ; les nombres premiers donnent un nombre proche de un, comme les écarts mélangés"
+    },
+    {
+     "label": "La taille des écarts",
+     "tex": "\\bar{g} \\approx \\ln p",
+     "note": "L'écart moyen près de p vaut environ le logarithme de p : le théorème des nombres premiers lu comme un espacement. La forme de l'histogramme en découle, et de presque rien d'autre"
+    }
+   ],
+   "dimension": {
+    "label": "Ce que le chaos n'est pas",
+    "tex": "\\text{no rule} \\neq \\text{a rule that is sensitive}",
+    "note": "Une suite chaotique a une règle et un exposant positif ; deux départs séparés d'un cheveu suivent la règle et s'écartent. Les nombres premiers n'ont aucune règle à suivre, et l'application de premier retour permet de distinguer les deux"
+   }
+  }
+ ],
+ "definitions": [
+  {
+   "id": "sieve",
+   "name": "Le crible",
+   "tex": "\\text{strike every multiple of each prime up to } \\sqrt{N}",
+   "note": "La façon dont les nombres premiers de la page sont trouvés : rien n'est deviné, et rien n'est pris dans une table"
+  },
+  {
+   "id": "returnmap",
+   "name": "Une application de premier retour",
+   "tex": "x_n \\mapsto x_{n+1}",
+   "note": "Chaque valeur en fonction de celle qui la suit. Pour une règle déterministe, les points se placent sur le graphe de cette règle ; c'est le test que la page applique"
+  }
+ ]
+}

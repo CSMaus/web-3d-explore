@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { L } from "@/lib/lang";
 import { Label, Text, Heading } from "@kit/index";
 import { useRef, useState } from "react";
 import { Equations } from "@/components/Equations";
@@ -32,14 +33,14 @@ function JuliaPage() {
 
   return (
     <div>
-      <Heading level={1} className="mt-4">{system?.name ?? "Julia sets"}</Heading>
+      <Heading level={1} className="mt-4">{system?.name ?? L("Julia sets")}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
         <div className="space-y-4">
           <section data-slot="panel">
-            <Label>CONSTANT C</Label>
+            <Label>{L("CONSTANT C")}</Label>
             <div className="mt-3 space-y-2">
-              <Slider label="c real" min={-2} max={1} step={0.002} value={cx} onChange={setCx} />
-              <Slider label="c imaginary" min={-1.5} max={1.5} step={0.002} value={cy} onChange={setCy} />
+              <Slider label={L("c real")} min={-2} max={1} step={0.002} value={cx} onChange={setCx} />
+              <Slider label={L("c imaginary")} min={-1.5} max={1.5} step={0.002} value={cy} onChange={setCy} />
             </div>
             <div className="mt-3 overflow-hidden rounded border border-selected/40">
               <div className="relative h-[190px] w-full">
@@ -70,23 +71,21 @@ function JuliaPage() {
               </div>
             </div>
             <Text kind="note" as="p" className="mt-2">
-              The small map is the Mandelbrot set - click it to put c anywhere. Inside it the Julia
-              set holds together in one piece, outside it breaks into dust.
+              {L("The small map is the Mandelbrot set - click it to put c anywhere. Inside it the Julia set holds together in one piece, outside it breaks into dust.")}
             </Text>
           </section>
 
           <section data-slot="panel">
-            <Label>VIEW</Label>
+            <Label>{L("VIEW")}</Label>
             <div className="mt-3 space-y-2">
-              <Slider label="Zoom" min={0} max={10} step={0.05} value={zoom} format={(v) => `x${Math.pow(2, v).toFixed(v > 6 ? 0 : 2)}`} onChange={setZoom} />
-              <Slider label="Max steps" min={30} max={500} step={10} value={iters} format={(v) => String(Math.round(v))} onChange={(v) => setIters(Math.round(v))} />
-              <Slider label="Escape radius" min={2} max={6} step={0.1} value={radius} format={(v) => v.toFixed(1)} onChange={setRadius} />
-              <Slider label="Colour offset" min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={setShift} />
+              <Slider label={L("Zoom")} min={0} max={10} step={0.05} value={zoom} format={(v) => `x${Math.pow(2, v).toFixed(v > 6 ? 0 : 2)}`} onChange={setZoom} />
+              <Slider label={L("Max steps")} min={30} max={500} step={10} value={iters} format={(v) => String(Math.round(v))} onChange={(v) => setIters(Math.round(v))} />
+              <Slider label={L("Escape radius")} min={2} max={6} step={0.1} value={radius} format={(v) => v.toFixed(1)} onChange={setRadius} />
+              <Slider label={L("Colour offset")} min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={setShift} />
               <PaletteBar />
             </div>
             <Text kind="note" as="p" className="mt-3">
-              Click the big picture to centre it there. The colour of a point outside is how many
-              steps it took to pass the escape distance.
+              {L("Click the big picture to centre it there. The colour of a point outside is how many steps it took to pass the escape distance.")}
             </Text>
           </section>
 
@@ -114,9 +113,9 @@ function JuliaPage() {
           <Readout
             rows={[
               ["c", `${cx.toFixed(3)} ${cy < 0 ? "-" : "+"} ${Math.abs(cy).toFixed(3)}i`],
-              ["Half width", span.toFixed(6)],
-              ["centre", `${centre[0].toFixed(4)}, ${centre[1].toFixed(4)}`],
-              ["Steps tried", String(iters)],
+              [L("Half width"), span.toFixed(6)],
+              [L("centre"), `${centre[0].toFixed(4)}, ${centre[1].toFixed(4)}`],
+              [L("Steps tried"), String(iters)],
             ]}
           />
         </div>

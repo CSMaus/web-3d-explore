@@ -11,6 +11,7 @@ import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/complex";
+import { L } from "@/lib/lang";
 import { INK, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { show, spin } from "@/systems/complex";
@@ -45,14 +46,13 @@ function RoundPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "Euler's formula"}
-        job="Topic 3 had a curve that grows by a fixed fraction of itself: the exponential. Give it an imaginary rate and it cannot grow, because its rate of change is its position turned a quarter, always sideways and never outward. So it goes round the unit circle at a steady pace. The job is to run the angle and watch the point go round, with its two shadows drawn as waves beside it."
+        title={system?.name ?? L("Euler's formula")}
+        job={L("Topic 3 had a curve that grows by a fixed fraction of itself: the exponential. Give it an imaginary rate and it cannot grow, because its rate of change is its position turned a quarter, always sideways and never outward. So it goes round the unit circle at a steady pace. The job is to run the angle and watch the point go round, with its two shadows drawn as waves beside it.")}
         input={
           <div className="space-y-3">
-            <Slider label="Turns" min={0.5} max={3} step={0.5} value={turnsTotal} format={(v) => `${v} turn${v === 1 ? "" : "s"}`} onChange={(v) => { setTurnsTotal(v); reset(); }} />
+            <Slider label={L("Turns")} min={0.5} max={3} step={0.5} value={turnsTotal} format={(v) => (v === 1 ? L("{{v}} turn", { v }) : L("{{v}} turns", { v }))} onChange={(v) => { setTurnsTotal(v); reset(); }} />
             <Text kind="note" as="p">
-              The angle is in radians: a full turn is two pi, about 6.28. Half a turn, pi, lands on
-              minus one, and the page pauses to say so.
+              {L("The angle is in radians: a full turn is two pi, about 6.28. Half a turn, pi, lands on minus one, and the page pauses to say so.")}
             </Text>
           </div>
         }
@@ -61,7 +61,7 @@ function RoundPage() {
             running={runner.running}
             count={Math.round(theta * 100) / 100}
             limit={Math.round(turnsTotal * 2 * Math.PI * 100) / 100}
-            what="radians"
+            what={L("radians")}
             onToggle={() => {
               if (!runner.running && at >= TICKS) reset();
               runner.toggle();
@@ -98,7 +98,7 @@ function RoundPage() {
                   }}
                 />
               </div>
-              <Caption>The unit circle. White: e to the 𝑖 theta at the angle so far. Sky: its shadow on the along axis, the cosine. Rose: its shadow on the up axis, the sine.</Caption>
+              <Caption>{L("The unit circle. White: e to the 𝑖 theta at the angle so far. Sky: its shadow on the along axis, the cosine. Rose: its shadow on the up axis, the sine.")}</Caption>
             </div>
             <div>
               <div data-slot="plot" className="h-[320px] overflow-hidden">
@@ -124,7 +124,7 @@ function RoundPage() {
                   }}
                 />
               </div>
-              <Caption>The two shadows against the angle, in units of pi. Sky: the cosine. Rose: the sine. The faint line is at pi, half a turn.</Caption>
+              <Caption>{L("The two shadows against the angle, in units of pi. Sky: the cosine. Rose: the sine. The faint line is at pi, half a turn.")}</Caption>
             </div>
           </section>
         }
@@ -132,25 +132,23 @@ function RoundPage() {
           <div className="space-y-2">
             <Verdict good={nearPi ? true : undefined}>
               {at === 0
-                ? "The angle is zero and the point is at 1. Press run and the angle grows at a steady rate."
+                ? L("The angle is zero and the point is at 1. Press run and the angle grows at a steady rate.")
                 : nearPi
-                  ? `The angle is pi, half a turn, and the point is at ${show(z)}: minus one. That is the famous line, e to the 𝑖 pi equals minus one, and it says nothing more than that half a turn lands opposite where it started.`
-                  : `At angle ${theta.toFixed(2)} the point is at ${show(z)}: cosine ${z[0].toFixed(3)} along, sine ${z[1].toFixed(3)} up, length exactly one. The rate of change points sideways, so the point neither grows nor shrinks; it goes round.`}
+                  ? L("The angle is pi, half a turn, and the point is at {{z}}: minus one. That is the famous line, e to the 𝑖 pi equals minus one, and it says nothing more than that half a turn lands opposite where it started.", { z: show(z) })
+                  : L("At angle {{a}} the point is at {{z}}: cosine {{c}} along, sine {{s}} up, length exactly one. The rate of change points sideways, so the point neither grows nor shrinks; it goes round.", { a: theta.toFixed(2), z: show(z), c: z[0].toFixed(3), s: z[1].toFixed(3) })}
             </Verdict>
             <Readout
               rows={[
-                ["Angle, radians", theta.toFixed(4)],
-                ["Angle, turns", (theta / (2 * Math.PI)).toFixed(4)],
-                ["e to the 𝑖 theta", show(z, 4)],
-                ["Cosine, the along shadow", z[0].toFixed(4)],
-                ["Sine, the up shadow", z[1].toFixed(4)],
-                ["Length, always", Math.hypot(z[0], z[1]).toFixed(6)],
+                [L("Angle, radians"), theta.toFixed(4)],
+                [L("Angle, turns"), (theta / (2 * Math.PI)).toFixed(4)],
+                [L("e to the 𝑖 theta"), show(z, 4)],
+                [L("Cosine, the along shadow"), z[0].toFixed(4)],
+                [L("Sine, the up shadow"), z[1].toFixed(4)],
+                [L("Length, always"), Math.hypot(z[0], z[1]).toFixed(6)],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              Multiplying by e to the 𝑖 theta is a turn by theta with no stretch: the last two pages,
-              written as one formula. The position vectors of topic 4 are this at many speeds at
-              once, and the swing on topic 2's phase plane is the along shadow of exactly this motion.
+              {L("Multiplying by e to the 𝑖 theta is a turn by theta with no stretch: the last two pages, written as one formula. The position vectors of topic 4 are this at many speeds at once, and the swing on topic 2's phase plane is the along shadow of exactly this motion.")}
             </Text>
           </div>
         }

@@ -19,6 +19,7 @@ import { TOPIC } from "@/lib/tokens";
 import { encode } from "@/systems/bpe";
 import { rng } from "@/systems/net";
 import { Input } from "@kit/index";
+import { L } from "@/lib/lang";
 
 export const Route = createFileRoute("/topics/tokens/play/table")({
   loader: () => api.system(TOPIC, "table"),
@@ -26,13 +27,13 @@ export const Route = createFileRoute("/topics/tokens/play/table")({
 });
 
 const INPUTS = [
-  { id: "short", label: "3 tokens", text: "the cat sleeps" },
-  { id: "mid", label: "7 tokens", text: "the cat sleeps on the warm mat" },
-  { id: "long", label: "12 tokens", text: "the cat sleeps on the warm mat by the window all day" },
+  { id: "short", label: L("{{n}} tokens", { n: 3 }), text: "the cat sleeps" },
+  { id: "mid", label: L("{{n}} tokens", { n: 7 }), text: "the cat sleeps on the warm mat" },
+  { id: "long", label: L("{{n}} tokens", { n: 12 }), text: "the cat sleeps on the warm mat by the window all day" },
 ];
 const SOURCES = [
-  { id: "noise", label: "Before training: noise" },
-  { id: "trained", label: "After training" },
+  { id: "noise", label: L("Before training: noise") },
+  { id: "trained", label: L("After training") },
 ];
 
 /** a value between about -1 and 1 as a colour, rose below zero and green above. */
@@ -73,21 +74,19 @@ function TablePage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? "From a number to a vector"}
-        job="The model receives integers, and an integer is not something a layer can multiply usefully: token 271 is not more than token 40 in any sense. The job is to turn each id into a list of numbers a network can work with. One honest way, one cheap way, and the discovery that they are the same."
+        title={system?.name ?? L("From a number to a vector")}
+        job={L("The model receives integers, and an integer is not something a layer can multiply usefully: token 271 is not more than token 40 in any sense. The job is to turn each id into a list of numbers a network can work with. One honest way, one cheap way, and the discovery that they are the same.")}
         input={
           <div className="space-y-3">
             <Choices options={INPUTS} value={which} onPick={(id) => { setWhich(id); setText(INPUTS.find((i) => i.id === id)!.text); reset(); }} />
             <label className="block">
-              <span data-text="note">Or type</span>
+              <span data-text="note">{L("Or type")}</span>
               <Input value={text} onChange={(e) => { setText(e.target.value); setWhich(""); reset(); }} className="mt-1" />
             </label>
-            <Slider label="Width" min={2} max={16} step={1} value={width} format={(v) => `${Math.round(v)} numbers`} onChange={(v) => { setWidth(Math.round(v)); reset(); }} />
+            <Slider label={L("Width")} min={2} max={16} step={1} value={width} format={(v) => L("{{n}} numbers", { n: Math.round(v) })} onChange={(v) => { setWidth(Math.round(v)); reset(); }} />
             <Choices options={SOURCES} value={source} onPick={setSource} />
             <Text kind="note" as="p">
-              The width is a constant of the architecture, chosen once. The table's rows start as
-              random numbers that mean nothing; the trained rows are the shared model's, once the
-              later pages have trained it.
+              {L("The width is a constant of the architecture, chosen once. The table's rows start as random numbers that mean nothing; the trained rows are the shared model's, once the later pages have trained it.")}
             </Text>
           </div>
         }
@@ -95,7 +94,7 @@ function TablePage() {
           <RunBar
             running={runner.running}
             count={at}
-            what="tokens looked up"
+            what={L("tokens looked up")}
             limit={tokens.length}
             onToggle={() => {
               if (!runner.running && at >= tokens.length) reset();
@@ -127,11 +126,11 @@ function TablePage() {
                   const top = 40;
                   const hotX = 90;
                   ctx.fillStyle = MUTED;
-                  ctx.fillText("One-hot", 60, 16);
-                  ctx.fillText(`${V} long`, 60, 28);
+                  ctx.fillText(L("One-hot"), 60, 16);
+                  ctx.fillText(L("{{n}} long", { n: V }), 60, 28);
                   const tableX = 130;
                   const cw = Math.min(16, (W * 0.45 - tableX) / width);
-                  ctx.fillText(`${(V * width).toLocaleString("en")} numbers`, tableX, 28);
+                  ctx.fillText(L("{{n}} numbers", { n: (V * width).toLocaleString("en") }), tableX, 28);
                   const hotRow = current ? rowOf(current.id) : -1;
                   rows.forEach((id, r) => {
                     const y = top + r * cell;
@@ -193,34 +192,30 @@ function TablePage() {
                   }
                 }}
               />
-            </div><Caption>{`The table: ${V} rows by ${width}`}. {`What the network receives: ${at} rows, ${width} wide`}. One row a token, in order. Only the row count changes with the input.</Caption></div>
+            </div><Caption>{L("The table: {{rows}} rows by {{width}}. What the network receives: {{at}} rows, {{width}} wide. One row a token, in order. Only the row count changes with the input.", { rows: V, width, at })}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict>
               {at === 0
-                ? `${tokens.length} tokens are waiting. Press run: each id becomes a vector ${width} wide by picking one row of the table.`
-                : `Token ${at}, ${visible(current!.text)}, id ${current!.id}: as a one-hot vector it is ${V} zeros with a single one at position ${current!.id}. Multiplying that by the table selects row ${current!.id} and nothing else, so the lookup is that multiplication, done cheaply. The network now holds ${at} rows of ${width} numbers.${at === tokens.length ? ` A longer input would add rows; nothing could make a row wider.` : ""}`}
+                ? L("{{n}} tokens are waiting. Press run: each id becomes a vector {{width}} wide by picking one row of the table.", { n: tokens.length, width })
+                : `${L("Token {{at}}, {{token}}, id {{id}}: as a one-hot vector it is {{size}} zeros with a single one at position {{id}}. Multiplying that by the table selects row {{id}} and nothing else, so the lookup is that multiplication, done cheaply. The network now holds {{at}} rows of {{width}} numbers.", { at, token: visible(current!.text), id: current!.id, size: V, width })}${at === tokens.length ? ` ${L("A longer input would add rows; nothing could make a row wider.")}` : ""}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>Vocabulary size, so one-hot length and table rows</dt>
+              <dt>{L("Vocabulary size, so one-hot length and table rows")}</dt>
               <dd className="text-right text-foreground/80">{V}</dd>
-              <dt>Width, chosen once</dt>
+              <dt>{L("Width, chosen once")}</dt>
               <dd className="text-right text-foreground/80">{width}</dd>
-              <dt>Numbers in the table, all of them trainable</dt>
+              <dt>{L("Numbers in the table, all of them trainable")}</dt>
               <dd className="text-right text-foreground/80">{(V * width).toLocaleString("en")}</dd>
-              <dt>Distance between any two distinct one-hot vectors</dt>
-              <dd className="text-right text-foreground/80">{Math.SQRT2.toFixed(4)}, Always</dd>
-              <dt>The input's shape</dt>
-              <dd className="text-right text-foreground/80">{tokens.length} by {width}</dd>
+              <dt>{L("Distance between any two distinct one-hot vectors")}</dt>
+              <dd className="text-right text-foreground/80">{Math.SQRT2.toFixed(4)}, {L("Always")}</dd>
+              <dt>{L("The input's shape")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{rows}} by {{width}}", { rows: tokens.length, width })}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              Every pair of one-hot vectors is exactly as far apart as every other, so that form
-              carries the identity of a token and nothing more. The table's rows can be anywhere,
-              and where training puts them is the next page. The question of why a token's vector
-              has a fixed length is answered here: the width is a constant and the lookup is by id,
-              so nothing about one vector depends on the sentence around it or how long it is.
+              {L("Every pair of one-hot vectors is exactly as far apart as every other, so that form carries the identity of a token and nothing more. The table's rows can be anywhere, and where training puts them is the next page. The question of why a token's vector has a fixed length is answered here: the width is a constant and the lookup is by id, so nothing about one vector depends on the sentence around it or how long it is.")}
             </Text>
           </div>
         }
