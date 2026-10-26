@@ -356,9 +356,9 @@ export type Fractal = {
   lightOpacity?: number;
   /** how much the lines differ in opacity, 0 to 1: 0 all alike; 1 the faintest of them invisible */
   vary: number;
-  /** how far the lines drift in opacity over time, 0 to 1: 0 still; 1 down to nothing and back */
+  /** how far apart the six layers of lines sit in opacity, 0 to 1: 0 all at full; 1 the last layer invisible. the layers hold still (moving ones made Chrome drop parts of the page) */
   drift: number;
-  /** about how long one drift down and back takes, in seconds; each layer of lines a little faster or slower */
+  /** no longer used: the layers do not move; kept so the cases' scripts stay valid */
   driftTime: number;
   /** the distance between two waves that sweep out from the top-right corner, showing the fractal as they pass and hiding it after, in px; 0 for no waves */
   wave: number;

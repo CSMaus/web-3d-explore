@@ -944,12 +944,10 @@ a[data-tile]:is(:hover, :focus-visible) [data-slot="edge-figure"] :is(.edge-core
 @keyframes fractal-wave { from { --fractal-wave: 0px; } to { --fractal-wave: 1600px; } }
 @media (prefers-reduced-motion: reduce) { [data-slot="fractal"] { animation: none; mask-image: none; -webkit-mask-image: none; } }
 html[data-scrolling] [data-slot="fractal"] { animation-play-state: paused; }
-[data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; animation: fractal-drift var(--drift-time) ease-in-out var(--drift-delay) infinite alternate; }
-@keyframes fractal-drift { from { opacity: 1; } to { opacity: 0.40; } }
-@media (prefers-reduced-motion: reduce) { [data-slot="fractal-layer"] { animation: none; } }
+[data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; }
 [data-slot="fractal"] path { fill: none; stroke: currentColor; stroke-width: 1px; stroke-linecap: round; stroke-linejoin: round; }
 [data-slot="fractal"] path { animation: fractal-in 900ms ease-out backwards; }
-@keyframes fractal-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fractal-in { from { stroke-opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { [data-slot="fractal"] path { animation: none; } }
 
 [data-slot="screens"] { display: block; }
@@ -964,4 +962,4 @@ a[data-slot="link"] { color: var(--c-link); text-decoration: none; } a[data-slot
   0%, 100% { opacity: 0.55; }
   50% { opacity: 1; }
 }
-[data-slot], [data-slot]::after { animation-name: travel, none !important; }
+[data-slot="topbar-link"]::after { animation: none !important; }

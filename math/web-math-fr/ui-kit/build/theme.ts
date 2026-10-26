@@ -1190,6 +1190,9 @@ function motion(t: Theme): string {
     underline: `a[data-slot="link"] { color: ${v("foreground")}; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: ${v("link")}; }`,
     colour: `a[data-slot="link"] { color: ${v("link")}; text-decoration: none; } a[data-slot="link"]:hover { text-decoration: underline; }`,
   };
+  // with breathing off only the bar's marker has to lose it: the figures' lights leave it out
+  // where they are written. a rule over every element would replace every other animation (the
+  // background's drift and wave) with the figures' walk, and the background's lines would blink.
   return `
 ${t.motion.rise ? "" : ".rise { opacity: 1 !important; transform: none !important; transition: none !important; }"}
 ${t.motion.transitions ? "" : "*, *::before, *::after { transition: none !important; }"}
@@ -1201,7 +1204,7 @@ ${links[t.motion.links]}
   0%, 100% { opacity: 0.55; }
   50% { opacity: 1; }
 }
-${t.motion.breathe.on ? "" : "[data-slot], [data-slot]::after { animation-name: travel, none !important; }"}`;
+${t.motion.breathe.on ? "" : '[data-slot="topbar-link"]::after { animation: none !important; }'}`;
 }
 
 /** the rail beside a topic: sticky under the bar, sections as a list, the open section's pages under it. */
@@ -1263,6 +1266,9 @@ const clearPressed = (t: Theme) => t.buttons.plain.pressed.fill === "transparent
  */
 function fractal(t: Theme): string {
   const f = t.fractal;
+  // a new line fades in by its stroke's opacity up to its own level, never by its opacity: an
+  // opacity that moves makes the browser lift each fading line into a texture the size of the
+  // page, and with lines added all the time Chrome ran out of room and dropped parts of the page
   return `
 [data-slot="fractal"] { position: absolute; top: 0; left: 0; z-index: 0; pointer-events: none; overflow: hidden; color: ${swatch(f.colour)}; opacity: ${f.on ? f.opacity : 0}; }
 ${f.on && f.lightOpacity !== undefined ? `html[data-mode="light"] [data-slot="fractal"] { opacity: ${f.lightOpacity}; }` : ""}
@@ -1271,12 +1277,10 @@ ${f.wave > 0 ? `@property --fractal-wave { syntax: "<length>"; inherits: false; 
 @keyframes fractal-wave { from { --fractal-wave: 0px; } to { --fractal-wave: ${f.wave}px; } }
 @media (prefers-reduced-motion: reduce) { [data-slot="fractal"] { animation: none; mask-image: none; -webkit-mask-image: none; } }
 html[data-scrolling] [data-slot="fractal"] { animation-play-state: paused; }
-` : ""}[data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; ${f.drift > 0 ? `animation: fractal-drift var(--drift-time) ease-in-out var(--drift-delay) infinite alternate;` : ""} }
-@keyframes fractal-drift { from { opacity: 1; } to { opacity: ${(1 - f.drift).toFixed(2)}; } }
-@media (prefers-reduced-motion: reduce) { [data-slot="fractal-layer"] { animation: none; } }
+` : ""}[data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; }
 [data-slot="fractal"] path { fill: none; stroke: currentColor; stroke-width: ${px(f.stroke)}; stroke-linecap: round; stroke-linejoin: round; }
 ${f.fade > 0 ? `[data-slot="fractal"] path { animation: fractal-in ${f.fade}ms ease-out backwards; }
-@keyframes fractal-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fractal-in { from { stroke-opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { [data-slot="fractal"] path { animation: none; } }
 ` : ""}`;
 }

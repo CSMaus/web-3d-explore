@@ -26,11 +26,11 @@ export const fractal = defineFractal({
   // than others (a stretch of the flowsnake, or a whole branch, keeps one)
   vary: 0.7,
 
-  // how far the lines drift in opacity over time, 0 to 1: 0 = still; higher = some lines slowly
-  // fade and come back while others brighten
+  // how far apart the six layers of lines sit in opacity, 0 to 1: 0 = all at full; higher = some
+  // layers fainter than others. the layers hold still
   drift: 0.6,
 
-  // about how long one drift down and back takes, in seconds: higher = slower, smoother
+  // no longer used: the layers do not move (moving ones made Chrome drop parts of the page)
   driftTime: 14,
 
   // waves that sweep out from the top-right corner: the fractal fades in as a wave arrives and

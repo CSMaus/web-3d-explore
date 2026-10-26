@@ -839,14 +839,10 @@ html:where([data-case="base"], :not([data-case])), :where(html[data-case="base"]
 :where(html[data-case="base"], html:not([data-case])) [data-slot="fractal"] { animation: none; mask-image: none; -webkit-mask-image: none; }
 }
 html:where([data-case="base"], :not([data-case]))[data-scrolling] [data-slot="fractal"] { animation-play-state: paused; }
-:where(html[data-case="base"], html:not([data-case])) [data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; animation: fractal-drift--base var(--drift-time) ease-in-out var(--drift-delay) infinite alternate; }
-@keyframes fractal-drift--base { from { opacity: 1; } to { opacity: 0.40; } }
-@media (prefers-reduced-motion: reduce) {
-:where(html[data-case="base"], html:not([data-case])) [data-slot="fractal-layer"] { animation: none; }
-}
+:where(html[data-case="base"], html:not([data-case])) [data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; }
 :where(html[data-case="base"], html:not([data-case])) [data-slot="fractal"] path { fill: none; stroke: currentColor; stroke-width: 1px; stroke-linecap: round; stroke-linejoin: round; }
 :where(html[data-case="base"], html:not([data-case])) [data-slot="fractal"] path { animation: fractal-in--base 900ms ease-out backwards; }
-@keyframes fractal-in--base { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fractal-in--base { from { stroke-opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
 :where(html[data-case="base"], html:not([data-case])) [data-slot="fractal"] path { animation: none; }
 }
@@ -861,7 +857,7 @@ html:where([data-case="base"], :not([data-case]))[data-scrolling] [data-slot="fr
   0%, 100% { opacity: 0.55; }
   50% { opacity: 1; }
 }
-:where(html[data-case="base"], html:not([data-case])) [data-slot], :where(html[data-case="base"], html:not([data-case])) [data-slot]::after { animation-name: travel--base, none !important; }
+:where(html[data-case="base"], html:not([data-case])) [data-slot="topbar-link"]::after { animation: none !important; }
 
 /* edge_light */
 :root:where([data-case="edge_light"]) {
@@ -2065,14 +2061,10 @@ html:where([data-case="edge_light"])[data-mode="light"] [data-slot="fractal"] { 
 :where(html[data-case="edge_light"]) [data-slot="fractal"] { animation: none; mask-image: none; -webkit-mask-image: none; }
 }
 html:where([data-case="edge_light"])[data-scrolling] [data-slot="fractal"] { animation-play-state: paused; }
-:where(html[data-case="edge_light"]) [data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; animation: fractal-drift--edge_light var(--drift-time) ease-in-out var(--drift-delay) infinite alternate; }
-@keyframes fractal-drift--edge_light { from { opacity: 1; } to { opacity: 0.40; } }
-@media (prefers-reduced-motion: reduce) {
-:where(html[data-case="edge_light"]) [data-slot="fractal-layer"] { animation: none; }
-}
+:where(html[data-case="edge_light"]) [data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; }
 :where(html[data-case="edge_light"]) [data-slot="fractal"] path { fill: none; stroke: currentColor; stroke-width: 1px; stroke-linecap: round; stroke-linejoin: round; }
 :where(html[data-case="edge_light"]) [data-slot="fractal"] path { animation: fractal-in--edge_light 900ms ease-out backwards; }
-@keyframes fractal-in--edge_light { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fractal-in--edge_light { from { stroke-opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
 :where(html[data-case="edge_light"]) [data-slot="fractal"] path { animation: none; }
 }
@@ -3224,14 +3216,10 @@ html:where([data-case="old_code"])[data-mode="light"] [data-slot="fractal"] { op
 :where(html[data-case="old_code"]) [data-slot="fractal"] { animation: none; mask-image: none; -webkit-mask-image: none; }
 }
 html:where([data-case="old_code"])[data-scrolling] [data-slot="fractal"] { animation-play-state: paused; }
-:where(html[data-case="old_code"]) [data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; animation: fractal-drift--old_code var(--drift-time) ease-in-out var(--drift-delay) infinite alternate; }
-@keyframes fractal-drift--old_code { from { opacity: 1; } to { opacity: 0.40; } }
-@media (prefers-reduced-motion: reduce) {
-:where(html[data-case="old_code"]) [data-slot="fractal-layer"] { animation: none; }
-}
+:where(html[data-case="old_code"]) [data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; }
 :where(html[data-case="old_code"]) [data-slot="fractal"] path { fill: none; stroke: currentColor; stroke-width: 1px; stroke-linecap: round; stroke-linejoin: round; }
 :where(html[data-case="old_code"]) [data-slot="fractal"] path { animation: fractal-in--old_code 900ms ease-out backwards; }
-@keyframes fractal-in--old_code { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fractal-in--old_code { from { stroke-opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
 :where(html[data-case="old_code"]) [data-slot="fractal"] path { animation: none; }
 }
@@ -4189,14 +4177,10 @@ html:where([data-case="pixel_art_cute"]), :where(html[data-case="pixel_art_cute"
 :where(html[data-case="pixel_art_cute"]) [data-slot="fractal"] { animation: none; mask-image: none; -webkit-mask-image: none; }
 }
 html:where([data-case="pixel_art_cute"])[data-scrolling] [data-slot="fractal"] { animation-play-state: paused; }
-:where(html[data-case="pixel_art_cute"]) [data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; animation: fractal-drift--pixel_art_cute var(--drift-time) ease-in-out var(--drift-delay) infinite alternate; }
-@keyframes fractal-drift--pixel_art_cute { from { opacity: 1; } to { opacity: 0.40; } }
-@media (prefers-reduced-motion: reduce) {
-:where(html[data-case="pixel_art_cute"]) [data-slot="fractal-layer"] { animation: none; }
-}
+:where(html[data-case="pixel_art_cute"]) [data-slot="fractal-layer"] { position: absolute; top: 0; left: 0; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="fractal"] path { fill: none; stroke: currentColor; stroke-width: 2px; stroke-linecap: round; stroke-linejoin: round; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="fractal"] path { animation: fractal-in--pixel_art_cute 900ms ease-out backwards; }
-@keyframes fractal-in--pixel_art_cute { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fractal-in--pixel_art_cute { from { stroke-opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
 :where(html[data-case="pixel_art_cute"]) [data-slot="fractal"] path { animation: none; }
 }
@@ -4212,4 +4196,4 @@ html:where([data-case="pixel_art_cute"])[data-scrolling] [data-slot="fractal"] {
   0%, 100% { opacity: 0.55; }
   50% { opacity: 1; }
 }
-:where(html[data-case="pixel_art_cute"]) [data-slot], :where(html[data-case="pixel_art_cute"]) [data-slot]::after { animation-name: travel--pixel_art_cute, none !important; }
+:where(html[data-case="pixel_art_cute"]) [data-slot="topbar-link"]::after { animation: none !important; }

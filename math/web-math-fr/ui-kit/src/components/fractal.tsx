@@ -16,7 +16,7 @@ const TIPS = 8;
 const SETTLE = 250;
 /** drawn points looked at when a stopped branch is replaced; the one nearest the top-right corner wins */
 const SAMPLES = 6;
-/** stacked layers the lines are spread over, each drifting in opacity on its own cycle */
+/** stacked layers the lines are spread over, each at its own opacity */
 const DRIFTS = 6;
 /** opacity levels the lines are spread over */
 const LEVELS = 4;
@@ -194,14 +194,15 @@ export function FractalBackground({ settings, of }: { settings: Fractal; of: Ref
     const box = host.current;
     const page = of.current;
     if (!box || !page || !settings.on) return;
-    // the stacked layers the lines are spread over; each breathes its opacity on its own slow cycle
-    const layers: SVGSVGElement[] = Array.from({ length: DRIFTS }, () => {
+    // the stacked layers the lines are spread over, each at an opacity of its own between full and
+    // `drift` below it. the opacities hold still: an opacity that moves makes the browser keep
+    // every layer as a texture the height of the whole page, and six of those are more than a
+    // graphics card keeps, so Chrome dropped parts of the page while scrolling
+    const layers: SVGSVGElement[] = Array.from({ length: DRIFTS }, (_, i) => {
       const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       s.setAttribute("data-slot", "fractal-layer");
       s.setAttribute("focusable", "false");
-      const cycle = settings.driftTime * (0.6 + Math.random() * 0.8);
-      s.style.setProperty("--drift-time", `${cycle.toFixed(1)}s`);
-      s.style.setProperty("--drift-delay", `${(-Math.random() * cycle).toFixed(1)}s`);
+      s.style.opacity = (1 - (settings.drift * i) / Math.max(1, DRIFTS - 1)).toFixed(2);
       box.appendChild(s);
       return s;
     });
