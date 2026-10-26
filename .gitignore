@@ -52,3 +52,4 @@ node_modules/
 # the full texts of the fractals clips as they stood before the brief descriptions, kept locally
 math/web-math-fr/docs/video-texts.md
 /math/01-fractals/narration
+math/tasks/snake.py

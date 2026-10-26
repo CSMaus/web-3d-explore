@@ -65,9 +65,9 @@ export const LANGUAGE_KEY = "mathfr_lang";
  * theme listed here must be in the kit's config/shipped.ts.
  */
 export const THEMES: { case: string; name: string; sign: "sun" | "prompt" | "flake" | "cat" }[] = [
+  { case: "base", name: "Cool", sign: "flake" },
   { case: "edge_light", name: "Warm", sign: "sun" },
   { case: "old_code", name: "Green", sign: "prompt" },
-  { case: "base", name: "Cool", sign: "flake" },
   { case: "pixel_art_cute", name: "Pixel", sign: "cat" },
 ];
 
