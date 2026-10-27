@@ -6,6 +6,7 @@ import { SYSTEMS as PRIMES_PAGES } from "@/lib/primes";
 import { SYSTEMS as FRACTAL_PAGES } from "@/lib/systems";
 import { SYSTEMS as TOKEN_PAGES } from "@/lib/tokens";
 import { BUILT } from "@/lib/topic";
+import { EDUCATION, NAME, PAPERS, REGISTERED, SUMMARY, WORK } from "@/content/about";
 import { PROJECTS } from "@/content/projects";
 import { USES } from "@/lib/uses";
 import { L } from "@/lib/lang";
@@ -39,6 +40,16 @@ const PAGES: Entry[] = [
   { to: "/account", title: L("Account"), place: L("Site"), text: "log in sign in create an account saved parameter sets" },
 ];
 
+/** the words of the about page itself: the name, the work, the education, the papers and the programs, so a search for any of them finds it */
+const ABOUT_TEXT = [
+  NAME,
+  SUMMARY,
+  ...WORK.flatMap((j) => [j.role, j.place, j.what ?? ""]),
+  ...EDUCATION.flatMap((e) => [e.degree, e.place]),
+  ...PAPERS.flatMap((p) => [p.title, p.authors, p.venue]),
+  ...REGISTERED.flatMap((r) => [r.english, r.title, r.authors, r.number]),
+].join(" ");
+
 const PLAY = [
   [L("Fractals"), FRACTAL_PAGES],
   [L("Differential equations, attractors and chaos"), CHAOS_PAGES],
@@ -49,7 +60,7 @@ const PLAY = [
 ] as const;
 
 function baseIndex(): Entry[] {
-  const out: Entry[] = [...PAGES];
+  const out: Entry[] = PAGES.map((p) => (p.to === "/about" ? { ...p, text: `${p.text} ${ABOUT_TEXT}` } : p));
   for (const topic of Object.values(BUILT)) {
     for (const section of topic.sections) {
       out.push({ to: section.to, title: `${topic.title}: ${section.label}`, place: L("Topic {{n}}", { n: topic.number }), text: `${topic.title} ${section.label}` });

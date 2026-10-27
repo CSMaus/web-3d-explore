@@ -1,210 +1,178 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Text } from "@kit/index";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
-import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
 import { Plot, type Box } from "@/components/Plot";
+import { lay, picture } from "@/components/projects/escape";
 import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/complex";
+import { EDGE, FAINT, GROUND, MUTED, ONE, SKY, TWO } from "@/lib/draw";
 import { L } from "@/lib/lang";
-import { INK, ONE, SKY, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
-import { abs, orbit, show, turns, type C } from "@/systems/complex";
+import { abs, show, type C } from "@/systems/complex";
 
 export const Route = createFileRoute("/topics/complex/play/square")({
   loader: () => api.system(TOPIC, "square"),
   component: SquarePage,
 });
 
-const BOX: Box = { x0: -2.4, x1: 2.4, y0: -2.4, y1: 2.4 };
+/**
+ * which values of c stay: start at zero, square and add c, again and again. the map is the
+ * Mandelbrot set, every c whose path stays; c travels round a loop that crosses its edge, the same
+ * motion as the fractals series figure "Which points stay?", and the path from zero is drawn for
+ * each c, staying near or running away. a click holds c where it lands.
+ */
+
+const BOX: Box = { x0: -2.3, x1: 0.9, y0: -1.4, y1: 1.4 };
 const MOST = 40;
-const SHIFTS = [
-  { id: "none", label: L("No shift: just square"), c: [0, 0] as C },
-  { id: "a", label: L("Shift by -0.5 + 0.5i"), c: [-0.5, 0.5] as C },
-  { id: "b", label: L("Shift by 0.3 + 0.5i"), c: [0.3, 0.5] as C },
-  { id: "c", label: L("Shift by -0.8 + 0.16i"), c: [-0.8, 0.16] as C },
-];
-const GRID = 44;
+const ROUND = 360;
+
+/** the loop c travels, the one of the series figure: it crosses the edge of the set four times */
+function onLoop(degrees: number): C {
+  const a = (degrees * Math.PI) / 180;
+  return [-0.45 + 0.42 * Math.cos(a), 0.5 * Math.sin(a)];
+}
+
+/** the path from zero under z to z squared plus c, and the step at which it left, if it did */
+function pathOf(c: C): { path: C[]; left: number | null } {
+  let z: C = [0, 0];
+  const path: C[] = [z];
+  for (let n = 1; n <= MOST; n++) {
+    z = [z[0] * z[0] - z[1] * z[1] + c[0], 2 * z[0] * z[1] + c[1]];
+    if (z[0] * z[0] + z[1] * z[1] > 4) return { path, left: n };
+    path.push(z);
+  }
+  return { path, left: null };
+}
+
+const round2 = (v: number) => Math.round(v * 100) / 100;
 
 function SquarePage() {
   const system = Route.useLoaderData();
   const stage = useRef<HTMLElement | null>(null);
-  const [start, setStart] = useState<C>([0.9, 0.35]);
-  const [shift, setShift] = useState("none");
-  const [tick, setTick] = useState(0);
-  const [perFrame, setPerFrame] = useState(0.15);
+  const [degrees, setDegrees] = useState(0);
+  const [held, setHeld] = useState<C | null>(null);
+  const [perFrame, setPerFrame] = useState(0.35);
+  const runner = useRunner((n) => setDegrees(n), { perFrame, stopAt: ROUND });
 
-  const c = SHIFTS.find((s) => s.id === shift)!.c;
-  const runner = useRunner((n) => setTick(n), { perFrame, stopAt: MOST });
-  const path = useMemo(() => orbit(start, c, MOST), [start, c]);
-  const n = Math.min(tick, path.path.length - 1);
-  const z = path.path[n];
-  // the picture of who stays: every start on a grid, coloured by how long it takes to leave
-  const field = useMemo(() => {
-    const out: number[] = [];
-    for (let j = 0; j < GRID; j++) {
-      for (let i = 0; i < GRID; i++) {
-        const x = BOX.x0 + ((i + 0.5) / GRID) * (BOX.x1 - BOX.x0);
-        const y = BOX.y1 - ((j + 0.5) / GRID) * (BOX.y1 - BOX.y0);
-        out.push(orbit([x, y], c, MOST).left ?? -1);
-      }
-    }
-    return out;
-  }, [c]);
-  // how many of the starts have left after the squarings done so far
-  const gone = useMemo(() => field.filter((t) => t > 0 && t <= n).length, [field, n]);
-  const share = Math.round((100 * gone) / field.length);
-  const reset = () => {
+  // the page opens moving, as the figure does, unless the reader asked for less motion
+  const { play } = runner;
+  useEffect(() => {
+    const still = typeof window !== "undefined" && Boolean(window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches);
+    if (!still) play();
+    // only on opening
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const c = held ?? onLoop(degrees);
+  const { path, left } = useMemo(() => pathOf(c), [c[0], c[1]]); // eslint-disable-line react-hooks/exhaustive-deps
+  const last = path[path.length - 1];
+  const stays = left === null;
+  const loop = useMemo(() => Array.from({ length: 121 }, (_, i) => onLoop((i / 120) * ROUND)), []);
+
+  const again = () => {
+    setHeld(null);
     runner.reset();
-    setTick(0);
+    setDegrees(0);
   };
-  const left = path.left;
 
   return (
-    <>
-      <TaskPage
-        title={system?.name ?? L("Julia set")}
-        job={L("Squaring a number multiplies it by itself: the angle doubles and the length squares. Do that again and again and one of three things happens: a start inside the unit circle falls to zero, a start outside runs off to infinity, a start on the circle stays on it. Then add a small shift after every squaring, and the line between falling and running stops being a circle. The job is to follow one start, and to watch every start at once: after each squaring the ones that have left are coloured, and what stays dark is the Julia set.")}
-        input={
-          <div className="space-y-3">
-            <Choices options={SHIFTS} value={shift} onPick={(id) => { setShift(id); reset(); }} />
-            <Text kind="note" as="p">
-              {L("Click anywhere to choose the start. Every start on the picture begins dark. Press run: each squaring is done to the chosen start and to every other start at once, and a start that has left is coloured, brighter the sooner it left. What is still dark after many squarings is the set of starts that never leave: a disc with no shift, a Julia set with one. The fractals topic draws these in full.")}
-            </Text>
-          </div>
-        }
-        run={
-          <RunBar
-            running={runner.running}
-            count={n}
-            limit={MOST}
-            what={L("squarings")}
-            onToggle={() => {
-              if (!runner.running && n >= path.path.length - 1) reset();
-              runner.toggle();
-            }}
-            onStep={(many) => setTick((v) => Math.min(MOST, v + many))}
-            onReset={reset}
-            perFrame={perFrame}
-            onSpeed={setPerFrame}
-            pace="slow"
-          />
-        }
-        picture={
-          <section ref={stage}>
-            <div data-slot="plot" className="h-[min(500px,calc(100vh-20rem))] overflow-hidden">
-              <Plot
-                className="h-full w-full"
-                box={BOX}
-                equal
-                deps={[field, path, n, start]}
-                onPick={(x, y) => {
-                  setStart([Math.round(x * 100) / 100, Math.round(y * 100) / 100]);
-                  reset();
-                }}
-                draw={(pen) => {
-                  const cw = pen.width / GRID;
-                  const ch = pen.height / GRID;
-                  const v = pen.box;
-                  for (let j = 0; j < GRID; j++) {
-                    for (let i = 0; i < GRID; i++) {
-                      const t = field[j * GRID + i];
-                      const x = BOX.x0 + (i / GRID) * (BOX.x1 - BOX.x0);
-                      const y = BOX.y1 - (j / GRID) * (BOX.y1 - BOX.y0);
-                      const px = pen.px(x);
-                      const py = pen.py(y);
-                      if (x < v.x0 - 1 || x > v.x1 + 1) continue;
-                      const left = t > 0 && t <= n;
-                      const shade = left ? Math.min(1, 0.25 + 0.75 * (1 - t / MOST)) : 0;
-                      pen.ctx.fillStyle = left ? `rgba(143,211,232,${(0.15 + 0.5 * shade).toFixed(3)})` : "#111a24";
-                      pen.ctx.fillRect(px, py, cw * (v.x1 - v.x0 > 0 ? (BOX.x1 - BOX.x0) / (v.x1 - v.x0) : 1) + 1, ch * ((BOX.y1 - BOX.y0) / (v.y1 - v.y0)) + 1);
-                    }
-                  }
-                  ticks(pen, { x: 1, y: 1 });
-                  pen.axes("#3a4048");
-                  const unit: [number, number][] = [];
-                  for (let i = 0; i <= 120; i++) unit.push([Math.cos((i / 120) * 2 * Math.PI), Math.sin((i / 120) * 2 * Math.PI)]);
-                  pen.line(unit, "#3a4a5c", 1);
-                  const escape: [number, number][] = [];
-                  for (let i = 0; i <= 120; i++) escape.push([2 * Math.cos((i / 120) * 2 * Math.PI), 2 * Math.sin((i / 120) * 2 * Math.PI)]);
-                  pen.line(escape, "#4a3a3a", 1);
-                  pen.line(path.path.slice(0, n + 1), ONE, 1.4);
-                  for (let k = 0; k < n; k++) pen.dot(path.path[k][0], path.path[k][1], 2.5, "#3a4a3c");
-                  pen.ring(start[0], start[1], 6, SKY, 1.5);
-                  pen.dot(z[0], z[1], 5, INK);
-                  if (shift !== "none") pen.dot(c[0], c[1], 4, TWO);
-                }}
-              />
-            </div>
-            <Caption>
-              {shift !== "none"
-                ? L("Sky ring: the start. White: where the number is now. Green: the path so far. Blue circle: length one. Dark red circle: length two, past which a number never comes back. Background: every start at once, dark while it has not left after the {{n}} squarings done so far, coloured once it has, brighter the sooner. Rose dot: the shift c.", { n })
-                : L("Sky ring: the start. White: where the number is now. Green: the path so far. Blue circle: length one. Dark red circle: length two, past which a number never comes back. Background: every start at once, dark while it has not left after the {{n}} squarings done so far, coloured once it has, brighter the sooner.", { n })}
-            </Caption>
-          </section>
-        }
-        result={
-          <div className="space-y-2">
-            <Verdict good={n === 0 ? undefined : left !== null && n >= left ? false : true}>
-              {n === 0
-                ? shift !== "none"
-                  ? L("Start at {{z}}, length {{r}}. Press run.", { z: show(start), r: abs(start).toFixed(3) })
-                  : abs(start) < 1
-                    ? L("Start at {{z}}, length {{r}}, inside the circle. Press run.", { z: show(start), r: abs(start).toFixed(3) })
-                    : abs(start) > 1
-                      ? L("Start at {{z}}, length {{r}}, outside the circle. Press run.", { z: show(start), r: abs(start).toFixed(3) })
-                      : L("Start at {{z}}, length {{r}}, on the circle. Press run.", { z: show(start), r: abs(start).toFixed(3) })
-                : left !== null && n >= left
-                  ? left === 1
-                    ? L("After {{n}} squaring the length passed two and the number is gone for good: from there each squaring at least doubles the distance and the shift cannot pull it back. This start leaves.", { n: left })
-                    : L("After {{n}} squarings the length passed two and the number is gone for good: from there each squaring at least doubles the distance and the shift cannot pull it back. This start leaves.", { n: left })
-                  : shift === "none"
-                    ? L("After {{n}} squarings the number is at {{z}}, length {{r}}, angle {{a}} deg. {{more}}", {
-                        n,
-                        z: show(z),
-                        r: abs(z).toFixed(4),
-                        a: (turns(z) * 360).toFixed(0),
-                        more: abs(start) < 1 ? L("The length squares each time, so it is falling to zero: this start stays.") : abs(start) > 1 ? L("The length is growing and will pass two.") : L("On the circle the length is one, squared is one: it stays on the circle, turning by a doubling angle each time."),
-                      })
-                    : n === MOST
-                      ? L("After {{n}} squarings and shifts the number is at {{z}}, length {{r}}. It has not passed two, after the whole run: this start stays, and it is one of the dark points on the map.", { n, z: show(z), r: abs(z).toFixed(3) })
-                      : L("After {{n}} squarings and shifts the number is at {{z}}, length {{r}}. It has not passed two.", { n, z: show(z), r: abs(z).toFixed(3) })}
-            </Verdict>
-            <Text kind="note" as="p">
-              {n === 0
-                ? L("Every start on the picture is dark: nothing has been squared yet.")
-                : n === 1
-                  ? L("{{p}} per cent of the starts have left after {{n}} squaring; the dark that remains is the set taking shape.", { p: share, n })
-                  : L("{{p}} per cent of the starts have left after {{n}} squarings; the dark that remains is the set taking shape.", { p: share, n })}
-            </Text>
-            <Readout
-              rows={[
-                [L("Start"), show(start)],
-                [L("Shift added each time"), show(c)],
-                [L("Now"), show(z)],
-                [L("Length now"), abs(z).toFixed(4)],
-                [L("Left, after"), left === null ? L("not within {{n}}", { n: MOST }) : L("{{n}} squarings", { n: left })],
-                [L("Squarings so far"), L("{{n}} of {{total}}", { n, total: MOST })],
-              ]}
+    <TaskPage
+      title={system?.name ?? L("Which points stay?")}
+      job={L("Take a number c. Start at zero, square, add c, and do it again and again. Each squaring doubles the angle and squares the length, as on the page before, and c moves the result. For some values of c the path stays near zero for ever; for others its length passes two and it runs away. Every c whose path stays is filled in, and together they form the Mandelbrot set. Here c travels round a loop that crosses the edge of the set, so the path can be watched changing from staying to running away.")}
+      input={
+        <Text kind="note" as="p">
+          {L("Click anywhere on the map to put c there and hold it. Press run to send c round the loop again.")}
+        </Text>
+      }
+      run={
+        <RunBar
+          running={runner.running && held === null}
+          count={degrees}
+          limit={ROUND}
+          what={L("degrees round the loop")}
+          onToggle={() => {
+            if (held !== null || degrees >= ROUND) {
+              again();
+              runner.play();
+              return;
+            }
+            runner.toggle();
+          }}
+          onStep={(many) => {
+            setHeld(null);
+            setDegrees((v) => Math.min(ROUND, v + many));
+          }}
+          onReset={again}
+          perFrame={perFrame}
+          onSpeed={setPerFrame}
+          pace="slow"
+        />
+      }
+      picture={
+        <section ref={stage}>
+          <div data-slot="plot" className="h-[min(500px,calc(100vh-20rem))] overflow-hidden">
+            <Plot
+              className="h-full w-full"
+              box={BOX}
+              equal
+              deps={[c[0], c[1]]}
+              onPick={(x, y) => {
+                runner.pause();
+                setHeld([round2(x), round2(y)]);
+              }}
+              draw={(pen) => {
+                const v = pen.box;
+                const w = Math.max(60, Math.min(520, Math.round(pen.width / 2)));
+                const h = Math.max(40, Math.round((w * (v.y1 - v.y0)) / (v.x1 - v.x0)));
+                lay(pen, picture("complex-escape", w, h, { cx: (v.x0 + v.x1) / 2, cy: (v.y0 + v.y1) / 2, span: v.x1 - v.x0 }, { ground: GROUND, mid: FAINT, hot: MUTED, inside: EDGE }, undefined, 60), v.x0, v.y0, v.x1 - v.x0, v.y1 - v.y0);
+                const two: [number, number][] = [];
+                for (let i = 0; i <= 120; i++) two.push([2 * Math.cos((i / 120) * 2 * Math.PI), 2 * Math.sin((i / 120) * 2 * Math.PI)]);
+                pen.line(two, FAINT, 1);
+                pen.line(loop, FAINT, 1);
+                pen.line(path, stays ? SKY : TWO, 1.2);
+                pen.dot(c[0], c[1], 5, stays ? ONE : TWO);
+              }}
             />
-            <Text kind="note" as="p" className="pt-1">
-              {L("The map of which starts stay is a Julia set when there is a shift. The fractals topic draws it at full resolution, and the Mandelbrot set is the same question asked of the shift instead of the start. Both are this page, done for every point at once.")}
-            </Text>
           </div>
-        }
-        below={
-          <>
-            <SaveImage stage={stage} name={`complex-square-${shift}`} />
-            <Equations system={system} />
-          </>
-        }
-      />
-    </>
+          <Caption>
+            {L("Filled shape: every c whose path stays. Lighter outside it, near its edge: the path runs away later. The dot: c. The line: the path from zero, one point for every square and add. Faint loop: the route c travels. Faint circle: length two, past which the path never comes back.")}
+          </Caption>
+        </section>
+      }
+      result={
+        <div className="space-y-2">
+          <Verdict good={stays}>
+            {stays
+              ? L("c = {{c}}: the path stays near zero for all {{n}} steps. This c is in the Mandelbrot set.", { c: show(c), n: MOST })
+              : left === 1
+                ? L("c = {{c}}: after {{n}} step the length passed two and the path runs away. This c is outside the set.", { c: show(c), n: left })
+                : L("c = {{c}}: after {{n}} steps the length passed two and the path runs away. This c is outside the set.", { c: show(c), n: left })}
+          </Verdict>
+          <Readout
+            rows={[
+              ["c", show(c)],
+              [L("Length of c"), abs(c).toFixed(3)],
+              [L("Last point inside length two"), show(last)],
+              [L("Left, after"), left === null ? L("not within {{n}}", { n: MOST }) : left === 1 ? L("{{n}} step", { n: left }) : L("{{n}} steps", { n: left })],
+            ]}
+          />
+          <Text kind="note" as="p" className="pt-1">
+            {L("The edge of the filled shape is where the path changes from staying to running away. The fractals topic zooms into that edge.")}
+          </Text>
+        </div>
+      }
+      below={
+        <>
+          <SaveImage stage={stage} name="complex-which-points-stay" />
+          <Equations system={system} />
+        </>
+      }
+    />
   );
 }
-

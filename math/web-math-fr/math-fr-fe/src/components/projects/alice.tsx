@@ -4,6 +4,7 @@ import type { Pen } from "@/components/Plot";
 import { EDGE, FAINT, INK, MUTED, ONE, SKY, TWO, blend } from "@/lib/draw";
 import { L } from "@/lib/lang";
 import MAP from "@/content/projects/alice-map.json";
+import { useClock } from "./clock";
 import { Live } from "./Live";
 import { ease, fill, outline, say, wide } from "./paint";
 
@@ -221,34 +222,6 @@ export function AlicePick() {
   );
 }
 
-/** the answer appearing word by word, the way the larger model writes it */
-export function AliceWrite() {
-  const words = EXAMPLES[2].output.split(" ");
-  return (
-    <Live
-      label={L("An answer written word by word, staying inside the book's world")}
-      still={9}
-      draw={(pen, t) => {
-        const n = Math.min(words.length, Math.floor((t % 12) * 3.2));
-        say(pen, EXAMPLES[2].instruction, 0.5, 7.8, MUTED, { size: 12 });
-        let line = "";
-        let row = 0;
-        const limit = 15;
-        for (const w of words.slice(0, n)) {
-          const next = line ? `${line} ${w}` : w;
-          if (wide(pen, next, 13) > limit) {
-            say(pen, line, 0.5, 6.4 - row * 0.85, INK, { size: 13 });
-            row++;
-            line = w;
-          } else line = next;
-        }
-        say(pen, line, 0.5, 6.4 - row * 0.85, INK, { size: 13 });
-        if (n < words.length) fill(pen, 0.5 + wide(pen, line, 13) + 0.1, 6.25 - row * 0.85, 0.12, 0.55, ONE);
-      }}
-    />
-  );
-}
-
 /** the pairs piling up, and the small model they are for, not trained yet */
 export function AliceTrain() {
   const pairs = MAP.meta.pairs;
@@ -274,5 +247,45 @@ export function AliceTrain() {
         fill(pen, 9.2, 3.65, 0.9 * ease(t % 10, 6, 7), 0.12, FAINT);
       }}
     />
+  );
+}
+
+/** how fast an answer is written, in letters a second, and how long it stays once written */
+const TYPING = 45;
+const HOLD = 3.5;
+const PAUSE = 1;
+
+/**
+ * a conversation played from the dataset: what a reader writes appears, then the book's reply
+ * comes in letter by letter, and the next pair follows; every word is the dataset's own. the two
+ * are named by who speaks, the reader and the book, not by the training terms
+ */
+export function AliceChat() {
+  const [t, host] = useClock(PAUSE + 60 / TYPING, 20);
+  const lengths = EXAMPLES.map((e) => PAUSE + e.output.length / TYPING + HOLD);
+  const cycle = lengths.reduce((a, b) => a + b, 0);
+  let left = t % cycle;
+  let i = 0;
+  while (left > lengths[i]) {
+    left -= lengths[i];
+    i += 1;
+  }
+  const e = EXAMPLES[i];
+  const shown = Math.max(0, Math.min(e.output.length, Math.floor((left - PAUSE) * TYPING)));
+  const writing = shown < e.output.length;
+  return (
+    <div ref={host} role="img" aria-label={L("A conversation from the dataset: what a reader writes and the book's reply")} className="flex aspect-[16/9] w-full flex-col justify-center gap-4 p-4 sm:p-8">
+      <div className="ml-auto max-w-[80%] rounded-2xl rounded-br-sm px-4 py-3" style={{ background: "color-mix(in oklab, var(--c-glow) 18%, transparent)" }}>
+        <div data-text="label">{L("Reader")}</div>
+        <p data-text="body" className="m-0 mt-1">{e.input ? `${e.instruction} ${e.input}` : e.instruction}</p>
+      </div>
+      <div className="mr-auto max-w-[85%] rounded-2xl rounded-bl-sm border px-4 py-3" style={{ borderColor: "var(--c-border)", opacity: left < PAUSE ? 0.4 : 1 }}>
+        <div data-text="label">{L("The book")}</div>
+        <p data-text="body" className="m-0 mt-1">
+          {e.output.slice(0, shown)}
+          {writing ? <span aria-hidden="true" style={{ color: "var(--c-glow)" }}>▍</span> : null}
+        </p>
+      </div>
+    </div>
   );
 }

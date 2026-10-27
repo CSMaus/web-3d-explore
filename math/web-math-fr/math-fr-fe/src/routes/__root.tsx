@@ -1,4 +1,4 @@
-import { Outlet, createRootRoute, useRouterState } from "@tanstack/react-router";
+import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { FractalBackground, Heading, KIT_CASE, Kitten, kitTheme, Page, SkipLink, useMode } from "@kit/index";
@@ -34,7 +34,6 @@ function Shell() {
   const { t } = useTranslation();
   const mode = useMode(kitTheme.colours.default);
   const shell = useRef<HTMLDivElement | null>(null);
-  const front = useRouterState({ select: (s) => s.location.pathname === "/" });
   useEffect(() => {
     document.title = BRAND;
   }, []);
@@ -65,7 +64,13 @@ function Shell() {
   return (
     <>
       <FractalBackground settings={kitTheme.fractal} of={shell} />
-      {KITTEN_CASES.includes(KIT_CASE) && front ? <Kitten /> : null}
+      {/* the pixel case's two kittens, on every page: one asleep on the right, one playing on the left */}
+      {KITTEN_CASES.includes(KIT_CASE) ? (
+        <>
+          <Kitten kind="sleeping" />
+          <Kitten kind="playing" />
+        </>
+      ) : null}
       <div ref={shell} className="relative z-[1] min-h-full">
       <SkipLink>{t("nav.skip")}</SkipLink>
       <Menu />

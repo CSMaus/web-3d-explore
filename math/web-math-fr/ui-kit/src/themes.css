@@ -646,6 +646,10 @@ html:where([data-case="base"], :not([data-case]))[data-mode="light"] [data-slot=
   z-index: 40;
   pointer-events: none;
 }
+:where(html[data-case="base"], html:not([data-case])) [data-slot="kitten"][data-kind="playing"] {
+  right: auto;
+  left: 16px;
+}
 :where(html[data-case="base"], html:not([data-case])) [data-slot="theme-sign"] svg {
   width: 15px;
   height: 15px;
@@ -1867,6 +1871,10 @@ html:where([data-case="edge_light"])[data-mode="light"] [data-slot="mode-switch"
   z-index: 40;
   pointer-events: none;
 }
+:where(html[data-case="edge_light"]) [data-slot="kitten"][data-kind="playing"] {
+  right: auto;
+  left: 16px;
+}
 :where(html[data-case="edge_light"]) [data-slot="theme-sign"] svg {
   width: 15px;
   height: 15px;
@@ -3022,6 +3030,10 @@ html:where([data-case="old_code"])[data-mode="light"] [data-slot="mode-switch"] 
   z-index: 40;
   pointer-events: none;
 }
+:where(html[data-case="old_code"]) [data-slot="kitten"][data-kind="playing"] {
+  right: auto;
+  left: 16px;
+}
 :where(html[data-case="old_code"]) [data-slot="theme-sign"] svg {
   width: 15px;
   height: 15px;
@@ -3481,7 +3493,7 @@ html:where([data-case="pixel_art_cute"])[data-palette="T_GP"][data-mode="dark"] 
   --page-gutter: 32px;
   --spacing: 0.25rem;
   --text-size: 17px;
-  --label-size: 12px;
+  --label-size: 14px;
   --leading: 1.6;
   --weight-body: 400;
   --weight-heading: 400;
@@ -3489,10 +3501,10 @@ html:where([data-case="pixel_art_cute"])[data-palette="T_GP"][data-mode="dark"] 
   --tracking-body: 0em;
   --tracking-heading: 0em;
   --tracking-label: 0em;
-  --heading-case: uppercase;
+  --heading-case: none;
   --label-case: uppercase;
   --topbar-height: 64px;
-  --display-size: 40px;
+  --display-size: 44px;
   --display-weight: 400;
   --display-tracking: 0em;
   --button-radius: 0px;
@@ -3501,7 +3513,7 @@ html:where([data-case="pixel_art_cute"])[data-palette="T_GP"][data-mode="dark"] 
   --button-px: 16px;
   --button-sm-py: 6px;
   --button-sm-px: 10px;
-  --button-weight: 700;
+  --button-weight: 400;
   --button-case: uppercase;
   --button-tracking: 0em;
   --tab-gap: 8px;
@@ -3522,25 +3534,25 @@ html:where([data-case="pixel_art_cute"])[data-palette="T_GP"][data-mode="dark"] 
   --figure-seconds: 6s;
   --breathe-seconds: 4s;
 }
-:root:where([data-case="pixel_art_cute"]) { --font-body: "Pixelify Sans", "Geist Variable", sans-serif; --font-heading: "Press Start 2P", "Pixelify Sans", monospace; --font-label: "Silkscreen", "Geist Mono Variable", monospace; --font-mono: "Silkscreen", "Geist Mono Variable", monospace; }
-:where(html[data-case="pixel_art_cute"]) [data-slot="display"], :where(html[data-case="pixel_art_cute"]) [data-text="display"] { font-family: var(--font-heading); font-size: 40px; font-weight: 400; line-height: 1.3; letter-spacing: 0em; text-transform: uppercase; color: var(--c-foreground); }
+:root:where([data-case="pixel_art_cute"]) { --font-body: "Nunito", "Geist Variable", sans-serif; --font-heading: "DotGothic16", "Nunito", sans-serif; --font-label: "DotGothic16", "Geist Mono Variable", monospace; --font-mono: "DotGothic16", "Geist Mono Variable", monospace; }
+:where(html[data-case="pixel_art_cute"]) [data-slot="display"], :where(html[data-case="pixel_art_cute"]) [data-text="display"] { font-family: var(--font-heading); font-size: 44px; font-weight: 400; line-height: 1.15; letter-spacing: 0em; text-transform: none; color: var(--c-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="lede"], :where(html[data-case="pixel_art_cute"]) [data-text="lede"] { font-family: var(--font-body); font-size: 20px; font-weight: 400; line-height: 1.5; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) body, :where(html[data-case="pixel_art_cute"]) [data-text="body"] { font-family: var(--font-body); font-size: 17px; font-weight: 400; line-height: 1.6; letter-spacing: 0em; text-transform: none; color: var(--c-foreground); }
-:where(html[data-case="pixel_art_cute"]) [data-slot="heading"][data-level="1"], :where(html[data-case="pixel_art_cute"]) [data-text="heading1"] { font-family: var(--font-heading); font-size: 20px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; text-transform: uppercase; color: var(--c-foreground); }
-:where(html[data-case="pixel_art_cute"]) [data-slot="heading"][data-level="2"], :where(html[data-case="pixel_art_cute"]) [data-text="heading2"] { font-family: var(--font-heading); font-size: 14px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; text-transform: uppercase; color: var(--c-foreground); }
-:where(html[data-case="pixel_art_cute"]) [data-slot="heading"][data-level="3"], :where(html[data-case="pixel_art_cute"]) [data-text="heading3"] { font-family: var(--font-heading); font-size: 11px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; text-transform: uppercase; color: var(--c-muted-foreground); }
-:where(html[data-case="pixel_art_cute"]) [data-slot="label"], :where(html[data-case="pixel_art_cute"]) [data-text="label"] { font-family: var(--font-label); font-size: 12px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; text-transform: uppercase; color: var(--c-muted-foreground); }
+:where(html[data-case="pixel_art_cute"]) [data-slot="heading"][data-level="1"], :where(html[data-case="pixel_art_cute"]) [data-text="heading1"] { font-family: var(--font-heading); font-size: 30px; font-weight: 400; line-height: 1.25; letter-spacing: 0em; text-transform: none; color: var(--c-foreground); }
+:where(html[data-case="pixel_art_cute"]) [data-slot="heading"][data-level="2"], :where(html[data-case="pixel_art_cute"]) [data-text="heading2"] { font-family: var(--font-heading); font-size: 22px; font-weight: 400; line-height: 1.3; letter-spacing: 0em; text-transform: none; color: var(--c-foreground); }
+:where(html[data-case="pixel_art_cute"]) [data-slot="heading"][data-level="3"], :where(html[data-case="pixel_art_cute"]) [data-text="heading3"] { font-family: var(--font-heading); font-size: 18px; font-weight: 400; line-height: 1.35; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); }
+:where(html[data-case="pixel_art_cute"]) [data-slot="label"], :where(html[data-case="pixel_art_cute"]) [data-text="label"] { font-family: var(--font-label); font-size: 14px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; text-transform: uppercase; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="tag"], :where(html[data-case="pixel_art_cute"]) [data-text="tag"] { font-family: var(--font-label); font-size: 12px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; word-spacing: -0.15em; text-transform: uppercase; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="caption"], :where(html[data-case="pixel_art_cute"]) [data-text="caption"] { font-family: var(--font-body); font-size: 14px; font-weight: 400; line-height: 1.5; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="verdict"], :where(html[data-case="pixel_art_cute"]) [data-text="verdict"] { font-family: var(--font-body); font-size: 16px; font-weight: 400; line-height: 1.55; letter-spacing: 0em; text-transform: none; color: var(--c-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="readout"], :where(html[data-case="pixel_art_cute"]) [data-text="readout"] { font-family: var(--font-label); font-size: 12px; font-weight: 400; line-height: 1.5; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="readout"] > dd, :where(html[data-case="pixel_art_cute"]) [data-text="readoutValue"] { font-family: var(--font-label); font-size: 12px; font-weight: 400; line-height: 1.5; letter-spacing: 0em; text-transform: none; color: var(--c-value); }
-:where(html[data-case="pixel_art_cute"]) [data-slot="topbar-brand"], :where(html[data-case="pixel_art_cute"]) [data-text="brand"] { font-family: var(--font-heading); font-size: 12px; font-weight: 500; line-height: 1; letter-spacing: 0em; text-transform: uppercase; color: var(--c-foreground); }
+:where(html[data-case="pixel_art_cute"]) [data-slot="topbar-brand"], :where(html[data-case="pixel_art_cute"]) [data-text="brand"] { font-family: var(--font-heading); font-size: 16px; font-weight: 400; line-height: 1; letter-spacing: 0em; text-transform: uppercase; color: var(--c-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="topbar-link"], :where(html[data-case="pixel_art_cute"]) [data-text="nav"] { font-family: var(--font-label); font-size: 13px; font-weight: 400; line-height: 1; letter-spacing: 0em; text-transform: uppercase; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-text="crumb"] { font-family: var(--font-label); font-size: 15px; font-weight: 400; line-height: 1.4; letter-spacing: 0.04em; text-transform: none; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-text="topic"] { font-family: var(--font-label); font-size: 15px; font-weight: 400; line-height: 1.4; letter-spacing: 0.04em; text-transform: none; color: var(--c-selected); }
 :where(html[data-case="pixel_art_cute"]) [data-text="tab"] { font-family: var(--font-label); font-size: 14px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); }
-:where(html[data-case="pixel_art_cute"]) [data-slot="button"], :where(html[data-case="pixel_art_cute"]) [data-slot="toggle-group-item"], :where(html[data-case="pixel_art_cute"]) [data-slot="tabs-trigger"], :where(html[data-case="pixel_art_cute"]) [data-text="button"] { font-family: var(--font-label); font-size: 13px; font-weight: 700; line-height: 1.2; letter-spacing: 0em; text-transform: uppercase; }
+:where(html[data-case="pixel_art_cute"]) [data-slot="button"], :where(html[data-case="pixel_art_cute"]) [data-slot="toggle-group-item"], :where(html[data-case="pixel_art_cute"]) [data-slot="tabs-trigger"], :where(html[data-case="pixel_art_cute"]) [data-text="button"] { font-family: var(--font-label); font-size: 13px; font-weight: 400; line-height: 1.2; letter-spacing: 0em; text-transform: uppercase; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="search-button"], :where(html[data-case="pixel_art_cute"]) [data-text="search"] { font-family: var(--font-label); font-size: 13px; font-weight: 400; line-height: 1; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="key"], :where(html[data-case="pixel_art_cute"]) [data-text="key"] { font-family: var(--font-label); font-size: 11px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="panel-head"], :where(html[data-case="pixel_art_cute"]) [data-text="panelHead"] { font-family: var(--font-label); font-size: 13px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; text-transform: none; color: var(--c-foreground); }
@@ -3551,10 +3563,10 @@ html:where([data-case="pixel_art_cute"])[data-palette="T_GP"][data-mode="dark"] 
 :where(html[data-case="pixel_art_cute"]) [data-slot="skip"], :where(html[data-case="pixel_art_cute"]) [data-text="skip"] { font-family: var(--font-label); font-size: 13px; font-weight: 500; line-height: 1.2; letter-spacing: 0em; text-transform: none; color: var(--c-background); background: var(--c-primary); padding: 8px 14px; border-radius: 0px; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="counter"], :where(html[data-case="pixel_art_cute"]) [data-text="counter"] { font-family: var(--font-label); font-size: 12px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="share"], :where(html[data-case="pixel_art_cute"]) [data-text="share"] { font-family: var(--font-label); font-size: 12px; font-weight: 400; line-height: 1.4; letter-spacing: 0em; text-transform: uppercase; color: var(--c-muted-foreground); }
-:where(html[data-case="pixel_art_cute"]) [data-slot="icon-card-title"], :where(html[data-case="pixel_art_cute"]) [data-text="cardTitle"] { font-family: var(--font-heading); font-size: 12px; font-weight: 400; line-height: 1.5; letter-spacing: 0em; text-transform: uppercase; color: var(--c-foreground); }
+:where(html[data-case="pixel_art_cute"]) [data-slot="icon-card-title"], :where(html[data-case="pixel_art_cute"]) [data-text="cardTitle"] { font-family: var(--font-heading); font-size: 18px; font-weight: 400; line-height: 1.3; letter-spacing: 0em; text-transform: none; color: var(--c-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="icon-card-text"], :where(html[data-case="pixel_art_cute"]) [data-text="cardText"] { font-family: var(--font-body); font-size: 15px; font-weight: 400; line-height: 1.6; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-text="itemTitle"] { font-family: var(--font-label); font-size: 16px; font-weight: 500; line-height: 1.3; letter-spacing: 0em; text-transform: none; color: var(--c-foreground); }
-:where(html[data-case="pixel_art_cute"]) [data-text="note"] { font-family: var(--font-label); font-size: 12px; font-weight: 400; line-height: 1.5; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); border-radius: 0px; }
+:where(html[data-case="pixel_art_cute"]) [data-text="note"] { font-family: var(--font-label); font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); border-radius: 0px; }
 :where(html[data-case="pixel_art_cute"]) [data-text="intro"] { font-family: var(--font-body); font-size: 18px; font-weight: 400; line-height: 1.6; letter-spacing: 0em; text-transform: none; color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-text="warning"] { font-family: var(--font-body); font-size: 11px; font-weight: 400; line-height: 1.5; letter-spacing: 0em; text-transform: none; color: var(--c-destructive); }
 :where(html[data-case="pixel_art_cute"]) span[data-text="crumb"], :where(html[data-case="pixel_art_cute"]) span[data-text="topic"], :where(html[data-case="pixel_art_cute"]) span[data-text="tab"], :where(html[data-case="pixel_art_cute"]) span[data-text="itemTitle"], :where(html[data-case="pixel_art_cute"]) span[data-text="note"], :where(html[data-case="pixel_art_cute"]) span[data-text="intro"], :where(html[data-case="pixel_art_cute"]) span[data-text="warning"] { display: inline-block; }
@@ -3984,6 +3996,10 @@ html:where([data-case="pixel_art_cute"])[data-mode="light"] [data-slot="mode-swi
   z-index: 40;
   pointer-events: none;
 }
+:where(html[data-case="pixel_art_cute"]) [data-slot="kitten"][data-kind="playing"] {
+  right: auto;
+  left: 16px;
+}
 :where(html[data-case="pixel_art_cute"]) [data-slot="theme-sign"] svg {
   width: 15px;
   height: 15px;
@@ -4104,7 +4120,7 @@ html:where([data-case="pixel_art_cute"]), :where(html[data-case="pixel_art_cute"
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"] { --hero-foot: clamp(28px, 7svh, 72px); position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(100svh - 8rem); padding-bottom: var(--hero-foot); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero-picture"] { position: absolute; z-index: -1; top: calc(64px - 8rem + 12px); bottom: calc(var(--hero-foot) + 44px); right: calc(50% - 50vw); width: min(54vw, 980px); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero-text"] { position: relative; max-width: min(820px, 60%); }
-:where(html[data-case="pixel_art_cute"]) [data-slot="hero"] [data-slot="display"] { font-size: clamp(40px, min(7vw, 11.5svh), 40px); text-wrap: balance; }
+:where(html[data-case="pixel_art_cute"]) [data-slot="hero"] [data-slot="display"] { font-size: clamp(40px, min(7vw, 11.5svh), 44px); text-wrap: balance; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"] [data-slot="display"] > :last-child:not(:first-child) { color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"] [data-slot="lede"] { max-width: 34ch; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero-aside"] { position: absolute; right: 0; bottom: var(--hero-foot); display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 20px; max-width: 36%; }
@@ -4122,7 +4138,7 @@ html:where([data-case="pixel_art_cute"]), :where(html[data-case="pixel_art_cute"
 }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"][data-size="page"] { min-height: 0; justify-content: flex-start; padding: 32px 0 clamp(40px, 8svh, 80px); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"][data-size="page"] [data-slot="hero-text"] { max-width: min(900px, 100%); }
-:where(html[data-case="pixel_art_cute"]) [data-slot="hero"][data-size="page"] [data-slot="display"] { font-size: clamp(40px, min(6vw, 10svh), 30px); }
+:where(html[data-case="pixel_art_cute"]) [data-slot="hero"][data-size="page"] [data-slot="display"] { font-size: clamp(40px, min(6vw, 10svh), 33px); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"][data-size="page"] [data-slot="lede"] { max-width: 46ch; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"][data-size="page"] [data-slot="hero-picture"] { position: absolute; z-index: 0; top: 0; bottom: 0; right: 0; left: auto; width: min(30%, 280px); height: auto; margin: 0; animation: none; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"][data-size="page"]:has([data-slot="hero-picture"]) [data-slot="hero-text"] { max-width: min(900px, 68%); }
@@ -4133,7 +4149,7 @@ html:where([data-case="pixel_art_cute"]), :where(html[data-case="pixel_art_cute"
 :where(html[data-case="pixel_art_cute"]) [data-slot="front-scene"] { --p: 0; position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; text-align: center; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="scene-words"] { position: relative; z-index: 1; max-width: 1000px; padding-top: clamp(8px, 5svh, 48px); opacity: calc(1 - var(--p) * 1.3); transform: translateY(calc(var(--p) * -56px)); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="front-scene"] [data-slot="hero-eyebrow"] { display: flex; justify-content: center; margin-bottom: 24px; }
-:where(html[data-case="pixel_art_cute"]) [data-slot="front-scene"] [data-slot="display"] { font-size: clamp(40px, min(6.6vw, 9.5svh), 40px); text-wrap: balance; margin-bottom: 24px; }
+:where(html[data-case="pixel_art_cute"]) [data-slot="front-scene"] [data-slot="display"] { font-size: clamp(40px, min(6.6vw, 9.5svh), 44px); text-wrap: balance; margin-bottom: 24px; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="front-scene"] [data-slot="display"] > :last-child:not(:first-child) { color: var(--c-muted-foreground); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="front-scene"] [data-slot="lede"] { max-width: 52ch; margin: 0 auto 24px; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="scene-picture"] { position: relative; z-index: 0; align-self: stretch; margin-inline: calc(50% - 50vw); margin-top: clamp(-48px, -4svh, -16px); height: min(90svh, 960px); transform-origin: 50% 0; transform: scale(calc(0.84 + var(--p) * 0.16)); }
@@ -4145,7 +4161,7 @@ html:where([data-case="pixel_art_cute"]), :where(html[data-case="pixel_art_cute"
 }
 :where(html[data-case="pixel_art_cute"]) [data-slot="band"] { position: relative; padding-block: clamp(56px, 11svh, 112px); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="band"][data-tone="card"] { border-image: linear-gradient(var(--c-card) 0 0) fill 0 / / 0 100vmax; }
-:where(html[data-case="pixel_art_cute"]) [data-slot="band"] [data-slot="heading"][data-level="2"] { font-family: var(--font-heading); font-size: 40px; font-weight: 400; line-height: 1.3; letter-spacing: 0em; text-transform: uppercase; color: var(--c-foreground); font-size: clamp(30px, 4vw, 25px); line-height: 1.05; text-wrap: balance; }
+:where(html[data-case="pixel_art_cute"]) [data-slot="band"] [data-slot="heading"][data-level="2"] { font-family: var(--font-heading); font-size: 44px; font-weight: 400; line-height: 1.15; letter-spacing: 0em; text-transform: none; color: var(--c-foreground); font-size: clamp(30px, 4vw, 27px); line-height: 1.05; text-wrap: balance; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"] [data-slot="hero-eyebrow"] { margin-bottom: 24px; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"] [data-slot="display"] { margin-bottom: 24px; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="hero"] [data-slot="lede"] { margin-bottom: 24px; }

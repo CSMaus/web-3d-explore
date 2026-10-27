@@ -48,3 +48,20 @@ html.still .rise {
     transition: none;
   }
 }
+
+/* the stage of a project's steps: a step coming in, and the bar filling over its time */
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+}
+
+@keyframes stage-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}

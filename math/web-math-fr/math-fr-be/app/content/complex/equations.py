@@ -126,11 +126,11 @@ SYSTEMS = [
     },
     {
         "id": "square",
-        "name": "Julia set",
+        "name": "Which points stay?",
         "summary": (
-            "Squaring doubles the angle and squares the length. Do it again and again and a start "
-            "inside the unit circle falls to zero, outside it runs away, on it stays. Add a constant "
-            "each time and the boundary between falling and running is a Julia set"
+            "Start at zero, square and add c, again and again. For some values of c the path stays "
+            "near zero for ever, for others it runs away. The values of c that stay form the "
+            "Mandelbrot set"
         ),
         "blocks": [
             {
@@ -139,20 +139,20 @@ SYSTEMS = [
                 "note": "Multiplying a number by itself: the angle adds to itself, the length multiplies by itself",
             },
             {
-                "label": "Repeated",
-                "tex": r"z_{n+1} = z_n^{2}",
-                "note": "A length below one, squared again and again, goes to zero; above one, to infinity; exactly one stays. The circle is the boundary",
+                "label": "Square and add c",
+                "tex": r"z_{0} = 0, \qquad z_{n+1} = z_n^{2} + c",
+                "note": "Square, then slide by c, every step. The page draws these points as the path from zero",
             },
             {
-                "label": "With a shift",
-                "tex": r"z_{n+1} = z_n^{2} + c",
-                "note": "Square, then slide by c, every step. The boundary between staying and leaving is no longer a circle, and the fractals topic draws it",
+                "label": "The Mandelbrot set",
+                "tex": r"M = \{\, c : |z_n| \le 2 \text{ for every } n \,\}",
+                "note": "Every c whose path never passes length two. The page fills these in",
             },
         ],
         "dimension": {
             "label": "The escape test",
             "tex": r"|z_n| > 2 \implies |z_{n+k}| \to \infty",
-            "note": "Once the length passes two the square outruns the shift for ever, which is how the page decides that an orbit has left",
+            "note": "Once the length passes two the square outruns c for ever, which is how the page decides that a path has left",
         },
     },
     {

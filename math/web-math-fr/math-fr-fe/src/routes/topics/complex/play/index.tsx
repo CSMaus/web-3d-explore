@@ -17,7 +17,7 @@ export const LOCAL: { id: string; name: string; summary: string }[] = [
   { id: "turn", name: L("What 𝑖 is"), summary: L("Minus one is a half turn. The number that does half of that, a quarter turn, is 𝑖, and twice is minus one. Watch it go round.") },
   { id: "add", name: L("Complex numbers: adding"), summary: L("Every number is an arrow. Add two by walking one out from the other's tip. The two parts never mix.") },
   { id: "multiply", name: L("Complex numbers: multiplying"), summary: L("Lengths multiply, angles add. Watch one arrow turned and stretched into the product.") },
-  { id: "square", name: L("Julia set"), summary: L("Square a number over and over: inside the circle it falls to zero, outside it runs away. Add a shift each time and the boundary is a Julia set.") },
+  { id: "square", name: L("Which points stay?"), summary: L("Start at zero, square and add c, again and again. For some c the path stays near zero; for others it runs away. The values of c that stay form the Mandelbrot set.") },
   { id: "round", name: L("Euler's formula"), summary: L("Growth at an imaginary rate does not grow: it circles. Its two shadows are the sine and the cosine, and at half a turn it lands on minus one.") },
   { id: "quaternions", name: L("Quaternions"), summary: L("Three units for the three axes of space. Pick an axis and an angle, turn the house step by step, and read the four numbers that do it.") },
 ];
@@ -29,7 +29,7 @@ function ComplexIndex() {
     <>
       <Heading level={1} className="mt-4">{L("The pages, in order")}</Heading>
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-        {L("For a reader who has never met an imaginary number. Every page has the same three parts in the same places: what goes in, run, what came out. By the last page the Julia set on the fractals pages is something that can be read.")}
+        {L("For a reader who has never met an imaginary number. Every page has the same three parts in the same places: what goes in, run, what came out. By the last page the Mandelbrot set on the fractals pages is something that can be read.")}
       </Text>
       {!theory ? (
         <Text kind="note" as="p" className="mt-3">{L("The descriptions come from the backend, which is not answering; this page needs nothing from it.")}</Text>

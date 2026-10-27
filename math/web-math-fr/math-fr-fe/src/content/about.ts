@@ -24,7 +24,7 @@ export type Job = { when: string; place: string; what?: string; role: string; po
 export const WORK: Job[] = [
   {
     when: "Dec 2025 - Present",
-    place: "Reynova Inc.",
+    place: "Reynova Inc. (formerly Perseptex)",
     what: "AI products for health insurance in the US",
     role: "Senior ML/AI Engineer",
     points: [
@@ -37,8 +37,7 @@ export const WORK: Job[] = [
   },
   {
     when: "Sep 2022 - Dec 2025",
-    place: "Changwon National University",
-    what: "Nondestructive Evaluation and Structural Health Monitoring Lab",
+    place: "CWNU NDE & SHM Lab, Rep. of Korea",
     role: "ML/DL Researcher",
     points: [
       "Built a voice assistant for the lab's ultrasonic inspection software: an inspector gives commands by voice, in several languages, and the software understands them (speech recognition with Whisper, the commands read by GPT).",
@@ -48,7 +47,7 @@ export const WORK: Job[] = [
   },
   {
     when: "Jun 2022 - Sep 2023",
-    place: "Kultura Ex Machina",
+    place: "Kultura Ex Machina, UK",
     what: "A platform for media and art",
     role: "Data Scientist",
     points: ["Built a system that tags artworks automatically from their images (CLIP, ViT) and writes a short description of each with a language model."],
@@ -62,15 +61,20 @@ export const WORK: Job[] = [
 ];
 
 export const EDUCATION: { when: string; degree: string; place: string }[] = [
-  { when: "2022 - 2024", degree: "M.Sc. in Smart Manufacturing", place: "Changwon National University" },
-  { when: "2015 - 2019", degree: "B.Sc. in Mechanical Engineering", place: "St. Petersburg Electrotechnical University (LETI)" },
+  { when: "2022 - 2024", degree: "M.Sc. in Smart Manufacturing", place: "Changwon National University, Rep. of Korea" },
+  { when: "2015 - 2019", degree: "B.Sc. in Mechanical Engineering", place: "St. Petersburg Electrotechnical University (LETI), Russia" },
 ];
 
-export type Paper = { authors: string; title: string; venue: string; year: number; doi: string };
+export type Paper = { authors: string; title: string; venue: string; year: number; href: string; doi?: string };
 
 /**
  * the papers on the lab's site, the owner's first-author journal papers in the international
- * journals first, then the review, the Korean society's journal, and the conference paper
+ * journals first, then the review, the Korean society's journal, and the conference paper; then the
+ * two the owner chose from her Google Scholar profile, the ODE solvers paper and, last, the
+ * chemistry paper. each title links to a page of the paper that opens, and the DOI is shown under
+ * it: the chemistry paper's DOI leads to a missing page of the journal, so its title links to the
+ * journal's working page; the ODE solvers paper has no DOI and no public copy found, so it links
+ * to its Google Scholar entry
  */
 export const PAPERS: Paper[] = [
   {
@@ -78,6 +82,7 @@ export const PAPERS: Paper[] = [
     title: "Deep Learning-based approach for automatic defect detection in complex structures using PAUT data",
     venue: "Sensors, 25(19), 6128",
     year: 2025,
+    href: "https://doi.org/10.3390/s25196128",
     doi: "10.3390/s25196128",
   },
   {
@@ -85,6 +90,7 @@ export const PAPERS: Paper[] = [
     title: "Machine Learning Techniques in Ultrasonics-Based Defect Detection and Material Characterization: A Comprehensive Review",
     venue: "Advances in Mechanical Engineering",
     year: 2025,
+    href: "https://doi.org/10.1177/16878132251347390",
     doi: "10.1177/16878132251347390",
   },
   {
@@ -92,6 +98,7 @@ export const PAPERS: Paper[] = [
     title: "Deep Learning Based Automatic Defect Detection Approach from a Sequence of PAUT A-Scans",
     venue: "Journal of the Korean Society for Nondestructive Testing, 45(5), 404-413",
     year: 2025,
+    href: "https://doi.org/10.7779/JKSNT.2025.45.5.404",
     doi: "10.7779/JKSNT.2025.45.5.404",
   },
   {
@@ -99,6 +106,7 @@ export const PAPERS: Paper[] = [
     title: "Deep learning algorithms for defect detection using phased array ultrasonic testing data",
     venue: "Journal of the Korean Society for Nondestructive Testing, 43(1), 34-43",
     year: 2023,
+    href: "https://doi.org/10.7779/JKSNT.2023.43.1.34",
     doi: "10.7779/JKSNT.2023.43.1.34",
   },
   {
@@ -106,7 +114,23 @@ export const PAPERS: Paper[] = [
     title: "Deep learning algorithms for design of periodic structures and dispersion curves calculation",
     venue: "Papers of the ECNDT 2023, Research and Review Journal of Nondestructive Testing, 1(1)",
     year: 2023,
+    href: "https://doi.org/10.58286/28162",
     doi: "10.58286/28162",
+  },
+  {
+    authors: "D. N. Butusov, S. V. Goryainov, V. S. Andreev, Kseniia Barashok, M. N. Kozak",
+    title: "Fractal Composition ODE solvers based on semi-implicit methods",
+    venue: "Proceedings of the XXI IEEE International Conference on Soft Computing and Measurements (SCM-2018), 23-25",
+    year: 2018,
+    href: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=ssl4seoAAAAJ&citation_for_view=ssl4seoAAAAJ:UeHWp8X0CEIC",
+  },
+  {
+    authors: "Kseniia Barashok, V. V. Panchuk, V. G. Semenov, O. V. Almjasheva, R. Sh. Abiev",
+    title: "Formation of cobalt ferrite nanopowders in an impinging-jets microreactor",
+    venue: "Nanosystems: Physics, Chemistry, Mathematics, 12(3), 303-310",
+    year: 2021,
+    href: "https://nanojournal.ifmo.ru/jour/article/view/488/453",
+    doi: "10.17586/2220-8054-2021-12-3-303-310",
   },
 ];
 

@@ -51,6 +51,8 @@ describe("The shell", () => {
     expect(search("lorenz")[0].to).toBe("/topics/chaos/play/lorenz");
     expect(search("mathematics fractals").some((h) => h.to === "/topics/fractals/theory")).toBe(true);
     expect(search("webpaut")[0].to).toBe("/projects/webpaut");
+    expect(search("Barashok")[0].to).toBe("/about");
+    expect(search("cobalt ferrite")[0].to).toBe("/about");
     expect(search("draw the line").some((h) => h.to === "/topics/networks/play/line")).toBe(true);
     expect(search("")).toEqual([]);
     expect(search("zzzz")).toEqual([]);
@@ -59,7 +61,7 @@ describe("The shell", () => {
   for (const [path, heading] of [
     ["/learn", "Learn"],
     ["/play", "Play"],
-    ["/about", "About"],
+    ["/about", "Kseniia Barashok"],
     ["/projects", "Projects"],
     ["/projects/webpaut", "WebPAUT, ultrasonic inspection in the browser"],
     ["/contact", "Contact"],

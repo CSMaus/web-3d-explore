@@ -1,13 +1,13 @@
 import { L } from "@/lib/lang";
-import TOPICS from "@/content/snapshot/topics.json";
-import FRACTALS from "@/content/snapshot/fractals.json";
 import ALICE from "@/content/projects/alice-map.json";
 
 /**
  * the projects page, one entry a project. a project is shown, not described: a moving figure on
  * its card, a figure to try at the top of its page, then the few steps of how it works, each
  * with its own figure and a sentence or two. the figures are in components/projects, by slug and
- * by step. the numbers in `facts` are read from the data where the data is in this repository.
+ * by step. `facts` holds numbers that are results of the work, read from the data where the data
+ * is in this repository; a project without such numbers has none (the owner, 2026-10-27: counts of
+ * parts or minutes tell nothing)
  */
 export type Step = {
   /** the name of the step's figure in components/projects */
@@ -22,7 +22,8 @@ export type Project = {
   summary: string;
   /** what to do with the figure at the top of the page, and what it shows */
   hero: string;
-  facts: { value: string; label: string }[];
+  /** the numbers that are results of the work; only where there are such numbers */
+  facts?: { value: string; label: string }[];
   steps: Step[];
   /** a closing sentence for what the steps leave out */
   more?: string;
@@ -32,53 +33,10 @@ export type Project = {
   link?: { label: string; to: string };
 };
 
-const topics = TOPICS as { aside: boolean }[];
-const series = FRACTALS as { parts: number; beats: number; seconds: number };
 const ALICE_META = ALICE.meta;
 const passages = ALICE_META.sizes.reduce((a, s) => a + s.passages, 0);
 
 export const PROJECTS: Project[] = [
-  {
-    slug: "maths-site",
-    title: L("Mathematics, made visible"),
-    summary: L("This site: fractals, chaos, neural networks and language models as short clips, pages to move by hand, and the equations behind them."),
-    hero: L("Drag the point across the map of the Mandelbrot set. Every pixel of the picture is computed again in the browser for that value of c."),
-    facts: [
-      { value: String(topics.filter((t) => !t.aside).length), label: L("topics") },
-      { value: String(series.parts), label: L("parts in the first series") },
-      { value: "4", label: L("languages") },
-      { value: String(topics.filter((t) => t.aside).length), label: L("aside") },
-    ],
-    steps: [
-      { figure: "watch", title: L("Watch"), text: L("Each topic opens with a series of short clips. Every number in a clip is computed by the code that draws it.") },
-      { figure: "move", title: L("Move it by hand"), text: L("Every system in the clips has a page where its numbers are sliders. The picture is computed again on every change.") },
-      { figure: "read", title: L("Read the numbers"), text: L("The equations sit beside the pictures. Each value a page prints comes from the same tested code that the checks run on every change.") },
-      { figure: "zoom", title: L("Zoom past the graphics card"), text: L("Deep zoom into the Mandelbrot set needs more precision than a graphics card has. A server computes it in double precision and sends it coarse first, then finer.") },
-    ],
-    more: L("The site also runs on its own from a snapshot of its content, which is how it is published as static pages."),
-    stack: ["React", "TypeScript", "WebGL", "Python", "FastAPI", "NumPy", "PostgreSQL", "Manim"],
-    link: { label: L("Open the topics"), to: "/topics" },
-  },
-  {
-    slug: "fractals-series",
-    title: L("The fractals series"),
-    summary: L("A video series in eleven parts: how to measure a shape that is rough at every scale, and the few rules that draw every shape in it."),
-    hero: L("Each step replaces every piece of the curve by four pieces a third as long. The length grows by a third at every step and never settles. The number that stays the same is the dimension, log 4 / log 3."),
-    facts: [
-      { value: String(series.parts), label: L("parts") },
-      { value: String(series.beats), label: L("scenes") },
-      { value: String(Math.round(series.seconds / 60)), label: L("minutes") },
-      { value: (Math.log(4) / Math.log(3)).toFixed(2), label: L("the dimension of the Koch curve") },
-    ],
-    steps: [
-      { figure: "coast", title: L("How long is a coast?"), text: L("Walked with a shorter ruler, a rough coast comes out longer, and the length never settles. The first four parts start here.") },
-      { figure: "boxes", title: L("Count boxes instead"), text: L("Cover the shape with boxes and count them as the boxes shrink. On logarithms the counts rise along a slope that comes down towards the dimension, 1.26 for the Koch curve.") },
-      { figure: "fern", title: L("Four rules draw a fern"), text: L("Each point is moved by one of four rules picked at random. The fern appears after a few thousand points.") },
-      { figure: "escape", title: L("Which points stay?"), text: L("Square a number and add c, again and again. The values of c whose path stays near zero form the Mandelbrot set.") },
-    ],
-    stack: ["Manim", "Python", "NumPy"],
-    link: { label: L("The series"), to: "/topics/fractals/parts" },
-  },
   {
     slug: "webpaut",
     title: L("WebPAUT, ultrasonic inspection in the browser"),
@@ -118,6 +76,35 @@ export const PROJECTS: Project[] = [
     ],
     stack: ["Python", "OpenAI API", "NumPy", "TinyLlama"],
     link: { label: L("The repository"), to: "https://github.com/CSMaus/Alice-in-Wonderland" },
+  },
+  {
+    slug: "maths-site",
+    title: L("Mathematics, made visible"),
+    summary: L("This site: fractals, chaos, neural networks and language models as short clips, pages to move by hand, and the equations behind them."),
+    hero: L("Drag the point across the map of the Mandelbrot set. Every pixel of the picture is computed again in the browser for that value of c."),
+    steps: [
+      { figure: "watch", title: L("Watch"), text: L("Each topic opens with a series of short clips. Every number in a clip is computed by the code that draws it.") },
+      { figure: "move", title: L("Change it with sliders"), text: L("Every system in the clips has a page where its numbers are sliders. The picture is computed again on every change.") },
+      { figure: "read", title: L("See the equations"), text: L("The equations sit beside the pictures. Each value a page prints comes from the same tested code that the checks run on every change.") },
+      { figure: "zoom", title: L("Zoom past the graphics card"), text: L("Deep zoom into the Mandelbrot set needs more precision than a graphics card has. A server computes it in double precision and sends it coarse first, then finer.") },
+    ],
+    more: L("The site also runs on its own from a snapshot of its content, which is how it is published as static pages."),
+    stack: ["React", "TypeScript", "WebGL", "Python", "FastAPI", "NumPy", "PostgreSQL", "Manim"],
+    link: { label: L("Open the topics"), to: "/topics" },
+  },
+  {
+    slug: "fractals-series",
+    title: L("The fractals series"),
+    summary: L("A video series in eleven parts: how to measure a shape that is rough at every scale, and the few rules that draw every shape in it."),
+    hero: L("Each step replaces every piece of the curve by four pieces a third as long. The length grows by a third at every step and never settles. The number that stays the same is the dimension, log 4 / log 3."),
+    steps: [
+      { figure: "coast", title: L("How long is a coast?"), text: L("Walked with a shorter ruler, a rough coast comes out longer, and the length never settles. The first four parts start here.") },
+      { figure: "boxes", title: L("Count boxes instead"), text: L("Cover the shape with boxes and count them as the boxes shrink. On logarithms the counts rise along a slope that comes down towards the dimension, 1.26 for the Koch curve.") },
+      { figure: "fern", title: L("Four rules draw a fern"), text: L("Each point is moved by one of four rules picked at random. The fern appears after a few thousand points.") },
+      { figure: "escape", title: L("Which points stay?"), text: L("Square a number and add c, again and again. The values of c whose path stays near zero form the Mandelbrot set.") },
+    ],
+    stack: ["Manim", "Python", "NumPy"],
+    link: { label: L("The series"), to: "/topics/fractals/parts" },
   },
 ];
 

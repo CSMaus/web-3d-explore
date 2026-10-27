@@ -91,12 +91,20 @@ describe("the opening topic's pages", () => {
   it("every page draws with the backend down and carries the run bar", async () => {
     for (const s of SYSTEMS) {
       const view = await siteAt(s.to);
-      await waitFor(() => expect(screen.getByRole("button", { name: /^Run( again)?$/ })).toBeTruthy());
+      // the page of which points stay opens moving, so its button reads pause
+      await waitFor(() => expect(screen.getByRole("button", { name: /^(Run( again)?|Pause)$/ })).toBeTruthy());
       expect(document.querySelectorAll("main canvas").length).toBeGreaterThan(0);
       expect(screen.getByRole("button", { name: "Ten steps" })).toBeTruthy();
       expect(screen.getByRole("button", { name: "Reset" })).toBeTruthy();
       view.unmount();
     }
+  });
+
+  it("the page of which points stay says whether c stays, and sends c round the loop", async () => {
+    await siteAt("/topics/complex/play/square");
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Which points stay?" })).toBeTruthy());
+    expect(screen.getByText(/^c = .*(in the Mandelbrot set|outside the set)\.$/, { selector: '[data-slot="verdict"]' })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Pause" })).toBeTruthy();
   });
 
   it("the line page tries every number and finds no square below zero", async () => {

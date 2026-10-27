@@ -948,6 +948,11 @@ function pieces(t: Theme): string {
   pointer-events: none;
 }
 
+[data-slot="kitten"][data-kind="playing"] {
+  right: auto;
+  left: 16px;
+}
+
 [data-slot="theme-sign"] svg {
   width: 15px;
   height: 15px;

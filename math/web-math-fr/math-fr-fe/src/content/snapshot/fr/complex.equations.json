@@ -110,29 +110,29 @@
   },
   {
    "id": "square",
-   "name": "Ensemble de Julia",
-   "summary": "Élever au carré double l'angle et met la longueur au carré. En répétant encore et encore, un départ à l'intérieur du cercle unité tombe vers zéro, à l'extérieur il s'échappe, sur le cercle il reste. En ajoutant une constante à chaque fois, la frontière entre chute et échappement devient un ensemble de Julia",
+   "name": "Quels points restent ?",
+   "summary": "Partir de zéro, élever au carré et ajouter c, encore et encore. Pour certaines valeurs de c le chemin reste près de zéro pour toujours, pour d'autres il s'enfuit. Les valeurs de c qui restent forment l'ensemble de Mandelbrot",
    "blocks": [
     {
-     "label": "Un carré",
+     "label": "Une élévation au carré",
      "tex": "|z^{2}| = |z|^{2}, \\qquad \\angle z^{2} = 2\\,\\angle z",
-     "note": "Multiplier un nombre par lui-même : l'angle s'ajoute à lui-même, la longueur se multiplie par elle-même"
+     "note": "Multiplier un nombre par lui-même : l'angle s'ajoute à lui-même, la longueur se multiplie par elle-même"
     },
     {
-     "label": "Répété",
-     "tex": "z_{n+1} = z_n^{2}",
-     "note": "Une longueur inférieure à un, élevée au carré encore et encore, tend vers zéro ; supérieure à un, vers l'infini ; exactement un reste. Le cercle est la frontière"
+     "label": "Carré, puis ajouter c",
+     "tex": "z_{0} = 0, \\qquad z_{n+1} = z_n^{2} + c",
+     "note": "À chaque pas, élever au carré, puis décaler de c. La page dessine ces points comme le chemin depuis zéro"
     },
     {
-     "label": "Avec un décalage",
-     "tex": "z_{n+1} = z_n^{2} + c",
-     "note": "À chaque pas, élever au carré, puis décaler de c. La frontière entre rester et partir n'est plus un cercle, et le thème des fractales la trace"
+     "label": "L'ensemble de Mandelbrot",
+     "tex": "M = \\{\\, c : |z_n| \\le 2 \\text{ for every } n \\,\\}",
+     "note": "Tous les c dont le chemin ne dépasse jamais la longueur deux. La page les remplit"
     }
    ],
    "dimension": {
     "label": "Le test d'échappement",
     "tex": "|z_n| > 2 \\implies |z_{n+k}| \\to \\infty",
-    "note": "Dès que la longueur dépasse deux, le carré distance le décalage pour toujours ; c'est ainsi que la page décide qu'une orbite est partie"
+    "note": "Dès que la longueur dépasse deux, le carré distance c pour toujours ; c'est ainsi que la page décide qu'un chemin est parti"
    }
   },
   {

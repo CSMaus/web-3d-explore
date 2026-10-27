@@ -1,9 +1,12 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { TextLink, Text, Button, Heading, Label, Page, Panel, Tag } from "@kit/index";
+import { TextLink, Text, Button, Label, Page, Panel, Tag } from "@kit/index";
 import { FIGURES } from "@/components/projects";
+import { Stage } from "@/components/projects/Stage";
 import { projectAt } from "@/content/projects";
 import { L } from "@/lib/lang";
+import { useRise } from "@/lib/reveal";
 
 export const Route = createFileRoute("/projects/$slug")({
   loader: ({ params }) => {
@@ -13,6 +16,16 @@ export const Route = createFileRoute("/projects/$slug")({
   },
   component: Project,
 });
+
+/** a block that rises into view as it reaches the screen */
+function Rising({ children, className }: { children: ReactNode; className?: string }) {
+  const ref = useRise<HTMLDivElement>(120);
+  return (
+    <div ref={ref} className={`rise ${className ?? ""}`}>
+      {children}
+    </div>
+  );
+}
 
 /**
  * a project shown rather than told: its figure to try, its numbers, then how it works in a few
@@ -29,17 +42,15 @@ function Project() {
       <TextLink asChild>
         <Link to="/projects">← {t("projects.back")}</Link>
       </TextLink>
-      <Heading className="mt-4">{project.title}</Heading>
-      <Text kind="intro" as="p" className="mt-3 max-w-3xl">{project.summary}</Text>
+      {/* the opening: the name large and alone in the middle, one line under it */}
+      <div className="mx-auto mt-12 max-w-3xl text-center">
+        <h1 data-text="display" className="m-0" style={{ fontSize: "clamp(2rem, 5vw, 3.6rem)", lineHeight: 1.08 }}>{project.title}</h1>
+        <Text kind="intro" as="p" className="mx-auto mt-5 max-w-2xl">{project.summary}</Text>
+      </div>
 
-      {Hero ? (
-        <Panel className="mt-8">
-          <Hero />
-          <Text kind="note" as="p" className="mt-4 max-w-3xl">{project.hero}</Text>
-        </Panel>
-      ) : null}
-
-      <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4">
+      {/* the main facts, right under the name, where they are read first */}
+      {project.facts?.length ? (
+      <dl className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4">
         {project.facts.map((f) => (
           <div key={f.label} className="min-w-0 border-l pl-4" style={{ borderColor: "var(--c-border)" }}>
             <dd data-text="display" className="m-0 tabular-nums" style={{ fontSize: "clamp(1.6rem, 3vw, 2.4rem)", lineHeight: 1.1, color: "var(--c-value)" }}>{f.value}</dd>
@@ -47,24 +58,22 @@ function Project() {
           </div>
         ))}
       </dl>
+      ) : null}
+
+      {Hero ? (
+        <Rising className="mt-12">
+          <Panel>
+            <Hero />
+            <Text kind="note" as="p" className="mt-4 max-w-3xl">{project.hero}</Text>
+          </Panel>
+        </Rising>
+      ) : null}
 
       <section className="mt-14">
         <Label>{L("How it works")}</Label>
-        <ol className="mt-6 space-y-10">
-          {project.steps.map((s, i) => {
-            const Figure = figures?.steps[s.figure];
-            return (
-              <li key={s.figure} className={`grid items-center gap-5 ${i % 2 ? "md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]" : "md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"}`}>
-                <div className={i % 2 ? "md:order-2" : undefined}>
-                  <span data-text="label" className="tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-                  <Heading level={3} className="mt-1">{s.title}</Heading>
-                  <Text kind="body" as="p" className="mt-2">{s.text}</Text>
-                </div>
-                <div data-slot="plot" className="min-w-0 overflow-hidden">{Figure ? <Figure /> : null}</div>
-              </li>
-            );
-          })}
-        </ol>
+        <div className="mt-6">
+          <Stage steps={project.steps} figures={figures?.steps ?? {}} />
+        </div>
         {project.more ? <Text kind="body" as="p" className="mt-10 max-w-3xl">{project.more}</Text> : null}
       </section>
 
