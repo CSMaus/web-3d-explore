@@ -34,8 +34,8 @@ export const SEQUENCE: Stop[] = Object.values(BUILT)
 
 /**
  * the page after the one at this path: the next stop when the path is one, or lies under one (a
- * page inside a section counts as that section); off the topics, the first page of the first topic;
- * after the very last page, none.
+ * page inside a section counts as that section). only topics and their pages have one: off the
+ * topics, and after the very last page, none.
  */
 export function nextAfter(path: string): Stop | null {
   const clean = path.replace(/\/+$/, "") || "/";
@@ -48,6 +48,10 @@ export function nextAfter(path: string): Stop | null {
     });
     at = best;
   }
-  if (at < 0) return clean.startsWith("/topics/") ? null : SEQUENCE[0];
+  if (at < 0) {
+    // a topic's own page leads to its first page
+    const home = clean.match(/^\/topics\/([^/]+)$/);
+    return home ? (SEQUENCE.find((s) => s.to.startsWith(`/topics/${home[1]}/`)) ?? null) : null;
+  }
   return SEQUENCE[at + 1] ?? null;
 }

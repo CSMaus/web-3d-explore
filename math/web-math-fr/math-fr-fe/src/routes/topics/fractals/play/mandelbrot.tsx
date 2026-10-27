@@ -76,7 +76,7 @@ function MandelbrotPage() {
     <div>
       <Heading level={1} className="mt-4">{system?.name ?? L("The Mandelbrot set")}</Heading>
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
-        <div className="space-y-4">
+        <div data-slot="task-in" className="min-w-0 space-y-4">
           <section data-slot="panel">
             <Label>{L("VIEW")}</Label>
             <div className="mt-3 space-y-2">
@@ -173,7 +173,7 @@ function MandelbrotPage() {
           <Equations system={system} />
         </div>
 
-        <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
+        <div data-slot="task-out" className="min-w-0 space-y-3 lg:sticky lg:top-24 lg:self-start">
           <section
             ref={stage}
             data-slot="plot"

@@ -39,9 +39,9 @@ export const FRONT_LAYOUT: "scene" | "stage" = "scene";
 /** whether the Mandelbulb on the front page sits in a frame; none by default. */
 export const FRONT_BULB_FRAMED = false;
 
-/** the colour of the light that runs along the Mandelbulb's edges in the contour view, settled per case: blue where the Mandelbulb is Crystal ice */
-const CONTOUR_LIGHTS: Record<string, string> = { base: "#9fe3ff", edge_light: "#ff6b5e", pixel_art_cute: "#a01c2c", old_code: "#0f5c4a" };
-export const CONTOUR_LIGHT = CONTOUR_LIGHTS[KIT_CASE] ?? "#9fe3ff";
+/** the colour of the light that runs along the Mandelbulb's edges in the contour view, settled per case: a clear blue for base (Cool) */
+const CONTOUR_LIGHTS: Record<string, string> = { base: "#3a8dff", edge_light: "#ff6b5e", pixel_art_cute: "#a01c2c", old_code: "#0f5c4a" };
+export const CONTOUR_LIGHT = CONTOUR_LIGHTS[KIT_CASE] ?? "#3a8dff";
 
 export type Language = { code: string; label: string; name: string };
 

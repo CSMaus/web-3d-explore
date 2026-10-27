@@ -377,6 +377,16 @@ function topbar(t: Theme): string {
   background: ${v("primary")};
 }
 
+/* the topic bar of a narrow screen: half-transparent under the top bar, the topic's sections as tabs */
+[data-slot="topic-bar"] {
+  background: color-mix(in oklab, ${v("background")} 70%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in oklab, ${v("border")} 60%, transparent);
+}
+[data-slot="topic-bar-link"] { color: ${v("muted-foreground")}; padding: 4px 10px; border-radius: var(--button-radius); white-space: nowrap; }
+[data-slot="topic-bar-link"][data-active="true"] { color: ${v("glow")}; box-shadow: inset 0 -2px 0 ${v("glow")}; }
+
 /* on a wide screen the menu wrapper is not a box: the links and the actions are the bar's own items */
 [data-slot="topbar-menu"] { display: contents; }
 

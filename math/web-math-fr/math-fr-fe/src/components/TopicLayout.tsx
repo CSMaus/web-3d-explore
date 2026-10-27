@@ -1,7 +1,8 @@
-import { Outlet, useRouterState } from "@tanstack/react-router";
+import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Page } from "@kit/index";
+import { NextButton } from "@/components/NextButton";
 import { TopicHead } from "@/components/TopicHead";
 import { TopicRail } from "@/components/TopicRail";
 import type { BuiltTopic } from "@/lib/topic";
@@ -34,7 +35,9 @@ function saveShown(shown: boolean): void {
  * drawer over the page, opened by a button above the page, closed by its own
  * button, the backdrop, Escape, or moving to another page; focus goes into the
  * drawer when it opens and back to the button when it closes, and the page
- * behind it does not scroll. the page itself carries no navigation.
+ * behind it does not scroll. on a narrow screen a half-transparent bar stays
+ * under the top bar: the topic's sections to tap, the menu button for every
+ * page, and the next page at its right end.
  */
 export function TopicLayout({ topic }: { topic: BuiltTopic }) {
   const { t } = useTranslation();
@@ -87,9 +90,26 @@ export function TopicLayout({ topic }: { topic: BuiltTopic }) {
               {t("nav.showMenu")}
             </button>
           )}
-          <button ref={opener} type="button" data-slot="side-nav-toggle" data-text="tab" aria-expanded={drawer} aria-controls={DRAWER_ID} className="inline-flex items-center gap-2 lg:hidden" onClick={() => setDrawerAt(drawer ? null : path)}>
+        </div>
+        {/* the topic bar of a narrow screen, held under the top bar */}
+        <div
+          data-slot="topic-bar"
+          className="sticky top-[var(--topbar-height)] z-30 -mx-4 mb-4 flex items-center gap-2 px-4 py-2 lg:hidden"
+        >
+          <button ref={opener} type="button" data-slot="side-nav-toggle" data-text="tab" aria-expanded={drawer} aria-controls={DRAWER_ID} className="inline-flex shrink-0 items-center gap-2" onClick={() => setDrawerAt(drawer ? null : path)}>
             {t("nav.menu")}
           </button>
+          <nav aria-label={topic.title} className="flex min-w-0 flex-1 gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {topic.sections.map((s) => {
+              const on = path === s.to || path.startsWith(`${s.to}/`);
+              return (
+                <Link key={s.to} to={s.to} data-slot="topic-bar-link" data-text="tab" data-active={on ? "true" : "false"} aria-current={on ? "page" : undefined} className="shrink-0">
+                  {s.label}
+                </Link>
+              );
+            })}
+          </nav>
+          <NextButton />
         </div>
         {topic.sections.some((s) => s.to === path.replace(/\/$/, "")) ? <TopicHead topic={topic} /> : null}
         <Outlet />

@@ -29,13 +29,14 @@ export function TaskPage({ title, job, input, run, picture, result, more, below 
       <Text kind="body" as="p" className="mt-2 max-w-2xl">{job}</Text>
 
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
-        <div className="space-y-4">
+        {/* min-w-0 on both columns: a long row inside never widens the column past the screen */}
+        <div data-slot="task-in" className="min-w-0 space-y-4">
           <Panel label={L("WHAT GOES IN")}>{input}</Panel>
           <Panel label={L("RUN")} tone="primary">{run}</Panel>
           {more}
         </div>
 
-        <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
+        <div data-slot="task-out" className="min-w-0 space-y-3 lg:sticky lg:top-24 lg:self-start">
           {picture}
           <Panel label={L("WHAT CAME OUT")}>{result}</Panel>
           {below}

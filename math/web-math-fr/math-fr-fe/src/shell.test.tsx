@@ -63,7 +63,11 @@ describe("The shell", () => {
     expect(nextAfter("/topics/complex/play/square")?.to).toBe("/topics/complex/play/round");
     expect(nextAfter("/topics/complex/play")?.to).toBe("/topics/complex/play/line");
     expect(nextAfter("/topics/complex/uses")?.to).toBe("/topics/fractals/parts");
-    expect(nextAfter("/about")?.to).toBe(SEQUENCE[0].to);
+    expect(nextAfter("/topics/chaos")?.to).toBe("/topics/chaos/parts");
+    expect(nextAfter("/topics")).toBeNull();
+    expect(nextAfter("/about")).toBeNull();
+    expect(nextAfter("/")).toBeNull();
+    expect(nextAfter("/projects/webpaut")).toBeNull();
     expect(nextAfter(SEQUENCE[SEQUENCE.length - 1].to)).toBeNull();
   });
 

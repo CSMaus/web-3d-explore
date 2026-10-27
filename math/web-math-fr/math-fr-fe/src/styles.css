@@ -41,6 +41,29 @@ html.still .rise {
   font-size: 1.02em;
 }
 
+/*
+ * a play page on a phone or a narrow screen: the picture comes first, above the inputs and the
+ * mathematics, and its plots stay held under the topic bar while the controls scroll under them,
+ * so a value changed is seen changing the plot. only the plots are held, capped at about a third of
+ * the screen; their captions scroll on under them. the wrappers around the plots give up their
+ * boxes (display: contents) so each plot is held by the page itself, not by a short wrapper.
+ */
+@media (max-width: 1023px) {
+  [data-slot="task-out"] { display: contents; }
+  [data-slot="task-out"] > :first-child:not([data-slot="plot"]),
+  [data-slot="task-out"] > :first-child :not([data-slot="plot"]):has([data-slot="plot"]) { display: contents; }
+  [data-slot="task-out"] > :first-child,
+  [data-slot="task-out"] > :first-child * { order: -1; }
+  [data-slot="task-out"] > :first-child[data-slot="plot"],
+  [data-slot="task-out"] > :first-child [data-slot="plot"] {
+    position: sticky;
+    top: calc(var(--topbar-height) + 52px);
+    z-index: 20;
+    height: min(34svh, 320px);
+    box-shadow: 0 -12px 0 var(--c-background);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rise {
     opacity: 1;

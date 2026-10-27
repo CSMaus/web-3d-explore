@@ -13,7 +13,7 @@ const PARTS = [
   { id: "experience", label: L("Experience") },
   { id: "education", label: L("Education") },
   { id: "papers", label: L("Papers") },
-  { id: "software", label: L("Registered software") },
+  { id: "software", label: L("Patents") },
 ] as const;
 
 type Part = (typeof PARTS)[number]["id"];
@@ -201,7 +201,7 @@ function About() {
         </ol>
       </Part>
 
-      <Part id="software" title={L("Registered software")} note={L("Computer programs registered in Korea, with their registration numbers.")}>
+      <Part id="software" title={L("Patents")} note={L("Computer programs registered in Korea, with their registration numbers.")}>
         <ol className={`${ITEMS} pb-12`}>
           {REGISTERED.map((r) => (
             <Rise key={r.number} className="grid gap-2 md:grid-cols-[260px_minmax(0,1fr)] md:gap-10">
