@@ -1,6 +1,7 @@
 /**
  * the about page: who makes the site. the work, the education and the three public profiles come
- * from the owner's CV (cv-versions/plata, 2026), in its own words; the papers and the registered
+ * from the owner's CV (cv-versions/plata, 2026), the work told in plain words for a reader new to
+ * the field, its facts and numbers the CV's; the papers and the registered
  * software from her lab's site (sites.google.com/view/ndeshmlab, Publication and Patent & Tech.
  * Transfer). no e-mail, phone or GitHub address goes on this page: the owner shares those herself.
  * the CV's wording stays in English in every language of the site, like the paper titles.
@@ -24,39 +25,39 @@ export const WORK: Job[] = [
   {
     when: "Dec 2025 - Present",
     place: "Reynova Inc.",
-    what: "AI & LLM products for US healthcare",
+    what: "AI products for health insurance in the US",
     role: "Senior ML/AI Engineer",
     points: [
-      "Led the cross-functional team that built an LLM assistant for health-insurance members from scratch, with tool calling over member records and policy search, text and real-time voice, defining the requirements and architecture together with the customer.",
-      "Led the design of the assistant's evaluation: labelled question sets, separate retrieval, answer and end-to-end runs, automated grading and run-by-run comparison, used to choose model settings and retrieval depth.",
-      "Raised recall@10 from 0.82 to 0.88 and cut search latency from 133 ms to 1.7 ms, measured on that evaluation set, by leading retrieval depth tuning and the move to a graph-based vector index.",
-      "Built, as sole developer, an LLM/RAG service that assesses prescribed medications for insurance approval, grounding each assessment in facts from FDA drug labels and returning a structured, cited result to external claim systems.",
-      "Cut a slow metrics refresh in a contract-management backend from ~7 s to 88 ms by finding repeated LLM vendor lookups and moving the recomputation to a background task.",
+      "Led the team that built, from scratch, an AI assistant for people with health insurance. It answers by text and by live voice, looks up the member's own records and searches the insurance policies to find the answer. The requirements and the design were worked out together with the customer.",
+      "Led the testing of the assistant: sets of real questions with checked answers, separate measurements of how well it finds information and how well it answers, and automatic grading, so that every change could be compared with the previous one and the best settings chosen.",
+      "Made the assistant's search both more accurate and much faster: the right document now appears among the first ten results in 88% of cases instead of 82%, and a search takes 1.7 milliseconds instead of 133, after tuning how many results the assistant reads and moving to a faster kind of search index.",
+      "Built, as the only developer, a service that checks whether a prescribed medicine should be approved by the insurance. Each decision rests on facts from the official US drug labels (FDA) and cites them, and the result goes back to the claim systems of other companies.",
+      "Made a slow part of a contract-management system update in 88 milliseconds instead of about 7 seconds: it repeated the same lookups through a language model every time, and that work was moved to run in the background.",
     ],
   },
   {
     when: "Sep 2022 - Dec 2025",
     place: "Changwon National University",
-    what: "NDE & SHM Lab",
+    what: "Nondestructive Evaluation and Structural Health Monitoring Lab",
     role: "ML/DL Researcher",
     points: [
-      "Built a multilingual voice-controlled LLM assistant for the inspection software (Whisper STT, GPT structured output).",
-      "Designed and trained transformer models for anomaly detection in sequential sensor data, with balanced sampling; integrated the final NN model via ONNX into the inspection software I developed, where it detected every reportable defect in real Korean Air data.",
-      "Built a computer vision system for automatic control of a Doosan Enerbility welding robot, reaching 0.95 mask mAP on 6000+ images I collected and labelled and ±0.2 mm on-site measurement stability.",
+      "Built a voice assistant for the lab's ultrasonic inspection software: an inspector gives commands by voice, in several languages, and the software understands them (speech recognition with Whisper, the commands read by GPT).",
+      "Designed and trained neural networks (transformers) that find defects in the signals of ultrasonic scans, and built the final model into the inspection software, also written in the lab. On real inspection data from Korean Air it found every defect that had to be reported.",
+      "Built a camera system that guides a Doosan Enerbility welding robot automatically. Trained on more than 6,000 images, collected and labelled for it, it scored 0.95 out of 1 on the standard accuracy measure for finding objects in images (mask mAP), and on site its measurements stayed steady to within 0.2 mm.",
     ],
   },
   {
     when: "Jun 2022 - Sep 2023",
     place: "Kultura Ex Machina",
-    what: "Media & Art platform",
+    what: "A platform for media and art",
     role: "Data Scientist",
-    points: ["Built an image auto-tagging pipeline (CLIP, ViT) with an LLM module that generates artwork descriptions."],
+    points: ["Built a system that tags artworks automatically from their images (CLIP, ViT) and writes a short description of each with a language model."],
   },
   {
     when: "Jul 2019 - Dec 2021",
     place: "SimRail",
     role: "Software Engineer",
-    points: ["Developed the detailed mathematical model of the Sapsan high-speed train for a driver training simulator, simulating the train's systems with real physics."],
+    points: ["Built the detailed mathematical model of the Sapsan high-speed train for a simulator that trains its drivers: every system of the train behaves by real physics."],
   },
 ];
 
