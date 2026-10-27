@@ -3,10 +3,11 @@
  * of running the shader. the live bulb is driven through one whole period of its turn, frame by
  * frame (window.__bulbPhase), in its contour light, and each frame is read from its canvas.
  *
- * the videos are plain H.264, which every computer and phone decodes in its hardware, the frames
- * laid on the page's own colour for each mode (a blend over the page cannot be used: the front
- * scene isolates itself, so a blend would see nothing behind it). each in two sizes, 1080
- * px and 720 px for small screens, with a still frame for devices that should not play video.
+ * the videos are plain H.264, which every computer and phone decodes in its hardware, and keep
+ * the bulb's transparency the way such video can: each frame holds the bulb (on black) in its top
+ * half and its transparency, as grey, in its bottom half; the page joins the two halves again
+ * (BakedBulb.tsx), so the bulb lies over the page and its background as the live one did. two
+ * sizes, 1080 px and 720 px for small screens, and a still frame with its transparency (PNG).
  *
  * needs the built site served and a Chrome open with its debugging port:
  *
@@ -15,8 +16,7 @@
  *     --use-angle=metal --remote-debugging-port=9390 --user-data-dir=/tmp/bake-chrome &
  *   node scripts/bake-bulb.mjs [case ...]
  *
- * writes public/baked/bulb-<case>-<mode>-<size>.mp4 and bulb-<case>-<mode>.jpg. ffmpeg must be on
- * the path. the frames are written to a folder in /tmp and removed after each case.
+ * writes public/baked/bulb-<case>-<size>.mp4 and bulb-<case>.png. ffmpeg must be on the path. the frames are written to a folder in /tmp and removed after each case.
  */
 import { execFileSync } from "node:child_process";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
@@ -25,8 +25,6 @@ import { join } from "node:path";
 const SITE = "http://localhost:1291/web-3d-explore/?bake";
 const CDP = "http://127.0.0.1:9390";
 const CASES = process.argv.slice(2).length ? process.argv.slice(2) : ["base", "edge_light", "old_code", "pixel_art_cute"];
-// the cases with a dark page only (DARK_ONLY in src/lib/site.ts)
-const DARK_ONLY = ["pixel_art_cute"];
 // one whole period of the turn (42 s, Bulb.tsx), at this many frames a second
 const SECONDS = 42;
 const FPS = Number(process.env.BAKE_FPS ?? 20);
@@ -68,12 +66,18 @@ const ev = async (expression) => (await send("Runtime.evaluate", { expression, r
 await send("Emulation.setDeviceMetricsOverride", { width: 1000, height: 1100, deviceScaleFactor: 2, mobile: false });
 mkdirSync(OUT, { recursive: true });
 
-const encode = (frames, ground, out, side) => {
-  // the square in the middle of the canvas, where the bulb is, laid on the ground colour
-  const graph = `color=c=${ground}:s=${side}x${side}:r=${FPS}[g];[0:v]crop='min(iw,ih)':'min(iw,ih)',scale=${side}:${side}:flags=lanczos[f];[g][f]overlay=shortest=1,scale=out_color_matrix=bt709:out_range=tv,format=yuv420p`;
-  // the colour standard written into the file, so a browser converts it back exactly and the
-  // ground matches the page instead of showing as a lighter or darker square
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", String(FPS), "-i", join(frames, "f%04d.png"), "-filter_complex", graph, "-c:v", "libx264", "-preset", "slow", "-crf", side > 800 ? "30" : "28", "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", "-an", out]);
+const encode = (frames, out, side) => {
+  // the square in the middle of the canvas, where the bulb is: on black above, its transparency
+  // as grey below; the colour standard is written into the file, so the browser reads it back
+  // exactly and the joined bulb keeps its colours and edges
+  const graph = [
+    `[0:v]crop='min(iw,ih)':'min(iw,ih)',scale=${side}:${side}:flags=lanczos,format=rgba,split[a][b]`,
+    `color=c=black:s=${side}x${side}:r=${FPS}[g]`,
+    `[g][a]overlay=shortest=1,format=rgb24[top]`,
+    `[b]alphaextract,format=rgb24[low]`,
+    `[top][low]vstack,scale=out_color_matrix=bt709:out_range=tv,format=yuv420p`,
+  ].join(";");
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", String(FPS), "-i", join(frames, "f%04d.png"), "-filter_complex", graph, "-c:v", "libx264", "-preset", "slow", "-crf", side > 800 ? "28" : "27", "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", "-an", out]);
 };
 
 for (const kase of CASES) {
@@ -84,10 +88,6 @@ for (const kase of CASES) {
   await wait(3500);
   await ev(`window.__bulbPhase = 0`);
   await wait(1500);
-  // the page's ground in each mode, read from the sheet
-  const ground = (mode) => ev(`(() => { document.documentElement.dataset.mode = "${mode}"; const c = getComputedStyle(document.documentElement).getPropertyValue("--c-background").trim(); document.documentElement.dataset.mode = "dark"; return c; })()`);
-  const light = await ground("light");
-  const dark = await ground("dark");
   const frames = SECONDS * FPS;
   const dir = join(WORK, kase);
   rmSync(dir, { recursive: true, force: true });
@@ -101,14 +101,11 @@ for (const kase of CASES) {
     })()`);
     writeFileSync(join(dir, `f${String(k).padStart(4, "0")}.png`), Buffer.from(url.split(",")[1], "base64"));
   }
-  const modes = DARK_ONLY.includes(kase) ? [["dark", dark]] : [["dark", dark], ["light", light]];
-  for (const [mode, ground] of modes) {
-    for (const side of SIZES) encode(dir, ground, join(OUT, `bulb-${kase}-${mode}-${side}.mp4`), side);
-    // the still frame: a third of the way round
-    execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", join(OUT, `bulb-${kase}-${mode}-720.mp4`), "-vf", `select=eq(n\\,${Math.round(frames / 3)})`, "-frames:v", "1", "-q:v", "3", join(OUT, `bulb-${kase}-${mode}.jpg`)]);
-  }
+  for (const side of SIZES) encode(dir, join(OUT, `bulb-${kase}-${side}.mp4`), side);
+  // the still frame, a third of the way round, with its transparency
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", join(dir, `f${String(Math.round(frames / 3)).padStart(4, "0")}.png`), "-vf", "crop='min(iw,ih)':'min(iw,ih)',scale=720:720:flags=lanczos", join(OUT, `bulb-${kase}.png`)]);
   rmSync(dir, { recursive: true, force: true });
-  console.log(`${kase}: ${frames} frames in ${Math.round((Date.now() - started) / 1000)} s (grounds ${dark}, ${light})`);
+  console.log(`${kase}: ${frames} frames in ${Math.round((Date.now() - started) / 1000)} s`);
 }
 ws.close();
 process.exit(0);
