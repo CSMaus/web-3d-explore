@@ -82,7 +82,7 @@ export function FrontScene() {
             <Bulb className="absolute inset-0 h-full w-full" view={view} palette={palette} light={CONTOUR_LIGHT} {...FRONT_LIGHT_SET} />
           </Suspense>
         ) : (
-          <BakedBulb kase={KIT_CASE} view={view} className="absolute inset-0 h-full w-full object-contain" onMissing={() => setMissing(true)} />
+          <BakedBulb kase={KIT_CASE} className="absolute inset-0 h-full w-full object-contain" onMissing={() => setMissing(true)} />
         )}
       </div>
       <div data-slot="scene-foot">
