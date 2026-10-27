@@ -5,7 +5,7 @@ import { ThemeSign } from "@/components/ThemeSign";
 import { L } from "@/lib/lang";
 import { useSearchBox } from "@/lib/searchBox";
 import { HAS_BACKEND } from "@/lib/api";
-import { BRAND, DONATE_URL, LANGUAGES, THEMES } from "@/lib/site";
+import { BRAND, DARK_ONLY, DONATE_URL, LANGUAGES, THEMES } from "@/lib/site";
 
 type To = "/learn" | "/topics" | "/play" | "/about" | "/projects" | "/contact" | "/kit";
 type Item = { to: To; key: string };
@@ -54,7 +54,7 @@ export function Menu() {
       actions={
         <>
           <SearchButton label={t("nav.search")} shortcut={MAC ? "⌘K" : "Ctrl K"} onClick={() => setOpen(true)} />
-          <ModeSwitch mode={mode} onChange={pickMode} labels={{ light: t("nav.light"), dark: t("nav.dark") }} />
+          {DARK_ONLY.includes(KIT_CASE) ? null : <ModeSwitch mode={mode} onChange={pickMode} labels={{ light: t("nav.light"), dark: t("nav.dark") }} />}
           <ThemeSwitch value={KIT_CASE} options={themes} onChange={chooseCase} label={t("nav.theme")} />
           {LANGUAGES.length > 1 ? (
             <LanguageSwitch value={i18n.language} options={LANGUAGES} onChange={(code) => void i18n.changeLanguage(code).then(() => window.location.reload())} label={t("nav.language")} />

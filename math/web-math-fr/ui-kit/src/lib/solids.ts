@@ -79,8 +79,8 @@ function lorenz(): P3[][] {
     x += dx * dt;
     y += dy * dt;
     z += dz * dt;
-    // the first steps leave the start for the attractor and are not drawn; every second step is kept
-    if (i > 300 && i % 2 === 0) line.push([x, z, y]);
+    // the first steps leave the start for the attractor and are not drawn; every third step is kept
+    if (i > 300 && i % 3 === 0) line.push([x, z, y]);
   }
   return normal([line]);
 }
@@ -221,7 +221,7 @@ export function project(lines: P3[][], angle: number, tilt = 0.32, margin = 8): 
       const ry = y * ct - rz * st;
       const depth = y * st + rz * ct;
       const k = 3.2 / (3.2 - depth);
-      d += `${i === 0 ? "M" : "L"}${(50 + rx * k * half * 0.86).toFixed(2)} ${(50 - ry * k * half * 0.86).toFixed(2)}`;
+      d += `${i === 0 ? "M" : "L"}${(50 + rx * k * half * 0.86).toFixed(1)} ${(50 - ry * k * half * 0.86).toFixed(1)}`;
     });
     out.push(d);
   }

@@ -819,6 +819,10 @@ html:where([data-case="base"], :not([data-case])), :where(html[data-case="base"]
 :where(html[data-case="base"], html:not([data-case])) a[data-tile]:hover, :where(html[data-case="base"], html:not([data-case])) a[data-tile]:focus-visible { transform: translateY(-3px); border-color: var(--c-selected); }
 :where(html[data-case="base"], html:not([data-case])) a[data-tile]:is(:hover, :focus-visible) [data-slot="edge-figure"] :is(.edge-core, .edge-tail, .edge-halo) { animation-duration: var(--figure-seconds), var(--breathe-seconds); }
 :where(html[data-case="base"], html:not([data-case])) [data-slot="topic-graph"] a[data-slot="panel"][data-lit] { transform: translateY(-6px); border-color: var(--c-selected); }
+:where(html[data-case="base"], html:not([data-case])) a[data-tile], :where(html[data-case="base"], html:not([data-case])) [data-slot="topic-graph"] a[data-slot="panel"] { position: relative; }
+:where(html[data-case="base"], html:not([data-case])) a[data-tile]::after, :where(html[data-case="base"], html:not([data-case])) [data-slot="topic-graph"] a[data-slot="panel"]::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 0; }
+:where(html[data-case="base"], html:not([data-case])) a[data-tile]:is(:hover, :focus-visible)::after { height: 4px; }
+:where(html[data-case="base"], html:not([data-case])) [data-slot="topic-graph"] a[data-slot="panel"][data-lit]::after { height: 7px; }
 :where(html[data-case="base"], html:not([data-case])) [data-slot="topic-graph"] [data-lit] [data-slot="edge-figure"] .edge-halo { stroke-opacity: 0.45; }
 :where(html[data-case="base"], html:not([data-case])) [data-slot="topic-graph"] [data-lit] [data-slot="graph-open"] { color: var(--c-selected); }
 @media (prefers-reduced-motion: reduce) {
@@ -2040,6 +2044,10 @@ html:where([data-case="edge_light"]), :where(html[data-case="edge_light"]) body 
 :where(html[data-case="edge_light"]) a[data-tile]:hover, :where(html[data-case="edge_light"]) a[data-tile]:focus-visible { transform: translateY(-3px); border-color: var(--c-selected); }
 :where(html[data-case="edge_light"]) a[data-tile]:is(:hover, :focus-visible) [data-slot="edge-figure"] :is(.edge-core, .edge-tail, .edge-halo) { animation-duration: var(--figure-seconds), var(--breathe-seconds); }
 :where(html[data-case="edge_light"]) [data-slot="topic-graph"] a[data-slot="panel"][data-lit] { transform: translateY(-6px); border-color: var(--c-selected); }
+:where(html[data-case="edge_light"]) a[data-tile], :where(html[data-case="edge_light"]) [data-slot="topic-graph"] a[data-slot="panel"] { position: relative; }
+:where(html[data-case="edge_light"]) a[data-tile]::after, :where(html[data-case="edge_light"]) [data-slot="topic-graph"] a[data-slot="panel"]::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 0; }
+:where(html[data-case="edge_light"]) a[data-tile]:is(:hover, :focus-visible)::after { height: 4px; }
+:where(html[data-case="edge_light"]) [data-slot="topic-graph"] a[data-slot="panel"][data-lit]::after { height: 7px; }
 :where(html[data-case="edge_light"]) [data-slot="topic-graph"] [data-lit] [data-slot="edge-figure"] .edge-halo { stroke-opacity: 0.45; }
 :where(html[data-case="edge_light"]) [data-slot="topic-graph"] [data-lit] [data-slot="graph-open"] { color: var(--c-selected); }
 @media (prefers-reduced-motion: reduce) {
@@ -3195,6 +3203,10 @@ html:where([data-case="old_code"]), :where(html[data-case="old_code"]) body { ov
 :where(html[data-case="old_code"]) a[data-tile]:hover, :where(html[data-case="old_code"]) a[data-tile]:focus-visible { transform: translateY(-3px); border-color: var(--c-selected); }
 :where(html[data-case="old_code"]) a[data-tile]:is(:hover, :focus-visible) [data-slot="edge-figure"] :is(.edge-core, .edge-tail, .edge-halo) { animation-duration: var(--figure-seconds), var(--breathe-seconds); }
 :where(html[data-case="old_code"]) [data-slot="topic-graph"] a[data-slot="panel"][data-lit] { transform: translateY(-6px); border-color: var(--c-selected); }
+:where(html[data-case="old_code"]) a[data-tile], :where(html[data-case="old_code"]) [data-slot="topic-graph"] a[data-slot="panel"] { position: relative; }
+:where(html[data-case="old_code"]) a[data-tile]::after, :where(html[data-case="old_code"]) [data-slot="topic-graph"] a[data-slot="panel"]::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 0; }
+:where(html[data-case="old_code"]) a[data-tile]:is(:hover, :focus-visible)::after { height: 4px; }
+:where(html[data-case="old_code"]) [data-slot="topic-graph"] a[data-slot="panel"][data-lit]::after { height: 7px; }
 :where(html[data-case="old_code"]) [data-slot="topic-graph"] [data-lit] [data-slot="edge-figure"] .edge-halo { stroke-opacity: 0.45; }
 :where(html[data-case="old_code"]) [data-slot="topic-graph"] [data-lit] [data-slot="graph-open"] { color: var(--c-selected); }
 @media (prefers-reduced-motion: reduce) {
@@ -4157,6 +4169,10 @@ html:where([data-case="pixel_art_cute"]), :where(html[data-case="pixel_art_cute"
 :where(html[data-case="pixel_art_cute"]) a[data-tile]:hover, :where(html[data-case="pixel_art_cute"]) a[data-tile]:focus-visible { transform: translateY(-3px); border-color: var(--c-selected); }
 :where(html[data-case="pixel_art_cute"]) a[data-tile]:is(:hover, :focus-visible) [data-slot="edge-figure"] :is(.edge-core, .edge-tail, .edge-halo) { animation-duration: var(--figure-seconds), var(--breathe-seconds); }
 :where(html[data-case="pixel_art_cute"]) [data-slot="topic-graph"] a[data-slot="panel"][data-lit] { transform: translateY(-6px); border-color: var(--c-selected); }
+:where(html[data-case="pixel_art_cute"]) a[data-tile], :where(html[data-case="pixel_art_cute"]) [data-slot="topic-graph"] a[data-slot="panel"] { position: relative; }
+:where(html[data-case="pixel_art_cute"]) a[data-tile]::after, :where(html[data-case="pixel_art_cute"]) [data-slot="topic-graph"] a[data-slot="panel"]::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 0; }
+:where(html[data-case="pixel_art_cute"]) a[data-tile]:is(:hover, :focus-visible)::after { height: 4px; }
+:where(html[data-case="pixel_art_cute"]) [data-slot="topic-graph"] a[data-slot="panel"][data-lit]::after { height: 7px; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="topic-graph"] [data-lit] [data-slot="edge-figure"] .edge-halo { stroke-opacity: 0.45; }
 :where(html[data-case="pixel_art_cute"]) [data-slot="topic-graph"] [data-lit] [data-slot="graph-open"] { color: var(--c-selected); }
 @media (prefers-reduced-motion: reduce) {

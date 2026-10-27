@@ -5,6 +5,7 @@ import { applyMode, applyPalette, KIT_CASE, kitTheme, readMode } from "@kit/inde
 import { routeTree } from "@/routeTree.gen";
 import "@/styles.css";
 import "@/i18n";
+import { DARK_ONLY } from "@/lib/site";
 
 // the theme in force (the visitor's choice when it is one the product ships), which the sheet follows
 document.documentElement.dataset.case = KIT_CASE;
@@ -15,7 +16,7 @@ for (const href of kitTheme.type.imports ?? []) {
   link.href = href;
   document.head.appendChild(link);
 }
-applyMode(readMode(kitTheme.colours.default));
+applyMode(DARK_ONLY.includes(KIT_CASE) ? "dark" : readMode(kitTheme.colours.default));
 if (kitTheme.palettes && kitTheme.palette) applyPalette(kitTheme.palette);
 
 // the site can live under a path, as on GitHub Pages (/web-3d-explore/); vite's base, set by

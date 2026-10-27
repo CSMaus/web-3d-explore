@@ -11,6 +11,25 @@ export type Palette = {
 
 /** the palettes written in code, then the ones the owner composed in the picker (palettes.own.json, written by the dev server) */
 const BUILT_IN: Palette[] = [
+  // the front page's bulb in the Warm theme: the owner's "Own 2" from the picker, fixed here on
+  // 2026-10-26 so a new save in the picker does not change it
+  {
+    id: "warm",
+    name: "Warm",
+    back: "#e0edd4",
+    ink: "#eafff8",
+    roles: ["#f19c00", "#da825a", "#ca892e", "#af0000"],
+    ramp: ["#652d0c", "#ca892e", "#f19c00", "#da825a", "#af0000"],
+  },
+  // the front page's bulb in the Pixel theme: the owner's "Own 1" of 2026-10-26, fixed the same way
+  {
+    id: "pixel",
+    name: "Pixel",
+    back: "#03100f",
+    ink: "#eafff8",
+    roles: ["#fb7979", "#b17272", "#8c5a60", "#f0a8c1"],
+    ramp: ["#06121f", "#8c5a60", "#fb7979", "#b17272", "#f0a8c1"],
+  },
   {
     id: "ice",
     name: "Crystal ice",

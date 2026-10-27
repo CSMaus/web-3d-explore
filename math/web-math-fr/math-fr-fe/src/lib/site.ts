@@ -13,7 +13,7 @@ export const BRAND: string = import.meta.env.VITE_BRAND || "M / Math";
 export const DONATE_URL: string = import.meta.env.VITE_DONATE_URL || "";
 
 /** the palette of the Mandelbulb on the front page, one per case, by id from `lib/palettes`; chosen here, not on the page. */
-const FRONT_PALETTES: Record<string, string> = { base: "ice", edge_light: "own-2", pixel_art_cute: "ice", old_code: "moss" };
+const FRONT_PALETTES: Record<string, string> = { base: "ice", edge_light: "warm", pixel_art_cute: "pixel", old_code: "moss" };
 export const FRONT_PALETTE = FRONT_PALETTES[KIT_CASE] ?? "ice";
 
 /** the lights of the Mandelbulb on the front page, per case; a value left out is the Bulb's default. */
@@ -40,7 +40,7 @@ export const FRONT_LAYOUT: "scene" | "stage" = "scene";
 export const FRONT_BULB_FRAMED = false;
 
 /** the colour of the light that runs along the Mandelbulb's edges in the contour view, settled per case: blue where the Mandelbulb is Crystal ice */
-const CONTOUR_LIGHTS: Record<string, string> = { base: "#9fe3ff", edge_light: "#ff6b5e", pixel_art_cute: "#9fe3ff", old_code: "#0f5c4a" };
+const CONTOUR_LIGHTS: Record<string, string> = { base: "#9fe3ff", edge_light: "#ff6b5e", pixel_art_cute: "#a01c2c", old_code: "#0f5c4a" };
 export const CONTOUR_LIGHT = CONTOUR_LIGHTS[KIT_CASE] ?? "#9fe3ff";
 
 export type Language = { code: string; label: string; name: string };
@@ -73,3 +73,6 @@ export const THEMES: { case: string; name: string; sign: "sun" | "prompt" | "fla
 
 /** the cases whose front page carries the kitten asleep in the corner */
 export const KITTEN_CASES: string[] = ["pixel_art_cute"];
+
+/** the cases that have a dark page only: no light and dark switch, and the page always dark */
+export const DARK_ONLY: string[] = ["pixel_art_cute"];

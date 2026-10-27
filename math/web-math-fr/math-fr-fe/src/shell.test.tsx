@@ -72,11 +72,11 @@ describe("The shell", () => {
     });
   }
 
-  it("The front page shows the Mandelbulb with its one switch, the topics, and the strip", async () => {
+  it("The front page shows the Mandelbulb in its contour light with no switch, and the topics", async () => {
     await siteAt("/");
     await waitFor(() => expect(screen.getByText(common.front.title1)).toBeTruthy());
-    expect(screen.getByRole("button", { name: "Solid" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Contour light" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Solid" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Contour light" })).toBeNull();
     expect(screen.queryByText("Colour")).toBeNull();
     expect(screen.getByText("Start with fractals").closest("a")?.getAttribute("href")).toBe("/topics/fractals/parts");
     expect(screen.getByText("The topics")).toBeTruthy();
