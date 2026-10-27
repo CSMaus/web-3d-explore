@@ -68,6 +68,8 @@
   "Memory": "Mémoire",
   "Move {{n}}": "Transformation {{n}}",
   "Network traffic that stays bursty however it is averaged, and what that does to a router's queue.": "Un trafic réseau qui reste par rafales quelle que soit la moyenne prise, et ce que cela fait à la file d'attente d'un routeur.",
+  "Next": "Suivant",
+  "Next: {{page}}": "Suivant : {{page}}",
   "No reinsurance is bought.": "Aucune réassurance n'est achetée.",
   "Not started": "Pas commencé",
   "Nothing has run yet. Choose a world and press the button.": "Rien n'a encore tourné. Choisissez un monde et appuyez sur le bouton.",

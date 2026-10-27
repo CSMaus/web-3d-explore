@@ -68,6 +68,8 @@
   "Memory": "기억",
   "Move {{n}}": "변환 {{n}}",
   "Network traffic that stays bursty however it is averaged, and what that does to a router's queue.": "아무리 평균을 내도 몰아치는 성질이 남는 네트워크 트래픽, 그리고 그것이 라우터의 대기열에 미치는 영향.",
+  "Next": "다음",
+  "Next: {{page}}": "다음: {{page}}",
   "No reinsurance is bought.": "재보험은 사지 않습니다.",
   "Not started": "시작 전",
   "Nothing has run yet. Choose a world and press the button.": "아직 아무것도 실행되지 않았습니다. 세계를 고르고 버튼을 누르세요.",

@@ -68,6 +68,8 @@
   "Memory": "Память",
   "Move {{n}}": "Преобразование {{n}}",
   "Network traffic that stays bursty however it is averaged, and what that does to a router's queue.": "Сетевой трафик, который остаётся рваным, при любом усреднении, и что это делает с очередью маршрутизатора.",
+  "Next": "Дальше",
+  "Next: {{page}}": "Дальше: {{page}}",
   "No reinsurance is bought.": "Перестрахование не покупается.",
   "Not started": "Не запущено",
   "Nothing has run yet. Choose a world and press the button.": "Пока ничего не запускалось. Выберите мир и нажмите кнопку.",

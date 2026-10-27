@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Text } from "@kit/index";
+import { Swatch, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Choices } from "@/components/Choices";
 import { Equations } from "@/components/Equations";
@@ -13,7 +13,7 @@ import { Slider } from "@/components/Slider";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/chaos";
-import { FAINT, INK, ticks } from "@/lib/draw";
+import { FAINT, INK, TWO, ticks } from "@/lib/draw";
 import { useRunner } from "@/lib/runner";
 import { useLook } from "@/lib/store";
 import { SEED, cobweb, compose, exponent, logistic, logisticSlope, orbit, period } from "@/systems/maps";
@@ -86,7 +86,7 @@ function LogisticPage() {
             <Slider label={L("Start x0")} min={0.01} max={0.99} step={0.005} value={x0} format={(v) => v.toFixed(3)} onChange={(v) => { setX0(v); reset(); }} />
             <Slider label={L("Iterate")} min={1} max={8} step={1} value={iterate} format={(v) => L("f applied {{n}}x", { n: Math.round(v) })} onChange={(v) => { setIterate(Math.round(v)); reset(); }} />
             <Text kind="note" as="p">
-              {L("Click on the left picture to choose the start. Iterate draws the rule composed with itself: a two-cycle of the rule is a fixed point of the rule applied twice, which is why doubling is mechanical. A second start, one millionth away, runs faintly beside the first on the right.")}
+              {L("Click on the left picture to choose the start. Iterate draws the rule composed with itself: a two-cycle of the rule is a fixed point of the rule applied twice, which is why doubling is mechanical. A second start, one millionth higher, runs as a dashed line beside the first on the right.")}
             </Text>
             <PaletteBar />
           </div>
@@ -125,12 +125,12 @@ function LogisticPage() {
                   pen.line([[0, 0], [1, 1]], "#3a4048", 1);
                   const pts: [number, number][] = [];
                   for (let i = 0; i <= 600; i++) pts.push([i / 600, composed(i / 600)]);
-                  pen.line(pts, curve, 1.8);
-                  // every rung so far, the newest brightest
+                  pen.line(pts, curve, 2.6);
+                  // every rung so far, the newest brightest; the older ones stay clearly visible
                   rungs.forEach((g, i) => {
                     const age = (rungs.length - i) / Math.max(1, rungs.length);
-                    pen.ctx.globalAlpha = 0.25 + 0.75 * (1 - age);
-                    pen.line([[g.x0, g.y0], [g.x1, g.y1]], accent, i >= rungs.length - 2 ? 1.8 : 1);
+                    pen.ctx.globalAlpha = 0.55 + 0.45 * (1 - age);
+                    pen.line([[g.x0, g.y0], [g.x1, g.y1]], accent, i >= rungs.length - 2 ? 2.6 : 1.8);
                     pen.ctx.globalAlpha = 1;
                   });
                   pen.dot(x0, 0, 4, INK);
@@ -139,7 +139,13 @@ function LogisticPage() {
                 }}
               />
             </div><Caption>{iterate === 1 ? L("The rule f(x) = r x (1 - x), and the diagonal") : L("f applied {{n}} times, and the diagonal", { n: iterate })}{L(". Up to the curve, across to the diagonal: one step")}</Caption></div>
-            <div><div data-slot="plot" className="h-[min(440px,calc(100vh-22rem))] overflow-hidden">
+            <div>
+              {/* which line is which, above the picture where it is read first */}
+              <Text kind="note" as="div" className="mb-2 flex flex-wrap gap-x-4 gap-y-1">
+                <span><Swatch colour={accent} />{L("The numbers from the start x0")}</span>
+                <span><Swatch colour={TWO} />{L("Dashed: a second start, one millionth higher")}</span>
+              </Text>
+              <div data-slot="plot" className="h-[min(440px,calc(100vh-22rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
                 box={seriesBox}
@@ -154,13 +160,16 @@ function LogisticPage() {
                     a.push([i, series[i]]);
                     b.push([i, twin[i]]);
                   }
-                  pen.line(b, "#5b616b", 1);
+                  // the second start, dashed and in its own colour, so it never reads as part of the first
+                  pen.ctx.setLineDash([5, 4]);
+                  pen.line(b, TWO, 1.4);
+                  pen.ctx.setLineDash([]);
                   pen.line(a, accent, 1.2);
                   for (let i = 0; i <= n; i++) pen.dot(i, series[i], 2, accent);
                   if (n > 0) pen.dot(n, series[n], 4.5, INK);
                 }}
               />
-            </div><Caption>{L("The numbers in order. Faint: a second start one millionth away.")} {L("Blue lines: the cycle it settles on, period {{period}}", { period: cycle })}</Caption></div>
+            </div><Caption>{L("The numbers in order. The dashed line starts one millionth higher: while the number settles, the two lines lie on top of each other; in chaos they part.")} {L("Blue lines: the cycle it settles on, period {{period}}", { period: cycle })}</Caption></div>
           </section>
         }
         result={

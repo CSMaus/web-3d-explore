@@ -5,6 +5,7 @@ import { routeTree } from "@/routeTree.gen";
 import common from "@/locales/en/common.json";
 import i18n from "@/i18n";
 import { search } from "@/lib/search";
+import { SEQUENCE, nextAfter } from "@/lib/sequence";
 import { BRAND } from "@/lib/site";
 
 async function siteAt(path: string) {
@@ -56,6 +57,14 @@ describe("The shell", () => {
     expect(search("draw the line").some((h) => h.to === "/topics/networks/play/line")).toBe(true);
     expect(search("")).toEqual([]);
     expect(search("zzzz")).toEqual([]);
+  });
+
+  it("The next button goes through a topic page by page, then on to the next topic", () => {
+    expect(nextAfter("/topics/complex/play/square")?.to).toBe("/topics/complex/play/round");
+    expect(nextAfter("/topics/complex/play")?.to).toBe("/topics/complex/play/line");
+    expect(nextAfter("/topics/complex/uses")?.to).toBe("/topics/fractals/parts");
+    expect(nextAfter("/about")?.to).toBe(SEQUENCE[0].to);
+    expect(nextAfter(SEQUENCE[SEQUENCE.length - 1].to)).toBeNull();
   });
 
   for (const [path, heading] of [

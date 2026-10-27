@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { FractalBackground, Heading, KIT_CASE, Kitten, kitTheme, Page, SkipLink, useMode } from "@kit/index";
 import { BackToTop } from "@/components/BackToTop";
 import { Consent } from "@/components/Consent";
+import { NextButton } from "@/components/NextButton";
 import { Menu } from "@/components/Menu";
 import { Offline } from "@/components/Offline";
 import { SearchBox } from "@/components/Search";
@@ -74,6 +75,7 @@ function Shell() {
       <div ref={shell} className="relative z-[1] min-h-full">
       <SkipLink>{t("nav.skip")}</SkipLink>
       <Menu />
+      <NextButton />
       <div id="content" tabIndex={-1} className="outline-none">
         <Outlet />
       </div>

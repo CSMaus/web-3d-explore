@@ -44,6 +44,7 @@ export function Menu() {
 
   return (
     <TopBar
+      menuLabel={t("nav.menu")}
       brand={
         <Brand asChild>
           <Link to="/" aria-label={BRAND}>

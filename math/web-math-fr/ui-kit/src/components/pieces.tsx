@@ -146,13 +146,51 @@ export function BrandInner({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function TopBar({ brand, actions, className, children, ...props }: React.ComponentProps<"header"> & { brand: React.ReactNode; actions?: React.ReactNode }) {
+/**
+ * the bar across the top. on a wide screen the links and the actions sit in the bar; on a narrow
+ * one (below 1024 px) the bar keeps the brand and a menu button, and the button opens a panel
+ * under the bar with every link and every action. a link chosen, the escape key or a press of the
+ * button again closes it.
+ */
+export function TopBar({
+  brand,
+  actions,
+  menuLabel = "Menu",
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"header"> & { brand: React.ReactNode; actions?: React.ReactNode; menuLabel?: string }) {
+  const [open, setOpen] = React.useState(false);
+  const panel = React.useId();
+
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   return (
-    <header data-slot="topbar" className={className} {...props}>
+    <header data-slot="topbar" data-open={open ? "true" : "false"} className={className} {...props}>
       <nav data-slot="topbar-inner" aria-label="Site">
         {brand}
-        <div data-slot="topbar-links">{children}</div>
-        {actions ? <div data-slot="topbar-actions">{actions}</div> : null}
+        <div
+          id={panel}
+          data-slot="topbar-menu"
+          onClick={(e) => {
+            if ((e.target as HTMLElement).closest("a")) setOpen(false);
+          }}
+        >
+          <div data-slot="topbar-links">{children}</div>
+          {actions ? <div data-slot="topbar-actions">{actions}</div> : null}
+        </div>
+        <button type="button" data-slot="topbar-toggle" aria-expanded={open} aria-controls={panel} aria-label={menuLabel} onClick={() => setOpen((v) => !v)}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+          </svg>
+        </button>
       </nav>
     </header>
   );

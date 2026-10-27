@@ -18,6 +18,9 @@ const PARTS = [
 
 type Part = (typeof PARTS)[number]["id"];
 
+/** the dates in the theme's primary colour, as the labels of Cool have it, so every theme carries its accent here */
+const ACCENT = { color: "var(--c-primary)" };
+
 /** a part of the page that rises into view as it reaches the screen */
 function Rise({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   const ref = useRise<HTMLLIElement>(delay);
@@ -28,7 +31,7 @@ function Rise({ children, className, delay = 0 }: { children: ReactNode; classNa
   );
 }
 
-/** the owner's name in a list of authors, set apart */
+/** the owner's name in a list of authors, set apart in the theme's primary colour so it never reads as part of the title */
 function Authors({ list }: { list: string }) {
   const parts = list.split(NAME);
   return (
@@ -36,7 +39,7 @@ function Authors({ list }: { list: string }) {
       {parts.map((p, i) => (
         <Fragment key={i}>
           {p}
-          {i < parts.length - 1 ? <strong className="font-medium text-foreground">{NAME}</strong> : null}
+          {i < parts.length - 1 ? <strong className="font-medium" style={ACCENT}>{NAME}</strong> : null}
         </Fragment>
       ))}
     </>
@@ -57,9 +60,6 @@ function Part({ id, title, note, children }: { id: Part; title: string; note?: s
     </section>
   );
 }
-
-/** the dates in the theme's primary colour, as the labels of Cool have it, so every theme carries its accent here */
-const ACCENT = { color: "var(--c-primary)" };
 
 /** the items of a part, each set off from the next by a faint line */
 const ITEMS = "mt-8 divide-y divide-[color-mix(in_oklab,var(--c-border)_55%,transparent)] md:mt-10 [&>li]:py-8 md:[&>li]:py-10 [&>li:first-child]:pt-0";
