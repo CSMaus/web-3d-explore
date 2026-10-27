@@ -48,8 +48,6 @@ export function LineFigure({ d, walk, className, ...props }: React.ComponentProp
 /** a full turn of a solid figure, in seconds, and how much faster it turns while it is lit */
 const SOLID_TURN = 60;
 const SOLID_FAST = 3;
-/** how many times a second a turning figure is drawn: its turn is slow, so this reads as smooth */
-const SOLID_FPS = 16;
 
 /**
  * a solid figure: a shape in three dimensions, turning slowly about its upright
@@ -73,54 +71,28 @@ export function SolidFigure({ kind, lit = false, className, style, ...props }: R
     const svg = host.current;
     if (!svg) return;
     const base = svg.querySelector(".edge-base");
-    const light = Array.from(svg.querySelectorAll<SVGPathElement>(".edge-halo, .edge-tail, .edge-core"));
+    const light = Array.from(svg.querySelectorAll(".edge-halo, .edge-tail, .edge-core"));
     const walk = lines.slice(-1);
-    const single = lines.length === 1;
     let angle = 0.6;
     const paint = () => {
-      const all = project(lines, angle);
-      base?.setAttribute("d", all);
-      // a figure of one line walks its whole drawing: the same path data, made once
-      const w = single ? all : project(walk, angle);
+      base?.setAttribute("d", project(lines, angle));
+      const w = project(walk, angle);
       for (const p of light) p.setAttribute("d", w);
     };
     paint();
     const still = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
     if (still) return;
-
-    // the light's lap and its breathing, as the sheet sets them, are played here in step with the
-    // turn, a few times a second, rather than by the sheet at the screen's rate: the sheet's
-    // animations repainted every figure on every frame
-    const timing = getComputedStyle(light[light.length - 1] ?? svg);
-    const names = timing.animationName.split(",").map((n) => n.trim());
-    const seconds = timing.animationDuration.split(",").map((d) => parseFloat(d) * (d.trim().endsWith("ms") ? 0.001 : 1));
-    const lap = seconds[names.findIndex((n) => n.startsWith("travel"))] || 16;
-    const breathIndex = names.findIndex((n) => n.startsWith("breathe"));
-    const breath = breathIndex >= 0 ? seconds[breathIndex] : 0;
-    for (const p of light) p.style.animation = "none";
-    let clock = Math.random() * lap;
-
     let frame = 0;
     let shown = true;
     let speed = 1;
     let last = performance.now();
-    let drawn = 0;
     const step = (now: number) => {
-      frame = requestAnimationFrame(step);
-      if (now - drawn < 1000 / SOLID_FPS) return;
       const dt = Math.min(now - last, 100) / 1000;
       last = now;
-      drawn = now;
       speed += ((fast.current ? SOLID_FAST : 1) - speed) * Math.min(1, dt * 3);
       angle += ((Math.PI * 2) / SOLID_TURN) * speed * dt;
-      clock += dt;
       paint();
-      const offset = (-(clock / lap) % 1).toFixed(4);
-      const glow = breath ? (0.775 - 0.225 * Math.cos((clock / breath) * Math.PI * 2)).toFixed(3) : "";
-      for (const p of light) {
-        p.style.strokeDashoffset = offset;
-        if (breath) p.style.opacity = glow;
-      }
+      frame = requestAnimationFrame(step);
     };
     const run = () => {
       cancelAnimationFrame(frame);

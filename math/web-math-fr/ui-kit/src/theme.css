@@ -922,10 +922,6 @@ a[data-tile] { display: flex; border: 1px solid var(--c-border); border-radius: 
 a[data-tile]:hover, a[data-tile]:focus-visible { transform: translateY(-3px); border-color: var(--c-selected); }
 a[data-tile]:is(:hover, :focus-visible) [data-slot="edge-figure"] :is(.edge-core, .edge-tail, .edge-halo) { animation-duration: var(--figure-seconds), var(--breathe-seconds); }
 [data-slot="topic-graph"] a[data-slot="panel"][data-lit] { transform: translateY(-6px); border-color: var(--c-selected); }
-a[data-tile], [data-slot="topic-graph"] a[data-slot="panel"] { position: relative; }
-a[data-tile]::after, [data-slot="topic-graph"] a[data-slot="panel"]::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 0; }
-a[data-tile]:is(:hover, :focus-visible)::after { height: 4px; }
-[data-slot="topic-graph"] a[data-slot="panel"][data-lit]::after { height: 7px; }
 [data-slot="topic-graph"] [data-lit] [data-slot="edge-figure"] .edge-halo { stroke-opacity: 0.45; }
 [data-slot="topic-graph"] [data-lit] [data-slot="graph-open"] { color: var(--c-selected); }
 @media (prefers-reduced-motion: reduce) {

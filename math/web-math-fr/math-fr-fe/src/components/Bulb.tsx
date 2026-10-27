@@ -163,18 +163,10 @@ export function Bulb({ className, view = "solid", palette, light = "#9fe3ff", ..
       last = now;
       smooth = smooth * 0.9 + Math.min(dt, 120) * 0.1;
 
-      // the bake script (scripts/bake-bulb.mjs) sets the phase of the turn itself, one frame at a
-      // time, and the frame is drawn at full resolution whatever the pace
-      const baked = (window as { __bulbPhase?: number }).__bulbPhase;
-      const moving = (p.turning && !still) || baked !== undefined;
+      const moving = p.turning && !still;
       if (!moving && !dirty.current) return;
 
-      if (baked !== undefined) {
-        if (scale !== SCALE_MAX) {
-          scale = SCALE_MAX;
-          resize();
-        }
-      } else if (smooth > TARGET_MS * 1.4 && scale > SCALE_MIN) {
+      if (smooth > TARGET_MS * 1.4 && scale > SCALE_MIN) {
         scale = Math.max(SCALE_MIN, scale - 0.05);
         resize();
       } else if (smooth < TARGET_MS * 0.6 && scale < SCALE_MAX) {
@@ -182,7 +174,7 @@ export function Bulb({ className, view = "solid", palette, light = "#9fe3ff", ..
         resize();
       }
 
-      const phase = baked ?? (moving ? ((now - started) % p.period) / p.period : 0);
+      const phase = moving ? ((now - started) % p.period) / p.period : 0;
       uniforms.uPhase.value = phase;
       // a bulb of whole power n looks the same after 1/(n - 1) of a turn about its axis, since each
       // step multiplies the angle by n and adds the point's own angle back; one period turns it by

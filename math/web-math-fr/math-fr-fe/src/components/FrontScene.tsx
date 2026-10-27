@@ -1,16 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { Suspense, lazy, useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, KIT_CASE, Label, TextLink } from "@kit/index";
-import { BakedBulb } from "@/components/BakedBulb";
+import { Button, Label, TextLink } from "@kit/index";
 import { paletteOf } from "@/lib/palettes";
 import { CONTOUR_LIGHT, FRONT_LIGHT_SET, FRONT_PALETTE } from "@/lib/site";
 
 const Bulb = lazy(() => import("@/components/Bulb").then((m) => ({ default: m.Bulb })));
-
-// the front page plays the baked video of the bulb; the live shader runs only for the bake script
-// (scripts/bake-bulb.mjs), which opens the page with ?bake
-const LIVE = typeof location !== "undefined" && new URLSearchParams(location.search).has("bake");
 
 type View = "solid" | "contour";
 
@@ -28,8 +23,6 @@ export function FrontScene() {
   const { t } = useTranslation();
   // the bulb is shown with its contour light only
   const view: View = "contour";
-  // the baked video could not be loaded: the live bulb takes its place
-  const [missing, setMissing] = useState(false);
   const palette = paletteOf(FRONT_PALETTE);
   const host = useRef<HTMLElement | null>(null);
 
@@ -77,13 +70,9 @@ export function FrontScene() {
         </div>
       </div>
       <div data-slot="scene-picture">
-        {LIVE || missing ? (
-          <Suspense fallback={<div className="absolute inset-0" />}>
-            <Bulb className="absolute inset-0 h-full w-full" view={view} palette={palette} light={CONTOUR_LIGHT} {...FRONT_LIGHT_SET} />
-          </Suspense>
-        ) : (
-          <BakedBulb kase={KIT_CASE} className="absolute inset-0 h-full w-full object-contain" onMissing={() => setMissing(true)} />
-        )}
+        <Suspense fallback={<div className="absolute inset-0" />}>
+          <Bulb className="absolute inset-0 h-full w-full" view={view} palette={palette} light={CONTOUR_LIGHT} {...FRONT_LIGHT_SET} />
+        </Suspense>
       </div>
       <div data-slot="scene-foot">
         <TextLink asChild>

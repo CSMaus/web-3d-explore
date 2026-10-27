@@ -1287,9 +1287,6 @@ ${f.fade > 0 ? `[data-slot="fractal"] path { animation: fractal-in ${f.fade}ms e
 
 /** the topic graph of the front page: the light along its links, and a card lifting and its figure brightening when it is lit */
 function graph(): string {
-  // a card lifts under the pointer; a strip as tall as the lift fills the gap it leaves below, so a
-  // pointer on its bottom edge stays on the card instead of losing it, the card dropping back, and
-  // the two repeating as a shake
   return `
 [data-slot="graph-light"] { animation-name: travel; animation-timing-function: linear; animation-iteration-count: infinite; }
 [data-slot="topic-graph"] a[data-slot="panel"], a[data-tile] { transition: transform 300ms ease, border-color 300ms ease; }
@@ -1297,10 +1294,6 @@ a[data-tile] { display: flex; border: 1px solid ${v("border")}; border-radius: 1
 a[data-tile]:hover, a[data-tile]:focus-visible { transform: translateY(-3px); border-color: ${v("selected")}; }
 a[data-tile]:is(:hover, :focus-visible) [data-slot="edge-figure"] :is(.edge-core, .edge-tail, .edge-halo) { animation-duration: var(--figure-seconds), var(--breathe-seconds); }
 [data-slot="topic-graph"] a[data-slot="panel"][data-lit] { transform: translateY(-6px); border-color: ${v("selected")}; }
-a[data-tile], [data-slot="topic-graph"] a[data-slot="panel"] { position: relative; }
-a[data-tile]::after, [data-slot="topic-graph"] a[data-slot="panel"]::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 0; }
-a[data-tile]:is(:hover, :focus-visible)::after { height: 4px; }
-[data-slot="topic-graph"] a[data-slot="panel"][data-lit]::after { height: 7px; }
 [data-slot="topic-graph"] [data-lit] [data-slot="edge-figure"] .edge-halo { stroke-opacity: 0.45; }
 [data-slot="topic-graph"] [data-lit] [data-slot="graph-open"] { color: ${v("selected")}; }
 @media (prefers-reduced-motion: reduce) {
