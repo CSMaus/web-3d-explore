@@ -377,15 +377,63 @@ function topbar(t: Theme): string {
   background: ${v("primary")};
 }
 
-/* the topic bar of a narrow screen: half-transparent under the top bar, the topic's sections as tabs */
-[data-slot="topic-bar"] {
-  background: color-mix(in oklab, ${v("background")} 70%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid color-mix(in oklab, ${v("border")} 60%, transparent);
+/*
+ * a topic on a narrow screen: a tab on the left edge with an arrow opens the topic's side menu and,
+ * at the menu's edge, closes it; the next page floats under the top bar in the top right corner,
+ * half-transparent. a wide screen has neither: the side menu has its own column there.
+ */
+[data-slot="rail-handle"] {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 61;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 56px;
+  padding-left: env(safe-area-inset-left, 0px);
+  border: 1px solid ${v("border")};
+  border-left: none;
+  border-radius: 0 12px 12px 0;
+  background: color-mix(in oklab, ${v("card")} 80%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: ${v("foreground")};
+  transition: left 0.2s ease;
 }
-[data-slot="topic-bar-link"] { color: ${v("muted-foreground")}; padding: 4px 10px; border-radius: var(--button-radius); white-space: nowrap; }
-[data-slot="topic-bar-link"][data-active="true"] { color: ${v("glow")}; box-shadow: inset 0 -2px 0 ${v("glow")}; }
+[data-slot="rail-handle"][data-open="true"] { left: min(300px, 85vw); }
+[data-slot="rail-handle"]:focus-visible { outline: 2px solid ${v("glow")}; outline-offset: 2px; }
+[data-slot="next-float"] {
+  position: fixed;
+  top: calc(var(--topbar-height) + 10px);
+  right: max(16px, env(safe-area-inset-right, 0px));
+  z-index: 40;
+  padding: 2px 10px;
+  border-radius: var(--button-radius);
+  background: color-mix(in oklab, ${v("background")} 55%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+[data-slot="next-float"]:empty { display: none; }
+@media (min-width: 1024px) {
+  [data-slot="rail-handle"], [data-slot="next-float"] { display: none; }
+}
+
+/* the next page: the word, with a line of light under it */
+[data-slot="next-button"] { position: relative; padding: 6px 2px; color: ${v("foreground")}; white-space: nowrap; }
+[data-slot="next-button"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: ${v("glow")};
+  box-shadow: 0 0 8px ${v("glow")}, 0 0 16px ${swatch("glow/50")};
+}
+[data-slot="next-button"]:focus-visible { outline: 2px solid ${v("glow")}; outline-offset: 3px; }
 
 /* on a wide screen the menu wrapper is not a box: the links and the actions are the bar's own items */
 [data-slot="topbar-menu"] { display: contents; }
