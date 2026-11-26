@@ -1,8 +1,8 @@
 {
  "slug": "primes",
- "number": 5,
- "title": "An aside: the gaps between primes",
- "summary": "The gaps between consecutive primes drawn the way a chaotic flow's return map is, beside a map that has a rule, to show what chaos is not",
+ "number": 6,
+ "title": "The gaps between prime numbers",
+ "summary": "A prime number divides only by 1 and by itself: 2, 3, 5, 7, 11 and so on. The gaps between neighbouring primes look irregular. This short aside draws each gap against the next one, the way chaotic systems are often drawn, and puts beside it a sequence that does follow a rule. Chaos means an exact rule whose results cannot be predicted far ahead, and the comparison shows what chaos is not.",
  "state": "writing",
  "parts": 0,
  "beats": 0,

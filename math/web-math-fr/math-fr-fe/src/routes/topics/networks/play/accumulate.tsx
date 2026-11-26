@@ -70,14 +70,14 @@ function AccumulatePage() {
     <div>
       <TaskPage
         title={system?.name ?? L("Adding it back up")}
-        job={L("This time only the speed is given, second by second, and the job is to say how far the car has gone. The only tool is the obvious one: for each short stretch of time, speed times duration is distance, and the stretches add up.")}
+        job={L("If only the speed of a car is known, how far has it gone? Over a short time the speed hardly changes, and then distance is speed times time: 5 m/s for 2 s is 10 m. So the 12 seconds are cut into slices, each slice gives a short distance, and the distances are added up. The buttons choose how the car moves. The slider sets how many slices there are. Press run to add the slices one by one, and compare the total with the true distance.")}
         input={
           <div className="space-y-3">
             <Choices options={OPTIONS} value={motion} onPick={(id) => { setMotion(id); reset(); }} />
             <Text kind="note" as="p">{L(m.what)}</Text>
             <Slider label={L("Slices")} min={2} max={96} step={1} value={count} format={(v) => String(Math.round(v))} onChange={(v) => { setCount(Math.round(v)); reset(); }} />
             <Text kind="note" as="p">
-              {L("How many slices the twelve seconds are cut into. Inside each slice the speed is taken as constant, which is a lie that gets smaller as the slices get thinner.")}
+              {L("How many slices the 12 seconds are cut into. Inside each slice the speed is treated as fixed, equal to the speed at the middle of the slice. That is not quite true, and the thinner the slices, the less it matters.")}
             </Text>
           </div>
         }
@@ -91,7 +91,7 @@ function AccumulatePage() {
               if (!runner.running && shown >= count) reset();
               runner.toggle();
             }}
-            onStep={(many) => setDone((v) => Math.min(count, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -128,7 +128,7 @@ function AccumulatePage() {
                   }
                 }}
               />
-            </div><Caption>{L("The speed. Each rectangle is one slice: speed times duration, a distance.")}</Caption></div>
+            </div><Caption>{L("Top picture: the speed against time. Each rectangle is one slice. Its height is the speed and its width is the time, so its area is a distance. The newest rectangle is the brightest.")}</Caption></div>
             <div><div data-slot="plot" className="h-[260px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -150,36 +150,36 @@ function AccumulatePage() {
                   }
                 }}
               />
-            </div><Caption>{L("Distance so far. Green: the slices added up.  Faint: where the car really was. Rose: the gap between the two")}</Caption></div>
+            </div><Caption>{L("Bottom picture: distance from the start against time. The thin curve is where the car really was. The thick staircase is the slices added up so far. The ring is the running total now, the large dot is the true distance, and the short vertical line between them is the error.")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={shown === 0 ? undefined : Math.abs(added - truth) < 0.02 * Math.max(1, Math.abs(truth))}>
               {shown === 0
-                ? L("Press run. One slice at a time, a rectangle of speed times duration goes in, and the running total climbs.")
-                : L("After {{shown}} of {{count}} slices, {{t}} s in, the slices add up to {{added}} m. The car had really gone {{truth}} m. The total is off by {{off}} m{{tail}}.", {
+                ? L("Press run. Each step adds one slice, a rectangle of speed times time, to the running total.")
+                : L("After {{shown}} of {{count}} slices, at {{t}} s, the slices add up to {{added}} m. The car had really gone {{truth}} m. The difference is {{off}} m{{tail}}.", {
                     shown,
                     count,
                     t: tNow.toFixed(1),
                     added: added.toFixed(2),
                     truth: truth.toFixed(2),
                     off: Math.abs(added - truth).toFixed(3),
-                    tail: Math.abs(added - truth) < 0.02 * Math.max(1, Math.abs(truth)) ? L(", which is close enough to call right") : L(": the slices are too fat for a speed that changes this much inside one of them"),
+                    tail: Math.abs(added - truth) < 0.02 * Math.max(1, Math.abs(truth)) ? L(", small enough to count as right") : L(": the slices are too wide, and the speed changes a lot inside each one"),
                   })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>{L("Each slice lasts")}</dt>
               <dd className="text-right text-foreground/80">{(T_END / count).toFixed(3)} s</dd>
-              <dt>{L("All {{count}} slices together", { count })}</dt>
+              <dt>{L("All {{count}} slices added up", { count })}</dt>
               <dd className="text-right text-foreground/80">{totals[count].toFixed(3)} m</dd>
-              <dt>{L("The true distance over twelve seconds")}</dt>
+              <dt>{L("True distance after 12 seconds")}</dt>
               <dd className="text-right text-foreground/80">{(m.at(T_END) - m.at(0)).toFixed(3)} m</dd>
-              <dt>{L("The error with {{count}} slices", { count })}</dt>
+              <dt>{L("Error with {{count}} slices: how far the sum is from the true distance", { count })}</dt>
               <dd className="text-right text-foreground/80">{finalError.toExponential(2)} m</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("Double the slices and the error falls by about four. That is the integral: the sum, with the slices made as thin as wanted. And the green staircase, once smooth, is the position curve from the first page: adding up a rate gives back the thing whose rate it was.")}
+              {L("With twice as many slices the error becomes about four times smaller. As the slices get thinner and thinner, the sum comes as close to the true distance as wanted. That limit is called the integral of the speed. The staircase then becomes the curve of the car's position: adding up a speed gives back the position it came from.")}
             </Text>
           </div>
         }

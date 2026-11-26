@@ -62,14 +62,14 @@ function GrowthPage() {
     <div>
       <TaskPage
         title={system?.name ?? L("The thing that grows by how much there is")}
-        job={L("Money at interest, a population with room, a rumour. What all three share: how fast it grows depends on how much there already is. The job is to watch that one rule play out, and to say when it will reach a target.")}
+        job={L("When does an amount reach a target if it always grows by a fixed share of itself? At a rate of 12 % a year, an amount of 100 grows at a speed of 12 a year, and an amount of 200 at 24 a year. So the more there is, the faster it grows. Money earning interest and a population with room to spread grow this way. The sliders set the starting amount, the yearly rate and the target. Press run and the years pass. With the starting values, 100 reaches 800 after 17.33 years.")}
         input={
           <div className="space-y-3">
-            <Slider label={L("Start with")} min={10} max={500} step={10} value={start} format={(v) => String(Math.round(v))} onChange={(v) => { setStart(v); reset(); }} />
-            <Slider label={L("Rate")} min={-0.3} max={0.5} step={0.01} value={rate} format={(v) => L("{{p}} % a year", { p: (v * 100).toFixed(0) })} onChange={(v) => { setRate(v); reset(); }} />
+            <Slider label={L("Starting amount")} min={10} max={500} step={10} value={start} format={(v) => String(Math.round(v))} onChange={(v) => { setStart(v); reset(); }} />
+            <Slider label={L("Yearly rate")} min={-0.3} max={0.5} step={0.01} value={rate} format={(v) => L("{{p}} % a year", { p: (v * 100).toFixed(0) })} onChange={(v) => { setRate(v); reset(); }} />
             <Slider label={L("Target")} min={10} max={5000} step={10} value={target} format={(v) => String(Math.round(v))} onChange={setTarget} />
             <Text kind="note" as="p">
-              {L("The rate is the fraction of what there is that gets added each year. A negative rate is decay: the same rule, taking away a fraction of what is left.")}
+              {L("The rate is the share of the current amount added per year. A negative rate means decay: the same share of what is left is taken away.")}
             </Text>
           </div>
         }
@@ -83,7 +83,7 @@ function GrowthPage() {
               if (!runner.running && tick >= TICKS) reset();
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(TICKS, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -122,7 +122,7 @@ function GrowthPage() {
                   }
                 }}
               />
-            </div><Caption>{L("Green: grows by a fixed fraction of itself.  Dim blue: grows by a fixed amount. Sky: the steepness right now.  Ticks: each doubling.")}</Caption></div>
+            </div><Caption>{L("Top picture: the amount against time, in years. The thick curve grows by a fixed share of itself. The thin straight line starts the same way but grows by the same amount every year. The short line touching the curve shows how fast the amount grows at this moment. The vertical lines mark each doubling, labelled x2, x4 and so on. The horizontal line is the target.")}</Caption></div>
             <div><div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -136,40 +136,40 @@ function GrowthPage() {
                   if (started) pen.dot(t, slope / value, 5, INK);
                 }}
               />
-            </div><Caption>{L("The steepness divided by the amount, at every moment.")} {L("It never moves: it is the rate, {{p}} %", { p: (rate * 100).toFixed(0) })}</Caption></div>
+            </div><Caption>{L("Bottom picture: how fast the amount grows, divided by the amount, at every moment.")} {L("The line stays flat: the result is always the rate, {{p}} %.", { p: (rate * 100).toFixed(0) })}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={started && value >= target ? true : undefined}>
               {!started
-                ? L("Press run and the years pass. The green curve is the amount; the sky line is how fast it is growing at that moment.")
+                ? L("Press run and the years pass. The thick curve is the amount. The short line touching it shows how fast it grows at that moment.")
                 : value >= target
-                  ? L("{{t}} years in, it is at {{v}}: past the target. The exact moment was {{reach}} years, and that is what a logarithm is: the question of when, asked of a growth like this.", { t: t.toFixed(1), v: value.toFixed(0), reach: reach.toFixed(2) })
-                  : L("{{t}} years in, there is {{v}}, and it is growing by {{s}} a year. That is {{p}} % of itself, the same as at every other moment. {{when}}", {
+                  ? L("After {{t}} years the amount is {{v}}, past the target. It reached the target at {{reach}} years. That moment can be computed without running: divide the target by the start, take the natural logarithm of the result, and divide by the rate. The logarithm is the operation that undoes this kind of growth.", { t: t.toFixed(1), v: value.toFixed(0), reach: reach.toFixed(2) })
+                  : L("After {{t}} years the amount is {{v}}, and it grows by {{s}} a year. That is {{p}} % of the amount, the same share as at every other moment. {{when}}", {
                       t: t.toFixed(1),
                       v: value.toFixed(0),
                       s: slope.toFixed(1),
                       p: ((slope / value) * 100).toFixed(1),
-                      when: Number.isFinite(reach) && reach > 0 ? L("At this rate the target of {{target}} is reached at {{reach}} years.", { target, reach: reach.toFixed(1) }) : L("At this rate the target is never reached."),
+                      when: Number.isFinite(reach) && reach > 0 ? L("At this rate the target of {{target}} is reached after {{reach}} years.", { target, reach: reach.toFixed(1) }) : L("At this rate the target is never reached."),
                     })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>{L("Amount now")}</dt>
               <dd className="text-right text-foreground/80">{value.toFixed(2)}</dd>
-              <dt>{L("Growing at")}</dt>
-              <dd className="text-right text-foreground/80">{L("{{s}} A year", { s: slope.toFixed(3) })}</dd>
-              <dt>{L("Growth divided by amount")}</dt>
+              <dt>{L("Growing by")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{s}} a year", { s: slope.toFixed(3) })}</dd>
+              <dt>{L("Growth per year divided by the amount")}</dt>
               <dd className="text-right text-foreground/80">{(slope / value).toFixed(4)}</dd>
-              <dt>{L("The rate set above")}</dt>
+              <dt>{L("Rate set on the slider")}</dt>
               <dd className="text-right text-foreground/80">{rate.toFixed(4)}</dd>
               <dt>{rate > 0 ? L("Time to double") : L("Time to halve")}</dt>
-              <dd className="text-right text-foreground/80">{L("{{t}} years", { t: rate !== 0 ? (Math.LN2 / Math.abs(rate)).toFixed(2) : L("Never") })}</dd>
-              <dt>{L("The straight-line rival by now")}</dt>
+              <dd className="text-right text-foreground/80">{rate !== 0 ? L("{{t}} years", { t: (Math.LN2 / Math.abs(rate)).toFixed(2) }) : L("Never")}</dd>
+              <dt>{L("Growth by a fixed amount, by now (the thin line)")}</dt>
               <dd className="text-right text-foreground/80">{straight.toFixed(1)}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("A curve whose steepness is always a fixed fraction of its height is the exponential. The fixed fraction is the rate. Every squashing curve inside a network, and the way a training step size shrinks, is built from this one shape.")}
+              {L("A curve that always grows at a speed equal to a fixed share of its height is called an exponential curve. The fixed share is the rate. A neural network, a program that learns from examples, uses curves built from this one to turn a sum of numbers into an answer between 0 and 1.")}
             </Text>
           </div>
         }

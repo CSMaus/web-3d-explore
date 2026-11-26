@@ -26,8 +26,8 @@ export const Route = createFileRoute("/topics/tokens/play/order")({
 });
 
 const SCHEMES = [
-  { id: "none", label: L("No position") },
-  { id: "learned", label: L("A learned vector per index") },
+  { id: "none", label: L("No position added") },
+  { id: "learned", label: L("A learned list per position") },
   { id: "sinus", label: L("Sines and cosines") },
 ];
 
@@ -93,22 +93,22 @@ function OrderPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? L("Order has to be supplied")}
-        job={L("A contextual vector has to be built from every position in the sentence, and the mixing that builds it treats every position alike: each one looks at all the others and takes a weighted average. Mix a sentence that way, and mix the same words shuffled, and the results are the same set of vectors in a different order. The job is to see that happen, and to see what fixes it.")}
+        title={system?.name ?? L("Word order has to be added")}
+        job={L("Does a model notice word order? \"The dog watches the cat\" and \"the cat watches the dog\" use the same words but mean different things. A model first cuts a sentence into tokens: pieces of text such as words. Each token is replaced by a list of 16 numbers, called a vector. Then the lists are mixed: each position takes an average of all the lists, giving some more weight than others. This page mixes a sentence and the same words in a shuffled order, then averages the result of each. With nothing added, the two averages come out equal, so the order is lost. The choice below adds a position to every list before the mixing. The question: which choice lets the two sentences come out different?")}
         input={
           <div className="space-y-3">
             <label className="block">
               <span data-text="note">{L("The sentence")}</span>
               <Input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className="mt-1" />
             </label>
-            <Button variant="outline" size="sm" type="button" onClick={() => { setSeed((s) => s + 1); reset(); }}>{L("Shuffle it another way")}</Button>
+            <Button variant="outline" size="sm" type="button" onClick={() => { setSeed((s) => s + 1); reset(); }}>{L("Shuffle again")}</Button>
             <Choices options={SCHEMES} value={scheme} onPick={(id) => { setScheme(id); reset(); }} />
             <Text kind="note" as="p">
               {scheme === "none"
-                ? L("Each token's vector is its row of the table and nothing else. The same token at position 1 and position 5 is the same vector.")
+                ? L("Each token gets only its own list of numbers, taken from a table with one row per token. The token \"the\" gets the same list at position 1 and at position 5.")
                 : scheme === "learned"
-                  ? L("One trainable vector per position index, added to the token's row. The shared model learned these; there are as many as the model's window is long, and no more.")
-                  : L("A fixed vector per position made of sines and cosines at many frequencies, added to the row. Nothing to learn, and there is one for any index.")}
+                  ? L("A second list of numbers is added for each position: one for position 1, one for position 2, and so on. The model learned these lists during training. There is one for each position the model can read at once, and none beyond.")
+                  : L("A fixed list is added for each position, made of sine and cosine waves of many speeds. Nothing is learned, and every position, however far along, has its own list.")}
             </Text>
           </div>
         }
@@ -116,13 +116,13 @@ function OrderPage() {
           <RunBar
             running={runner.running}
             count={at}
-            what={L("mixed positions folded in")}
+            what={L("positions added in")}
             limit={n}
             onToggle={() => {
               if (!runner.running && at >= n) reset();
               runner.toggle();
             }}
-            onStep={(many) => setDone((v) => Math.min(n, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -163,7 +163,7 @@ function OrderPage() {
                         });
                         const y = 30 + side.rows.length * rh + 10;
                         ctx.fillStyle = MUTED;
-                        ctx.fillText(L("Added up and averaged:"), 8, y);
+                        ctx.fillText(L("Average of the rows above:"), 8, y);
                         for (let d = 0; d < WIDTH; d++) {
                           ctx.fillStyle = signed(side.sum[d], 1.2);
                           ctx.fillRect(24 + d * cw, y + 6, cw - 1, 18);
@@ -172,7 +172,7 @@ function OrderPage() {
                         ctx.fillText(side.sum.slice(0, 5).map((v) => v.toFixed(2)).join("  ") + " ...", 8, y + 40);
                       }}
                     />
-                  </div><Caption>{scheme === "none" ? L("After mixing: one row a position, {{width}} wide", { width: WIDTH }) : L("After mixing: one row a position, {{width}} wide, positions added before", { width: WIDTH })}</Caption></div>
+                  </div><Caption>{scheme === "none" ? L("After mixing: one row per position, {{width}} numbers each. Each cell is one number: the two colours mark positive and negative, and a stronger colour means a larger number. Faded rows are not added in yet. The strip at the bottom is the average of the rows added in so far, with its first five numbers printed under it.", { width: WIDTH }) : L("After mixing: one row per position, {{width}} numbers each, with the position lists added before the mixing. Each cell is one number: the two colours mark positive and negative, and a stronger colour means a larger number. Faded rows are not added in yet. The strip at the bottom is the average of the rows added in so far, with its first five numbers printed under it.", { width: WIDTH })}</Caption></div>
                 </div>
               ))}
             </div>
@@ -196,7 +196,7 @@ function OrderPage() {
                     }
                   }}
                 />
-              </div><Caption>{L("The position vectors for positions 1 to 24: slow waves on the left, fast on the right. Every position gets a different pattern, and two positions a fixed distance apart are related by the same rotation wherever they are.")}</Caption></div>
+              </div><Caption>{L("The position lists for positions 1 to 24, one thin row each, from top to bottom. The left columns change slowly from row to row, the right columns quickly. Every position gets a different pattern. Moving the same number of positions along changes the pattern in the same way, from any starting position.")}</Caption></div>
             ) : null}
           </section>
         }
@@ -204,25 +204,27 @@ function OrderPage() {
           <div className="space-y-2">
             <Verdict good={at === 0 ? undefined : scheme === "none" ? false : !same}>
               {at === 0
-                ? L("Press run: both sentences are mixed, then their mixed vectors are folded into one total, position by position, side by side.")
+                ? L("Nothing is mixed yet. Run mixes both sentences, then adds in their rows one position at a time and keeps an average for each side.")
                 : !isShuffled
-                  ? L("The shuffle happened to leave the sentence as it was; shuffle it another way.")
-                  : same
-                    ? L("After {{at}} positions the two totals are identical: they differ by {{gap}}. The same rows went in, in a different order; the mixing treats positions alike, so it gave the same vectors back in that other order, and the total does not care about order. Nothing built this way can tell a sentence from its shuffle.", { at, gap: gap.toExponential(1) })
-                    : L("After {{at}} positions the two totals differ by {{gap}}. The token rows that went in are the same, but each carried its position with it, so the mixing weights came out different and the order survived. That is what a position vector is for, and it is all it is for.", { at, gap: gap.toFixed(3) })}
+                  ? L("The shuffle left the words in their original order. \"Shuffle again\" tries another order.")
+                  : at < n
+                    ? L("After {{at}} of {{n}} positions the two averages differ by {{gap}}. The two sides have not yet added in the same tokens, so this difference means nothing yet. The comparison counts once all {{n}} positions are in.", { at, n, gap: gap.toFixed(3) })
+                    : same
+                      ? L("After {{at}} positions the two averages are equal: they differ by {{gap}}, which is rounding error. Both sides had the same rows, only in another order. The mixing treats every position alike, so it gave back the same mixed rows in that other order. An average does not depend on order. So nothing built this way can tell a sentence from its shuffle.", { at, gap: gap.toExponential(1) })
+                      : L("After {{at}} positions the two averages differ by {{gap}}. The token rows were the same on both sides, but each row now carried its position. So the mixing weights came out different, and the order left a trace. This is the only job of a position list.", { at, gap: gap.toFixed(3) })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("Tokens")}</dt>
+              <dt>{L("Tokens in the sentence")}</dt>
               <dd className="text-right text-foreground/80">{n}</dd>
-              <dt>{L("Width of every vector, the stream's width for the whole depth")}</dt>
+              <dt>{L("Numbers in each list, the same at every stage of the model")}</dt>
               <dd className="text-right text-foreground/80">{WIDTH}</dd>
-              <dt>{L("Gap between the two totals")}</dt>
+              <dt>{L("Difference between the two averages")}</dt>
               <dd className="text-right text-foreground/80">{gap.toExponential(2)}</dd>
-              <dt>{L("Position vectors available")}</dt>
-              <dd className="text-right text-foreground/80">{scheme === "none" ? L("None") : scheme === "learned" ? L("{{n}}, the window's length, and then none", { n: P.length }) : L("One for any index")}</dd>
+              <dt>{L("Position lists this choice provides")}</dt>
+              <dd className="text-right text-foreground/80">{scheme === "none" ? L("None") : scheme === "learned" ? L("{{n}}, one per position the model can read", { n: P.length }) : L("One for every position")}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("The learned scheme has a ceiling: a position past the last learned vector has no vector. The sine scheme has none, and rotating a query and a key by an angle proportional to their positions, so that their dot product depends only on the distance between them, is what current models do. The mask is off here on purpose: with it on, the mixing itself would already know which position came first. The next page opens the mixing.")}
+              {L("The learned lists have a limit: a position past the last learned list gets nothing. The sine lists have no limit. Large current models use a third way: inside the mixing they turn the numbers by an angle that grows with the position, so that what counts is the distance between two positions. Here every position may look at every other, later ones included. Real text models let a position look only at earlier positions, and that rule alone would already reveal some of the order. It is switched off here to show the problem plainly. A page of the same topic, \"Attention: which earlier words count\", shows how the mixing weights are computed.")}
             </Text>
           </div>
         }

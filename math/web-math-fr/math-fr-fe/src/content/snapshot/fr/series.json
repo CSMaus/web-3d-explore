@@ -1,0 +1,13 @@
+{
+ "slug": "series",
+ "number": 5,
+ "title": "Séries : des fonctions faites de pièces simples",
+ "summary": "Une série est une somme de nombreux morceaux simples qui, ensemble, reconstruisent une courbe compliquée. Le thème montre comment une calculatrice trouve sin(x), le sinus d'un angle, avec seulement des additions et des multiplications. Il montre pourquoi une telle somme peut cesser de suivre la courbe au-delà d'un certain point, même quand la courbe est lisse. Et il montre comment toute onde, tout contour dessiné et toute photo se reconstruisent avec des cercles qui tournent et des ondes simples.",
+ "state": "writing",
+ "parts": 0,
+ "beats": 0,
+ "seconds": 0,
+ "systems": 5,
+ "aside": false,
+ "part_list": []
+}

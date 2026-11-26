@@ -4,22 +4,23 @@ import { Choices, Page, Text, TextLink } from "@kit/index";
 import { EDUCATION, NAME, PAPERS, PROFILES, REGISTERED, SUMMARY, WORK } from "@/content/about";
 import { L } from "@/lib/lang";
 import { useRise } from "@/lib/reveal";
+import { DogByCircles, Hobbies, RouteGlobe } from "@/components/Life";
+import { DOG, HAS_LIFE, HOBBIES, PLACES } from "@/content/life";
 
 export const Route = createFileRoute("/about")({
   component: About,
 });
 
-const PARTS = [
+type Part = "experience" | "education" | "papers" | "software" | "life";
+
+/** the parts of the page in order; the personal one only once it has something in it (content/life.ts) */
+const PARTS: { id: Part; label: string }[] = [
   { id: "experience", label: L("Experience") },
   { id: "education", label: L("Education") },
   { id: "papers", label: L("Papers") },
   { id: "software", label: L("Patents") },
-] as const;
-
-type Part = (typeof PARTS)[number]["id"];
-
-/** the dates in the theme's primary colour, as the labels of Cool have it, so every theme carries its accent here */
-const ACCENT = { color: "var(--c-primary)" };
+  ...(HAS_LIFE ? [{ id: "life" as const, label: L("Life") }] : []),
+];
 
 /** a part of the page that rises into view as it reaches the screen */
 function Rise({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
@@ -39,7 +40,7 @@ function Authors({ list }: { list: string }) {
       {parts.map((p, i) => (
         <Fragment key={i}>
           {p}
-          {i < parts.length - 1 ? <strong className="font-medium" style={ACCENT}>{NAME}</strong> : null}
+          {i < parts.length - 1 ? <strong data-tone="accent" className="font-medium">{NAME}</strong> : null}
         </Fragment>
       ))}
     </>
@@ -52,9 +53,9 @@ function Authors({ list }: { list: string }) {
  */
 function Part({ id, title, note, children }: { id: Part; title: string; note?: string; children: ReactNode }) {
   return (
-    <section id={id} className="pt-20 md:pt-28" style={{ scrollMarginTop: "calc(var(--topbar-height) + 40px)" }}>
-      <div aria-hidden="true" className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, var(--c-border) 12%, var(--c-border) 88%, transparent)" }} />
-      <h2 data-text="display" className="m-0 mt-10 md:mt-14" style={{ fontSize: "clamp(1.9rem, 4.5vw, 3.2rem)", lineHeight: 1.08 }}>{title}</h2>
+    <section id={id} className="scroll-mt-[calc(var(--topbar-height)_+_40px)] pt-20 md:pt-28">
+      <div aria-hidden="true" data-slot="part-rule" />
+      <h2 data-text="partTitle" className="m-0 mt-10 md:mt-14">{title}</h2>
       {note ? <Text kind="note" as="p" className="mt-3 max-w-2xl">{note}</Text> : null}
       {children}
     </section>
@@ -106,13 +107,9 @@ function About() {
     <Page>
       {/* the opening: one idea on the screen, centred, with room round it */}
       <div className="mx-auto flex min-h-[calc(78svh_-_var(--topbar-height))] max-w-3xl flex-col items-center justify-center py-10 text-center">
-        {/* the name is the heading: the tab in the bar already says what the page is. its size follows
-            the theme's display size, the size of the front page's slogan: six tenths of it, at least
-            36 px (the pixel slogan is small), never more than nine tenths, and a narrow screen makes it
-            smaller still, so it never outgrows the slogan */}
-        <div data-text="display" style={{ lineHeight: 1.08 }}>
-          <h1 className="m-0" style={{ fontSize: "min(max(0.6em, 36px), 0.9em, 7vw)", lineHeight: "inherit" }}>{NAME}</h1>
-        </div>
+        {/* the name is the heading: the tab in the bar already says what the page is; its size is the
+            theme's, smaller than the front page's slogan */}
+        <h1 data-text="personName" className="m-0">{NAME}</h1>
         <Text kind="intro" as="p" className="mx-auto mt-6 max-w-xl">{SUMMARY}</Text>
         <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2">
           {PROFILES.map((p) => (
@@ -128,7 +125,7 @@ function About() {
           ].map((f) => (
             <div key={f.label} className="flex min-w-0 flex-col-reverse items-center">
               <dt data-text="note" className="mt-2">{f.label}</dt>
-              <dd data-text="display" className="m-0 tabular-nums" style={{ fontSize: "clamp(2.6rem, 7vw, 4rem)", lineHeight: 1, color: "var(--c-value)" }}>{f.value}</dd>
+              <dd data-text="statValue" className="m-0 tabular-nums">{f.value}</dd>
             </div>
           ))}
         </dl>
@@ -138,8 +135,8 @@ function About() {
           phone one row that scrolls sideways */}
       <div
         ref={row}
+        data-slot="sticky-row"
         className="sticky top-[var(--topbar-height)] z-10 -mx-4 overflow-x-auto px-4 py-3 [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
-        style={{ background: "var(--c-background)", boxShadow: "0 0 0 100vmax var(--c-background)", clipPath: "inset(0 -100vmax)" }}
       >
         <Choices className="w-max flex-nowrap" options={PARTS.map((p) => ({ id: p.id, label: p.label }))} value={here} onPick={go} />
       </div>
@@ -150,7 +147,7 @@ function About() {
             <Rise key={job.when} className="grid gap-3 md:grid-cols-[260px_minmax(0,1fr)] md:gap-10">
               {/* the dates and the role stay in view beside the work while it scrolls past */}
               <div className="min-w-0 md:sticky md:top-[calc(var(--topbar-height)_+_84px)] md:self-start">
-                <span data-text="label" className="tabular-nums" style={ACCENT}>{job.when}</span>
+                <span data-text="label" data-tone="accent" className="tabular-nums">{job.when}</span>
                 <div data-text="itemTitle" className="mt-1">{job.role}</div>
                 <Text kind="note" as="div" className="mt-1">
                   {job.place}
@@ -171,7 +168,7 @@ function About() {
         <ol className={ITEMS}>
           {EDUCATION.map((e) => (
             <Rise key={e.when} className="grid gap-2 md:grid-cols-[260px_minmax(0,1fr)] md:gap-10">
-              <span data-text="label" className="tabular-nums" style={ACCENT}>{e.when}</span>
+              <span data-text="label" data-tone="accent" className="tabular-nums">{e.when}</span>
               <div className="min-w-0">
                 <div data-text="itemTitle">{e.degree}</div>
                 <Text kind="note" as="div" className="mt-1">{e.place}</Text>
@@ -185,7 +182,7 @@ function About() {
         <ol className={ITEMS}>
           {PAPERS.map((p) => (
             <Rise key={p.href} className="grid gap-2 md:grid-cols-[260px_minmax(0,1fr)] md:gap-10">
-              <span data-text="label" className="tabular-nums" style={ACCENT}>{p.year}</span>
+              <span data-text="label" data-tone="accent" className="tabular-nums">{p.year}</span>
               <div className="min-w-0 max-w-3xl">
                 <a href={p.href} target="_blank" rel="noopener noreferrer" data-text="itemTitle" className="hover:underline">
                   {p.title} ↗
@@ -205,7 +202,7 @@ function About() {
         <ol className={`${ITEMS} pb-12`}>
           {REGISTERED.map((r) => (
             <Rise key={r.number} className="grid gap-2 md:grid-cols-[260px_minmax(0,1fr)] md:gap-10">
-              <span data-text="label" className="tabular-nums" style={ACCENT}>{r.date}</span>
+              <span data-text="label" data-tone="accent" className="tabular-nums">{r.date}</span>
               <div className="min-w-0 max-w-3xl">
                 <div data-text="itemTitle" lang="ko">{r.title}</div>
                 <Text kind="note" as="div" className="mt-1">{r.english}</Text>
@@ -218,6 +215,15 @@ function About() {
           ))}
         </ol>
       </Part>
+      {HAS_LIFE ? (
+        <Part id="life" title={L("Life")}>
+          <div className="mt-8 space-y-14 pb-12">
+            {DOG.photos[0] ? <DogByCircles photo={DOG.photos[0]} name={DOG.name} line={DOG.line} /> : null}
+            {PLACES.length ? <RouteGlobe places={PLACES} /> : null}
+            {HOBBIES.length ? <Hobbies hobbies={HOBBIES} /> : null}
+          </div>
+        </Part>
+      ) : null}
     </Page>
   );
 }

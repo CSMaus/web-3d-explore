@@ -22,8 +22,8 @@ export const Route = createFileRoute("/topics/networks/play/words")({
 
 const HEAD_OPTIONS = Object.keys(HEADS).map((id) => ({ id, label: L(HEADS[id].label) }));
 const MASKS = [
-  { id: "back", label: L("May only look back") },
-  { id: "both", label: L("May look both ways") },
+  { id: "back", label: L("Only earlier words") },
+  { id: "both", label: L("Earlier and later words") },
 ];
 const DEFAULT = "the cat sat on the mat and the dog watched";
 
@@ -57,8 +57,8 @@ function WordsPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? L("The same job on words")}
-        job={L("A sentence, one word a position. For each word the job is to decide which other words to draw meaning from, and how much. Every word asks a question, every word offers an answer key, and the match between a question and a key, squashed so the matches add to one, is how much that word listens to that one. The questions and keys are made by weights; here they are wired by hand so what they do can be seen.")}
+        title={system?.name ?? L("Which earlier word each word looks at")}
+        job={L("In a sentence, which other words should each word look at to be understood? Here each word is turned into a short list of numbers: some say which word it is, others say where it stands. From these numbers each word makes a question and a key, by multiplying them by weights. The match between one word's question and another word's key (multiply the matching numbers and add) says how much the first word looks at the second. For each word, these matches are turned into shares that add up to 100 %. This is called attention, and one set of weights for questions and keys is called a head. In a trained network the weights are learned; here they are set by hand, so the pattern can be read. Press Run and each word in turn chooses where to look.")}
         input={
           <div className="space-y-3">
             <label className="block">
@@ -76,7 +76,7 @@ function WordsPage() {
             <Text kind="note" as="p">{L(HEADS[head].what)}</Text>
             <Choices options={MASKS} value={mask} onPick={(id) => { setMask(id); reset(); }} />
             <Text kind="note" as="p">
-              {L("A model that writes text one word at a time may only look back, because the words ahead do not exist yet. One that reads a finished sentence may look both ways.")}
+              {L("The first row of buttons chooses the head. The second row chooses which words may be looked at. A model that writes text one word at a time may look only at earlier words, because the later words do not exist yet. A model that reads a finished sentence may look both ways.")}
             </Text>
           </div>
         }
@@ -84,13 +84,13 @@ function WordsPage() {
           <RunBar
             running={runner.running}
             count={at}
-            what={L("words decided")}
+            what={L("words done")}
             limit={n}
             onToggle={() => {
               if (!runner.running && at >= n) reset();
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(n, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -172,7 +172,7 @@ function WordsPage() {
                 ctx.textBaseline = "alphabetic";
               }}
             />
-          </div><Caption>{L("Green: how much the current word listens to each other word.  Sky: the words already decided The same, as a table: row listens to column")}</Caption></section>
+          </div><Caption>{L("Above the words: arcs from each word already done to the words it looks at; the stronger the arc, the larger the share. The newest word's arcs are drawn thicker, and a small loop means a word looks at itself. Below: the same as a table, one row per word and one column per word it may look at, brighter for a larger share. Dark cells: words it may not look at")}</Caption></section>
         }
         result={
           <div className="space-y-2">
@@ -180,26 +180,26 @@ function WordsPage() {
               {n === 0
                 ? L("Type a sentence above.")
                 : at === 0
-                  ? L("{{n}} words. Press run and each word in turn decides which words to listen to.", { n })
+                  ? L("{{n}} words. Press Run and each word in turn chooses which words to look at.", { n })
                   : head === "untrained"
-                    ? L("Word {{at}}, \"{{word}}\", listens {{pct}} % to \"{{top}}\" and about as much to everything else it may see. Before training the questions and keys are random, so the pattern says nothing. Training moves them until the pattern is useful; the other three heads are what useful ones look like.", { at, word: tokens[at - 1], pct: (evenness * 100).toFixed(0), top: tokens[top] })
+                    ? L("Word {{at}}, \"{{word}}\", gives {{pct}} % of its attention to \"{{top}}\", and about as much to every other word it may see. Before training the questions and keys are random, so the pattern means nothing. Training changes the weights until the pattern is useful; the other three heads show what useful ones look like.", { at, word: tokens[at - 1], pct: (evenness * 100).toFixed(0), top: tokens[top] })
                     : listened(at, tokens[at - 1], (evenness * 100).toFixed(0), tokens[top], top + 1,
-                        head === "previous" && top === at - 2 ? L("The word just before it, as this head was wired to do") : head === "first" && top === 0 ? L("The first word, as this head was wired to do") : head === "same" && tokens[top] === tokens[at - 1] && top !== at - 1 ? L("An earlier copy of the same word") : head === "same" && top === at - 1 ? L("Itself, since there is no earlier copy of it") : "") +
-                      (mask === "back" && at === 1 ? " " + L("The first word has nothing behind it, so it can only listen to itself.") : "")}
+                        head === "previous" && top === at - 2 ? L("The word right before it, as this head was wired to do") : head === "first" && top === 0 ? L("The first word, as this head was wired to do") : head === "same" && tokens[top] === tokens[at - 1] && top !== at - 1 ? L("An earlier copy of the same word") : head === "same" && top === at - 1 ? L("Itself, since there is no earlier copy of it") : "") +
+                      (mask === "back" && at === 1 ? " " + L("The first word has no earlier word, so it can only look at itself.") : "")}
             </Verdict>
             {row ? (
               <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
                 {row.map((v, j) => (v > 0.005 ? (
                   <FragmentRow key={j} label={L("\"{{word}}\", position {{pos}}:", { word: tokens[j], pos: j + 1 })} value={`${(v * 100).toFixed(1)} %`} />
                 ) : null))}
-                <dt>{L("Adds up to")}</dt>
+                <dt>{L("Total")}</dt>
                 <dd className="text-right text-foreground/80">{(row.reduce((a, b) => a + b, 0) * 100).toFixed(0)} %</dd>
-                <dt>{L("Numbers in this head's wiring")}</dt>
+                <dt>{L("Weights in this head (for questions, keys and values)")}</dt>
                 <dd className="text-right text-foreground/80">{3 * width * width}</dd>
               </dl>
             ) : null}
             <Text kind="note" as="p" className="pt-1">
-              {L("This is one head of attention. A transformer is many heads at once, each with its own questions and keys, stacked in layers, with the small networks from earlier pages between them. What a word carries out of a layer is the words it listened to, weighed as the table shows, and nothing else.")}
+              {L("This is one head of attention. A transformer, the kind of network used in today's language models, runs many heads at once, each with its own question and key weights, in many layers, with small ordinary networks between them. Each word also has a third list of numbers, its value. What a word passes on from a layer is a mix of the values of the words it looked at, in the shares the table shows, and nothing else.")}
             </Text>
           </div>
         }
@@ -217,14 +217,14 @@ function WordsPage() {
 /** the verdict for a wired head: which word the current one listens to most, and why when the wiring explains it */
 function listened(at: number, word: string, pct: string, top: string, pos: number, why: string) {
   return why
-    ? L("Word {{at}}, \"{{word}}\", listens {{pct}} % to \"{{top}}\" at position {{pos}}: {{why}}.", { at, word, pct, top, pos, why })
-    : L("Word {{at}}, \"{{word}}\", listens {{pct}} % to \"{{top}}\" at position {{pos}}.", { at, word, pct, top, pos });
+    ? L("Word {{at}}, \"{{word}}\", gives {{pct}} % of its attention to \"{{top}}\" at position {{pos}}: {{why}}.", { at, word, pct, top, pos, why })
+    : L("Word {{at}}, \"{{word}}\", gives {{pct}} % of its attention to \"{{top}}\" at position {{pos}}.", { at, word, pct, top, pos });
 }
 
 function FragmentRow({ label, value }: { label: string; value: string }) {
   return (
     <>
-      <dt>{L("Listens to {{what}}", { what: label })}</dt>
+      <dt>{L("Attention to {{what}}", { what: label })}</dt>
       <dd className="text-right text-foreground/80">{value}</dd>
     </>
   );

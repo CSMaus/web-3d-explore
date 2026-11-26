@@ -35,7 +35,7 @@ function TheoryPage() {
       <div>
         <Heading level={1} className="mt-6">{HEADING}</Heading>
         <div className="mt-6">
-          <Offline what={L("This page is nothing but the equations, so it has nothing to show until the backend answers. The play pages draw their fractals without it.")} />
+          <Offline what={L("This page shows only formulas, and the formulas come from the server, so there is nothing to show until it answers. The pages that draw the fractals work without the server.")} />
         </div>
       </div>
     );
@@ -48,7 +48,7 @@ function TheoryPage() {
       <div className="min-w-0">
         <Heading level={1} className="mt-6">{HEADING}</Heading>
         <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-          {L("Every equation the site draws from. Each one also sits on the page of the system it belongs to.")}
+          {L("Which formulas are behind the fractal pages of this site? A fractal is a shape that stays rough however closely it is looked at, such as a coastline or a fern. This page lists every formula used, in one place. First come four ways to measure dimension, a number that says how rough a shape is: 1 for a smooth line, 2 for a filled area, and values in between for shapes such as a coast. Then each drawing page follows, with its formulas and a line under each that says what it means. Each formula also appears on the page that draws with it.")}
         </Text>
 
         <section id="measuring" className="mt-12 scroll-mt-24">
@@ -69,7 +69,7 @@ function TheoryPage() {
         </section>
 
         <section className="mt-16">
-          <Heading level={2}>{L("The systems")}</Heading>
+          <Heading level={2}>{L("The pages and their formulas")}</Heading>
           <div className="mt-4 space-y-10">
             {theory.systems.map((s, i) => (
               <div key={s.id} id={s.id} className="scroll-mt-24">

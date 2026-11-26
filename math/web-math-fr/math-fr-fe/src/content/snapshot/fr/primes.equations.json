@@ -2,49 +2,49 @@
  "systems": [
   {
    "id": "gaps",
-   "name": "Les écarts entre nombres premiers, comme application de premier retour",
-   "summary": "Chaque écart entre nombres premiers consécutifs porté en fonction du suivant, comme les traversées d'un flot chaotique, à côté d'une application qui a vraiment une règle. Un nuage face à une courbe",
+   "name": "Un écart entre nombres premiers permet-il de prévoir le suivant ?",
+   "summary": "Chaque écart entre deux nombres premiers voisins est dessiné comme un point, face à l'écart qui le suit. Si une règle fixe donnait l'écart suivant, les points se placeraient sur une même courbe, comme ceux de la règle chaotique dessinée à côté. Pour les nombres premiers, ils forment un nuage dispersé",
    "blocks": [
     {
-     "label": "Les écarts",
+     "label": "L'écart entre nombres premiers voisins",
      "tex": "g_n = p_{n+1} - p_n",
-     "note": "Les nombres premiers sont trouvés par un crible, les écarts lus à partir d'eux. Tout écart après le premier est pair"
+     "note": "p_n est le n-ième nombre premier : p_1 = 2, p_2 = 3, p_3 = 5. g_n est l'écart qui le suit : le nombre premier suivant moins celui-ci. Par exemple, g_4 = 11 - 7 = 4. Le premier écart, 3 - 2 = 1, est impair. Tous les écarts suivants sont pairs, car tout nombre premier après 2 est impair, et la différence de deux nombres impairs est paire"
     },
     {
-     "label": "L'application de premier retour",
+     "label": "Chaque écart face au suivant",
      "tex": "(g_n,\\ g_{n+1})",
-     "note": "La même image que la page sur Rössler construit à partir d'un flot. Une règle apparaît comme une courbe ; les écarts apparaissent comme un nuage sur une grille de nombres pairs"
+     "note": "Chaque paire d'écarts voisins donne un point : g_n fixe la position horizontale, g_(n+1) la position verticale. Pour les nombres premiers 7, 11, 13, les écarts valent 4 et 2, et le point se place en (4, 2). Une image de chaque valeur face à la suivante s'appelle une application de retour. Si une règle donnait chaque valeur suivante à partir de la valeur actuelle, tous les points seraient sur le graphe de cette règle. Les écarts entre nombres premiers donnent à la place un nuage de points sur des nombres pairs"
     },
     {
-     "label": "À quel point l'écart suivant est prévisible",
+     "label": "Ce qu'un écart apprend sur le suivant",
      "tex": "\\rho = \\frac{\\mathbb{E}\\big[\\operatorname{sd}(g_{n+1} \\mid g_n)\\big]}{\\operatorname{sd}(g_{n+1})}",
-     "note": "La dispersion de l'écart suivant une fois celui-ci connu, divisée par la dispersion sans rien connaître. Une règle donne zéro ; les nombres premiers donnent un nombre proche de un, comme les écarts mélangés"
+     "note": "sd désigne la dispersion d'une liste de nombres, son écart type : la distance habituelle entre les nombres et leur moyenne. Le dénominateur est la dispersion de tous les écarts suivants g_(n+1). Le numérateur est la dispersion de g_(n+1) parmi les seuls cas où l'écart actuel g_n a une taille donnée. La barre | se lit « sachant ». E désigne la moyenne de ces dispersions sur toutes les tailles de g_n, chaque taille comptée autant de fois qu'elle apparaît. Seules les tailles vues au moins 8 fois sont utilisées. Le rapport ρ (la lettre grecque rhô) vaut 0 quand l'écart actuel fixe exactement le suivant, comme le ferait une règle. Il vaut 1 quand l'écart actuel n'apprend rien. Pour les nombres premiers, ρ est proche de 1, comme pour les mêmes écarts dans un ordre aléatoire"
     },
     {
-     "label": "La taille des écarts",
+     "label": "La taille moyenne des écarts",
      "tex": "\\bar{g} \\approx \\ln p",
-     "note": "L'écart moyen près de p vaut environ le logarithme de p : le théorème des nombres premiers lu comme un espacement. La forme de l'histogramme en découle, et de presque rien d'autre"
+     "note": "ḡ, la lettre g surmontée d'une barre, est l'écart moyen entre nombres premiers près d'un grand nombre p. ln p est le logarithme népérien de p : la puissance à laquelle il faut élever le nombre e ≈ 2,718 pour obtenir p. Près d'un million, ln p ≈ 13,8, et les nombres premiers voisins y sont donc séparés d'environ 14 en moyenne. Cela découle du théorème des nombres premiers : près de p, environ un nombre sur ln p est premier. La page montre les deux nombres : l'écart moyen jusqu'ici, et le ln du plus grand nombre premier trouvé jusqu'ici"
     }
    ],
    "dimension": {
-    "label": "Ce que le chaos n'est pas",
-    "tex": "\\text{no rule} \\neq \\text{a rule that is sensitive}",
-    "note": "Une suite chaotique a une règle et un exposant positif ; deux départs séparés d'un cheveu suivent la règle et s'écartent. Les nombres premiers n'ont aucune règle à suivre, et l'application de premier retour permet de distinguer les deux"
+    "label": "Une règle chaotique, et pas de règle",
+    "tex": "x_{n+1} = 4\\,x_n\\,(1 - x_n) \\qquad g_{n+1} = \\ ?",
+    "note": "À gauche, la règle de l'image de comparaison, l'application logistique avec r = 4. x est un nombre entre 0 et 1, x_n sa valeur à l'étape n, et la règle donne la valeur à l'étape suivante. Cette règle est chaotique : deux valeurs de départ séparées d'une distance minuscule donnent bientôt des suites qui n'ont plus rien en commun. La vitesse à laquelle ces valeurs s'écartent s'appelle l'exposant de Lyapunov. Pour cette règle, il vaut ln 2 ≈ 0,69 par étape. Il est positif, et c'est ce que veut dire « chaotique ». À droite, l'écart suivant entre nombres premiers. Aucune formule de ce genre ne le donne à partir de l'écart précédent : il n'y a rien à lancer deux fois et aucun exposant à mesurer. Avoir l'air aléatoire et être chaotique sont deux choses différentes, et l'image de chaque valeur face à la suivante les distingue"
    }
   }
  ],
  "definitions": [
   {
    "id": "sieve",
-   "name": "Le crible",
-   "tex": "\\text{strike every multiple of each prime up to } \\sqrt{N}",
-   "note": "La façon dont les nombres premiers de la page sont trouvés : rien n'est deviné, et rien n'est pris dans une table"
+   "name": "Le crible d'Ératosthène",
+   "tex": "\\{2, 3, \\dots, N\\} \\setminus \\{\\, k\\,p : p \\le \\sqrt{N},\\ k \\ge 2 \\,\\}",
+   "note": "La façon dont la page trouve les nombres premiers jusqu'à un nombre N. Les nombres entiers de 2 à N sont écrits. Le plus petit, 2, est premier, et ses multiples 4, 6, 8, etc. sont barrés. Le plus petit nombre restant, 3, est premier, et ses multiples 6, 9, 12, etc. sont barrés. Cela continue pour chaque nombre premier p jusqu'à √N, la racine carrée de N. Dans la formule, k p avec k = 2, 3, 4, etc. désigne les multiples de p, et le signe ∖ veut dire « retirer ». Les nombres restants sont exactement les nombres premiers jusqu'à N. S'arrêter à √N suffit, car un nombre jusqu'à N qui n'est pas premier a un diviseur au plus égal à √N. Rien n'est deviné et rien n'est recopié d'une table"
   },
   {
    "id": "returnmap",
-   "name": "Une application de premier retour",
+   "name": "Une application de retour",
    "tex": "x_n \\mapsto x_{n+1}",
-   "note": "Chaque valeur en fonction de celle qui la suit. Pour une règle déterministe, les points se placent sur le graphe de cette règle ; c'est le test que la page applique"
+   "note": "Une façon de chercher une règle dans une suite de nombres x_1, x_2, x_3, etc. Chaque valeur x_n est dessinée comme un point, face à la valeur x_(n+1) qui vient juste après. La flèche ↦ se lit « est suivi de ». Si une règle fixe donne chaque valeur suivante à partir de la valeur actuelle, tous les points sont sur une même courbe, le graphe de cette règle. S'il n'y a pas de telle règle, les points se dispersent. La page applique ce test aux écarts entre nombres premiers"
   }
  ]
 }

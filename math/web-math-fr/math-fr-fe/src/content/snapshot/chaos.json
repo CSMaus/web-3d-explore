@@ -2,7 +2,7 @@
  "slug": "chaos",
  "number": 2,
  "title": "Differential equations, attractors and chaos",
- "summary": "An equation whose unknown is a function, solved in closed form until that runs out and numerically after it, the attractor a system settles onto, deterministic chaos, the route in through period doubling, and the one experiment where the whole chain was used to do something",
+ "summary": "Many things that change over time follow a rule that links how fast a quantity changes to its present value. Such a rule is called a differential equation, and its answer is not a single number but a whole curve over time. Some of these equations are solved by a formula. When no formula exists, the computer builds the curve in many small steps. Over time, a system often settles onto a fixed shape, called an attractor. Some systems follow an exact rule and still cannot be predicted far ahead: this is called chaos. The topic shows how chaos appears as one setting is turned up, through a cycle that doubles its length again and again. It ends with an experiment from 1992 that used this chain of ideas to steady the irregular beating of heart tissue with small, well-timed pulses.",
  "state": "writing",
  "parts": 0,
  "beats": 0,

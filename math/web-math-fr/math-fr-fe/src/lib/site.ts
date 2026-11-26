@@ -12,6 +12,13 @@ export const BRAND: string = import.meta.env.VITE_BRAND || "M / Math";
 /** where the donate button leads. empty means no button is shown, so no dead link ships. */
 export const DONATE_URL: string = import.meta.env.VITE_DONATE_URL || "";
 
+/**
+ * the feedback relay (feedback-worker/, docs/telegram-bot.md): the Worker's address and the public
+ * Turnstile site key. both are public values; with either empty the feedback button is not shown.
+ */
+export const FEEDBACK_URL: string = import.meta.env.VITE_FEEDBACK_URL || "";
+export const TURNSTILE_SITE_KEY: string = import.meta.env.VITE_TURNSTILE_SITE_KEY || "";
+
 /** the palette of the Mandelbulb on the front page, one per case, by id from `lib/palettes`; chosen here, not on the page. */
 const FRONT_PALETTES: Record<string, string> = { base: "ice", edge_light: "warm", pixel_art_cute: "pixel", old_code: "moss" };
 export const FRONT_PALETTE = FRONT_PALETTES[KIT_CASE] ?? "ice";

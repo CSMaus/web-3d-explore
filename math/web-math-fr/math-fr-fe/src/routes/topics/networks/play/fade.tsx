@@ -24,9 +24,9 @@ export const Route = createFileRoute("/topics/networks/play/fade")({
 });
 
 const SQUASHES: { id: Act; label: string }[] = [
-  { id: "sigmoid", label: L("Squash to 0..1") },
-  { id: "tanh", label: L("Squash to -1..1") },
-  { id: "relu", label: L("Cut below zero") },
+  { id: "sigmoid", label: L("Squash into 0 to 1 (sigmoid)") },
+  { id: "tanh", label: L("Squash into -1 to 1 (tanh)") },
+  { id: "relu", label: L("Negatives become zero (ReLU)") },
 ];
 const STARTS: { id: Init; label: string }[] = (["uniform", "xavier", "he"] as Init[]).map((id) => ({ id, label: L(INITS[id].label) }));
 const WIDTH = 6;
@@ -118,17 +118,17 @@ function FadePage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? L("The first layer learns last")}
-        job={L("The correction page sent the blame back through two layers. This page stacks many, on the ring inside a ring, and measures how much blame reaches each layer. Every layer the blame passes back through multiplies it by a weight and by the slope of a squash, and a squash to 0..1 has a slope of at most a quarter. Layer after layer, the blame fades, and the first layer, the one that sees the dots, is the one that barely moves.")}
+        title={system?.name ?? L("Why the first layer learns last")}
+        job={L("Why does the first layer of a deep network learn last? The network here has many layers of neurons, one after another: 2 inputs, several middle layers of 6 neurons each, and 1 output. A neuron multiplies its inputs by numbers called weights, adds a number called a bias and squashes the total. The data are 60 dots of two kinds: one kind in the middle, the other in a ring around it. In training, the error found at the output is passed back layer by layer. Each layer's weights move in proportion to the error signal that reaches them. At every layer on the way back, the signal is multiplied by weights and by the slope of a squashing function. For the squashing function into 0 to 1, that slope is at most 1/4. So the signal shrinks layer after layer, and the first layer, the one that receives the dots, gets the least. The bars show how much reaches each layer.")}
         input={
           <div className="space-y-3">
             <Choices options={SQUASHES} value={act} onPick={(id) => { setAct(id); restart(id, init, deep); }} />
             <Choices options={STARTS} value={init} onPick={(id) => { setInit(id); restart(act, id, deep); }} />
             <Text kind="note" as="p">{L(INITS[init].label)}: {L(INITS[init].note)}.</Text>
-            <Slider label={L("Hidden layers")} min={2} max={7} step={1} value={deep} format={(v) => `${v}`} onChange={(v) => { setDeep(v); restart(act, init, v); }} />
+            <Slider label={L("Middle layers")} min={2} max={7} step={1} value={deep} format={(v) => `${v}`} onChange={(v) => { setDeep(v); restart(act, init, v); }} />
             <Slider label={L("Step size")} min={0.05} max={2} step={0.05} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
             <Text kind="note" as="p">
-              {L("Six units in every hidden layer. The bars measure the blame before any step is taken, so the comparison between squashes and starts can be read without running.")}
+              {L("The first row chooses the squashing function, the second how the starting weights are drawn. Each middle layer has 6 neurons. 'Step size' sets how far the weights move at each step. The bars are measured before any step, so the choices can be compared without running.")}
             </Text>
           </div>
         }
@@ -170,12 +170,12 @@ function FadePage() {
                     const top = pen.py(y - 0.22);
                     const bottom = pen.py(y - 0.78);
                     ctx.fillRect(pen.px(LOW), top, Math.max(2, pen.px(v) - pen.px(LOW)), bottom - top);
-                    plate(pen, l === 0 ? L("Layer 1, first, sees the dots") : l === layers - 1 ? L("Layer {{n}}, last, gives the answer", { n: l + 1 }) : L("Layer {{n}}", { n: l + 1 }), LOW + 0.15, y - 0.5, INK);
+                    plate(pen, l === 0 ? L("Layer 1, the first: receives the dots") : l === layers - 1 ? L("Layer {{n}}, the last: gives the answer", { n: l + 1 }) : L("Layer {{n}}", { n: l + 1 }), LOW + 0.15, y - 0.5, INK);
                     plate(pen, view.norms[l].toExponential(1), HIGH - 0.1, y - 0.5, MUTED, "right");
                   }
                 }}
               />
-            </div><Caption>{L("How much blame reaches each layer's weights right now, on a scale where each mark is ten times the last")}</Caption></div>
+            </div><Caption>{L("How much error signal reaches each layer's weights right now: the typical size of their slopes. On this scale each mark is ten times the one to its left, and 1e-3 means 0.001")}</Caption></div>
             <div className="space-y-2">
               <div><div data-slot="plot" className="h-[200px] overflow-hidden">
                 <Plot
@@ -193,7 +193,7 @@ function FadePage() {
                     }
                   }}
                 />
-              </div><Caption>{L("The answer so far")}</Caption></div>
+              </div><Caption>{L("The network's answer so far, shaded by the kind it picks at each point. Ring: a dot on the wrong side")}</Caption></div>
               <div><div data-slot="plot" className="h-[172px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
@@ -206,7 +206,7 @@ function FadePage() {
                     }
                   }}
                 />
-              </div><Caption>{L("The same, against steps. Rose: the first layer. Green: the last")}</Caption></div>
+              </div><Caption>{L("The same sizes (up, on the same ten-times scale) over the training steps (across). One line per layer, in the colour of its bar. The two thicker lines are the first and the last layer")}</Caption></div>
             </div>
           </section>
         }
@@ -214,39 +214,39 @@ function FadePage() {
           <div className="space-y-2">
             <Verdict good={wrong === 0 ? true : stalled || travelRatio > 100 ? false : undefined}>
               {view.steps === 0
-                ? L("Before any step, with {{hidden}} hidden layers: the blame reaching the first layer is {{ratio}} times smaller than the blame at the last. {{next}}", {
+                ? L("Before any step, with {{hidden}} middle layers, the error signal reaching the first layer is {{ratio}} times smaller than at the last layer. {{next}}", {
                     hidden: layers - 1,
                     ratio: ratio.toExponential(1),
-                    next: ratio > 100 ? L("At that rate the first layer is as good as frozen. Press run and watch which layers move.") : ratio > 10 ? L("That is a real gap. Press run and watch which layers move.") : L("That is close to even: the blame arrives nearly undiminished. Press run."),
+                    next: ratio > 100 ? L("At that ratio the first layer is almost frozen. Press Run and watch which layers move.") : ratio > 10 ? L("That is a real gap. Press Run and watch which layers move.") : L("That is close to even: the signal arrives almost undiminished. Press Run."),
                   })
-                : L("After {{steps}} steps, {{wrong}} of {{total}} wrong. Since the start the last layer's weights have moved {{last}} and the first layer's {{first}}, {{ratio}} times less. {{story}}{{relu}}{{start}}", {
+                : L("After {{steps}} steps, {{wrong}} of the {{total}} dots are on the wrong side. Since the start, the last layer's weights have moved by {{last}} and the first layer's by {{first}}: {{ratio}} times less. {{story}}{{relu}}{{start}}", {
                     steps: view.steps,
                     wrong,
                     total: data.X.length,
                     last: travel[layers - 1].toExponential(1),
                     first: travel[0].toExponential(1),
                     ratio: travelRatio.toExponential(1),
-                    story: stalled ? L("The blame is now tiny at every layer: the network has stalled. The layers nearest the answer flattened onto answering about one half for every dot, and the first layer, which barely moved, is the one that would have to change for anything else to happen. This is what the vanishing gradient looks like from outside: not slow progress but a network that stops.") : travelRatio > 100 ? L("The first layer is learning last, if at all: the layers nearest the answer move first and the layer that actually sees the dots waits. This is the vanishing gradient.") : travelRatio > 10 ? L("The gap is there but the first layer is moving.") : L("Every layer is moving by about the same amount, so the whole network learns at once."),
-                    relu: act === "relu" ? L(" The cut-off unit's slope is exactly one wherever it is on, so nothing is lost passing through it.") : "",
-                    start: init === "he" || init === "xavier" ? L(" The start was sized so the signal keeps its size through each layer, which is what the rule was made for.") : "",
+                    story: stalled ? L("The error signal is now tiny at every layer: the network has stopped learning. The layers nearest the output settled on answering about one half for every dot. The first layer, which barely moved, is the one that would have to change for anything else to happen. This is called the vanishing gradient: the slopes that guide training shrink towards zero on their way back. Seen from outside, it is not slow progress but a network that stops.") : travelRatio > 100 ? L("The first layer is learning last, if at all: the layers nearest the output move first, and the layer that actually receives the dots waits. This is called the vanishing gradient: the slopes that guide training shrink towards zero on their way back to the first layers.") : travelRatio > 10 ? L("The gap is there, but the first layer is moving.") : L("Every layer moves by about the same amount, so the whole network learns at once."),
+                    relu: act === "relu" ? L(" With 'Negatives become zero', the slope is exactly 1 wherever the neuron's total is positive, so the signal loses nothing passing through it.") : "",
+                    start: init === "he" || init === "xavier" ? L(" The starting weights were sized so the signal keeps its size through each layer, which is what that rule was made for.") : "",
                   })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("Blame at the last layer")}</dt>
+              <dt>{L("Error signal at the last layer's weights")}</dt>
               <dd className="text-right text-foreground/80">{last.toExponential(2)}</dd>
-              <dt>{L("Blame at the first layer")}</dt>
+              <dt>{L("Error signal at the first layer's weights")}</dt>
               <dd className="text-right text-foreground/80">{first.toExponential(2)}</dd>
-              <dt>{L("Last over first")}</dt>
+              <dt>{L("Last divided by first")}</dt>
               <dd className="text-right text-foreground/80">{ratio.toExponential(2)}</dd>
-              <dt>{L("How far the last and the first layer have moved since the start")}</dt>
+              <dt>{L("How far the weights of the last and the first layer have moved since the start")}</dt>
               <dd className="text-right text-foreground/80">{travel[layers - 1].toExponential(2)}, {travel[0].toExponential(2)}</dd>
-              <dt>{L("Layers of weights")}</dt>
+              <dt>{L("Layers of weights (middle layers plus 1)")}</dt>
               <dd className="text-right text-foreground/80">{layers}</dd>
-              <dt>{L("Wrong of {{total}}", { total: data.X.length })}</dt>
+              <dt>{L("Dots on the wrong side, of {{total}}", { total: data.X.length })}</dt>
               <dd className="text-right text-foreground/80">{wrong}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("Try the same depth with the cut-below-zero squash and He's start, and read the bars again. Skip connections, the other standard fix, give the blame a wire that bypasses the squashes altogether; they are not on this page.")}
+              {L("For comparison: the same number of layers with 'Negatives become zero' and 'He's rule', then the bars again. A third standard fix, skip connections, gives the signal a path that goes around the squashing functions; it is not on this page.")}
             </Text>
           </div>
         }

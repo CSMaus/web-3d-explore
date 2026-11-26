@@ -15,42 +15,38 @@ export const Route = createFileRoute("/topics/chaos/play/")({
 const LOCAL: { id: string; name: string; summary: string }[] = [
   {
     id: "field",
-    name: L("One equation, and its field"),
-    summary:
-      L("An equation whose unknown is a function. It prescribes a rate at every state, which can be drawn before anything is solved"),
+    name: L("One equation for change, drawn as strokes"),
+    summary: L("An equation that gives, for every value and every moment, how fast a quantity changes. Drawn as short strokes, it shows the shape of every possible answer before anything is calculated"),
   },
   {
     id: "solvers",
-    name: L("Solving it by stepping"),
-    summary:
-      L("No formula, only the rate at the current state. The size of the step decides how much of the answer is real"),
+    name: L("Solving an equation step by step"),
+    summary: L("When no formula gives the answer, it is built in small steps: read the rate of change, move a little, repeat. The size of the step decides how close the result stays to the true answer"),
   },
   {
     id: "phase",
-    name: L("Two unknowns, and the phase plane"),
-    summary:
-      L("The whole state as one point, its history as one curve, and the clock off the axes altogether"),
+    name: L("Two quantities at once: the phase plane"),
+    summary: L("Two quantities that change together, such as the position and the speed of a swing. Their pair of values is drawn as one point, and its history as one curve"),
   },
   {
     id: "lorenz",
     name: L("The Lorenz system"),
-    summary:
-      L("Three equations from a truncated model of convection, and the smallest honest place chaos can live"),
+    summary: L("Three equations written by Edward Lorenz in 1963 as a much simplified model of a layer of fluid heated from below. Two starts that differ by a tiny amount soon move completely apart. This is chaos, and three quantities are the fewest in which a smooth motion can be chaotic"),
   },
   {
     id: "rossler",
     name: L("The Rossler system"),
-    summary: L("Built on purpose to be the simplest carrier of the same behaviour, with one non-linear term"),
+    summary: L("Three equations built by Rossler in 1976 to be the simplest system with the same unpredictable behaviour. Two of the equations only add and scale the quantities, and only one term multiplies two of them together"),
   },
   {
     id: "logistic",
     name: L("The logistic map"),
-    summary: L("One number to the next. A map needs one dimension to be chaotic where a flow needs three"),
+    summary: L("A rule that turns one number into the next, applied over and over. One number is enough for chaos here, where a smooth motion needs three, so everything is quick to compute and to draw"),
   },
   {
     id: "bifurcation",
     name: L("The bifurcation diagram"),
-    summary: L("Every parameter on one axis and every value the orbit visits above it"),
+    summary: L("The rule x → r x (1 - x) turns one number into the next. Its setting r runs along the bottom of one picture, and above each r are all the numbers the sequence keeps returning to. Every change of behaviour shows in that one picture"),
   },
 ];
 
@@ -60,13 +56,13 @@ function ChaosIndex() {
 
   return (
     <div>
-      <Heading level={1} className="mt-4">{L("Pick something to move")}</Heading>
+      <Heading level={1} className="mt-4">{L("Choose a page to try")}</Heading>
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-        {L("Every system carries its equations, its parameters as controls, and the numbers measured from whatever is on screen. Nothing here is a stated result: the exponents, the dimensions and Feigenbaum's constant are all computed in the browser as they appear.")}
+        {L("Each page below shows one system: a rule for how some numbers change over time. Each page has the equations, sliders for the fixed numbers in them, and readouts measured from what is on the screen. No result is copied from a book. The growth rates, the dimensions and Feigenbaum's constant are all computed in the browser while the page is open.")}
       </Text>
       {!theory ? (
         <Text kind="note" as="p" className="mt-3">
-          {L("The descriptions come from the backend, which is not answering; this page needs nothing from it and neither does any of the mathematics.")}
+          {L("The short descriptions below come from the site's server, which is not answering now. The pages themselves do not need the server: every calculation runs in the browser.")}
         </Text>
       ) : null}
 

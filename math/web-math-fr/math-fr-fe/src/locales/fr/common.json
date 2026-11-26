@@ -27,8 +27,8 @@
     "eyebrow": "Les mathématiques de près",
     "title1": "Voir l'idée,",
     "title2": "comprendre pourquoi",
-    "lede": "De beaux concepts, explorés par des expériences interactives, des récits visuels et des notes qui ne gardent que l'essentiel.",
-    "start": "Commencer par les fractales",
+    "lede": "Des explications interactives des mathématiques derrière les nombres imaginaires, les fractales, le chaos, les séries, les réseaux de neurones et les modèles de langage : manipuler l'idée, lire les équations, et regarder une courte vidéo là où elle existe.",
+    "start": "Commencez ici",
     "browse": "Tous les thèmes",
     "tag1": "Sans prérequis",
     "tag2": "À son rythme",
@@ -51,7 +51,18 @@
       "fractals": "Des formes dont la dimension tombe entre les nombres entiers, et la façon de la mesurer.",
       "chaos": "Des règles exactes dont l'avenir reste pourtant imprévisible.",
       "networks": "De la pente d'une courbe à un réseau qui apprend.",
-      "tokens": "Comment un texte devient des nombres, et des nombres le mot suivant."
+      "tokens": "Comment un texte devient des nombres, et des nombres le mot suivant.",
+      "series": "Des fonctions bâties avec des pièces simples : le sinus d'une calculatrice, une onde tracée par des cercles, une photo gardée en quelques ondes.",
+      "probability": "La fréquence des événements dus au hasard, comptée exactement : deux dés, un test médical, l'attente d'un taxi et les mises d'un joueur."
+    },
+    "steps": {
+      "heading": "Comment chaque thème est construit",
+      "watch": "Regarder",
+      "watchText": "Là où une vidéo existe, elle montre l'idée en mouvement ; la page des parties donne l'ordre dans tous les cas.",
+      "try": "Essayer",
+      "tryText": "Chaque système a sa page à manipuler, et l'image change à chaque valeur.",
+      "read": "Lire",
+      "readText": "Les équations derrière, pas à pas, avec les nombres que la page vient de montrer."
     }
   },
   "learn": {

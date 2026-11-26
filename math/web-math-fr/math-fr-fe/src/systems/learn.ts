@@ -7,10 +7,10 @@ import { rng, type Batch, type Vec } from "./net.ts";
 export type SetKind = "split" | "xor" | "rings" | "spiral";
 
 export const SETS: Record<SetKind, { label: string; note: string }> = {
-  split: { label: "Two clouds", note: "Linearly separable: one straight line divides them" },
-  xor: { label: "Exclusive or", note: "Four points that no straight line divides" },
-  rings: { label: "A ring inside a ring", note: "Separable, but not by anything straight" },
-  spiral: { label: "Two spirals", note: "The hardest of the four for a small network" },
+  split: { label: "Two clouds", note: "Two groups of dots that one straight line can divide" },
+  xor: { label: "Exclusive or", note: "Four dots at the corners of a square, the two of each kind on opposite corners. No straight line divides them" },
+  rings: { label: "A ring inside a ring", note: "One group in the middle, the other in a ring around it. A closed curve divides them, a straight line cannot" },
+  spiral: { label: "Two spirals", note: "Two spirals wound into each other. The hardest of the four sets for a small network" },
 };
 
 export function dataset(kind: SetKind, count: number, seed = 1): Batch {

@@ -1,0 +1,313 @@
+{
+ "systems": [
+  {
+   "id": "dice",
+   "name": "Two dice: why 7 comes up six times as often as 2",
+   "summary": "Two dice can land in 36 equally likely ways, and six of them give a sum of 7, against one for a sum of 2. Thousands of throws show the share of 7 settling on 6/36.",
+   "blocks": [
+    {
+     "label": "A chance as a share",
+     "tex": "P(A) = \\frac{\\text{outcomes in } A}{\\text{all outcomes}}",
+     "note": "P(A) is the chance of an event A, a number from 0 to 1. When every outcome is equally likely, it is the number of outcomes in A divided by the number of all outcomes. Two dice have 6 x 6 = 36 outcomes, counting the first die and the second apart"
+    },
+    {
+     "label": "The sum 7 and the sum 2",
+     "tex": "P(\\text{sum} = 7) = \\frac{6}{36} = 0.1667, \\quad P(\\text{sum} = 2) = \\frac{1}{36}",
+     "note": "A sum of 7 comes from six pairs: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1). A sum of 2 comes from (1,1) alone"
+    },
+    {
+     "label": "The number of ways to make a sum s",
+     "tex": "N(s) = 6 - |s - 7|, \\quad s = 2, \\dots, 12",
+     "note": "N(s) is the number of pairs whose sum is s, and |s - 7| is the distance of s from 7. From 2 to 12 the counts are 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, and the bars of the throws settle on them"
+    }
+   ],
+   "dimension": {
+    "label": "Why the throws settle",
+    "tex": "\\frac{\\text{count of } A \\text{ in } n \\text{ throws}}{n} \\to P(A)",
+    "note": "Over n throws, the share of throws in which A happens comes close to the chance of A. The arrow means 'comes close to as n grows'. The gap shrinks like 1/sqrt(n), one divided by the square root of n"
+   }
+  },
+  {
+   "id": "birthdays",
+   "name": "Shared birthdays",
+   "summary": "How many people must be in a room for an even chance that two share a birthday? First a guess, then the curve: 23 people give a chance of 50.7 per cent.",
+   "blocks": [
+    {
+     "label": "The other way round",
+     "tex": "P(\\text{some pair shares}) = 1 - P(\\text{all different})",
+     "note": "The chance that something happens is 1 minus the chance that it does not. The chance that nobody shares is easier to count: each person in turn misses the days already taken"
+    },
+    {
+     "label": "All birthdays different",
+     "tex": "P(\\text{all different}) = \\frac{365}{365}\\cdot\\frac{364}{365}\\cdots\\frac{365-n+1}{365}",
+     "note": "n is the number of people. Each fraction is the chance that the next person misses every birthday so far. Every day of the year is taken as equally likely, and 29 February is left out"
+    }
+   ],
+   "dimension": {
+    "label": "Why so few people are enough",
+    "tex": "\\binom{23}{2} = 253 \\text{ pairs}",
+    "note": "The symbol is the number of ways to choose 2 people out of 23. Twenty-three people make 253 pairs, and any pair can share a birthday. 23 people give a chance of 0.507"
+   }
+  },
+  {
+   "id": "test",
+   "name": "A positive test",
+   "summary": "A test finds 99 per cent of ill people and wrongly calls 5 per cent of healthy people ill. One person in 1000 is ill. Counting 100,000 people shows that only 1.94 per cent of the positive results belong to ill people.",
+   "blocks": [
+    {
+     "label": "The count",
+     "tex": "\\frac{99}{99 + 4995} = \\frac{99}{5094} = 0.0194",
+     "note": "Of 100,000 people, 100 are ill and 99 of them get a positive result. 99,900 are healthy, and 5 per cent of them, 4,995 people, get a positive result too"
+    },
+    {
+     "label": "A chance once something is known",
+     "tex": "P(A \\mid B) = \\frac{P(A \\text{ and } B)}{P(B)}",
+     "note": "P(A | B) is read 'the chance of A given B': the chance of A once B is known to have happened. Knowing B leaves only the outcomes in B, and the chance of A is its share of them"
+    },
+    {
+     "label": "Bayes' rule",
+     "tex": "P(\\text{ill} \\mid +) = \\frac{P(+ \\mid \\text{ill})\\,P(\\text{ill})}{P(+ \\mid \\text{ill})\\,P(\\text{ill}) + P(+ \\mid \\text{healthy})\\,P(\\text{healthy})}",
+     "note": "The plus sign stands for a positive result. The rule is the same count with every number divided by the number of people: 0.99 x 0.001 divided by 0.99 x 0.001 + 0.05 x 0.999"
+    }
+   ],
+   "dimension": {
+    "label": "Two different questions",
+    "tex": "P(+ \\mid \\text{ill}) = 0.99 \\ne P(\\text{ill} \\mid +) = 0.0194",
+    "note": "The chance of a positive result for an ill person is 0.99. The chance of being ill for a person with a positive result is 0.0194. They are different numbers"
+   }
+  },
+  {
+   "id": "doors",
+   "name": "Three doors: stay or switch",
+   "summary": "A car is behind one of three doors. After the player picks, the host opens another door with a goat behind it. A thousand games with each choice show whether switching helps, and then the same with 100 doors.",
+   "blocks": [
+    {
+     "label": "Staying",
+     "tex": "P(\\text{win by staying}) = \\frac{1}{n}",
+     "note": "n is the number of doors. The first pick hides the car one time in n, and the doors the host opens change nothing about that pick"
+    },
+    {
+     "label": "Switching",
+     "tex": "P(\\text{win by switching}) = 1 - \\frac{1}{n}",
+     "note": "When the first pick was wrong, the host has to leave the car's door closed, so switching wins. That gives 2/3 with 3 doors and 99/100 with 100"
+    }
+   ],
+   "dimension": {
+    "label": "What the host knows",
+    "tex": "P(\\text{car} \\mid \\text{a goat shown at random}) = \\tfrac{1}{2}",
+    "note": "Suppose the host opened a door at random and it happened to show a goat. Then the two closed doors would be equally likely. Switching pays only because the host knows where the car is"
+   }
+  },
+  {
+   "id": "game",
+   "name": "A game with a die: pay 2, win 10 on a six",
+   "summary": "A round costs 2, and a six on a die wins 10. On average a round loses 1/3. Over a thousand rounds the average per round settles on -1/3, while the total drifts down by about 333.",
+   "blocks": [
+    {
+     "label": "The expected value",
+     "tex": "E[X] = \\sum_x x\\,P(X = x) = 10\\cdot\\tfrac{1}{6} - 2 = -\\tfrac{1}{3}",
+     "note": "X is the gain of one round. E[X], its expected value, is each possible gain times its chance, all added up. Here it is the prize times the chance of a six, minus the cost"
+    },
+    {
+     "label": "The spread of one round",
+     "tex": "\\sigma = 10\\sqrt{\\tfrac{1}{6}\\cdot\\tfrac{5}{6}} = 3.73",
+     "note": "The Greek letter sigma is the standard deviation: a typical distance of one round's gain from the expected gain, in the same units as the gain"
+    },
+    {
+     "label": "After n rounds",
+     "tex": "E[S_n] = -\\tfrac{n}{3}, \\qquad \\sigma_{S_n} = 3.73\\sqrt{n}",
+     "note": "S_n is the total after n rounds. After 1000 rounds it is about -333, give or take about 118. The average per round wanders less and less, and the total wanders more"
+    }
+   ],
+   "dimension": {
+    "label": "A fair game",
+    "tex": "\\tfrac{\\text{prize}}{6} - 2 = 0 \\iff \\text{prize} = 12",
+    "note": "A game is fair when its expected gain is zero. A prize of 12 makes it so"
+   }
+  },
+  {
+   "id": "hats",
+   "name": "Hats handed back at random",
+   "summary": "Hats are handed back to their owners in a random order. On average exactly 1 person gets their own hat back, with 3 hats and with 100.",
+   "blocks": [
+    {
+     "label": "One yes-or-no number for each person",
+     "tex": "M = I_1 + I_2 + \\cdots + I_n, \\quad I_k = 1 \\text{ if person } k \\text{ gets hat } k",
+     "note": "M is the number of people with their own hat, and n the number of people. I_k is 1 if person number k gets their own hat and 0 if not. M is the sum of these numbers"
+    },
+    {
+     "label": "Averages add",
+     "tex": "E[M] = \\sum_k E[I_k] = n\\cdot\\tfrac{1}{n} = 1",
+     "note": "E stands for the average over many shuffles. The average of a sum is the sum of the averages, even though the people depend on each other"
+    }
+   ],
+   "dimension": {
+    "label": "Nobody gets their own hat",
+    "tex": "P(M = 0) = \\sum_{j=0}^{n} \\frac{(-1)^j}{j!} \\to e^{-1} = 0.368",
+    "note": "The factorial of a whole number, written with the sign !, is the product of all whole numbers from 1 up to it: 3! = 1 x 2 x 3 = 6. The number e, about 2.718, is a constant. The chance is one third for 3 hats, and 0.368 for 10 hats or more"
+   }
+  },
+  {
+   "id": "galton",
+   "name": "The Galton board",
+   "summary": "Balls fall through rows of pins and go right or left at each pin. The bins below fill to a shape that a count of paths predicts. Tilting the board changes the chance of going right.",
+   "blocks": [
+    {
+     "label": "The binomial distribution",
+     "tex": "P(K = k) = \\binom{n}{k} p^k (1-p)^{n-k}",
+     "note": "n is the number of rows, p the chance of going right at a pin, and K the number of rights a ball takes. The chance of k rights is the number of paths with k rights times the chance of each path"
+    },
+    {
+     "label": "The middle bin",
+     "tex": "\\binom{10}{5} \\Big/ 2^{10} = \\frac{252}{1024} = 0.246",
+     "note": "With ten rows and a chance of one half at each pin, 252 of the 1024 paths end in the middle bin. About a quarter of the balls land there"
+    }
+   ],
+   "dimension": {
+    "label": "Where the pile sits",
+    "tex": "E[K] = np, \\qquad \\sigma_K = \\sqrt{np(1-p)}",
+    "note": "The average bin is the rows times the chance of going right, and sigma is the typical distance from it. Tilting the board moves the pile to n p and makes it narrower"
+   }
+  },
+  {
+   "id": "poisson",
+   "name": "Rare events: a minute with no call",
+   "summary": "A call centre gets 3 calls a minute on average, at random. Cutting the minute into finer and finer slices gives the chance of a minute with no call: e^-3 = 0.0498.",
+   "blocks": [
+    {
+     "label": "No call in n slices",
+     "tex": "\\left(1 - \\frac{3}{n}\\right)^n \\to e^{-3} = 0.0498",
+     "note": "The minute is cut into n slices, each holding a call with chance 3/n. The chance that no slice holds a call is 0.0282 for 10 slices, 0.0476 for 100 and 0.0496 for 1000"
+    },
+    {
+     "label": "The Poisson chances",
+     "tex": "P(K = k) = e^{-\\lambda}\\,\\frac{\\lambda^k}{k!}",
+     "note": "K is the number of calls in a minute, and the Greek letter lambda is the average, here 3. These chances are the limit of the slices as they get finer. Two calls in a minute have chance 0.224"
+    }
+   ],
+   "dimension": {
+    "label": "How close the two lists are",
+    "tex": "d = \\tfrac{1}{2}\\sum_k \\left|\\mathrm{Bin}(n, \\tfrac{3}{n})(k) - \\mathrm{Poi}(3)(k)\\right|",
+    "note": "d is half the sum of the differences between the chances with n slices and the Poisson chances, over every number of calls k. The page reads it as n grows"
+   }
+  },
+  {
+   "id": "bins",
+   "name": "From bars to a curve: waits for a taxi",
+   "summary": "10,000 waits for a taxi, 10 minutes on average, are counted in narrower and narrower time bins until the bars become a curve. The chance of waiting over 20 minutes is the area under the curve: e^-2 = 0.135.",
+   "blocks": [
+    {
+     "label": "The height of a bar",
+     "tex": "\\text{height} = \\frac{\\text{count in bin}}{n \\times \\text{bin width}}",
+     "note": "n is the number of waits. Divided by the width, the bars keep their height as the bins narrow, and their areas add up to 1"
+    },
+    {
+     "label": "The exponential density",
+     "tex": "f(t) = \\frac{1}{10}\\,e^{-t/10}, \\quad t \\ge 0",
+     "note": "f(t) is the height of the curve at a wait of t minutes, and e, about 2.718, is a constant. This curve describes waits with an average of 10 minutes when taxis come at random"
+    },
+    {
+     "label": "A chance as an area",
+     "tex": "P(T > 20) = \\int_{20}^{\\infty} f(t)\\,dt = e^{-2} = 0.135",
+     "note": "T is the wait in minutes. The integral sign means the area under the curve, here from 20 minutes on. One exact wait has chance zero. A range of waits has the area above it"
+    }
+   ],
+   "dimension": {
+    "label": "The same average, another shape",
+    "tex": "T \\sim \\mathrm{U}(0, 20): \\quad P(T > 20) = 0",
+    "note": "U(0, 20) means a wait spread evenly from 0 to 20 minutes: a bus every 20 minutes, reached at a random moment. It also averages 10 minutes and never makes anyone wait more than 20"
+   }
+  },
+  {
+   "id": "memory",
+   "name": "Waiting that forgets the past",
+   "summary": "Taxis come at random. After 10 minutes of waiting, the wait still ahead is as long on average as at the start. A bus on a timetable behaves differently.",
+   "blocks": [
+    {
+     "label": "A wait without memory",
+     "tex": "P(T > s + t \\mid T > s) = \\frac{e^{-(s+t)/10}}{e^{-s/10}} = e^{-t/10}",
+     "note": "T is the whole wait, s the minutes already waited and t the minutes more. Having waited s minutes changes nothing about the wait ahead"
+    },
+    {
+     "label": "The wait ahead after 10 minutes",
+     "tex": "P(T > 20 \\mid T > 10) = e^{-1} = 0.368",
+     "note": "After 10 minutes, the chance of 10 more is the same as the chance of more than 10 minutes from the start. The average wait ahead stays 10 minutes"
+    }
+   ],
+   "dimension": {
+    "label": "A timetable remembers",
+    "tex": "T \\sim \\mathrm{U}(0, 20): \\quad E[T - 10 \\mid T > 10] = 5",
+    "note": "With a bus every 20 minutes, the wait is spread evenly from 0 to 20. After 10 minutes waited, 5 minutes are left on average"
+   }
+  },
+  {
+   "id": "walks",
+   "name": "Fifty walks of coin tosses",
+   "summary": "A counter moves up one step for each head and down one for each tail. The walks spread like the square root of the number of tosses, and most of them spend nearly all or nearly none of their time above zero.",
+   "blocks": [
+    {
+     "label": "A walk",
+     "tex": "S_n = X_1 + \\cdots + X_n, \\quad X_k = \\pm 1 \\text{ each with chance } \\tfrac{1}{2}",
+     "note": "X_k is step number k, plus one or minus one, and S_n is the position after n steps. No step depends on the ones before"
+    },
+    {
+     "label": "How far the walks spread",
+     "tex": "E[S_n] = 0, \\qquad \\sqrt{E[S_n^2]} = \\sqrt{n}",
+     "note": "On average the position is zero. The typical distance from zero, the square root of the average squared position, is the square root of n: about 20 after 400 steps"
+    },
+    {
+     "label": "The arcsine law",
+     "tex": "P(\\text{share of time above } 0 \\le x) \\to \\frac{2}{\\pi}\\arcsin\\sqrt{x}",
+     "note": "The chance that a long walk spends at most a share x of its time above zero. By it, 0.41 of long walks spend less than a tenth or more than nine tenths of their time above zero, and only 0.128 between 0.4 and 0.6"
+    }
+   ],
+   "dimension": {
+    "label": "A walk stays on one side",
+    "tex": "f(x) = \\frac{1}{\\pi\\sqrt{x(1-x)}}",
+    "note": "The density of the share x of time above zero. Its curve is shaped like a U, high near 0 and 1: a fair walk tends to stay on one side"
+   }
+  },
+  {
+   "id": "ruin",
+   "name": "Gambler's ruin",
+   "summary": "A gambler starts with 10 and bets 1 at a time until reaching 20 or 0. With a fair coin, 20 is reached half the time, after 100 bets on average. A coin that wins 49 times in 100 reaches 20 only 0.40 of the time.",
+   "blocks": [
+    {
+     "label": "A fair coin",
+     "tex": "P(\\text{reach } N \\text{ from } a) = \\frac{a}{N}, \\qquad E[\\text{bets}] = a(N - a)",
+     "note": "a is the starting money and N the target. From 10 to 20 the chance is one half, and the game lasts 100 bets on average"
+    },
+    {
+     "label": "An unfair coin",
+     "tex": "P(\\text{reach } N \\text{ from } a) = \\frac{1 - r^a}{1 - r^N}, \\quad r = \\frac{1-p}{p}",
+     "note": "p is the chance of winning a bet. With p = 0.49, from 10 to 20 the chance is 0.401. From 100 to 200 the same coin gives 0.018"
+    }
+   ],
+   "dimension": {
+    "label": "Where the formula comes from",
+    "tex": "h(a) = p\\,h(a+1) + (1-p)\\,h(a-1), \\quad h(0) = 0,\\ h(N) = 1",
+    "note": "h(a) is the chance of reaching the target from a. After the first bet the money is a + 1 with chance p or a - 1 with chance 1 - p, and h(a) is the average of the two chances that follow"
+   }
+  }
+ ],
+ "definitions": [
+  {
+   "id": "chance",
+   "name": "A chance",
+   "tex": "0 \\le P(A) \\le 1, \\qquad P(\\text{not } A) = 1 - P(A)",
+   "note": "P(A) is the chance of an event A: a number from 0, never, to 1, always, that says how often A happens over many tries. The chance that A does not happen is 1 minus it"
+  },
+  {
+   "id": "independent",
+   "name": "Independent events",
+   "tex": "P(A \\text{ and } B) = P(A)\\,P(B)",
+   "note": "Two events are independent when knowing one tells nothing about the other, like two throws of a die. Then the chance of both is the product of their chances"
+  },
+  {
+   "id": "expectation",
+   "name": "Averages add",
+   "tex": "E[X + Y] = E[X] + E[Y]",
+   "note": "E[X] is the average of a quantity X over many tries. The average of a sum is the sum of the averages, for any two quantities, independent or not. The page on hats rests on it"
+  }
+ ]
+}

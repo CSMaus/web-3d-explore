@@ -68,17 +68,17 @@ function MergePage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? L("Building a vocabulary")}
-        job={L("A short text, and a rule short enough to run by hand: count every pair of neighbouring symbols, join the commonest pair into one new symbol, and repeat. Start from bytes. The list of joins is the vocabulary, and it is the whole of what a tokeniser learns.")}
+        title={system?.name ?? L("Building a vocabulary of pieces")}
+        job={L("How does a language model decide which pieces of text to treat as single units? These units are called tokens, and the list of all of them is called the vocabulary. A common method, byte-pair encoding, learns the vocabulary from a sample text with one short rule. At the start the text is written in bytes. A byte is a whole number from 0 to 255, and each English letter takes one byte. Every pair of neighbouring symbols in the text is counted. The commonest pair is replaced everywhere by one new symbol. This step is called a merge. Then the counting starts again. The sample text here is a short story of 2039 bytes about a cat, a dog and a man. The first merge joins h and e, a pair seen 125 times. The slider sets how many merges to make, and Run makes them one at a time. The thing to watch is that common words turn into single symbols and the text gets shorter: 2039 symbols at the start, 516 after 150 merges.")}
         input={
           <div className="space-y-3">
             <label className="block">
-              <span data-text="note">{L("The text to learn from")}</span>
+              <span data-text="note">{L("The sample text the vocabulary is learned from")}</span>
               <Textarea value={corpus} onChange={(e) => { setCorpus(e.target.value); reset(); }} rows={7} className="mt-1" />
             </label>
-            <Slider label={L("Merges to make")} min={10} max={300} step={10} value={target} format={(v) => String(Math.round(v))} onChange={(v) => { setTarget(Math.round(v)); reset(); }} />
+            <Slider label={L("Number of merges to make")} min={10} max={300} step={10} value={target} format={(v) => String(Math.round(v))} onChange={(v) => { setTarget(Math.round(v)); reset(); }} />
             <Text kind="note" as="p">
-              {L("The alphabet is the 256 byte values, so anything can be written and nothing is unknown. A join never crosses a space: a space is glued to the word after it and travels inside the token.")}
+              {L("The vocabulary starts with the 256 possible bytes. So any text in any language can be written with it, and no character is ever unknown. A merge never joins across a space. Each space is attached to the start of the word after it, so ' cat', with its space, can become one token.")}
             </Text>
           </div>
         }
@@ -92,7 +92,7 @@ function MergePage() {
               if (!runner.running && at >= most) reset();
               runner.toggle();
             }}
-            onStep={(many) => setDone((v) => Math.min(most, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -127,9 +127,9 @@ function MergePage() {
                     });
                   }}
                 />
-              </div><Caption>{at >= most ? L("No pair is left that occurs twice") : L("The ten commonest neighbouring pairs now. The top one is joined next.")}</Caption></div>
+              </div><Caption>{at >= most ? L("No pair of neighbouring symbols occurs twice any more, so the merging has stopped") : L("Bar chart: the ten commonest pairs of neighbouring symbols in the text right now. The length of a bar is how many times its pair occurs. The top pair is merged next.")}</Caption></div>
               <div data-text="caption" className="h-[250px] overflow-hidden rounded border border-border p-3">
-                <div className="text-muted-foreground">{L("The merge list, newest last")}</div>
+                <div className="text-muted-foreground">{L("The merges made so far, newest at the bottom. In brackets: how many times the pair occurred")}</div>
                 <ol className="mt-2 space-y-0.5">
                   {now.merges.slice(Math.max(0, at - 9), at).map((m, i) => {
                     const index = Math.max(0, at - 9) + i;
@@ -140,12 +140,12 @@ function MergePage() {
                       </li>
                     );
                   })}
-                  {at === 0 ? <li className="text-muted-foreground">{L("Nothing joined yet: every symbol is a byte")}</li> : null}
+                  {at === 0 ? <li className="text-muted-foreground">{L("No merge yet: every symbol is still a single byte")}</li> : null}
                 </ol>
               </div>
             </div>
             <div className="min-h-[190px] rounded border border-border p-3">
-              <div data-text="caption">{L("The start of the text, cut at the symbols the vocabulary has so far")}</div>
+              <div data-text="caption">{L("The first lines of the text, cut into the symbols the vocabulary has at this point. Each box is one token")}</div>
               <div className="mt-2">
                 <TokenRow tokens={preview} size="sm" />
               </div>
@@ -156,23 +156,23 @@ function MergePage() {
           <div className="space-y-2">
             <Verdict good={at >= most ? true : undefined}>
               {at === 0
-                ? L("Before any merge the text is {{bytes}} bytes, so {{bytes}} tokens, from an alphabet of 256. The commonest pair right now is {{pair}}. Press run.", { bytes: bytesTotal, pair: winner ? L("{{a}} + {{b}}, seen {{count}} times", { a: name(now.vocab, winner.a), b: name(now.vocab, winner.b), count: winner.count }) : L("none") })
-                : `${L("Merge {{at}}: {{a}} + {{b}} became one symbol, {{into}}, because that pair was the commonest, {{count}} times. The vocabulary is now {{size}} symbols and the text is {{tokens}} tokens, down from {{bytes}} bytes.", { at, a: name(now.vocab, last!.a), b: name(now.vocab, last!.b), into: name(now.vocab, last!.into), count: last!.count, size: now.vocab.bytes.length, tokens: tokensNow, bytes: bytesTotal })}${at >= most ? ` ${L("No more pairs occur twice, so there is nothing left worth a symbol.")}` : ""}`}
+                ? L("Before any merge the text is {{bytes}} bytes long, so it is {{bytes}} tokens of one byte each. The vocabulary has 256 symbols, one for each possible byte. The commonest pair of neighbours is {{pair}}. Run starts the merging.", { bytes: bytesTotal, pair: winner ? L("{{a}} + {{b}}, seen {{count}} times", { a: name(now.vocab, winner.a), b: name(now.vocab, winner.b), count: winner.count }) : L("none") })
+                : `${L("Merge {{at}}: {{a}} + {{b}} became one symbol, {{into}}. It was the commonest pair, seen {{count}} times. The vocabulary now has {{size}} symbols, and the text takes {{tokens}} tokens instead of the {{bytes}} bytes it started with.", { at, a: name(now.vocab, last!.a), b: name(now.vocab, last!.b), into: name(now.vocab, last!.into), count: last!.count, size: now.vocab.bytes.length, tokens: tokensNow, bytes: bytesTotal })}${at >= most ? ` ${L("No pair of neighbours occurs twice any more, so the rule has nothing left to merge.")}` : ""}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("Symbols in the vocabulary")}</dt>
+              <dt>{L("Symbols in the vocabulary: 256 bytes plus one per merge")}</dt>
               <dd className="text-right text-foreground/80">256 + {at} = {now.vocab.bytes.length}</dd>
-              <dt>{L("Tokens the text takes")}</dt>
+              <dt>{L("Length of the text in tokens")}</dt>
               <dd className="text-right text-foreground/80">{tokensNow}</dd>
-              <dt>{L("Bytes a token, on average")}</dt>
+              <dt>{L("Average bytes per token")}</dt>
               <dd className="text-right text-foreground/80">{(bytesTotal / tokensNow).toFixed(2)}</dd>
-              <dt>{L("Distinct words in the text")}</dt>
+              <dt>{L("Different words in the text")}</dt>
               <dd className="text-right text-foreground/80">{now.words.length}</dd>
               <dt>{L("Longest symbol so far")}</dt>
               <dd className="text-right text-foreground/80">{visible(tokenText(now.vocab, now.vocab.bytes.reduce((b, v, i) => (v.length > now.vocab.bytes[b].length ? i : b), 0)))}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("More merges: fewer, longer tokens and a bigger vocabulary, which is a bigger output layer later. Fewer merges: the reverse. The text decides everything: a word that never appears here never becomes a symbol, and the next page shows what happens to it.")}
+              {L("More merges give a bigger vocabulary and fewer, longer tokens. A bigger vocabulary also makes the model bigger, because the model gives a score to every symbol of the vocabulary each time it picks the next token. Fewer merges give the reverse. The sample text decides everything. A word that never appears in it never becomes a symbol. A page of the same topic, 'Cutting a sentence', shows what happens to such a word.")}
             </Text>
           </div>
         }

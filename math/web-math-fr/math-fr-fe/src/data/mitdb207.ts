@@ -14,23 +14,23 @@ export const RECORD = "207";
 export const SECONDS = 1805.556;
 /** beat types, in the database's own codes */
 export const TYPES: Record<string, string> = {
-  L: "normal beat, conducted with left bundle branch block",
-  R: "normal beat, conducted with right bundle branch block",
+  L: "normal beat, carried with a delay down the left side of the heart",
+  R: "normal beat, carried with a delay down the right side of the heart",
   N: "normal beat",
-  A: "premature beat from the atria",
-  V: "premature beat from the ventricles",
-  E: "escape beat from the ventricles",
+  A: "early beat from the upper chambers",
+  V: "early beat from the lower chambers",
+  E: "late beat the lower chambers make on their own",
   "!": "ventricular flutter wave",
-  F: "fusion of a normal and a ventricular beat",
+  F: "a normal beat and a beat from the lower chambers merged into one",
 };
 /** rhythm names, in the database's own codes */
 export const RHYTHMS: Record<string, string> = {
-  N: "normal sinus rhythm",
-  B: "ventricular bigeminy: every other beat premature",
-  VT: "ventricular tachycardia",
+  N: "normal rhythm, set by the heart's natural pacemaker",
+  B: "every other beat early, coming from the lower chambers",
+  VT: "ventricular tachycardia: a fast run of beats from the lower chambers",
   VFL: "ventricular flutter",
-  IVR: "idioventricular rhythm: the ventricles pacing themselves",
-  SVTA: "supraventricular tachyarrhythmia",
+  IVR: "a slow rhythm that the lower chambers set on their own",
+  SVTA: "a fast rhythm that starts in the upper chambers",
 };
 export type Beat = { t: number; rr: number; type: string; rhythm: string };
 /** [time in seconds, interval to the next beat in ms, beat type, rhythm] */

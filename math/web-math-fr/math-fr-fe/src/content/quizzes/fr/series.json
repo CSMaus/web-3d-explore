@@ -1,0 +1,266 @@
+{
+  "slug": "series",
+  "title": "Test : Séries",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Une série de Taylor construit une fonction comme une somme de puissances de (x - a), où a est un point choisi, appelé le centre. Que copie la somme au centre ?",
+      "options": [
+        {
+          "text": "Seulement la hauteur de la courbe, les termes suivants corrigeant la courbe ailleurs",
+          "correct": false,
+          "why": "Le premier terme seul ne copie que la hauteur, et son graphe est une droite horizontale. Chaque terme suivant copie une propriété de plus au même centre."
+        },
+        {
+          "text": "La hauteur, la pente, la courbure et toutes les dérivées suivantes en ce point",
+          "correct": true,
+          "why": "Une dérivée mesure la vitesse à laquelle une fonction change : la première est la pente, la deuxième la courbure. Le terme en (x - a)^n porte f^(n)(a)/n!, donc l'ajouter fait coïncider la dérivée n-ième de la somme en a avec celle de la fonction."
+        },
+        {
+          "text": "Les hauteurs de la courbe en des points régulièrement espacés autour du centre",
+          "correct": false,
+          "why": "Une série de Taylor n'utilise qu'un point, le centre. Mesurer la courbe en de nombreux points est une autre méthode."
+        },
+        {
+          "text": "Les tailles de cercles qui tournent à des vitesses entières",
+          "correct": false,
+          "why": "Cela décrit une série de Fourier, qui construit une onde périodique avec des sinusoïdes. Une série de Taylor se construit avec des puissances de x en un point."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Dans une série de Fourier, une onde est construite avec des sinusoïdes. Comment une seule sinusoïde se dessine-t-elle avec un cercle ?",
+      "options": [
+        {
+          "text": "Comme une droite qui penche d'un côté puis de l'autre",
+          "correct": false,
+          "why": "Une droite qui penche n'a ni taille fixe ni vitesse. Chaque sinusoïde se dessine comme un cercle avec un rayon et une vitesse entière."
+        },
+        {
+          "text": "Comme un cercle dont le rayon grandit un peu à chaque tour",
+          "correct": false,
+          "why": "Le cercle d'une sinusoïde garde sa taille. Son rayon est la taille de cette sinusoïde, et un cercle qui grandit ferait grandir l'onde."
+        },
+        {
+          "text": "Comme un bloc de 8 sur 8 pixels, les petits carrés d'une image",
+          "correct": false,
+          "why": "Les blocs de 8 sur 8 pixels appartiennent à la compression d'images, où une photo est découpée. Une sinusoïde se trace sur un tour de cercle."
+        },
+        {
+          "text": "Comme la hauteur d'un point qui tourne régulièrement sur un cercle",
+          "correct": true,
+          "why": "sin(nx) est la hauteur d'un point qui fait n fois le tour d'un cercle pendant que x fait un tour. Additionner des sinusoïdes revient à poser des cercles sur le bord d'autres cercles."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "La compression façon JPEG découpe une image en gris en blocs de 8 sur 8 pixels, chaque pixel étant un nombre. Comment s'écrit un bloc ?",
+      "options": [
+        {
+          "text": "Ses 64 nombres s'écrivent exactement comme une somme de 64 ondes",
+          "correct": true,
+          "why": "8 fois 8 font 64 valeurs, et la transformée en cosinus les change en 64 forces d'ondes sans rien perdre. Garder les 64 ondes rend le bloc exactement."
+        },
+        {
+          "text": "Ses 64 nombres s'écrivent comme une somme de 8 ondes, une par ligne",
+          "correct": false,
+          "why": "Huit ondes ne peuvent pas contenir 64 nombres indépendants. Les ondes varient dans la largeur du bloc et dans sa hauteur, et il y en a 64."
+        },
+        {
+          "text": "Ses 16 nombres s'écrivent comme une somme de 16 ondes",
+          "correct": false,
+          "why": "8 plus 8 font 16, mais un bloc a 8 fois 8 pixels, soit 64 nombres."
+        },
+        {
+          "text": "Ses 64 nombres demandent une infinité d'ondes, il n'est donc jamais exact",
+          "correct": false,
+          "why": "Une liste finie de nombres ne demande qu'autant d'ondes qu'elle a de nombres. Avec les 64 ondes gardées, l'image revient exactement."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "La série de sin x est x - x^3/3! + x^5/5! - ..., où 3! = 1 × 2 × 3 = 6 et 5! = 120. Que vaut la somme de ces trois termes en x = 0.5 ?",
+      "options": [
+        {
+          "text": "0.5",
+          "correct": false,
+          "why": "0.5 est le premier terme seul. Les deux termes suivants retirent 0.0208333 et rajoutent 0.0002604."
+        },
+        {
+          "text": "0.4791667",
+          "correct": false,
+          "why": "Ce sont deux termes : 0.5 - 0.125/6. Le troisième terme, 0.03125/120 = 0.0002604, manque encore."
+        },
+        {
+          "text": "0.4794271",
+          "correct": true,
+          "why": "0.5 - 0.0208333 + 0.0002604 = 0.4794271. C'est déjà à moins de 0.0000016 de la valeur exacte de sin(0.5)."
+        },
+        {
+          "text": "0.4794255, exactement sin(0.5)",
+          "correct": false,
+          "why": "0.4794255 est la valeur exacte. Trois termes en approchent de très près mais donnent 0.4794271. Le terme suivant, -x^7/7!, comblerait l'essentiel de l'écart."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Une onde carrée saute entre -1 et 1. Elle est construite avec des cercles de rayons 4/(pi k) pour les vitesses impaires k = 1, 3, 5 et ainsi de suite. Quel est le rayon du cercle de vitesse 3 ?",
+      "options": [
+        {
+          "text": "Environ 1.273, aussi grand que le premier cercle",
+          "correct": false,
+          "why": "1.273 est 4/pi, le rayon du premier cercle, avec k = 1. Le cercle de vitesse 3 en est le tiers."
+        },
+        {
+          "text": "Environ 0.424",
+          "correct": true,
+          "why": "k = 3 donne 4/(3 pi) = 0.4244 : le tiers du premier cercle."
+        },
+        {
+          "text": "Environ 0.333",
+          "correct": false,
+          "why": "1/3 oublie le facteur 4/pi. Chaque rayon de l'onde carrée le porte, donc le cercle de vitesse 3 vaut (4/pi)/3."
+        },
+        {
+          "text": "Environ 0.141",
+          "correct": false,
+          "why": "0.141 est 4/(9 pi), plus petit du carré de la vitesse. C'est ainsi que diminue une onde sans saut, l'onde triangulaire. L'onde carrée a un saut et ne diminue que selon la vitesse."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "La fonction 1/(1 + x^2) n'est pas définie aux nombres complexes i et -i, où i est le nombre dont le carré vaut -1. Sa série de centre a = 3 marche jusqu'à la distance de 3 à i. Se rapproche-t-elle de la valeur exacte en x = 0 ?",
+      "options": [
+        {
+          "text": "Oui : 0 est à 3 du centre, et la série atteint environ 3.162",
+          "correct": true,
+          "why": "La distance de a à i vaut sqrt(1 + a^2) = sqrt(10) = 3.162. Comme 3 est plus petit, x = 0 est dans le cercle où la série marche."
+        },
+        {
+          "text": "Non : toute série de cette fonction cesse de marcher au-delà de 1 et -1",
+          "correct": false,
+          "why": "La limite 1 vaut pour le centre 0. Éloigner le centre de 0 l'éloigne aussi de i et -i, et la série porte plus loin."
+        },
+        {
+          "text": "Ni l'un ni l'autre : elle atteint exactement 3, donc 0 est au bord",
+          "correct": false,
+          "why": "3 est la distance du centre à 0, pas à i. Le point i est hors de la droite des nombres ordinaires, et la distance de 3 à i vaut sqrt(9 + 1)."
+        },
+        {
+          "text": "Oui, et pour tout x, puisque la courbe est lisse partout",
+          "correct": false,
+          "why": "Une courbe lisse ne suffit pas. Les points i et -i limitent quand même cette série à sqrt(10) autour du centre 3, donc un point comme x = -1 est hors de portée."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "Une onde carrée qui saute entre -1 et 1 est construite avec 100 cercles. Jusqu'où la somme monte-t-elle à peu près près d'un saut ?",
+      "options": [
+        {
+          "text": "Jusqu'à 1 : avec 100 cercles le dépassement a disparu",
+          "correct": false,
+          "why": "Plus de cercles rendent le pic plus étroit, pas plus bas. Cette erreur ne disparaît jamais, quel que soit le nombre de cercles ajoutés."
+        },
+        {
+          "text": "Jusqu'à environ 1.09, 9 pour cent au-dessus du palier",
+          "correct": false,
+          "why": "Les 9 pour cent portent sur le saut, pas sur le palier. Le saut de -1 à 1 vaut 2, et 9 pour cent de 2 font environ 0.18."
+        },
+        {
+          "text": "Jusqu'à environ 2, la taille du saut",
+          "correct": false,
+          "why": "La somme monte d'une fraction du saut, pas du saut entier. Son pic reste bien sous 2 pour tout nombre de cercles."
+        },
+        {
+          "text": "Jusqu'à environ 1.179",
+          "correct": true,
+          "why": "Le dépassement tend vers environ 9 pour cent du saut de 2, donc le pic est vers 1.179 avec 100 cercles comme avec 10. C'est le phénomène de Gibbs."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "Un contour est dessiné par des cercles qui tournent, les plus grands étant gardés. Les cercles écartés ont pour rayons 2, 1 et 0.5, et tous les autres ont un rayon 0. L'erreur du dessin se mesure comme la moyenne du carré de la distance au contour. Que vaut-elle ?",
+      "options": [
+        {
+          "text": "3.5",
+          "correct": false,
+          "why": "3.5 additionne les rayons eux-mêmes. L'erreur additionne leurs carrés."
+        },
+        {
+          "text": "12.25",
+          "correct": false,
+          "why": "12.25 est (2 + 1 + 0.5) au carré. Élever la somme au carré ajoute des termes croisés qui n'ont rien à faire là, car des cercles de vitesses différentes ne se chevauchent pas."
+        },
+        {
+          "text": "5.25",
+          "correct": true,
+          "why": "L'erreur est la somme des carrés des rayons écartés : 4 + 1 + 0.25 = 5.25. Cette règle s'appelle le théorème de Parseval."
+        },
+        {
+          "text": "4",
+          "correct": false,
+          "why": "4 ne compte que le plus grand cercle écarté. Chaque cercle écarté ajoute le carré de son rayon à l'erreur."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "La série du logarithme naturel ln(1 + x) de centre a ne marche que jusqu'à la distance 1 + a. La série de sin x marche pour tout x. Pourquoi ?",
+      "options": [
+        {
+          "text": "ln(1 + x) n'est pas défini en x = -1, et les termes de sin portent une factorielle",
+          "correct": true,
+          "why": "Dans la série de sin, une puissance x^n est divisée par n! = 1 × 2 × ... × n, qui croît plus vite que toute puissance, donc les termes tendent vers 0 pour tout x. Dans la série de ln(1 + x), les termes sont de la forme (x - a)^n/(n (1 + a)^n). Ils grandissent dès que la distance à a dépasse 1 + a, la distance jusqu'à x = -1."
+        },
+        {
+          "text": "ln(1 + x) croît trop lentement pour que les puissances de x le suivent au loin",
+          "correct": false,
+          "why": "La vitesse de croissance d'une fonction ne fixe pas la portée. sin x ne croît pas du tout, et sa série marche partout. La limite vient du point où ln(1 + x) n'est pas défini."
+        },
+        {
+          "text": "Aucune ne s'arrête : avec assez de termes, ln(1 + x) est atteint partout",
+          "correct": false,
+          "why": "Au-delà de la portée, les termes grandissent au lieu de diminuer, donc chaque nouveau terme rend la somme pire. Là, aucun nombre de termes ne suffit."
+        },
+        {
+          "text": "sin x se répète, donc sa série n'a besoin d'être juste que sur un tour",
+          "correct": false,
+          "why": "Une série de puissances ignore tout des répétitions. Elle marche loin du centre parce que x^n/n! tend vers 0. e^x ne se répète pas, et sa série marche aussi pour tout x."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Dans la compression façon JPEG, garder seulement quelques-unes des 64 ondes les plus fortes de chaque bloc change à peine une photo. Une page de texte, elle, se couvre d'ondulations et de carrés. Pourquoi ?",
+      "options": [
+        {
+          "text": "La transformée perd de l'énergie sur les images nettes, donc le texte revient plus pâle",
+          "correct": false,
+          "why": "La transformée conserve l'énergie totale de chaque bloc, net ou doux. Ce qui change, c'est la façon dont cette énergie se répartit entre les 64 ondes."
+        },
+        {
+          "text": "Dans une photo, l'essentiel tient en quelques ondes lentes, alors que les lettres en demandent beaucoup de rapides",
+          "correct": true,
+          "why": "Jeter des ondes faibles coûte peu quand elles portent peu. Le bord d'une lettre demande beaucoup d'ondes rapides, donc avec peu d'ondes gardées il se couvre d'ondulations et de blocs, les marques d'un JPEG très compressé."
+        },
+        {
+          "text": "Un bloc de texte contient moins de nombres qu'un bloc de photo",
+          "correct": false,
+          "why": "Chaque bloc fait 8 sur 8 pixels, 64 nombres, quoi qu'il montre. Des pixels noirs et blancs restent 64 niveaux de gris."
+        },
+        {
+          "text": "L'œil ne voit pas les ondes lentes, donc les jeter ne se voit pas sur une photo",
+          "correct": false,
+          "why": "C'est l'inverse. Les ondes lentes portent l'essentiel de ce qui se voit, et ce sont elles qui sont gardées. Ce sont les ondes faibles et rapides qui sont jetées."
+        }
+      ]
+    }
+  ]
+}

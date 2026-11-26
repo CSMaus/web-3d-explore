@@ -66,7 +66,7 @@ function RatePage() {
     <div>
       <TaskPage
         title={system?.name ?? L("How fast is it going")}
-        job={L("A car drives along a road. Where it is can be seen at every moment. The job is to say how fast it is going, using nothing but where it is.")}
+        job={L("How can the speed of a car be found when only its position is known? A car drives along a straight road for 12 seconds. At every moment the page knows how far the car is from the start, in metres, and nothing else. The speed is worked out from two readings of the position, taken a short time apart: the distance covered between them, divided by the time between them. The buttons choose how the car moves. The slider sets the time between the two readings. Press run and compare the speed found this way with the true speed.")}
         input={
           <div className="space-y-3">
             <div className="flex flex-wrap gap-1.5">
@@ -87,7 +87,7 @@ function RatePage() {
             </div>
             <Text kind="note" as="p">{L(m.what)}</Text>
             <Slider
-              label={L("The gap")}
+              label={L("Time between the two readings")}
               min={0.05}
               max={4}
               step={0.05}
@@ -96,7 +96,7 @@ function RatePage() {
               onChange={setGap}
             />
             <Text kind="note" as="p">
-              {L("The gap is how far apart the two positions are that the speed is worked out from. Pinch it down and watch the number from two positions settle on the true speed.")}
+              {L("One reading of the position is taken a little before the moment shown and one a little after. The slider sets the time between them, in seconds. The shorter this time, the closer the result comes to the true speed.")}
             </Text>
           </div>
         }
@@ -113,7 +113,7 @@ function RatePage() {
               }
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(TICKS, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={() => {
               runner.reset();
               setTick(0);
@@ -136,7 +136,7 @@ function RatePage() {
                     pen.text(`${x} m`, x, -0.55, "#5b616b", "center");
                   }
                   pen.dot(position, 0.02, 9, "#a5e3a0");
-                  pen.text(started ? `${position.toFixed(1)} m` : L("The road"), position, 0.45, "#a5e3a0", "center");
+                  pen.text(started ? `${position.toFixed(1)} m` : L("The car"), position, 0.45, "#a5e3a0", "center");
                 }}
               />
             </div>
@@ -162,7 +162,7 @@ function RatePage() {
                   pen.dot(t, position, 5, "#e8e8ea");
                 }}
               />
-            </div><Caption>{L("Where the car is, against time.")} {L("The line through two positions {{gap}} s apart. Its steepness is the speed.", { gap: gap.toFixed(2) })}</Caption></div>
+            </div><Caption>{L("Middle picture: the car's distance from the start (up) against time (across). The thick part of the curve is the time already passed, and the large dot is the car now. The two small dots are the two readings, {{gap}} s apart, joined by a straight line. The steeper that line, the faster the car.", { gap: gap.toFixed(2) })}</Caption></div>
             <div><div data-slot="plot" className="h-[190px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -177,37 +177,37 @@ function RatePage() {
                   pen.ring(t, fromTwo, 6, "#c75ab0", 2);
                 }}
               />
-            </div><Caption>{L("The speed, against time: the steepness of the curve above, at every moment Ring: from two positions.  Dot: exact.")}</Caption></div>
+            </div><Caption>{L("Bottom picture: the car's speed against time. The dot is the true speed at this moment. The ring is the speed worked out from the two readings. When the ring sits on the dot, the two agree.")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={started ? Math.abs(fromTwo - exact) < 0.05 * Math.max(1, Math.abs(exact)) : undefined}>
               {!started
-                ? L("Press run and the car sets off. The speed will be read from where it is, and only from where it is.")
-                : L("At {{t}} s the car is at {{x}} m and going {{v}} m/s. From two positions {{gap}} s apart, the speed comes out as {{est}} m/s, {{judge}}.", {
+                ? L("Press run and the car sets off. Its speed will be worked out from its positions alone.")
+                : L("At {{t}} s the car is {{x}} m from the start, and its true speed is {{v}} m/s. From two positions {{gap}} s apart, the speed comes out as {{est}} m/s, {{judge}}.", {
                     t: t.toFixed(1),
                     x: position.toFixed(1),
                     v: exact.toFixed(2),
                     gap: gap.toFixed(2),
                     est: fromTwo.toFixed(2),
-                    judge: Math.abs(fromTwo - exact) < 0.05 * Math.max(1, Math.abs(exact)) ? L("which is right") : L("which is off, because the gap is too wide for a curve that bends this much"),
+                    judge: Math.abs(fromTwo - exact) < 0.05 * Math.max(1, Math.abs(exact)) ? L("which matches the true speed") : L("which is off: the two readings are too far apart for this motion, and a shorter time between them gives a better result"),
                   })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("Moved between the two positions")}</dt>
+              <dt>{L("Distance covered between the two readings")}</dt>
               <dd className="text-right text-foreground/80">{(m.at(tB) - m.at(tA)).toFixed(3)} m</dd>
-              <dt>{L("In")}</dt>
+              <dt>{L("Time between the two readings")}</dt>
               <dd className="text-right text-foreground/80">{(tB - tA).toFixed(3)} s</dd>
-              <dt>{L("So the speed is that divided by this")}</dt>
-              <dd className="text-right text-foreground/80">{fromTwo.toFixed(4)} M/s</dd>
-              <dt>{L("The exact speed at this instant")}</dt>
-              <dd className="text-right text-foreground/80">{exact.toFixed(4)} M/s</dd>
-              <dt>{L("The gap between the two answers")}</dt>
+              <dt>{L("Speed from the two readings: distance divided by time")}</dt>
+              <dd className="text-right text-foreground/80">{fromTwo.toFixed(4)} m/s</dd>
+              <dt>{L("True speed at this moment")}</dt>
+              <dd className="text-right text-foreground/80">{exact.toFixed(4)} m/s</dd>
+              <dt>{L("Difference between the two speeds, in m/s")}</dt>
               <dd className="text-right text-foreground/80">{Math.abs(fromTwo - exact).toExponential(2)}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("That is the whole of a derivative: a change in one thing divided by the change in another, with the gap made as small as wanted. Every page after this one uses it.")}
+              {L("A small change in position divided by the short time it took gives the speed. As the time between the two readings shrinks towards zero, the result becomes the speed at one exact moment. This number is called the derivative of the position. The same division, a small change in one quantity over the small change in another, is how a neural network, a program that learns from examples, finds out how to improve.")}
             </Text>
           </div>
         }

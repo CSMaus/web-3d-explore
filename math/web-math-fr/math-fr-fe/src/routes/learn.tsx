@@ -50,7 +50,7 @@ function Learn() {
             <Text kind="intro" as="p" className="mt-4 max-w-xl">{card?.summary || t(`front.lines.${topic.slug}`)}</Text>
             {card ? (
               <Text kind="caption" as="p" className="mt-4">
-                {card.parts > 0 ? L("{{parts}} parts, {{beats}} beats, about {{minutes}} minutes", { parts: card.parts, beats: card.beats, minutes: Math.round(card.seconds / 60) }) : L("No clip filmed yet")}
+                {card.parts > 0 ? L("Video series: {{parts}} parts, {{beats}} scenes, about {{minutes}} minutes.", { parts: card.parts, beats: card.beats, minutes: Math.round(card.seconds / 60) }) : L("No video filmed yet.")}
               </Text>
             ) : null}
             {into ? (

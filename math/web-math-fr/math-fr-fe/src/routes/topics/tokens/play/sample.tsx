@@ -102,20 +102,20 @@ function SamplePage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? L("Choosing from the distribution")}
-        job={L("The loop says choose one token, and every page so far has left the choice open. Always taking the most likely one is a choice; drawing at random from the distribution is another; and the distribution itself can be reshaped before the draw. The job is to run the same model on the same prompt under different rules and read what changes.")}
+        title={system?.name ?? L("Choosing the next token")}
+        job={L("A model gives a probability to every possible next token. Which one should be written? A token is a piece of text such as a word. Always taking the likeliest token is one rule, called greedy. Drawing at random with the model's probabilities is another. The probabilities can also be reshaped before the draw. This page writes text from the same model and the same start under two rules side by side: the rule set by the sliders, and greedy. The model is small and trained in the browser on a short text about a cat, a dog and a man. The question: how much does the text change when only the rule changes?")}
         input={
           <div className="space-y-3">
             <label className="block">
-              <span data-text="note">{L("The prompt")}</span>
+              <span data-text="note">{L("The start of the text")}</span>
               <Input value={text} onChange={(e) => { setText(e.target.value); reset(false); }} className="mt-1" />
             </label>
             <Slider label={L("Temperature")} min={0} max={2.5} step={0.05} value={temperature} format={(v) => (v === 0 ? L("0: greedy") : v.toFixed(2))} onChange={(v) => { setTemperature(v); if (mine.length) reset(); }} />
             <Slider label={L("Top k")} min={0} max={20} step={1} value={topK} format={(v) => (v === 0 ? L("off") : L("keep {{n}}", { n: Math.round(v) }))} onChange={(v) => { setTopK(Math.round(v)); if (mine.length) reset(); }} />
-            <Slider label={L("Nucleus")} min={0.1} max={1} step={0.05} value={topP} format={(v) => (v >= 1 ? L("off") : L("mass {{m}}", { m: v.toFixed(2) }))} onChange={(v) => { setTopP(v); if (mine.length) reset(); }} />
+            <Slider label={L("Nucleus")} min={0.1} max={1} step={0.05} value={topP} format={(v) => (v >= 1 ? L("off") : L("share {{m}}", { m: v.toFixed(2) }))} onChange={(v) => { setTopP(v); if (mine.length) reset(); }} />
             <Slider label={L("Repeat penalty")} min={0} max={4} step={0.1} value={penalty} format={(v) => (v === 0 ? L("off") : v.toFixed(1))} onChange={(v) => { setPenalty(v); if (mine.length) reset(); }} />
             <Text kind="note" as="p">
-              {L("Temperature divides the scores before the softmax: below one sharpens, above one flattens. Top k keeps the k most likely; nucleus keeps the fewest whose mass reaches the threshold; the penalty lowers the score of tokens already written. Changing a rule mid-run keeps the run's text below and starts a new one.")}
+              {L("Each token has a score, and the probabilities are made from the scores. Temperature divides every score by the same number first. Below 1, the likely tokens become likelier; above 1, the probabilities even out. Top k keeps only the k likeliest tokens. Nucleus keeps the fewest likeliest tokens whose probabilities add up to the chosen share. The repeat penalty lowers the score of tokens already in the text. After a cut, the remaining probabilities are scaled back up to 100 %. Moving a slider during a run keeps the old text in a list below and starts again.")}
             </Text>
             {!trained ? <Text kind="warning" as="p">{L("The model is still training ({{done}} of {{total}} steps).", { done: store.model.steps, total: MODEL_STEPS })}</Text> : null}
           </div>
@@ -124,7 +124,7 @@ function SamplePage() {
           <RunBar
             running={runner.running}
             count={made}
-            what={L("tokens, both rules")}
+            what={L("tokens per rule")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 10, max: 200, step: 10 }}
@@ -165,7 +165,7 @@ function SamplePage() {
                   });
                 }}
               />
-            </div><Caption>{L("The next-token distribution now. Dim: as the model gave it.  Green: after the rule.  Rose: cut away by the rule.")}</Caption></div>
+            </div><Caption>{L("The fourteen likeliest next tokens now. Each token has two bars. Upper bar: the probability the model gave. Lower bar: the probability after the rule. When the rule removes a token, its lower bar keeps the old length and the number after the arrow is 0.0 %.")}</Caption></div>
             <div className="grid gap-2 lg:grid-cols-2">
               <div className="rounded border border-border p-3">
                 <div data-text="caption" style={{ color: "var(--c-selected)" }}>{L("The rule: {{rule}}", { rule: describe(rule) })}</div>
@@ -178,7 +178,7 @@ function SamplePage() {
             </div>
             {kept.length ? (
               <div className="rounded border border-border p-3">
-                <div data-text="caption">{L("Earlier runs, same model, same prompt")}</div>
+                <div data-text="caption">{L("Earlier runs: same model, same start")}</div>
                 <ul className="mt-2 space-y-1.5">
                   {kept.map((k, i) => (
                     <li key={i} data-text="caption">
@@ -195,21 +195,21 @@ function SamplePage() {
           <div className="space-y-2">
             <Verdict>
               {made === 0
-                ? L(live === 1 ? "Under {{rule}} the next token is drawn from {{live}} candidate of {{n}}; the model itself gave {{big}} of them more than one per cent. Press run to generate under the rule and under greedy side by side." : "Under {{rule}} the next token is drawn from {{live}} candidates of {{n}}; the model itself gave {{big}} of them more than one per cent. Press run to generate under the rule and under greedy side by side.", { rule: describe(rule), live, n: VOCAB.bytes.length, big: raw.filter((v) => v > 0.01).length })
-                : `${L(live === 1 ? "{{made}} tokens under each rule. Greedy is the same every time and {{greedy}}; the rule draws from {{live}} candidate at this step" : "{{made}} tokens under each rule. Greedy is the same every time and {{greedy}}; the rule draws from {{live}} candidates at this step", { made, greedy: greedy.length > prompt.length + 12 && decode(VOCAB, greedy).split(". ").length < 3 ? L("has settled into a loop") : L("repeats whatever the text repeats"), live })}${temperature > 1.3 ? ` ${L("and at this temperature it wanders, because unlikely tokens are given a real chance")}` : temperature > 0 && temperature < 0.5 ? ` ${L("and at this temperature it is nearly greedy")}` : ""}. ${L("The model did not change between the two columns; only the choosing did.")}`}
+                ? L(live === 1 ? "With {{rule}}, the next token is drawn from {{live}} candidate out of {{n}}. The model itself gives more than 1 % to {{big}} of them. Run writes text with this rule and with greedy, side by side." : "With {{rule}}, the next token is drawn from {{live}} candidates out of {{n}}. The model itself gives more than 1 % to {{big}} of them. Run writes text with this rule and with greedy, side by side.", { rule: describe(rule), live, n: VOCAB.bytes.length, big: raw.filter((v) => v > 0.01).length })
+                : `${L(live === 1 ? "{{made}} tokens with each rule. Greedy writes the same text every time, and {{greedy}}. The rule draws from {{live}} candidate at this step" : "{{made}} tokens with each rule. Greedy writes the same text every time, and {{greedy}}. The rule draws from {{live}} candidates at this step", { made, greedy: greedy.length > prompt.length + 12 && decode(VOCAB, greedy).split(". ").length < 3 ? L("here it has fallen into a loop") : L("it repeats what the training text repeats"), live })}${temperature > 1.3 ? ` ${L("and at this temperature it wanders, because unlikely tokens get a real chance")}` : temperature > 0 && temperature < 0.5 ? ` ${L("and at this temperature it is nearly greedy")}` : ""}. ${L("The model is the same in both boxes. Only the rule for choosing differs.")}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>{L("Candidates left after the rule")}</dt>
               <dd className="text-right text-foreground/80">{L("{{a}} of {{b}}", { a: live, b: VOCAB.bytes.length })}</dd>
-              <dt>{L("Most likely token, raw and after the rule")}</dt>
+              <dt>{L("Likeliest token: probability before and after the rule")}</dt>
               <dd className="text-right text-foreground/80">{visible(tokenText(order[0]))}: {(raw[order[0]] * 100).toFixed(1)} % → {(shaped[order[0]] * 100).toFixed(1)} %</dd>
-              <dt>{L("The two limits of temperature")}</dt>
-              <dd className="text-right text-foreground/80">{L("0 is greedy; very large is every token alike")}</dd>
-              <dt>{L("Runs kept below")}</dt>
+              <dt>{L("Temperature at its extremes")}</dt>
+              <dd className="text-right text-foreground/80">{L("0 gives greedy; a very large value makes all tokens equally likely")}</dd>
+              <dt>{L("Earlier runs listed below")}</dt>
               <dd className="text-right text-foreground/80">{kept.length}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("Beam search is the other shape: keep several partial texts and score whole continuations. It suits translation, where there is a right answer to find, and not open writing, where it finds the blandest one. The decoding rule is a second system sitting on top of the model, and its settings change the text as much as a change of model would.")}
+              {L("Another method, beam search, keeps several unfinished texts at once and picks the one that is likeliest as a whole. It suits translation, where one right answer is sought. In free writing it tends to pick the dullest text. The rule for choosing is a separate system on top of the model, and its settings can change the text as much as a different model would.")}
             </Text>
           </div>
         }

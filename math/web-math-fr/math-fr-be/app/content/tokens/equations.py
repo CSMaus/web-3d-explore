@@ -8,462 +8,420 @@ paragraph. the notes say what the page shows, not what a textbook proves.
 SYSTEMS = [
     {
         "id": "bytes",
-        "name": "One string, three ways",
-        "summary": (
-            "What you read, the code points that name it, the bytes that store it: three counts "
-            "that agree in plain English and part company everywhere else"
-        ),
+        "name": "Three ways to count text",
+        "summary": "A line of text counted three ways: the characters a reader sees, their numbers in Unicode, and the bytes a computer stores. In English the three counts agree, in most other languages they do not",
         "blocks": [
             {
                 "label": "A code point",
                 "tex": r"c \in \{0, 1, \ldots, \mathrm{10FFFF}_{16}\}",
-                "note": "One integer per character in the standard's table. The page shows each as U+ and its number in hexadecimal",
+                "note": "Unicode, the table of characters shared by all computers, gives each character a whole number, its code point. The largest is 10FFFF in base 16, a little over a million. The play page writes each code point as U+ and its number in base 16",
             },
             {
                 "label": "Its bytes",
                 "tex": r"\text{bytes}(c) = \begin{cases} 1 & c < 2^{7} \\ 2 & c < 2^{11} \\ 3 & c < 2^{16} \\ 4 & \text{otherwise} \end{cases}",
-                "note": "UTF-8: a small code point is one byte, a large one up to four. The first byte says how many follow, which is what the colours on the page mark",
+                "note": "UTF-8, the usual way to store Unicode text, writes a code point below 2 to the power 7, that is below 128, in one byte. Below 2 to the power 11 it uses two bytes, below 2 to the power 16 three bytes, and above that four. A byte is a whole number from 0 to 255. The first byte of a character tells how many bytes follow, and the play page shades each byte by this role",
             },
             {
                 "label": "Two spellings, one letter",
                 "tex": r"\text{e} + \text{U+0301} \neq \text{U+00E9}, \qquad \mathrm{NFC}(\cdot) \text{ makes them equal}",
-                "note": "A base letter with a combining mark, or the composed letter: the same to the eye, different as strings, equal only after normalising",
+                "note": "The letter é can be stored as one code point, U+00E9, or as the letter e followed by a separate accent, U+0301. The two look the same on screen but are different texts for a program. They become equal only after both are rewritten in one standard form, called NFC normalisation",
             },
         ],
         "dimension": {
             "label": "Why neither is the unit",
             "tex": r"|\text{bytes}| \gg |\text{words}|, \qquad |\text{alphabet}| \ll \text{what a row can carry}",
-            "note": "Bytes make a sentence hundreds long and leave every word to be reassembled; characters give a vocabulary too small to mean anything. The unit is chosen between them",
+            "note": "A language model, a program that reads and writes text, needs a unit of text. Bytes make a sentence hundreds of units long, and every word must be rebuilt from its pieces. Characters are too few, and one letter alone carries almost no meaning. So the unit, called a token, is chosen between the two",
         },
     },
     {
         "id": "merge",
-        "name": "Building a vocabulary",
-        "summary": (
-            "Byte-pair encoding on a small text, one merge a step: count neighbouring pairs, join "
-            "the commonest into a new symbol, repeat. The merge list is the whole result"
-        ),
+        "name": "Building a vocabulary of pieces",
+        "summary": "How a vocabulary of tokens is learned from a short text: count the pairs of neighbouring symbols, join the commonest pair into one new symbol, and repeat. The list of joins is the whole result",
         "blocks": [
             {
                 "label": "One step",
                 "tex": r"(a, b)^{*} = \arg\max_{(a,b)} \#\{a\,b \text{ adjacent}\}, \qquad a\,b \rightarrow s_{\text{new}}",
-                "note": "The commonest adjacent pair becomes one symbol, everywhere it occurs. The bar chart on the page is the count; the top bar is the pair joined next",
+                "note": "Among all pairs a, b of symbols that stand next to each other, the one that occurs most often is chosen. It is replaced everywhere by one new symbol. This step is called a merge. On the play page, the bar chart shows the counts, and the top bar is the pair merged next",
             },
             {
                 "label": "The vocabulary after k merges",
                 "tex": r"|V| = 256 + k",
-                "note": "The alphabet is the 256 byte values, so every string is representable and nothing is unknown. Each merge adds exactly one symbol",
+                "note": "V is the vocabulary and |V| its size. It starts with the 256 possible bytes, so any text can be written and no character is unknown. Each of the k merges adds exactly one symbol",
             },
             {
                 "label": "The text gets shorter",
                 "tex": r"\text{tokens}_{k+1} = \text{tokens}_{k} - \#\{(a,b)^{*}\}",
-                "note": "Each merge removes one token per occurrence of the pair. On the page's text, 2039 bytes become about 516 tokens after 150 merges",
+                "note": "Each merge removes one token for every place where its pair occurred. On the play page's sample text, 2039 bytes become 516 tokens after 150 merges",
             },
         ],
         "dimension": {
             "label": "A space stays with the word after it",
             "tex": r"\text{``the cat''} \rightarrow [\text{``the''},\ \text{``\textvisiblespace cat''}]",
-            "note": "Words are split before merging with the leading space attached, so merges never cross a word boundary and a token can carry its space",
+            "note": "Before merging, the text is split into words, and each space is attached to the start of the word after it. So merges never cross from one word to the next, and a token can contain its space",
         },
     },
     {
         "id": "segment",
-        "name": "Cutting a sentence",
-        "summary": (
-            "The merges replayed in order on text the vocabulary never saw. The same sentence under "
-            "four vocabularies, the space inside the token, and the exact way back"
-        ),
+        "name": "Cutting a sentence into tokens",
+        "summary": "A new sentence cut into tokens by replaying the learned merges in order. The same sentence under four vocabularies, the space carried inside a token, and the exact way back to the text",
         "blocks": [
             {
-                "label": "Encoding is a replay",
+                "label": "Cutting is a replay",
                 "tex": r"\text{encode}(x) = m_k \circ \cdots \circ m_2 \circ m_1 (\text{bytes}(x))",
-                "note": "Apply the merges in the order they were learned. Deterministic: the same text always cuts the same way under the same list",
+                "note": "The text x is written as bytes, then the merges m1, m2, up to mk are applied in the order they were learned. The result never varies: the same text is always cut the same way by the same list",
             },
             {
-                "label": "Decoding is a concatenation",
+                "label": "Going back is joining bytes",
                 "tex": r"\text{decode}(t_1, \ldots, t_n) = \text{bytes}(t_1) \| \cdots \| \text{bytes}(t_n)",
-                "note": "Each symbol stands for a fixed byte string; join them. With a byte alphabet the round trip is exact, and the page checks it",
+                "note": "Each token t stands for a fixed string of bytes. Writing these strings one after another, in order, gives the text back. Since every token is made of whole bytes, the round trip is exact, and the play page checks it",
             },
             {
                 "label": "A word the text never had",
                 "tex": r"\text{pieces}(w) > 1 \iff w \notin \text{training text}",
-                "note": "No merge ever covered it, so it stays in pieces however many merges are made. The page's default sentence has one such word",
+                "note": "If a word w never occurs in the text the vocabulary was learned from, no merge was ever made for it. So it stays in more than one piece, however many merges are made. The play page's sample sentence has one such word, windowsill",
             },
         ],
         "dimension": {
             "label": "The ids are all the model gets",
             "tex": r"x \mapsto (t_1, \ldots, t_n) \in V^{n}",
-            "note": "Integers in vocabulary order. Their numeric values carry nothing; the next group of pages is about giving them something",
+            "note": "The model receives only the token numbers t1 to tn, called ids, each the position of a token in the vocabulary V. The size of an id means nothing. Other pages of this topic show how each id is given a list of numbers that does carry meaning",
         },
     },
     {
         "id": "cost",
         "name": "What a token costs",
-        "summary": (
-            "One sentence in eleven scripts under one English-trained vocabulary: tokens against "
-            "characters, and why the ratio is what is billed and what fills the window"
-        ),
+        "summary": "One sentence in ten languages and once with emoji, all cut by one vocabulary learned from English: tokens against characters, and why the count of tokens decides the price and how much fits in a model at once",
         "blocks": [
             {
                 "label": "The ratio",
                 "tex": r"r = \frac{\#\text{tokens}}{\#\text{characters}}",
-                "note": "About 0.23 for English on this vocabulary, and above 1 for a script the vocabulary never saw, where every character is several bytes and each byte is a token",
+                "note": "r is the number of tokens divided by the number of characters. With this vocabulary it is about 0.23 for English. It is above 1 for writing the vocabulary never saw, where every character takes several bytes and each byte becomes a token",
             },
             {
                 "label": "What it multiplies",
                 "tex": r"\text{cost}_{\text{attention}} \propto n^{2}, \qquad \text{cache} \propto n",
-                "note": "The score matrix has one entry per pair of positions. The same sentence at four times the tokens costs sixteen times the attention",
+                "note": "The main step of a model, called attention, compares every token with every other one, so its work grows as n squared for n tokens. The memory it keeps grows as n. The same sentence at four times the tokens costs sixteen times the work",
             },
             {
                 "label": "How many fit",
                 "tex": r"\left\lfloor \frac{W}{n} \right\rfloor",
-                "note": "Copies of the sentence that fit in a window of W tokens. The window is counted in tokens, so its size in words depends on the language",
+                "note": "W is the window, the number of tokens a model reads at once, and n the tokens of the sentence. W divided by n, rounded down, is how many copies of the sentence fit. The window is counted in tokens, so how many words it holds depends on the language",
             },
         ],
         "dimension": {
             "label": "A number, cut by frequency",
             "tex": r"1234567 \rightarrow [12][34][567] \text{ or } [1][2345][67]",
-            "note": "Place value can sit across a token boundary, decided by which digit pairs the training text happened to have most. The last page collects this",
+            "note": "A number such as 1234567 is cut wherever merges happened to form, for example into 12, 34 and 567, or into 1, 2345 and 67. Which cut happens depends on which digit pairs were commonest in the learning text, not on the value of the number",
         },
     },
     {
         "id": "table",
-        "name": "From a number to a vector",
-        "summary": (
-            "A token id as a one-hot row, a matrix that picks one row when multiplied by it, and "
-            "the table that makes the picking cheap. The width is fixed; the count grows"
-        ),
+        "name": "From a number to a list of numbers",
+        "summary": "How a token's number becomes a row of numbers: a list of zeros with a single 1, a table it is multiplied by, and the lookup that gives the same row for free. The width of a row is fixed, only the number of rows grows with the text",
         "blocks": [
             {
                 "label": "One-hot",
                 "tex": r"e_t \in \{0,1\}^{|V|}, \qquad (e_t)_i = [i = t]",
-                "note": "As long as the vocabulary, zero everywhere but one place. Every pair of distinct one-hot vectors is exactly root two apart, so it carries identity and nothing else",
+                "note": "For a token t, e_t is a list as long as the vocabulary V, with 0 everywhere and 1 at position t. Such a list is called a one-hot vector. Any two different one-hot vectors are exactly the square root of 2 apart, so it tells which token it is and nothing else",
             },
             {
                 "label": "Multiplying by a matrix picks a row",
                 "tex": r"e_t^{\top} E = E_{t,:}",
-                "note": "The embedding layer is a fully connected layer with a one-hot input, and it is implemented as an index because that is the same thing for free",
+                "note": "E is the table, a grid of numbers also called a matrix. Multiplying the one-hot vector e_t by E adds up the rows of E, each times its entry in e_t, so the result is row t of E. Models skip the multiplication and read row t directly, which gives the same numbers",
             },
             {
                 "label": "The table",
                 "tex": r"E \in \mathbb{R}^{|V| \times d}, \qquad |V| \cdot d \text{ trainable numbers}",
-                "note": "One row per vocabulary entry, of a width chosen once. The rows start random and are trained like any other weights",
+                "note": "The table E has one row per token of the vocabulary V, and each row holds d numbers, a width chosen once. So it holds |V| times d numbers in all. The rows start random and are changed by training, like every other number of the model",
             },
             {
                 "label": "The shape of an input",
                 "tex": r"X = \begin{pmatrix} E_{t_1,:} \\ \vdots \\ E_{t_n,:} \end{pmatrix} \in \mathbb{R}^{n \times d}",
-                "note": "There are n rows for n tokens, each d wide. Only n changes with the input. This is the answer to why a token's vector has a fixed length",
+                "note": "For n tokens t1 to tn, the model receives X, the n rows of E stacked in order, each d numbers wide. Only n changes with the input. This is why every token's vector has the same length",
             },
         ],
         "dimension": {
             "label": "What a row depends on",
             "tex": r"E_{t,:} \text{ depends on } t \text{ alone}",
-            "note": "Not on the sentence around it, not on the input's length. A token's vector is a lookup by identity, and everything contextual comes later",
+            "note": "Row t of E depends on the token t alone: not on the sentence around it, not on the length of the input. A token's vector is found by its number only. Everything that depends on the context comes later in the model",
         },
     },
     {
         "id": "meaning",
-        "name": "Where the meaning comes from",
-        "summary": (
-            "The rows trained by predicting the tokens near each one and pushing away random "
-            "others, watched forming a map. Which rows moved often and which almost never"
-        ),
+        "name": "Where meaning comes from",
+        "summary": "Rows of numbers for each token, trained by predicting the tokens near it and pushing away random others, watched as related words gather. Which rows were moved often and which almost never",
         "blocks": [
             {
                 "label": "Skip-gram with negative sampling",
                 "tex": r"L = -\log \sigma(e_c \cdot c_o) - \sum_{k=1}^{K} \log \sigma(-e_c \cdot c_{n_k})",
-                "note": "The centre token's row against its neighbour's context vector, pushed together; against K random tokens, pushed apart. One row of the table moves per step",
+                "note": "e_c is the row of the centre token, c_o a second vector for a neighbour, and c_nk the same for K tokens picked at random. The dot product, the sum of the products of matching numbers, scores each pair, and sigma turns a score into a number between 0 and 1. The loss L is small when the neighbour scores high and the random tokens score low. One row of the table moves per step",
             },
             {
                 "label": "The update",
                 "tex": r"e_c \leftarrow e_c - \eta \left[(\sigma(e_c \cdot c_o) - 1)\,c_o + \sum_k \sigma(e_c \cdot c_{n_k})\,c_{n_k}\right]",
-                "note": "Topic 3's descent on the row alone. The page counts how many times each row was touched: the commonest token thousands of times, the rarest a handful",
+                "note": "The row e_c is moved a small step, of size eta, in the direction that lowers the loss most. This is the usual way networks are trained, applied to one row. The play page counts how many times each row was moved: the commonest token thousands of times, the rarest only a few",
             },
             {
                 "label": "The premise",
                 "tex": r"\text{context}(a) \approx \text{context}(b) \Rightarrow e_a \approx e_b",
-                "note": "Tokens found in the same places get similar rows. Cat and dog end up close because the text puts them in the same sentences. A word with two meanings gets one row between them",
+                "note": "If two tokens a and b appear in similar places in the text, their rows end up similar. Cat and dog end up close because the text puts them in the same sentences. A word with two meanings gets one row, between them",
             },
         ],
         "dimension": {
             "label": "No objective of its own",
             "tex": r"\nabla_E L_{\text{downstream}}",
-            "note": "A table takes its structure from whatever loss sits after it. A generative model's table is trained by next-token prediction alone, which the later pages use",
+            "note": "A table gets its structure from whatever loss is computed after it, through the gradient, the direction in which the loss changes fastest. In a model that writes text, the table is trained only by predicting the next token",
         },
     },
     {
         "id": "space",
-        "name": "Measuring the space",
-        "summary": (
-            "Cosine against distance, a flat picture that keeps only part of the spread, direction "
-            "as the carrier of relation, and the narrow cone every trained table sits in"
-        ),
+        "name": "Measuring how close two tokens are",
+        "summary": "Two ways to measure closeness of word vectors, the angle and the distance, a flat picture that keeps only part of the spread, the word arithmetic and what it hides, and the narrow cone all the vectors lean into",
         "blocks": [
             {
                 "label": "Two readings of closeness",
                 "tex": r"\cos(a, b) = \frac{a \cdot b}{\|a\|\,\|b\|}, \qquad d(a, b) = \|a - b\|",
-                "note": "The angle between them, blind to length; and how far apart, which grows with length. The page reports both for any two tokens",
+                "note": "For two vectors a and b, the cosine is their dot product divided by the product of their lengths. It is 1 for the same direction, 0 at a right angle, and it ignores length. The distance d is the length of a minus b, how far apart the tips are, and it grows with length. The play page reports both for any two tokens",
             },
             {
                 "label": "The flat picture",
                 "tex": r"\text{kept} = \frac{\lambda_1 + \lambda_2}{\sum_i \lambda_i}",
-                "note": "The two directions of most spread, by power iteration on the covariance. The fraction kept is on the page, and the rest is what the picture hides or invents",
+                "note": "The picture uses the two directions along which the vectors spread most. Lambda 1 and lambda 2 measure the spread along them, and the sum of all lambdas the whole spread, so the fraction kept is their ratio. The play page shows this fraction. The rest is what the picture hides or distorts",
             },
             {
-                "label": "The analogy arithmetic",
+                "label": "The word arithmetic",
                 "tex": r"\arg\max_{w \notin \{a, b, c\}} \cos(e_a - e_b + e_c,\ e_w)",
-                "note": "The famous demonstration excludes the three inputs by hand. The page shows the answer with and without that exclusion; without it the answer is usually an input",
+                "note": "Take the vector of a, subtract that of b, add that of c, and find the word w whose vector has the highest cosine with the result, leaving out a, b and c. The well-known demonstrations leave these three out by hand. The play page shows the answer with and without that rule, and without it the answer is often one of the three",
             },
             {
                 "label": "The cone, and centring",
                 "tex": r"\bar{e} = \frac{1}{|V|}\sum_t e_t, \qquad e_t' = e_t - \bar{e}",
-                "note": "Cosines between random pairs average well above zero: the vectors lean one way together. Taking the mean away spreads them out, and the page's histogram shows both",
+                "note": "The cosines of random pairs average well above zero: the vectors lean one way together and fill a narrow cone. The mean vector, e bar, is the average of all vectors. Subtracting it from each vector, called centring, spreads them out. The play page's chart shows the cosines before and after",
             },
         ],
         "dimension": {
             "label": "What the space does not contain",
             "tex": r"\text{no axis } i \text{ has an assigned meaning}",
-            "note": "A direction that seems to mean something was found afterwards, not designed. The space carries what the loss put there and nothing else",
+            "note": "No axis i of the space was given a meaning. A direction that seems to mean something was found afterwards, not designed. The space holds what training put there and nothing else",
         },
     },
     {
         "id": "order",
-        "name": "Order has to be supplied",
-        "summary": (
-            "A sentence and its shuffle give one and the same answer under any symmetric mixing, "
-            "until a position is added to every vector"
-        ),
+        "name": "Word order has to be added",
+        "summary": "The same words in another order give the same result, until each token's list of numbers also carries its position",
         "blocks": [
             {
-                "label": "The problem",
+                "label": "The problem: an average ignores order",
                 "tex": r"\frac{1}{n}\sum_i x_{\pi(i)} = \frac{1}{n}\sum_i x_i \quad \text{for every permutation } \pi",
-                "note": "An average does not care about order, and neither does any mechanism that treats positions alike. The page adds up a sentence and its shuffle and gets the same vector to machine precision",
+                "note": "Here x_i is the list of numbers at position i, n is the number of tokens, and π is a shuffle of the positions. Adding up the n lists and dividing by n gives the same result in any order. Any mixing that treats every position alike has the same blindness. The page mixes a sentence and its shuffle and gets the same average, up to rounding error",
             },
             {
-                "label": "A learned vector per index",
+                "label": "A learned list for each position",
                 "tex": r"x_i = E_{t_i,:} + P_{i,:}, \qquad P \in \mathbb{R}^{n_{\max} \times d}",
-                "note": "One trainable row per position, added to the token's. The small model on these pages does this. The ceiling: no row exists past the last one",
+                "note": "What goes into the model at position i is the row of the token table E for the token t_i, plus row i of a position table P. P has one row of d numbers for each position up to the longest text allowed, n_max. The small model of these pages learns P in training. Past the last row there is no position list",
             },
             {
                 "label": "Sines and cosines",
                 "tex": r"P_{i, 2j} = \sin\!\left(\frac{i}{10000^{2j/d}}\right), \qquad P_{i, 2j+1} = \cos\!\left(\frac{i}{10000^{2j/d}}\right)",
-                "note": "A fixed function of the index at many frequencies. Any index has one. Two positions a fixed distance apart are related by the same rotation wherever they are",
+                "note": "Here the position list is a fixed formula of the position i: column 2j holds a sine and column 2j + 1 a cosine, with slower waves for larger j, and d is the number of columns. Every position has a list, however far along. Moving the same number of positions along turns each sine and cosine pair by the same angle, from any starting position",
             },
             {
-                "label": "Rotating the query and the key",
+                "label": "Turning the query and the key",
                 "tex": r"q_i \cdot k_j \text{ after rotating each by } i\theta,\ j\theta \text{ depends on } i - j \text{ only}",
-                "note": "The current standard: position enters as a rotation of the query and key, so the score depends on the distance between positions rather than on each one",
+                "note": "The method of large current models. In attention, the query q_i of position i and the key k_j of position j are two lists of numbers, multiplied to give a score. Turning them by an angle θ times their positions makes the score depend only on the distance i - j between the two positions",
             },
         ],
         "dimension": {
-            "label": "The stream's width",
+            "label": "Every list has the same length",
             "tex": r"x_i \in \mathbb{R}^{d} \text{ for the whole depth}",
-            "note": "The running representation is one vector per position, of the embedding width, read and written by every block. It starts as the row plus the position",
+            "note": "Each position holds a list of d numbers, 16 on these pages, at every stage of the model. It starts as the token's row plus the position's row",
         },
     },
     {
         "id": "attend",
-        "name": "Attention, with the numbers",
-        "summary": (
-            "Query, key and value from the stream, the score matrix, the mask, the weights and the "
-            "mix written back, on a real prompt through the small model trained on these pages"
-        ),
+        "name": "Attention: which earlier words count",
+        "summary": "Each token's list of numbers is rebuilt as a weighted average of the lists before it, computed stage by stage on a real sentence with a small trained model",
         "blocks": [
             {
-                "label": "Three projections",
+                "label": "Three new lists from each row",
                 "tex": r"Q = X W_Q, \qquad K = X W_K, \qquad V = X W_V",
-                "note": "Each row of the stream becomes a query, a key and a value, each a matrix multiplication of the same row",
+                "note": "X has one row of numbers per token. Multiplying it by three tables of learned weights, W_Q, W_K and W_V, gives each token a query in Q (what it looks for), a key in K (what it offers) and a value in V (what it passes on)",
             },
             {
                 "label": "Scores, scaled",
                 "tex": r"S_{ij} = \frac{q_i \cdot k_j}{\sqrt{d}}",
-                "note": "One entry per pair of positions, n squared of them. Dividing by the root of the width keeps the scores from growing with it, which would drive every row of the softmax to a single one",
+                "note": "S_ij is the score of token i for token j: the query of i and the key of j multiplied number by number, summed, and divided by the square root of the list length d. With d = 16 that is a division by 4. There is one score for each pair of tokens, n times n in all. Without the division, scores would grow with d, and each row of weights would end up with one weight near 1 and the rest near 0",
             },
             {
                 "label": "The mask, then the weights",
                 "tex": r"S_{ij} \leftarrow -\infty \text{ for } j > i, \qquad A_{i,:} = \mathrm{softmax}(S_{i,:})",
-                "note": "No position may read a later one. After the softmax each row is positive and adds to one, and the page prints the last row as percentages",
+                "note": "A score for a later token, j greater than i, is set to minus infinity, so a token never reads a later one. Softmax then turns each row of scores into weights A: positive, and adding up to 1. The page prints the last token's weights as percentages",
             },
             {
-                "label": "The mix, written back",
+                "label": "The mix, added back",
                 "tex": r"Z = A V, \qquad H = X + Z",
-                "note": "The weights applied to the values, added to what the stream had. This is the only way earlier tokens reach later ones, and it is recomputed at every position",
+                "note": "Z is the values averaged with the weights, and the output H is the input X plus Z. This is the only way earlier tokens affect later ones, and it is done at every position",
             },
         ],
         "dimension": {
             "label": "The cost",
-            "tex": r"|S| = n^{2}",
-            "note": "The reason the window is finite. The page's slider computes it for any length; at a thousand tokens it is a million scores per head per layer",
+            "tex": "|S| = n^{2}",
+            "note": "The table of scores has n squared entries for n tokens. This is why a model reads only a limited number of tokens at once. The page's slider computes the count for any length: a thousand tokens give a million scores, for each attention unit in each layer",
         },
     },
     {
         "id": "predict",
-        "name": "The next token",
-        "summary": (
-            "The last vector scored against every row of the table, softmaxed into a ranked list. "
-            "Watch it sharpen as the model trains, scored against what the text actually said"
-        ),
+        "name": "Guessing the next token",
+        "summary": "The model's last list of numbers becomes a probability for every possible next token, and the guess improves as the model trains",
         "blocks": [
             {
-                "label": "One score per vocabulary entry",
+                "label": "One score per token",
                 "tex": r"z_t = h_n \cdot E_{t,:}",
-                "note": "The output layer is the table transposed, so a score is how well the running vector lines up with a token's own row. Tying them saves a whole table of numbers",
+                "note": "h_n is the model's list of numbers at the last position n, and E_t is the own row of token t in the token table. The score z_t multiplies them number by number and sums. A token scores high when its row points the same way as h_n. Reusing the table this way saves a second table of the same size",
             },
             {
-                "label": "The distribution",
+                "label": "From scores to probabilities",
                 "tex": r"p_t = \frac{e^{z_t}}{\sum_{t'} e^{z_{t'}}}",
-                "note": "Topic 3's softmax over the vocabulary. The page shows the top twelve as a ranked list rather than a plot, because that is how the shape reads",
+                "note": "Each score becomes e (about 2.718) to that power, divided by the total over all tokens t': shares that are positive and add up to 1. This is called softmax. The page shows the twelve likeliest tokens as a ranked list",
             },
             {
                 "label": "The loss, at every position at once",
                 "tex": r"L = -\frac{1}{n-1}\sum_{i=1}^{n-1} \log p^{(i)}_{t_{i+1}}",
-                "note": "Cross entropy against the token that actually followed, one term per position of the text. The curve on the page is this, falling",
+                "note": "At each position i of a text of n tokens, the model gives a probability to the token that really came next, t_{i+1}. The loss is minus the logarithm of that probability, averaged over all positions. A sure right guess costs 0. The falling curve on the page is this loss during training",
             },
             {
                 "label": "Perplexity",
                 "tex": r"\mathrm{PPL} = e^{L}",
-                "note": "The exponential of the average loss: as if choosing among this many equally likely tokens. Untrained it is about the vocabulary size; trained on this small text it falls to a handful",
+                "note": "e to the power of the average loss: the number of equally likely tokens the model's uncertainty amounts to. Untrained, it is about the size of the vocabulary. Trained on the short text of these pages, it falls to a handful",
             },
         ],
         "dimension": {
             "label": "What the model knows",
             "tex": r"\text{one text of } \approx 500 \text{ tokens}",
-            "note": "The ranked list is what that text made likely and nothing else. The pages after this one generate from it, and what they generate is that text rearranged",
+            "note": "The ranked list reflects what that one text made likely, and nothing else. Text written by this model is pieces of that text, rearranged",
         },
     },
     {
         "id": "generate",
-        "name": "One token at a time",
-        "summary": (
-            "Run, choose one token, append it, run again. The appended token goes in like any "
-            "other, the window fills, the oldest falls out, and nothing can be revised"
-        ),
+        "name": "Writing one token at a time",
+        "summary": "Text is written by guessing one token, adding it to the text and guessing again. The model sees only the latest tokens, and nothing written can be changed",
         "blocks": [
             {
                 "label": "The loop",
                 "tex": r"t_{n+1} \sim p(\cdot \mid t_{1..n}), \qquad n \leftarrow n + 1",
-                "note": "Four steps: tokenise the prompt, run the stack, choose from the distribution at the last position, append. The appended token is indistinguishable from the prompt's",
+                "note": "Given the tokens t_1 to t_n so far, the model gives probabilities p for the next one. One token, t_{n+1}, is chosen from them and added, and n grows by one. Then the loop repeats. An added token is read exactly like the tokens of the typed start",
             },
             {
                 "label": "Why it matches training",
                 "tex": r"p(t_{i+1} \mid t_{1..i}) \text{ used only } j \le i \text{ in training too}",
-                "note": "The causal mask made every training prediction depend on earlier positions only, which is exactly the situation at generation time",
+                "note": "In training, each guess of token i + 1 could use only positions j up to i, because of the mask in attention. Writing is the same situation: the next tokens do not exist yet",
             },
             {
-                "label": "The cache",
+                "label": "The store of keys and values",
                 "tex": r"\text{keep } K_{1..n}, V_{1..n}; \text{ compute only } q_{n+1}, k_{n+1}, v_{n+1}",
-                "note": "The keys and values of earlier positions do not change, so they are stored. The work per new token drops from the whole sequence to one position",
+                "note": "The keys K and values V of earlier positions do not change when a token is added, so they are kept. For each new token only its own query q, key k and value v are computed: one position instead of the whole text",
             },
             {
-                "label": "What the cache costs",
+                "label": "What the store costs",
                 "tex": r"\text{depth} \times \text{heads} \times 2 \times d_{\text{head}} \times n",
-                "note": "Linear in the length, and in practice the real limit on how long a generation runs. The page counts it for its one head and one layer",
+                "note": "The number of layers, times the attention units in each, times 2 (a key and a value), times the numbers in each, times the length n. It grows with the length, and in practice it limits how long a text can get. The page counts it for its one unit and one layer",
             },
         ],
         "dimension": {
             "label": "The window",
             "tex": r"n \le W",
-            "note": "Past W tokens the oldest fall out and are gone. The page's slider shrinks the window so this is seen on a short text; a real one truncates or summarises",
+            "note": "The model reads at most W tokens. Past W, the oldest tokens drop out and are gone. The page's slider shrinks the window so that this shows on a short text. Large models instead cut or summarise old text",
         },
     },
     {
         "id": "sample",
-        "name": "Choosing from the distribution",
-        "summary": (
-            "Greedy repeats itself; temperature, top-k and nucleus reshape the same distribution "
-            "before the draw, and the choice changes the text as much as the model does"
-        ),
+        "name": "Choosing the next token",
+        "summary": "Always taking the likeliest next token makes text repeat itself. Other rules draw at random, and the rule changes the text as much as the model does",
         "blocks": [
             {
                 "label": "Greedy",
                 "tex": r"t_{n+1} = \arg\max_t p_t",
-                "note": "Always the most likely. Deterministic, and on a small model it finds a cycle and stays in it, which the page shows in the right-hand column",
+                "note": "The next token t_{n+1} is always the token t with the largest probability p_t. The same start always gives the same text, and a small model soon falls into a loop and stays in it. The page shows greedy in the box \"Greedy, for comparison\"",
             },
             {
                 "label": "Temperature",
                 "tex": r"p_t \propto e^{z_t / T}",
-                "note": "Divide the scores before the softmax. Below one sharpens, above one flattens; the limits are greedy and every token alike",
+                "note": "Each score z_t is divided by the temperature T before the probabilities are made. T below 1 makes likely tokens likelier; T above 1 evens the shares out. Near T = 0 the rule becomes greedy; at a very large T all tokens become equally likely",
             },
             {
-                "label": "Top-k and nucleus",
+                "label": "Top k and nucleus",
                 "tex": r"\text{keep the } k \text{ largest}; \quad \text{keep the fewest with } \sum p_t \ge P; \quad \text{renormalise}",
-                "note": "Cut the tail, then renormalise what is left. Nucleus adapts the count to how confident the distribution is; the page greys out what each rule removed",
+                "note": "Top k keeps the k likeliest tokens. Nucleus keeps the fewest likeliest tokens whose probabilities add up to at least P. What is kept is scaled back up to a total of 1. Nucleus keeps fewer tokens when the model is sure and more when it is not. The page shows what each rule removed",
             },
             {
                 "label": "A penalty on what was written",
                 "tex": r"z_t \leftarrow z_t - \lambda \,[t \text{ already emitted}]",
-                "note": "Lower the score of tokens already in the text, which is the blunt cure for the greedy cycle",
+                "note": "The score of each token already in the text is lowered by λ, the penalty. It is a blunt cure for the loops of greedy",
             },
         ],
         "dimension": {
             "label": "Two systems, not one",
             "tex": r"\text{text} = \text{decode}(\text{model}, \text{rule})",
-            "note": "The model did not change between the two columns; only the rule did. Beam search is the other shape, kept for translation where there is a right answer to find",
+            "note": "The text depends on the model and on the rule for choosing. On the page the model is the same in both boxes; only the rule differs. Another rule, beam search, keeps several unfinished texts and suits translation, where one right answer is sought",
         },
     },
     {
         "id": "pool",
-        "name": "One vector for a whole passage",
-        "summary": (
-            "The per-position vectors collapsed into one, on purpose, two ways, and what the one "
-            "vector cannot tell apart"
-        ),
+        "name": "One list of numbers for a whole passage",
+        "summary": "A passage's lists of numbers averaged into one, and why two passages with opposite meanings can still come out almost the same",
         "blocks": [
             {
-                "label": "Two collapses",
+                "label": "Two ways to collapse",
                 "tex": r"v = \frac{1}{n}\sum_i h_i \qquad \text{or} \qquad v = h_n",
-                "note": "Average every position, or read off a designated one. A causal model's natural choice is the last position, since only it has seen everything",
+                "note": "h_i is the model's list of numbers at position i, and n is the number of tokens. The passage list v is either the average of all h_i or the last one, h_n. A model that reads only earlier tokens naturally uses the last position, since only it has seen the whole passage",
             },
             {
-                "label": "Compared",
+                "label": "The comparison",
                 "tex": r"\cos(v_A, v_B)",
-                "note": "The page compares three pairs: same meaning in other words, opposite meaning in the same words, and a different subject. The opposite pair sits close",
+                "note": "The cosine of the angle between the lists v_A and v_B of two passages A and B: 1 for the same direction, 0 for unrelated, negative for opposite. The page compares three pairs: the same meaning in other words, the opposite meaning in the same words, and different subjects. The opposite pair comes out close",
             },
             {
-                "label": "The loss a retrieval model uses instead",
+                "label": "The training used by search models",
                 "tex": r"L = -\log \frac{e^{\cos(v_A, v_{A^{+}})/\tau}}{\sum_{B} e^{\cos(v_A, v_B)/\tau}}",
-                "note": "Pairs that belong together pulled close, others pushed apart. A different loss on the same kind of vector, not a different kind of vector",
+                "note": "A passage A, a passage A+ that belongs with it, and other passages B. The loss L is low when A is much closer to A+ than to every B; τ is a fixed number that sets how sharp the comparison is. Training pulls matching pairs together and pushes others apart. The lists are of the same kind; only the training differs",
             },
         ],
         "dimension": {
-            "label": "The third part of the correction",
+            "label": "One list per passage is built, not given",
             "tex": r"\text{one vector per passage is a construction, not a property of the embedding}",
-            "note": "The fixed width is the table's; the count of vectors is the input's; a single vector for the whole exists only when the count is deliberately collapsed. A generative model never makes it",
+            "note": "The length of each list comes from the token table, and the number of lists from the length of the input. A single list for a whole passage exists only when the lists are collapsed on purpose. A model that writes text never builds it",
         },
     },
     {
         "id": "artefacts",
-        "name": "What the first pages explain",
-        "summary": (
-            "Counting letters, a long number, a stray space, a rare word: four failures people "
-            "meet, each traced to a page before any model appeared"
-        ),
+        "name": "Four mistakes explained by cutting text",
+        "summary": "Counting letters, long numbers, a stray space, a rare word: four common failures of language models, each caused by how text is cut into tokens",
         "blocks": [
             {
                 "label": "Letters inside a token",
-                "tex": r"\text{``windowsill''} \rightarrow 3 \text{ ids}; \quad \#\text{letters} \notin \text{input}",
-                "note": "The token is the unit and its letters were never separately represented. Counting them, spelling and reversing all fail for this one reason",
+                "tex": r"\text{``windowsill''} \rightarrow 7 \text{ ids}; \quad \#\text{letters} \notin \text{input}",
+                "note": "On the vocabulary of these pages the word arrives as 7 ids, and the number of its letters is not part of what the model receives. A token is the smallest unit the model sees. Counting letters, spelling and reversing a word all fail for this one reason",
             },
             {
                 "label": "A number, cut three ways",
                 "tex": r"\text{tokens}(1234567) \neq \text{tokens}(1{,}234{,}567) \neq \text{tokens}(\textvisiblespace 1234567)",
-                "note": "Place value split wherever the merges fell, and differently in each spelling. Arithmetic on the pieces is not arithmetic on digits",
+                "note": "The same number as typed, with commas, and after a space gives different tokens. Which digits share a token depends on where the vocabulary's pieces fell. Arithmetic on those pieces is not arithmetic on digits",
             },
             {
                 "label": "A stray space",
                 "tex": r"\text{id}(\text{``the''}) \neq \text{id}(\text{``\textvisiblespace the''})",
-                "note": "The space travels inside the token, so a different row of the table goes in and everything after is computed from different numbers",
+                "note": "\"the\" and \"the\" with a space in front are different tokens with different ids. So a different list of numbers goes in, and everything after is computed from different numbers",
             },
             {
-                "label": "A rare word's rows",
+                "label": "A rare word's lists",
                 "tex": r"\#\text{updates}(t) \propto \#\text{occurrences}(t)",
-                "note": "The pieces of a rare word were moved a handful of times or never during training, so they carry little. The meaning page counted this",
+                "note": "Each time a token t appears in the training text, its list of numbers is adjusted. A token that appears rarely is adjusted rarely. The pieces of a rare word were adjusted a few times or never, so they carry little",
             },
         ],
         "dimension": {
-            "label": "The closing point",
-            "tex": r"\text{every failure above} \Leftarrow \text{pages 1 to 4}",
-            "note": "The unit, how it is chosen, where the space goes, where a number is cut: decided before any network appeared. None of these is a mystery about the model",
+            "label": "What the four have in common",
+            "tex": r"\text{every failure above} \Leftarrow \text{how text is cut into tokens}",
+            "note": "What counts as one piece, how the pieces are chosen, where the space goes, where a number is cut: all decided before the model learned anything. None of these failures is a mystery about the model",
         },
     },
 ]
@@ -472,50 +430,32 @@ SYSTEMS = [
 DEFINITIONS = [
     {
         "id": "softmax",
-        "name": "The softmax",
+        "name": "Softmax",
         "tex": r"\mathrm{softmax}(z)_i = \frac{e^{z_i}}{\sum_j e^{z_j}}",
-        "note": (
-            "Used three times in this topic: over the scores at one position to make attention "
-            "weights, over the vocabulary to make the next-token distribution, and with a "
-            "temperature under the scores to reshape it"
-        ),
+        "note": "Turns a list of scores z into shares that are positive and add up to 1: each score z_i becomes e (about 2.718) to the power z_i, divided by the total over all j. The topic uses it three times: for attention weights, for the probability of every next token, and, with a temperature, to reshape those probabilities",
     },
     {
         "id": "crossentropy",
-        "name": "Cross entropy",
+        "name": "Cross entropy, the loss",
         "tex": r"L = -\log p_{t^{*}}",
-        "note": (
-            "The loss of one prediction is the negative log of the probability given to the token "
-            "that actually followed. Averaged over every position of the text at once, it is what "
-            "the model descends"
-        ),
+        "note": "The loss L of one guess: minus the logarithm of the probability p given to the token t* that really came next. A sure right guess costs 0; a guess of 1 per cent costs about 4.6. Training lowers the average of this loss over every position of the text",
     },
     {
         "id": "cosine",
         "name": "Cosine similarity",
         "tex": r"\cos(a, b) = \frac{a \cdot b}{\|a\|\,\|b\|}",
-        "note": (
-            "The angle between two vectors, blind to their lengths. The reading of closeness used "
-            "for nearest neighbours, for the analogy arithmetic and for comparing passage vectors"
-        ),
+        "note": "The cosine of the angle between two lists of numbers a and b, seen as arrows: their product number by number, summed, divided by their two lengths. 1 means the same direction, 0 unrelated, a negative value opposite. The lengths do not matter. Used to find the nearest tokens and to compare passages",
     },
     {
         "id": "onehot",
-        "name": "The one-hot vector",
+        "name": "The one-hot list",
         "tex": r"(e_t)_i = [i = t], \qquad \|e_a - e_b\| = \sqrt{2} \text{ for } a \neq b",
-        "note": (
-            "An integer as a vector a matrix can multiply. Every pair is equally far apart, so it "
-            "carries identity and nothing else, and multiplying it by a matrix selects one row"
-        ),
+        "note": "A token id t written as a list e_t as long as the vocabulary: 0 everywhere except a 1 at place t. Any two different such lists are the same distance apart, the square root of 2, so they say which token it is and nothing else. Multiplying a table by such a list picks out row t",
     },
     {
         "id": "utf8",
-        "name": "The byte alphabet",
+        "name": "Bytes as the alphabet",
         "tex": r"|\Sigma| = 256",
-        "note": (
-            "With bytes as the alphabet every string is representable, no token is unknown, and "
-            "decoding is an exact concatenation. The cost is that a script the vocabulary never "
-            "saw is one token per byte"
-        ),
+        "note": "Computers store text as bytes, whole numbers from 0 to 255. Starting the vocabulary from these 256 values means every text can be written, no token is ever unknown, and turning tokens back into text is exact. The price: text in a script the vocabulary never saw takes one token per byte",
     },
 ]

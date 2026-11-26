@@ -127,13 +127,13 @@ describe("The topic index", () => {
     await waitFor(() => expect(screen.getByText("Ready")).toBeTruthy());
     expect(screen.getAllByText("Being written").length).toBe(2);
     expect(screen.getAllByText("Planned").length).toBe(1);
-    expect(screen.getByText(/10 parts, 53 beats, about 20 minutes, 7 things to move/i)).toBeTruthy();
+    expect(screen.getByText(/Video series: 10 parts, 53 scenes, about 20 minutes\. Interactive pages: 7\./i)).toBeTruthy();
     expect(
-      screen.getAllByText(/7 things to move, and every equation. no clip filmed yet/i).length,
+      screen.getAllByText(/Interactive pages: 7, with every formula behind them\. No video filmed yet\./i).length,
     ).toBe(2);
-    expect(screen.getAllByText(/0 things to move, and every equation/i).length).toBe(1);
+    expect(screen.getAllByText(/Interactive pages: 0, with every formula behind them/i).length).toBe(1);
     // tokens is planned on its card and built in the site, so it is the third with pages
-    expect(screen.getAllByText(/things to move, and every equation. no clip filmed yet/i).length).toBe(3);
+    expect(screen.getAllByText(/with every formula behind them\. No video filmed yet\./i).length).toBe(3);
   });
 
   it("Lists the topics from the snapshot when the backend is down", async () => {
@@ -143,7 +143,7 @@ describe("The topic index", () => {
     );
     await siteAt("/topics");
     await waitFor(() => expect(screen.getByRole("heading", { name: "Fractals" })).toBeTruthy());
-    expect(screen.queryByText("The backend is not answering")).toBeNull();
+    expect(screen.queryByText("The site's server is not answering")).toBeNull();
   });
 });
 
@@ -193,13 +193,13 @@ describe("Navigation between and inside topics", () => {
     for (const [path, question] of [
       ["/topics/fractals/uses/actuarial", "How does anyone put a price on a fire that has not happened?"],
       ["/topics/chaos/uses/weather", "Why does the forecast say 70 per cent?"],
-      ["/topics/complex/uses/current", "Why does a motor draw more current than the work it does?"],
+      ["/topics/complex/uses/current", "Why does a motor take more current from the mains than its work needs?"],
       ["/topics/networks/uses/proteins", "How does a string of letters become a shape?"],
       ["/topics/tokens/uses/spam", "How does a mailbox know which mail to throw away?"],
     ] as const) {
       const view = await siteAt(path);
       await waitFor(() => expect(screen.getByRole("heading", { name: question })).toBeTruthy(), { timeout: 4000 });
-      expect(screen.getByText("What this does not say")).toBeTruthy();
+      expect(screen.getByText("What this page does not claim")).toBeTruthy();
       expect(screen.getByText("Sources")).toBeTruthy();
       expect(document.querySelectorAll('a[data-slot="link"][target="_blank"]').length).toBeGreaterThan(2);
       view.unmount();
@@ -216,19 +216,19 @@ describe("Navigation between and inside topics", () => {
   it("The applications live under their own section, and the old play addresses arrive there", async () => {
     let view = await siteAt("/topics/fractals/uses");
     await waitFor(() => expect(screen.getByRole("heading", { name: "Applications" })).toBeTruthy());
-    expect(screen.getByText("Claims with a fractal tail")).toBeTruthy();
+    expect(screen.getByText("When one claim outweighs a thousand")).toBeTruthy();
     expect(screen.getByText("How does anyone put a price on a fire that has not happened?")).toBeTruthy();
     // every application of this topic is now written, so none is marked as coming
     expect(screen.getAllByText("Ready").length).toBeGreaterThan(3);
     expect(screen.queryByText("Being written")).toBeNull();
     view.unmount();
     view = await siteAt("/topics/fractals/play/tails");
-    await waitFor(() => expect(screen.getByRole("heading", { name: "Claims with a fractal tail" })).toBeTruthy(), { timeout: 4000 });
+    await waitFor(() => expect(screen.getByRole("heading", { name: "When one claim outweighs a thousand" })).toBeTruthy(), { timeout: 4000 });
     expect(Array.from(document.querySelectorAll("main a")).map((a) => a.getAttribute("href"))).toContain("/topics/fractals/uses");
     view.unmount();
     view = await siteAt("/topics/fractals/play");
     await waitFor(() => expect(screen.getAllByText(/Iterated maps/).length).toBeGreaterThan(0));
-    expect(screen.queryByText("Claims with a fractal tail")).toBeNull();
+    expect(screen.queryByText("When one claim outweighs a thousand")).toBeNull();
     view.unmount();
   });
 

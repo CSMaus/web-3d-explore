@@ -1,0 +1,266 @@
+{
+  "slug": "probability",
+  "title": "Test : Probabilités",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Deux dés équilibrés sont lancés, et leurs deux nombres sont additionnés. Quelle est la probabilité que la somme soit 8, c'est-à-dire la part de toutes les issues également probables qui donnent 8 ?",
+      "options": [
+        {
+          "text": "1/11, puisqu'il y a 11 sommes possibles",
+          "correct": false,
+          "why": "Les 11 sommes de 2 à 12 ne sont pas également probables : 2 vient d'une seule paire de faces et 7 de six. Les issues également probables sont les 36 paires, en distinguant le premier dé du second."
+        },
+        {
+          "text": "5/36, environ 0.139",
+          "correct": true,
+          "why": "Sur les 36 paires également probables, cinq donnent 8 : (2,6), (3,5), (4,4), (5,3) et (6,2). 5/36 = 0.139."
+        },
+        {
+          "text": "3/21, en comptant (2,6), (3,5) et (4,4) parmi 21 paires sans ordre",
+          "correct": false,
+          "why": "Les paires comptées sans ordre ne sont pas également probables. (2,6) peut arriver de deux façons : premier dé à 2 ou premier dé à 6. (4,4) n'arrive que d'une façon. En tenant compte de l'ordre, la réponse est 5 sur 36, 0.139, et non 3 sur 21, 0.143."
+        },
+        {
+          "text": "1/6, comme pour une somme de 7",
+          "correct": false,
+          "why": "Seule la somme 7 a six paires, le plus grand nombre parmi toutes les sommes. La somme 8 en a cinq, sa probabilité est donc 5/36."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Une pièce contient 30 personnes, et chaque jour de l'année est également probable comme anniversaire. Quelle valeur est la plus proche de la probabilité qu'au moins deux d'entre elles aient le même anniversaire ?",
+      "options": [
+        {
+          "text": "Environ 8 pour cent, 30 jours sur 365",
+          "correct": false,
+          "why": "30/365 est à peu près la probabilité que quelqu'un ait le même anniversaire qu'une personne donnée. Pour un anniversaire commun, il suffit qu'une paire quelconque coïncide, et 30 personnes forment 435 paires."
+        },
+        {
+          "text": "Certaine, puisque 435 paires dépassent 365 jours",
+          "correct": false,
+          "why": "Additionner les probabilités de toutes les paires compte certains anniversaires communs plusieurs fois, ce qui donne trop. La probabilité que les 30 anniversaires soient tous différents vaut 365/365 x 364/365 x ... x 336/365 = 0.294, donc un anniversaire commun a la probabilité 0.706."
+        },
+        {
+          "text": "Environ 71 pour cent",
+          "correct": true,
+          "why": "La probabilité que les 30 anniversaires soient tous différents vaut 0.294, donc la probabilité d'au moins un anniversaire commun vaut 1 - 0.294 = 0.706. La probabilité dépasse un demi à 23 personnes."
+        },
+        {
+          "text": "Environ 50 pour cent",
+          "correct": false,
+          "why": "Un demi est atteint à 23 personnes, avec une probabilité de 0.507. Avec 30 personnes, la probabilité vaut déjà 0.706."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Un test détecte 99 pour cent des personnes qui ont une maladie, et déclare à tort « malade » 5 pour cent des personnes en bonne santé. Une personne sur 100 a la maladie. Une personne a un résultat positif. Quelle valeur est la plus proche de la probabilité que cette personne soit malade ?",
+      "options": [
+        {
+          "text": "99 pour cent",
+          "correct": false,
+          "why": "99 pour cent est la probabilité d'un résultat positif pour une personne malade. La question demande l'inverse : la probabilité d'être malade pour une personne au résultat positif. Ce sont deux nombres différents."
+        },
+        {
+          "text": "95 pour cent",
+          "correct": false,
+          "why": "95 pour cent est la part des personnes en bonne santé qui ont un résultat négatif. Ce nombre ne dit rien directement sur les personnes au résultat positif."
+        },
+        {
+          "text": "Environ 17 pour cent",
+          "correct": true,
+          "why": "Prendre 10,000 personnes. 100 sont malades, et 99 d'entre elles ont un résultat positif. 9,900 sont en bonne santé, et 5 pour cent d'entre elles, 495, ont aussi un résultat positif. Sur les 594 positifs, 99 sont malades : 16.7 pour cent."
+        },
+        {
+          "text": "1 pour cent",
+          "correct": false,
+          "why": "1 pour cent est la probabilité avant le test. Un résultat positif la multiplie par environ dix-sept, car les résultats positifs sont bien plus fréquents chez les malades."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Un jeu compte 4 portes fermées, une voiture derrière l'une et des chèvres derrière les trois autres. Le joueur choisit une porte. Le présentateur, qui sait où est la voiture, ouvre deux autres portes avec des chèvres et propose de passer à la dernière porte fermée. Quelle est la probabilité de gagner en changeant ?",
+      "options": [
+        {
+          "text": "1/2, puisqu'il reste deux portes",
+          "correct": false,
+          "why": "Qu'il reste deux portes ne les rend pas également probables. Le choix du présentateur dépendait de la place de la voiture : chaque fois que le premier choix était mauvais, il devait laisser fermée la porte de la voiture."
+        },
+        {
+          "text": "3/4",
+          "correct": true,
+          "why": "Le premier choix est mauvais 3 fois sur 4, et chaque fois qu'il est mauvais, la porte restée fermée cache la voiture. Changer gagne exactement quand le premier choix était mauvais : 3/4."
+        },
+        {
+          "text": "1/4",
+          "correct": false,
+          "why": "1/4 est la probabilité de gagner en gardant. Le premier choix est bon une fois sur quatre, et ouvrir des portes avec des chèvres ne change rien à ce choix."
+        },
+        {
+          "text": "2/3, comme avec trois portes",
+          "correct": false,
+          "why": "2/3 correspond à trois portes, où le premier choix est mauvais 2 fois sur 3. Avec n portes, changer gagne 1 - 1/n, ici 3/4."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Une partie coûte 3. À chaque partie, un dé est lancé, et un six rapporte un prix de 15. Combien un joueur a-t-il à peu près gagné ou perdu après 600 parties ?",
+      "options": [
+        {
+          "text": "Environ +1500, puisqu'un six rapporte en moyenne 15/6 = 2.5 par partie",
+          "correct": false,
+          "why": "2.5 est le prix moyen par partie, mais chaque partie coûte aussi 3. L'espérance de gain d'une partie, chaque résultat multiplié par sa probabilité puis additionné, vaut 15/6 - 3 = -0.5."
+        },
+        {
+          "text": "Environ -300",
+          "correct": true,
+          "why": "L'espérance de gain d'une partie vaut 15 x 1/6 - 3 = -0.5, donc 600 parties font perdre environ 300. Le total varie autour de cette valeur d'environ 15 x sqrt(1/6 x 5/6) x sqrt(600) = 137, où sqrt désigne la racine carrée."
+        },
+        {
+          "text": "Environ 0, puisqu'un six sort une fois sur six et rend cinq mises",
+          "correct": false,
+          "why": "Un prix de cinq mises une fois sur six parties ne rembourse que cinq des six mises. Le jeu serait équitable, avec une espérance de gain nulle, pour un prix de 18."
+        },
+        {
+          "text": "Environ -1800, les mises de toutes les parties",
+          "correct": false,
+          "why": "Cette réponse oublie les prix. Environ 100 six en 600 parties rapportent environ 1500, donc la perte est d'environ 300."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "50 chapeaux sont rendus à leurs 50 propriétaires dans un ordre pris au hasard. En moyenne, combien de personnes récupèrent leur propre chapeau ?",
+      "options": [
+        {
+          "text": "1",
+          "correct": true,
+          "why": "Chaque personne récupère son propre chapeau avec la probabilité 1/50, et apporte donc en moyenne 1/50 de rencontre. La moyenne d'une somme est la somme des moyennes, même si les personnes dépendent les unes des autres : 50 x 1/50 = 1."
+        },
+        {
+          "text": "1/50, la probabilité pour une personne",
+          "correct": false,
+          "why": "1/50 est la part d'une seule personne. Le nombre de rencontres additionne les parts des 50 personnes."
+        },
+        {
+          "text": "25, la moitié",
+          "correct": false,
+          "why": "La moitié supposerait que chaque personne récupère son chapeau une fois sur deux. Chacune le récupère avec une probabilité de 1 sur 50."
+        },
+        {
+          "text": "0.368",
+          "correct": false,
+          "why": "0.368, soit 1/e, est la probabilité que personne ne récupère son propre chapeau. Ce n'est pas le nombre moyen de personnes qui le récupèrent."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "Une planche a 6 rangées de clous. Une bille tombe à travers elles et va à droite ou à gauche à chaque clou, avec une probabilité d'un demi pour chaque côté. Quelle est la probabilité que la bille aille exactement 3 fois à droite et tombe dans la case du milieu ?",
+      "options": [
+        {
+          "text": "1/7, puisqu'il y a 7 cases",
+          "correct": false,
+          "why": "Les cases ne sont pas également probables : un seul chemin mène à la case 0, et 20 chemins mènent à la case du milieu. La probabilité d'une case est son nombre de chemins multiplié par la probabilité de chaque chemin."
+        },
+        {
+          "text": "20/64, environ 0.31",
+          "correct": true,
+          "why": "Une bille suit l'un de 2^6 = 64 chemins également probables, et 20 d'entre eux comptent exactement 3 passages à droite. 20/64 = 0.3125."
+        },
+        {
+          "text": "1/2, puisque droite et gauche sont également probables",
+          "correct": false,
+          "why": "Un demi est la probabilité à un seul clou. Tomber au milieu demande exactement 3 passages à droite sur 6 clous, ce qui arrive sur 20 des 64 chemins."
+        },
+        {
+          "text": "1/64, la probabilité d'un chemin",
+          "correct": false,
+          "why": "1/64 est la probabilité d'un chemin précis. 20 chemins différents mènent à la case du milieu."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "Des appels arrivent à des moments pris au hasard, 2 par minute en moyenne. Quelle valeur est la plus proche de la probabilité qu'une minute donnée n'ait aucun appel ?",
+      "options": [
+        {
+          "text": "0, puisque 2 appels arrivent chaque minute",
+          "correct": false,
+          "why": "2 est une moyenne, pas un nombre que chaque minute contient. Le nombre d'appels au hasard varie d'une minute à l'autre."
+        },
+        {
+          "text": "0.135",
+          "correct": true,
+          "why": "Le nombre d'appels en une minute suit les probabilités de Poisson de moyenne 2. Aucun appel a la probabilité e^-2 = 0.135, où e = 2.718..., environ une minute sur sept."
+        },
+        {
+          "text": "0.368",
+          "correct": false,
+          "why": "0.368 = e^-1 est la probabilité d'une minute sans appel quand la moyenne est de 1 appel par minute. Avec une moyenne de 2, elle vaut e^-2 = 0.135."
+        },
+        {
+          "text": "0.5",
+          "correct": false,
+          "why": "Une minute sans appel est l'un des nombreux cas possibles, 0, 1, 2, 3 appels et plus, sa probabilité n'est donc pas d'un demi. Elle vaut e^-2 = 0.135."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Des taxis arrivent à des moments pris au hasard, en moyenne à 5 minutes d'intervalle. Une personne a déjà attendu 5 minutes. Quelle est la probabilité que les 5 minutes suivantes passent aussi sans taxi ?",
+      "options": [
+        {
+          "text": "Environ 0.37",
+          "correct": true,
+          "why": "Avec des arrivées au hasard, l'attente qui reste se comporte comme au début. La probabilité de 5 minutes de plus sans taxi vaut e^-5/5 = e^-1 = 0.368, où e = 2.718..."
+        },
+        {
+          "text": "Environ 0.14, la probabilité d'attendre 10 minutes en tout",
+          "correct": false,
+          "why": "e^-2 = 0.135 est la probabilité, vue depuis le début, d'attendre plus de 10 minutes. Les 5 premières minutes sont déjà passées, ce qui laisse e^-1 = 0.368."
+        },
+        {
+          "text": "0, puisqu'après 5 minutes un taxi doit arriver",
+          "correct": false,
+          "why": "Un taxi n'est attendu à coup sûr qu'avec un horaire. Les arrivées au hasard ne suivent aucun horaire, donc attendre ne rapproche pas le suivant."
+        },
+        {
+          "text": "0.5, puisque 5 minutes est la moyenne",
+          "correct": false,
+          "why": "Les attentes d'arrivées au hasard ne se répartissent pas également autour de leur moyenne : plus de la moitié sont plus courtes. La probabilité de plus de 5 minutes vaut e^-1 = 0.368, que 5 minutes soient déjà passées ou non."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Un joueur part de 5 et mise 1 à la fois, en gagnant chaque mise avec la probabilité 0.49, jusqu'à ce que son argent atteigne 10 ou 0. Quelle valeur est la plus proche de la probabilité d'atteindre 10 ?",
+      "options": [
+        {
+          "text": "0.49, la probabilité de chaque mise",
+          "correct": false,
+          "why": "La probabilité d'une mise n'est pas celle de toute la partie. La partie demande que les gains prennent 5 d'avance sur les pertes avant que les pertes ne prennent 5 d'avance."
+        },
+        {
+          "text": "0.50, puisque 5 est à mi-chemin",
+          "correct": false,
+          "why": "Être à mi-chemin ne donne un demi que pour une pièce équilibrée. Un petit désavantage pour le joueur, répété sur environ 25 mises, fait passer la probabilité sous un demi."
+        },
+        {
+          "text": "0.45",
+          "correct": true,
+          "why": "Avec r = 0.51/0.49, la probabilité vaut (1 - r^5)/(1 - r^10) = 0.450. De 10 à 20, la même pièce donne 0.401 : plus la partie est longue, plus le désavantage compte."
+        },
+        {
+          "text": "0.40, comme de 10 à 20",
+          "correct": false,
+          "why": "0.40 est la probabilité de 10 à 20. Une partie plus courte, de 5 à 10, laisse au désavantage moins de mises pour agir, et la probabilité vaut 0.450."
+        }
+      ]
+    }
+  ]
+}

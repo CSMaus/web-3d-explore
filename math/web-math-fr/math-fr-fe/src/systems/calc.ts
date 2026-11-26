@@ -20,31 +20,31 @@ export const MOTIONS: Record<string, Motion> = {
     label: "Steady",
     at: (t) => 4 * t,
     speed: () => 4,
-    what: "The same distance every second, so the position climbs in a straight line and the speed is flat",
+    what: "The car covers 4 metres every second. Its distance from the start grows evenly, and its speed stays at 4 m/s",
   },
   faster: {
     label: "Speeding up",
     at: (t) => 0.4 * t * t,
     speed: (t) => 0.8 * t,
-    what: "Each second covers more ground than the last. The position curves upward and the speed climbs",
+    what: "The car starts at rest and covers more ground each second than the second before. Its speed grows evenly, by 0.8 m/s every second",
   },
   braking: {
     label: "Braking",
     at: (t) => 10 * t - 0.5 * t * t,
     speed: (t) => 10 - t,
-    what: "Fast at first, then slower. The position curve flattens and the speed falls through zero at ten seconds",
+    what: "The car starts at 10 m/s and loses 1 m/s every second. At 10 seconds its speed is zero, and after that it rolls backwards",
   },
   back: {
     label: "There and back",
     at: (t) => 12 * Math.sin(t * 0.5),
     speed: (t) => 6 * Math.cos(t * 0.5),
-    what: "Out, stop, back. The speed is zero exactly where the car turns round, and negative on the way back",
+    what: "The car drives 12 m forward, turns round, drives back past the start to 12 m behind it, and turns round again. Its speed is zero at the two moments it turns, and below zero while it drives backwards",
   },
   bumpy: {
     label: "Stop and go",
     at: (t) => 3 * t + 2 * Math.sin(1.4 * t),
     speed: (t) => 3 + 2.8 * Math.cos(1.4 * t),
-    what: "Traffic. The speed swings, and the acceleration swings ahead of it",
+    what: "Traffic: the car always moves forward, but its speed swings between 0.2 and 5.8 m/s",
   },
 };
 
@@ -133,21 +133,21 @@ export const HILLS: Record<string, Hill> = {
     height: (x, y) => 0.5 * (x * x + y * y),
     slopes: (x, y) => [x, y],
     box: { x0: -3, x1: 3, y0: -3, y1: 3 },
-    what: "The slope points straight away from the middle everywhere, and gets steeper the further out you stand",
+    what: "The lowest point is the middle. From any point, uphill is straight away from the middle, and the ground is steeper the further out the ball is",
   },
   valley: {
     label: "A narrow valley",
     height: (x, y) => 0.5 * (x * x + 12 * y * y),
     slopes: (x, y) => [x, 12 * y],
     box: { x0: -3, x1: 3, y0: -1.2, y1: 1.2 },
-    what: "Steep across, gentle along. The slope points mostly across the valley even when the bottom is far away along it",
+    what: "Steep across the valley and gentle along it. Uphill points mostly across the valley, even when the lowest point is far away along it",
   },
   saddle: {
     label: "A saddle",
     height: (x, y) => 0.5 * x * x - 0.4 * y * y,
     slopes: (x, y) => [x, -0.8 * y],
     box: { x0: -3, x1: 3, y0: -3, y1: 3 },
-    what: "Uphill one way and downhill the other. At the very middle the slope is zero and it is not the bottom of anything",
+    what: "Shaped like a horse's saddle: the ground rises in one direction and falls in the other. At the very middle the ground is flat, but it is not the lowest point",
   },
   hills: {
     label: "Two hills",
@@ -158,7 +158,7 @@ export const HILLS: Record<string, Hill> = {
       return [-2 * (x - 1) * a - 2 * (x + 1.2) * b, -2 * (y - 0.8) * a - 2 * (y + 1) * b];
     },
     box: { x0: -3, x1: 3, y0: -3, y1: 3 },
-    what: "Two summits. The slope points up whichever is nearer, so where you start decides where you end",
+    what: "Two hilltops on flat ground. Uphill points towards the nearer top, so the ball rolls away from it, and the starting point decides where it ends up",
   },
 };
 

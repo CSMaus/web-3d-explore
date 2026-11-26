@@ -1,0 +1,266 @@
+{
+  "slug": "chaos",
+  "title": "Test : Équations différentielles, attracteurs et chaos",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Une équation différentielle est une règle qui dit à quelle vitesse une grandeur change. Elle s'écrit dx/dt = f(x, t). Ici x est la grandeur (par exemple une température), t le temps, dx/dt la vitesse à laquelle x change, et f la règle donnée. Quelle est l'inconnue, c'est-à-dire ce qu'il faut trouver ?",
+      "options": [
+        {
+          "text": "Un seul nombre x qui rend les deux membres égaux",
+          "correct": false,
+          "why": "C'est l'inconnue d'une équation ordinaire, comme 2x = 6. Ici la réponse est une courbe entière : la valeur de x à chaque instant. Elle se vérifie en remplaçant la courbe dans l'équation."
+        },
+        {
+          "text": "La règle f, retrouvée à partir d'une courbe déjà tracée",
+          "correct": false,
+          "why": "La règle f est donnée. C'est l'équation elle-même. Ce qu'il faut trouver, c'est la courbe."
+        },
+        {
+          "text": "L'instant t où x atteint zéro",
+          "correct": false,
+          "why": "Le temps est ce dont dépend la courbe inconnue. Une telle question ne peut se poser qu'une fois la courbe connue."
+        },
+        {
+          "text": "Une courbe x(t) : la valeur de x à chaque instant",
+          "correct": true,
+          "why": "L'inconnue est toute l'histoire de x au cours du temps. La règle f dit à quelle vitesse x change, pour chaque valeur de x et à chaque instant. Une solution est une courbe dont la pente suit cette règle en chaque point."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Le système de Lorenz est formé de trois équations, écrites par Edward Lorenz en 1963, pour de l'air chauffé par le bas. Sa règle ne contient aucun hasard. Deux calculs partent d'états si proches qu'aucun instrument ne pourrait les distinguer. Que veut dire le mot chaos pour un tel système ?",
+      "options": [
+        {
+          "text": "La règle contient une part de hasard, donc deux calculs partis du même point diffèrent",
+          "correct": false,
+          "why": "Chaque pas des équations de Lorenz est fixé par la règle. Deux calculs partis exactement du même état coïncident exactement. Les deux calculs voisins se séparent à cause de la règle, pas du hasard."
+        },
+        {
+          "text": "L'écart entre les calculs double encore et encore, à un rythme régulier",
+          "correct": true,
+          "why": "Chaque pas est fixé par la règle, et pourtant l'avenir lointain ne peut pas être prédit. À chaque unité de temps, la distance entre les deux calculs est multipliée par le même facteur. La vitesse de cette croissance s'appelle l'exposant de Lyapunov. Pour ce système, elle vaut environ 0,904 par unité de temps. Un exposant positif de ce genre est la définition pratique du chaos."
+        },
+        {
+          "text": "Le chemin de l'état dessine une forme d'ailes de papillon",
+          "correct": false,
+          "why": "La forme de papillon est l'ensemble des états que le système visite sans cesse. Elle ne rend pas à elle seule le système chaotique. Le chaos, c'est l'écart qui grandit entre deux calculs voisins."
+        },
+        {
+          "text": "Les équations n'ont pas de solution pour certains états de départ",
+          "correct": false,
+          "why": "Chaque départ a une solution, et les méthodes pas à pas la calculent. Ce qui se perd, c'est la possibilité de prédire loin à partir d'un départ connu seulement de façon approchée."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "L'application logistique est une règle qui transforme un nombre x compris entre 0 et 1 en un nombre suivant, r·x·(1 - x). Ici r est un nombre fixe entre 0 et 4, réglé par un curseur. Appliquée encore et encore, la règle donne une suite de nombres. Un diagramme de bifurcation porte r sur l'axe horizontal. Que trace-t-il au-dessus de chaque valeur de r ?",
+      "options": [
+        {
+          "text": "Les valeurs encore visitées une fois les premiers pas écartés",
+          "correct": true,
+          "why": "Chaque colonne est un calcul complet. La règle est appliquée de nombreuses fois, les premiers pas sont écartés, et les valeurs restantes sont tracées. Un seul point veut dire que la suite se fixe sur un nombre. Deux ou quatre points veulent dire qu'elle répète un cycle de deux ou quatre valeurs. Une bande floue veut dire qu'elle ne se répète jamais."
+        },
+        {
+          "text": "Toutes les valeurs de la suite, dès le tout premier pas du calcul",
+          "correct": false,
+          "why": "Pendant les premiers pas, la suite est encore en route vers son comportement à long terme. Les garder brouillerait chaque colonne. Ils sont écartés pour que seul le comportement à long terme apparaisse."
+        },
+        {
+          "text": "La moyenne des valeurs restantes une fois les premiers pas écartés",
+          "correct": false,
+          "why": "Une moyenne cacherait un cycle : un cycle de deux valeurs apparaîtrait comme un seul point entre elles. Le diagramme trace chaque valeur visitée. C'est ainsi que se voit la séparation en deux, quatre valeurs et plus."
+        },
+        {
+          "text": "La vitesse à laquelle deux suites voisines s'éloignent pour ce r",
+          "correct": false,
+          "why": "Cette vitesse s'appelle l'exposant de Lyapunov. C'est un seul nombre pour chaque r, souvent tracé comme une courbe à part sous le diagramme. Le diagramme lui-même montre les valeurs visitées."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "L'équation dx/dt = -0,5x dit que x diminue, par unité de temps, de la moitié de sa valeur actuelle. Au temps 0, x = 2. La méthode d'Euler avance par petits pas. Elle prend la vitesse au point actuel et la suppose constante pendant tout le pas. Quelle valeur donne un pas d'Euler de longueur h = 0,2 unité de temps ?",
+      "options": [
+        {
+          "text": "2,2",
+          "correct": false,
+          "why": "Ce pas va dans le mauvais sens. La vitesse est négative, donc x diminue au lieu d'augmenter."
+        },
+        {
+          "text": "1,0",
+          "correct": false,
+          "why": "Ici la vitesse entière est ajoutée sans être multipliée par la longueur du pas. Le pas dure 0,2 unité de temps, pas une unité entière."
+        },
+        {
+          "text": "1,8",
+          "correct": true,
+          "why": "La vitesse au départ vaut -0,5 × 2 = -1. Sur un pas de 0,2, la variation vaut 0,2 × (-1) = -0,2. Donc x devient 2 - 0,2 = 1,8."
+        },
+        {
+          "text": "1,8097",
+          "correct": false,
+          "why": "C'est la valeur exacte, 2e^(-0,1), où e ≈ 2,718. La méthode d'Euler garde la vitesse de départ pendant tout le pas. La vraie courbe s'infléchit tandis que le pas va tout droit, donc Euler arrive à 1,8."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "L'application logistique transforme un nombre x compris entre 0 et 1 en r·x·(1 - x), ici avec r = 2,8. Un point fixe est un nombre que la règle laisse inchangé. La pente de la règle en un point x indique par combien une petite variation de x est multipliée. Elle vaut r(1 - 2x). Hors de 0, où se trouve le point fixe, et une suite partie tout près s'y fixe-t-elle ?",
+      "options": [
+        {
+          "text": "En 1 - 1/r ≈ 0,643, où la pente vaut -0,8, donc elle s'y fixe",
+          "correct": true,
+          "why": "En x = 0,643, la pente vaut 2,8 × (1 - 2 × 0,643) = -0,8. Une suite se fixe sur un point fixe quand la pente y est comprise entre -1 et 1. Alors une petite distance au point est multipliée en taille par 0,8 à chaque pas, et elle diminue. -0,8 est dans cet intervalle, donc la suite reste près du point."
+        },
+        {
+          "text": "En 1/r ≈ 0,357, où la pente vaut 0,8, donc elle s'y fixe",
+          "correct": false,
+          "why": "Résoudre x = r·x·(1 - x) pour x différent de 0 donne x = 1 - 1/r, pas 1/r. La règle ne laisse pas 0,357 inchangé."
+        },
+        {
+          "text": "En 0,643, mais la pente y est négative, donc elle ne s'y fixe pas",
+          "correct": false,
+          "why": "Une pente négative fait seulement sauter la suite d'un côté du point à l'autre. Que la suite se fixe ou non dépend de la taille de la pente, et 0,8 est inférieur à 1."
+        },
+        {
+          "text": "Seulement en 0, où la pente vaut 2,8, donc rien ne se fixe",
+          "correct": false,
+          "why": "0 est un point fixe, et pour ce r la suite s'en éloigne. Mais un second point fixe existe en 0,643, et les suites parties près de lui s'y fixent."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Une balançoire sans frottement est décrite par deux nombres : sa position et sa vitesse. Avec la position à l'horizontale et la vitesse à la verticale, son mouvement exact est un cercle, et son énergie reste à 0,5. La méthode d'Euler calcule ce mouvement par pas en ligne droite. En cent tours, le chemin calculé s'écarte en spirale vers l'extérieur, et l'énergie atteint 267,67. Pourquoi ?",
+      "options": [
+        {
+          "text": "Les erreurs d'arrondi de l'ordinateur s'accumulent sur les nombreux pas",
+          "correct": false,
+          "why": "La méthode de Runge-Kutta, une méthode pas à pas plus soignée, tourne sur le même ordinateur et garde l'énergie à 0,500000. L'arrondi est donc bien trop petit pour expliquer la dérive."
+        },
+        {
+          "text": "Un pas de 0,01 est trop petit, donc trop de pas accumulent les erreurs",
+          "correct": false,
+          "why": "Des pas plus petits réduisent l'erreur d'Euler : diviser le pas par deux divise l'erreur par deux. La dérive vient de la direction de chaque pas, pas de leur nombre."
+        },
+        {
+          "text": "Un frottement dans le modèle apporte de l'énergie à la balançoire",
+          "correct": false,
+          "why": "Ce modèle n'a pas de frottement. Un frottement enlèverait de l'énergie au lieu d'en ajouter. Le gain vient de la méthode de calcul."
+        },
+        {
+          "text": "Chaque pas droit quitte le cercle et tombe à l'extérieur",
+          "correct": true,
+          "why": "La méthode d'Euler avance en ligne droite, dans la direction qu'a le chemin au point actuel. Un pas droit qui part d'un cercle en suivant sa direction finit toujours à l'extérieur du cercle. Chaque pas tombe donc un peu plus loin, et la dérive s'accumule. L'erreur tient à la méthode, pas à l'arrondi."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "Le système de Lorenz est formé de trois équations pour de l'air chauffé par le bas, sans aucun hasard. Une petite erreur sur l'état de départ y grandit comme e^(0,904t). Autrement dit, l'erreur est multipliée par e ≈ 2,718 toutes les 1/0,904 ≈ 1,1 unité de temps. Si l'état de départ est mesuré 100 fois plus précisément, de combien la prévision peut-elle porter plus loin ?",
+      "options": [
+        {
+          "text": "D'environ 2,5 unités de temps",
+          "correct": false,
+          "why": "2,5 unités de temps, c'est le gain d'une mesure dix fois plus précise. Un facteur 100, c'est deux facteurs dix, donc le gain est deux fois plus grand."
+        },
+        {
+          "text": "D'environ 5,1 unités de temps",
+          "correct": true,
+          "why": "L'erreur part maintenant 100 fois plus petite, il lui faut donc grandir 100 fois plus pour devenir aussi grande qu'avant. Grandir d'un facteur 100 prend le temps t tel que e^(0,904t) = 100, soit t = ln 100 / 0,904 ≈ 5,1. Ici ln est le logarithme népérien : ln 100 est la puissance à laquelle il faut élever e pour obtenir 100."
+        },
+        {
+          "text": "100 fois plus longtemps, puisque l'erreur part 100 fois plus petite",
+          "correct": false,
+          "why": "L'erreur grandit de façon exponentielle, c'est-à-dire du même facteur à chaque unité de temps. La précision ne fait donc gagner du temps qu'à travers un logarithme. Chaque gain d'un facteur dix ajoute les mêmes 2,5 unités."
+        },
+        {
+          "text": "D'environ 4,6 unités de temps, puisque ln(100) ≈ 4,6",
+          "correct": false,
+          "why": "4,6 est ln 100 seul, le logarithme népérien de 100. Il faut encore le diviser par la vitesse de croissance de l'erreur, 0,904."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "Un flot est un système dont l'état change de façon continue dans le temps selon une règle fixe, par exemple des équations différentielles (des règles qui disent à quelle vitesse change chaque grandeur). Le chaos veut dire que deux départs voisins s'éloignent vite, alors que la règle ne contient aucun hasard. Pourquoi un flot a-t-il besoin d'au moins trois grandeurs pour être chaotique ?",
+      "options": [
+        {
+          "text": "Deux équations ne peuvent pas contenir un terme comme x fois y",
+          "correct": false,
+          "why": "L'oscillateur de Van der Pol, un modèle de circuit électrique, a deux équations et un terme de ce genre. Chaque chemin s'y fixe sur une seule boucle fermée, appelée cycle limite. C'est un mouvement régulier qui se répète, pas du chaos."
+        },
+        {
+          "text": "Avec deux grandeurs il n'y a pas d'attracteur, donc tout chemin s'enfuit",
+          "correct": false,
+          "why": "Un attracteur est un ensemble d'états sur lequel les chemins se fixent. L'oscillateur de Van der Pol en a un dans le plan : une boucle fermée dont s'approche tout départ. Le plan permet des attracteurs en forme de points et de boucles, mais pas le chaos."
+        },
+        {
+          "text": "Dans le plan, un chemin qui ne s'enfuit pas finit en un point ou une boucle",
+          "correct": true,
+          "why": "Avec deux grandeurs, l'état est un point du plan et son histoire est un chemin dans ce plan. Deux chemins ne peuvent pas se croiser, et un chemin ne peut pas se croiser lui-même. Un chemin qui ne s'enfuit pas doit donc finir en un point de repos ou sur une boucle fermée. C'est le théorème de Poincaré-Bendixson. Une troisième grandeur permet à un chemin de passer au-dessus de lui-même sans se croiser."
+        },
+        {
+          "text": "Les méthodes de résolution pas à pas échouent avec seulement deux grandeurs",
+          "correct": false,
+          "why": "Les méthodes pas à pas fonctionnent avec n'importe quel nombre de grandeurs. La limite vient de la forme des chemins, pas de la méthode de résolution."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Dans le système de Lorenz, l'état est un point de l'espace à trois coordonnées. Un petit nuage d'états voisins se déplace selon la règle. Son volume diminue partout au même rythme : à chaque unité de temps, il est multiplié par e^(-13,67). Le nombre -13,67 s'appelle la divergence du système. Il vaut -(σ + 1 + β), où σ = 10 et β = 8/3 sont deux constantes du système. Que dit cela de l'attracteur, l'ensemble des états sur lequel le système se fixe ?",
+      "options": [
+        {
+          "text": "Tout état tombe à l'origine et y reste",
+          "correct": false,
+          "why": "Le volume diminue, mais une direction s'étire encore : les états voisins s'y éloignent à une vitesse d'environ 0,904 par unité de temps. Les états finissent donc sur un ensemble mince et s'y déplacent pour toujours, sans s'arrêter en un point."
+        },
+        {
+          "text": "L'attracteur n'occupe aucun volume",
+          "correct": true,
+          "why": "Le volume se perd sans cesse, à un rythme fixe. Ce qui reste à long terme a donc un volume nul. Sa dimension est un peu au-dessus de 2 : plus qu'une surface (2), bien moins qu'un solide (3). Une formule de Kaplan et Yorke utilise les vitesses d'étirement et de contraction : 2 + 0,904 / 14,57 ≈ 2,06. Ici 0,904 est la vitesse d'étirement et 14,57 celle de la contraction la plus rapide."
+        },
+        {
+          "text": "Les états voisins se rapprochent toujours, donc il n'y a pas de chaos",
+          "correct": false,
+          "why": "Un volume qui diminue ne veut pas dire une contraction dans toutes les directions. Une direction s'étire pendant qu'une autre se contracte plus vite. C'est l'étirement qui rend le système chaotique."
+        },
+        {
+          "text": "L'attracteur remplit une région pleine de l'espace",
+          "correct": false,
+          "why": "Une région pleine a un volume, et le volume de tout nuage d'états ne cesse de diminuer. L'attracteur est donc plus mince que n'importe quel solide."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "L'application logistique transforme un nombre x en r·x·(1 - x). Quand r augmente, le cycle atteint à long terme double : 1 valeur, puis 2, puis 4, 8 et ainsi de suite. Pour des valeurs particulières de r, dites superstables, le cycle est aussi stable que possible. Deux de ces valeurs à la suite sont 3,498562 et 3,554641, soit un écart de 0,056079. Chaque écart suivant est plus court que le précédent d'un facteur d'environ 4,669, appelé constante de Feigenbaum δ. Où se trouve la valeur suivante ?",
+      "options": [
+        {
+          "text": "Vers 3,8165 : l'écart multiplié par δ",
+          "correct": false,
+          "why": "Ici l'écart est multiplié par 4,669. Les écarts raccourcissent, donc l'écart doit être divisé."
+        },
+        {
+          "text": "Vers 3,6107 : le même écart ajouté encore",
+          "correct": false,
+          "why": "Ici le même écart est ajouté une nouvelle fois. Les doublements se resserrent, donc chaque écart est plus court que le précédent."
+        },
+        {
+          "text": "Vers 3,5699 : là où les doublements finissent",
+          "correct": false,
+          "why": "3,5699 est le point où les doublements s'accumulent et où commence le chaos. Une infinité de doublements le précèdent encore, de plus en plus serrés."
+        },
+        {
+          "text": "Vers 3,5667 : l'écart divisé par δ",
+          "correct": true,
+          "why": "L'écart suivant vaut 0,056079 / 4,669 ≈ 0,0120. Ajouté à 3,554641, il donne environ 3,5667. Une recherche numérique directe trouve la valeur en 3,566667."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+{
+  "slug": "probability",
+  "title": "Test: Probability",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Two fair dice are thrown, and their two numbers are added. What is the chance that the sum is 8, that is, the share of all equally likely outcomes that give 8?",
+      "options": [
+        {
+          "text": "1/11, since there are 11 possible sums",
+          "correct": false,
+          "why": "The 11 sums from 2 to 12 are not equally likely: 2 comes from one pair of faces and 7 from six. The equally likely outcomes are the 36 pairs, counting the first die and the second apart."
+        },
+        {
+          "text": "5/36, about 0.139",
+          "correct": true,
+          "why": "Of the 36 equally likely pairs, five give 8: (2,6), (3,5), (4,4), (5,3) and (6,2). 5/36 = 0.139."
+        },
+        {
+          "text": "3/21, counting (2,6), (3,5) and (4,4) among 21 pairs with no order",
+          "correct": false,
+          "why": "Pairs counted without order are not equally likely. (2,6) can happen two ways: first die 2 or first die 6. (4,4) happens one way only. Counted in order, the answer is 5 of 36, 0.139, not 3 of 21, 0.143."
+        },
+        {
+          "text": "1/6, the same as for a sum of 7",
+          "correct": false,
+          "why": "Only the sum 7 has six pairs, the most of any sum. The sum 8 has five, so its chance is 5/36."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "There are 30 people in a room, and every day of the year is equally likely as a birthday. Which is closest to the chance that at least two of them share a birthday?",
+      "options": [
+        {
+          "text": "About 8 per cent, 30 days out of 365",
+          "correct": false,
+          "why": "30/365 is about the chance that someone shares the birthday of one given person. A shared birthday needs any pair of people to match, and 30 people make 435 pairs."
+        },
+        {
+          "text": "Certain, since 435 pairs are more than 365 days",
+          "correct": false,
+          "why": "Adding up the chances of all the pairs counts some shared birthdays many times over, so it gives too much. The chance that all 30 birthdays differ is 365/365 x 364/365 x ... x 336/365 = 0.294, so a shared birthday has chance 0.706."
+        },
+        {
+          "text": "About 71 per cent",
+          "correct": true,
+          "why": "The chance that all 30 birthdays differ is 0.294, so the chance of at least one shared birthday is 1 - 0.294 = 0.706. The chance passes one half at 23 people."
+        },
+        {
+          "text": "About 50 per cent",
+          "correct": false,
+          "why": "One half is reached at 23 people, with a chance of 0.507. With 30 people the chance is already 0.706."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "A test finds 99 per cent of the people who have a disease, and wrongly says 'ill' for 5 per cent of healthy people. One person in 100 has the disease. A person gets a positive result. Which is closest to the chance that this person is ill?",
+      "options": [
+        {
+          "text": "99 per cent",
+          "correct": false,
+          "why": "99 per cent is the chance of a positive result for a person who is ill. The question asks the reverse: the chance of being ill for a person with a positive result. These are different numbers."
+        },
+        {
+          "text": "95 per cent",
+          "correct": false,
+          "why": "95 per cent is the share of healthy people who get a negative result. It says nothing directly about the people with a positive result."
+        },
+        {
+          "text": "About 17 per cent",
+          "correct": true,
+          "why": "Take 10,000 people. 100 are ill, and 99 of them get a positive result. 9,900 are healthy, and 5 per cent of them, 495, also get a positive result. Of the 594 positives, 99 are ill: 16.7 per cent."
+        },
+        {
+          "text": "1 per cent",
+          "correct": false,
+          "why": "1 per cent is the chance before the test. A positive result raises it about seventeen times, because positive results are far more common among ill people."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "A game has 4 closed doors, a car behind one and goats behind the other three. The player picks a door. The host, who knows where the car is, opens two other doors with goats and offers a switch to the last closed door. What is the chance of winning by switching?",
+      "options": [
+        {
+          "text": "1/2, since two doors are left",
+          "correct": false,
+          "why": "Two doors being left does not make them equally likely. The host's choice depended on where the car was: whenever the first pick was wrong, he had to keep the car's door closed."
+        },
+        {
+          "text": "3/4",
+          "correct": true,
+          "why": "The first pick is wrong 3 times in 4, and every time it is wrong the door left closed hides the car. Switching wins exactly when the first pick was wrong: 3/4."
+        },
+        {
+          "text": "1/4",
+          "correct": false,
+          "why": "1/4 is the chance of winning by staying. The first pick is right one time in four, and opening doors with goats changes nothing about that pick."
+        },
+        {
+          "text": "2/3, as with three doors",
+          "correct": false,
+          "why": "2/3 belongs to three doors, where the first pick is wrong 2 times in 3. With n doors, switching wins 1 - 1/n, here 3/4."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "A game costs 3 a round. In each round a die is thrown, and a six wins a prize of 15. Roughly how much has a player won or lost after 600 rounds?",
+      "options": [
+        {
+          "text": "About +1500, since a six pays 15/6 = 2.5 a round on average",
+          "correct": false,
+          "why": "2.5 is the average prize a round, but each round also costs 3. The expected gain of a round, each result times its chance added up, is 15/6 - 3 = -0.5."
+        },
+        {
+          "text": "About -300",
+          "correct": true,
+          "why": "The expected gain of a round is 15 x 1/6 - 3 = -0.5, so 600 rounds lose about 300. The total varies around that by about 15 x sqrt(1/6 x 5/6) x sqrt(600) = 137, where sqrt means the square root."
+        },
+        {
+          "text": "About 0, since a six comes once in six rounds and pays five stakes",
+          "correct": false,
+          "why": "A prize of five stakes once in six rounds pays back only five of the six stakes. The game would be fair, with an expected gain of zero, at a prize of 18."
+        },
+        {
+          "text": "About -1800, the stakes of every round",
+          "correct": false,
+          "why": "That leaves out the prizes. About 100 sixes in 600 rounds pay about 1500 back, so the loss is about 300."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "50 hats are handed back to their 50 owners in a random order. On average, how many people get their own hat back?",
+      "options": [
+        {
+          "text": "1",
+          "correct": true,
+          "why": "Each person gets their own hat with chance 1/50, so adds 1/50 of a match on average. The average of a sum is the sum of the averages, even though the people depend on each other: 50 x 1/50 = 1."
+        },
+        {
+          "text": "1/50, the chance for one person",
+          "correct": false,
+          "why": "1/50 is the share of one person. The number of matches adds the shares of all 50 people."
+        },
+        {
+          "text": "25, half of them",
+          "correct": false,
+          "why": "Half would need each person to get their own hat half the time. Each person gets it with chance 1 in 50."
+        },
+        {
+          "text": "0.368",
+          "correct": false,
+          "why": "0.368, which is 1/e, is the chance that nobody gets their own hat. It is not the average number of people who do."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "A board has 6 rows of pins. A ball falls through them and goes right or left at each pin, each with chance one half. What is the chance that the ball goes right exactly 3 times and lands in the middle bin?",
+      "options": [
+        {
+          "text": "1/7, since there are 7 bins",
+          "correct": false,
+          "why": "The bins are not equally likely: one path leads to bin 0, and 20 paths lead to the middle bin. The chance of a bin is its number of paths times the chance of each path."
+        },
+        {
+          "text": "20/64, about 0.31",
+          "correct": true,
+          "why": "A ball takes one of 2^6 = 64 equally likely paths, and 20 of them have exactly 3 rights. 20/64 = 0.3125."
+        },
+        {
+          "text": "1/2, since right and left are equally likely",
+          "correct": false,
+          "why": "One half is the chance at one pin. Landing in the middle needs exactly 3 rights among 6 pins, which happens on 20 of the 64 paths."
+        },
+        {
+          "text": "1/64, the chance of one path",
+          "correct": false,
+          "why": "1/64 is the chance of one particular path. 20 different paths lead to the middle bin."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "Calls arrive at random moments, 2 a minute on average. Which is closest to the chance that a given minute has no call at all?",
+      "options": [
+        {
+          "text": "0, since 2 calls come every minute",
+          "correct": false,
+          "why": "2 is an average, not a number every minute holds. The number of random calls varies from minute to minute."
+        },
+        {
+          "text": "0.135",
+          "correct": true,
+          "why": "The number of calls in a minute follows the Poisson chances with an average of 2. No call has chance e^-2 = 0.135, where e = 2.718..., about one minute in seven."
+        },
+        {
+          "text": "0.368",
+          "correct": false,
+          "why": "0.368 = e^-1 is the chance of a minute with no call when the average is 1 call a minute. With an average of 2 it is e^-2 = 0.135."
+        },
+        {
+          "text": "0.5",
+          "correct": false,
+          "why": "A minute with no call is one of many possible counts, 0, 1, 2, 3 and more, so its chance is not one half. It is e^-2 = 0.135."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Taxis arrive at random moments, 5 minutes apart on average. A person has already waited 5 minutes. What is the chance that the next 5 minutes also pass with no taxi?",
+      "options": [
+        {
+          "text": "About 0.37",
+          "correct": true,
+          "why": "With random arrivals, the wait still ahead behaves as at the start. The chance of 5 more minutes with no taxi is e^-5/5 = e^-1 = 0.368, where e = 2.718..."
+        },
+        {
+          "text": "About 0.14, the chance of waiting 10 minutes in all",
+          "correct": false,
+          "why": "e^-2 = 0.135 is the chance, seen from the start, of waiting more than 10 minutes. The first 5 minutes are already known to have passed, and that leaves e^-1 = 0.368."
+        },
+        {
+          "text": "0, since after 5 minutes a taxi is due",
+          "correct": false,
+          "why": "A taxi is due only on a timetable. Random arrivals follow no schedule, so waiting does not bring the next one closer."
+        },
+        {
+          "text": "0.5, since 5 minutes is the average",
+          "correct": false,
+          "why": "Waits of random arrivals are not split evenly around their average: more than half are shorter. The chance of more than 5 minutes is e^-1 = 0.368, whether or not 5 minutes have passed."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "A gambler starts with 5 and bets 1 at a time, winning each bet with chance 0.49, until the money reaches 10 or 0. Which is closest to the chance of reaching 10?",
+      "options": [
+        {
+          "text": "0.49, the chance of each bet",
+          "correct": false,
+          "why": "The chance of one bet is not the chance of the whole game. The game needs the wins to get 5 ahead of the losses before the losses get 5 ahead."
+        },
+        {
+          "text": "0.50, since 5 is half way",
+          "correct": false,
+          "why": "Half way gives one half only for a fair coin. A small bias against the gambler, repeated over about 25 bets, pulls the chance below one half."
+        },
+        {
+          "text": "0.45",
+          "correct": true,
+          "why": "With r = 0.51/0.49, the chance is (1 - r^5)/(1 - r^10) = 0.450. From 10 to 20 the same coin gives 0.401: the longer the game, the more the bias counts."
+        },
+        {
+          "text": "0.40, as from 10 to 20",
+          "correct": false,
+          "why": "0.40 is the chance from 10 to 20. A shorter game, from 5 to 10, gives the bias fewer bets to act, and the chance is 0.450."
+        }
+      ]
+    }
+  ]
+}

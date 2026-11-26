@@ -100,13 +100,13 @@ function PicturesPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? L("The same job on a picture")}
-        job={L("A small picture, twelve by twelve. The job is to say which of five shapes it is, and to keep saying so when it is drawn a pixel to one side. A unit wired to every pixel would learn the shape in one place only. Instead, one tiny three by three pattern is slid over the whole picture, the strongest responses are kept, and what is left is compared with the five shapes.")}
+        title={system?.name ?? L("Finding a shape in a picture")}
+        job={L("How can a program tell which shape is in a picture, even when the shape is moved? The picture here is 12 by 12 squares, each one on or off. The task is to say which of five shapes it shows: a cross, a square, a disc, stripes or a seven. The answer should stay the same when the shape moves by one square. A neuron connected to every square would learn the shape in one place only. Instead, a small pattern of 3 by 3 numbers is slid over the picture. At each position, each number of the pattern is multiplied by the square under it, and the nine products are added. A total below zero becomes zero. This sliding sum is called a convolution. Then each block of 2 by 2 results keeps only its largest value; this is called pooling. What is left is compared with the same result for each of the five shapes, and the nearest one is the answer. Press Run to watch it step by step.")}
         input={
           <div className="space-y-3">
             <Choices options={SHAPES} value={drawnFrom} onPick={(id) => { setCells(PICTURES[id].make(N)); setDrawnFrom(id); reset(); }} />
             <Text kind="note" as="p">
-              {L("Or draw: click any square of the picture to turn it on or off.")}
+              {L("Or draw: a click on any square of the picture turns it on or off.")}
             </Text>
             <div className="flex flex-wrap gap-1.5">
               <Button variant="outline" size="sm" type="button" onClick={() => { setCells((g) => shifted(g, 0, 1)); reset(); }}>{L("Shift right")}</Button>
@@ -121,13 +121,13 @@ function PicturesPage() {
           <RunBar
             running={runner.running}
             count={at}
-            what={stage3 ? L("steps: every position, then pooled, then compared") : stage2 ? L("steps: every position, then pooled") : L("steps, one a position")}
+            what={stage3 ? L("steps: every position, then pooling, then comparison") : stage2 ? L("steps: every position, then pooling") : L("steps, one per position")}
             limit={SLIDE + 2}
             onToggle={() => {
               if (!runner.running && at >= SLIDE + 2) reset();
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(SLIDE + 2, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -168,15 +168,15 @@ function PicturesPage() {
                 heatGrid(ctx, kernel, kx, ky, 28, -2, 2, ONE, true);
                 if (here && !stage2) {
                   ctx.fillStyle = MUTED;
-                  ctx.fillText(L("Times the patch"), kx, ky + 3 * 28 + 26);
+                  ctx.fillText(L("Times the patch under it"), kx, ky + 3 * 28 + 26);
                   heatGrid(ctx, here, kx, ky + 3 * 28 + 34, 28, 0, 1, INK, true);
                   ctx.fillStyle = INK;
-                  ctx.fillText(L("Adds up to {{v}}", { v: hereValue.toFixed(1) }), kx, ky + 6 * 28 + 60);
+                  ctx.fillText(L("Sum: {{v}}", { v: hereValue.toFixed(1) }), kx, ky + 6 * 28 + 60);
                   ctx.fillStyle = MUTED;
                 }
                 // the response map, filled position by position
                 ctx.fillStyle = MUTED;
-                ctx.fillText(L("Where it fits, {{n}} by {{n}}", { n: OUT }), ox, 18);
+                ctx.fillText(L("How well it fits, {{n}} by {{n}}", { n: OUT }), ox, 18);
                 const shownOut: Grid = conv.out.map((r, ri) => r.map((v, ci) => (ri * OUT + ci < Math.min(at, SLIDE) ? v : 0)));
                 heatGrid(ctx, shownOut, ox, oy, cell, 0, outMax, SKY);
                 if (pos >= 0 && !stage2) {
@@ -194,7 +194,7 @@ function PicturesPage() {
                 }
                 // the five shapes, compared
                 ctx.fillStyle = stage3 ? MUTED : "#3a3f47";
-                ctx.fillText(L("Nearest remembered shape"), cx, 18);
+                ctx.fillText(L("The five shapes, nearest first"), cx, 18);
                 ranked.forEach((t, i) => {
                   const ty = gy + i * 78;
                   heatGrid(ctx, t.pooled, cx, ty, 12, 0, Math.max(1e-9, ...t.pooled.flat()), stage3 ? (i === 0 ? ONE : SKY) : "#2a2f37");
@@ -205,35 +205,35 @@ function PicturesPage() {
                 });
               }}
             />
-          </div><Caption>{L("The picture. Click to draw.")} {hereValue > 0 ? L("Kept") : L("Below zero: cut to 0")}. {L("Biggest of each 2x2: {{n}} by {{n}}", { n: pooled.length })}</Caption></section>
+          </div><Caption>{L("Left: the picture, 12 by 12 squares; a click turns a square on or off. Next: the 3 by 3 pattern with its nine numbers, and the patch of the picture under it. Then the map of how well the pattern fits at each of the 10 by 10 positions, brighter for a larger sum, and under it the pooled map, {{n}} by {{n}}. Right: each of the five shapes as its own pooled map, nearest first. Distance: how different two pooled maps are, the square root of the sum of the squared differences", { n: pooled.length })}</Caption></section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={stage3 ? (drawnFrom === "yours" ? undefined : ranked[0].id === drawnFrom) : undefined}>
               {at === 0
-                ? L("Press run. The pattern will visit every position of the picture, and the map on the right will fill in with how well it fitted there.")
+                ? L("Press Run. The pattern will visit every position of the picture, one per step, and the map will fill in with how well it fits at each position.")
                 : !stage2
                   ? hereValue > 0
-                    ? L("Position {{pos}} of {{all}}: row {{row}}, column {{col}}. The patch under the pattern, times the pattern, adds up to {{v}}.", { pos: pos + 1, all: SLIDE, row: row + 1, col: col + 1, v: hereValue.toFixed(1) })
-                    : L("Position {{pos}} of {{all}}: row {{row}}, column {{col}}. The patch under the pattern, times the pattern, adds up to {{v}}, So nothing is kept here.", { pos: pos + 1, all: SLIDE, row: row + 1, col: col + 1, v: hereValue.toFixed(1) })
+                    ? L("Position {{pos}} of {{all}}: row {{row}}, column {{col}}. The patch under the pattern, multiplied square by square by the pattern and added up, gives {{v}}.", { pos: pos + 1, all: SLIDE, row: row + 1, col: col + 1, v: hereValue.toFixed(1) })
+                    : L("Position {{pos}} of {{all}}: row {{row}}, column {{col}}. The patch under the pattern, multiplied square by square by the pattern and added up, gives {{v}}. That is not above zero, so the map gets 0 here.", { pos: pos + 1, all: SLIDE, row: row + 1, col: col + 1, v: hereValue.toFixed(1) })
                   : !stage3
-                    ? L("The map is complete: {{all}} numbers from {{weights}} weights. Now each block of two by two keeps only its largest, which throws away exactly where inside the block the fit was: {{left}} numbers left.", { all: SLIDE, weights: conv.weights, left: pooled.length * pooled.length })
-                    : L("The picture is nearest to {{first}}, at distance {{d1}}; the next nearest is {{second}} at {{d2}}.", { first: ranked[0].label, d1: ranked[0].d.toFixed(1), second: ranked[1].label, d2: ranked[1].d.toFixed(1) }) +
-                      (drawnFrom !== "yours" && ranked[0].id !== drawnFrom ? " " + L("That is wrong: it was {{shape}}. This pattern does not tell those two apart; try another.", { shape: L(PICTURES[drawnFrom].label) }) : "") +
-                      " " + L("shift the picture by a pixel and run again: the answer should hold.")}
+                    ? L("The map is complete: {{all}} numbers from only {{weights}} weights, because the same pattern is used everywhere. Now each block of 2 by 2 keeps only its largest number. This forgets where inside the block the best fit was. {{left}} numbers are left.", { all: SLIDE, weights: conv.weights, left: pooled.length * pooled.length })
+                    : L("The picture is nearest to {{first}}, at distance {{d1}}; the next nearest is {{second}}, at {{d2}}.", { first: ranked[0].label, d1: ranked[0].d.toFixed(1), second: ranked[1].label, d2: ranked[1].d.toFixed(1) }) +
+                      (drawnFrom !== "yours" && ranked[0].id !== drawnFrom ? " " + L("That is wrong: the picture was {{shape}}. This pattern does not tell those two shapes apart; another pattern may.", { shape: L(PICTURES[drawnFrom].label) }) : "") +
+                      " " + L("Moving the picture by one square and running again should give the same answer.")}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>{L("Weights in the sliding pattern")}</dt>
               <dd className="text-right text-foreground/80">{conv.weights}</dd>
-              <dt>{L("Weights a unit wired to every pixel would need, for the same map")}</dt>
+              <dt>{L("Weights needed for the same map if every map cell were connected to every square")}</dt>
               <dd className="text-right text-foreground/80">{conv.denseWeights.toLocaleString("en")}</dd>
-              <dt>{L("Multiply-adds to make the map")}</dt>
+              <dt>{L("Multiplications (each followed by an addition) to make the map")}</dt>
               <dd className="text-right text-foreground/80">{conv.work.toLocaleString("en")}</dd>
               <dt>{L("Numbers after pooling")}</dt>
               <dd className="text-right text-foreground/80">{pooled.length * pooled.length}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("This is a convolutional network with the learning left out: the nine numbers in the pattern are the weights a real one would learn, by the same blame flowing back as on the last page. What the picture shows is why the shape can move and still be found: the same pattern looks everywhere, and pooling forgets exactly where it fitted.")}
+              {L("This is a convolutional network with the learning left out. In a real one, the nine numbers of the pattern are weights that training finds, by passing the error back through the network as in any other neural network. The picture shows why a shape can move and still be found: the same pattern looks everywhere, and pooling forgets exactly where it fitted.")}
             </Text>
           </div>
         }

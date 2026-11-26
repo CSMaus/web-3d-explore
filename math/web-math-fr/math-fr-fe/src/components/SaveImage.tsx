@@ -34,7 +34,7 @@ export function SaveImage({ stage, name }: Props) {
         {L("Save image")}
       </Button>
       {trouble ? (
-        <Text kind="warning" as="p" className="mt-1">{L("The picture could not be read back")}</Text>
+        <Text kind="warning" as="p" className="mt-1">{L("The picture could not be saved as a file")}</Text>
       ) : null}
     </div>
   );

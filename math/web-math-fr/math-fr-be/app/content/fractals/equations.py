@@ -3,348 +3,538 @@ SYSTEMS = [
         "id": "ifs",
         "name": "Iterated maps",
         "summary": (
-            "A small set of affine moves applied to one point over and over, one chosen at "
-            "random each step, so the visited points pile up onto a single fixed shape"
+            "A few moves, each one shrinking, turning and shifting the plane, applied to one "
+            "point again and again in random order. The points pile up on one fixed shape, "
+            "such as a fern"
         ),
         "blocks": [
             {
                 "label": "One move",
                 "tex": r"f_k(x,y) = \bigl(a_k x + b_k y + e_k,\; c_k x + d_k y + f_k\bigr)",
-                "note": "Four numbers turn and stretch, two more shift",
+                "note": (
+                    "Move number k takes the point (x, y) to a new point. The letter f on the "
+                    "left is the move's name. The numbers a, b, c, d shrink, stretch and turn, "
+                    "and the numbers e, f shift. For example a = d = 0.5 with the rest 0 "
+                    "halves the distance of every point from the centre"
+                ),
             },
             {
-                "label": "The chaos game",
+                "label": "Picking the moves at random",
                 "tex": r"z_{n+1} = f_{k_n}(z_n), \qquad \Pr[k_n = k] = p_k",
-                "note": "The move is drawn from the weights each step",
+                "note": (
+                    "z with a small n below it is the point after n steps. At each step one move is "
+                    "picked at random, move k with probability p (its chance, from 0 to 1), "
+                    "and applied to the point. This random walk is called the chaos game"
+                ),
             },
             {
-                "label": "The attractor",
+                "label": "The shape the points settle on",
                 "tex": r"A = \bigcup_{k} f_k(A)",
-                "note": "The shape is exactly the union of its own images",
+                "note": (
+                    "A is the shape. Applying every move to the whole shape and putting the "
+                    "pieces together gives the same shape again, which is why a fern is made "
+                    "of smaller ferns. A shape that the points are drawn to like this is "
+                    "called an attractor"
+                ),
             },
             {
-                "label": "Why it settles",
+                "label": "Why the points settle on one shape",
                 "tex": (
                     r"s_k = \sigma_{\max}(M_k) = \sqrt{\lambda_{\max}\!\left(M_k^{\mathsf T}"
                     r" M_k\right)} < 1"
                 ),
-                "note": "Every move shrinks, so any starting shape is pulled onto the same limit",
+                "note": (
+                    "M is the table of the four numbers a, b, c, d of move k, and s is the "
+                    "most that the move can stretch a length. The square root is the "
+                    "standard way to compute s from the four numbers. When s is below 1 for "
+                    "every move, every move shrinks distances, so the points end on the same "
+                    "shape from any starting point"
+                ),
             },
         ],
         "dimension": {
-            "label": "Measured by box counting",
+            "label": "Dimension, measured by counting boxes",
             "tex": r"d = \lim_{\varepsilon \to 0} \frac{\log N(\varepsilon)}{\log(1/\varepsilon)}",
-            "note": "The fern measures about 1.78",
+            "note": (
+                "The shape is covered by a grid of squares of side epsilon, and N is the "
+                "number of squares that hold part of it. When the squares get smaller, N "
+                "grows: for a line, halving the side doubles N, and d = 1; for a filled "
+                "area, it multiplies N by four, and d = 2. The fern measures about 1.78"
+            ),
         },
     },
     {
         "id": "lsystem",
         "name": "Rewriting systems",
         "summary": (
-            "A short seed word rewritten by a handful of rules, once per pass, then read as "
-            "turtle instructions"
+            "A short word of letters rewritten by a few rules, all letters at once, several "
+            "times over. The final word is then read as orders for a drawing pen, and it "
+            "draws a plant, a curve or a snowflake"
         ),
         "blocks": [
             {
-                "label": "A production",
+                "label": "One rewriting pass",
                 "tex": r"\omega \to \omega', \qquad w_{n+1} = P(w_n)",
-                "note": "Every symbol is replaced at once, so the word grows by a fixed factor",
+                "note": (
+                    "Omega is one letter and omega prime, written with a small stroke, is what "
+                    "replaces it. w with a small n below it is the word after n passes, and P is one pass: every letter is "
+                    "replaced at the same time. So the number of F letters is multiplied by "
+                    "the same number at every pass, by 4 for the Koch curve"
+                ),
             },
             {
-                "label": "The branching plant",
+                "label": "The rules of the branching plant",
                 "tex": r"X \to F+[[X]-X]-F[-FX]+X, \qquad F \to FF",
-                "note": "F draws a step, plus and minus turn, brackets remember a point",
+                "note": (
+                    "Every X becomes F+[[X]-X]-F[-FX]+X and every F becomes FF. F draws one "
+                    "step, plus and minus turn by the angle. An opening bracket saves the "
+                    "place of the pen and the closing one brings it back, which makes a side "
+                    "branch"
+                ),
             },
             {
-                "label": "The turtle",
+                "label": "How the pen moves",
                 "tex": (
                     r"\begin{aligned} p_{n+1} &= p_n + \ell\,(\cos\theta_n, \sin\theta_n) \\"
                     r" \theta_{n+1} &= \theta_n \pm \alpha \end{aligned}"
                 ),
-                "note": "One turn angle for the whole word",
+                "note": (
+                    "p with a small n below it is the place of the pen after n orders, and theta is its "
+                    "direction. Each F moves the pen one step of length l in that direction. "
+                    "Each plus or minus changes the direction by the angle alpha, the same "
+                    "angle for the whole word. A drawing pen moved like this is called a "
+                    "turtle"
+                ),
             },
         ],
         "dimension": {
-            "label": "Read off the rule when the pieces are exact copies",
+            "label": "Dimension, read from the rule",
             "tex": r"d = \frac{\log N}{\log(1/s)}",
-            "note": "The Koch curve gives log 4 over log 3, about 1.262",
+            "note": (
+                "When a shape is made of N exact copies of itself, each s times its size, "
+                "its dimension is d = log N / log(1/s). The Koch curve is 4 copies at a third "
+                "of the size, so d = log 4 / log 3, about 1.262: 3 raised to the power "
+                "1.262 gives 4"
+            ),
         },
     },
     {
         "id": "lichtenberg",
         "name": "Dielectric breakdown",
         "summary": (
-            "The field is solved on the grid and the chance a site lights up next is its field "
-            "strength raised to a power, which is the figure a discharge burns into an insulator"
+            "How does a spark choose its path through glass or wood? Such a material does not "
+            "conduct electricity, and is called a dielectric. When a strong enough voltage burns "
+            "a path through it, this is called dielectric breakdown. The model splits the "
+            "material into square cells. The spark starts from one cell and burns one more cell "
+            "at a time. A cell next to the tips of the burn, where the electric field is "
+            "strongest, is the most likely to burn next. The result is a branching mark like "
+            "the one a real spark leaves"
         ),
         "blocks": [
             {
-                "label": "The field between growths",
+                "label": "The voltage around the burn",
                 "tex": r"\nabla^2 \phi = 0, \qquad \phi = 0 \text{ on the cluster}",
-                "note": "The cluster is a conductor, so the potential is flat across it",
+                "note": (
+                    "φ (phi) is the voltage at a cell. The burn conducts electricity, so its "
+                    "voltage is 0 all along it. The outer edge of the block, or the far plate, "
+                    "is held at voltage 1. The equation ∇²φ = 0 says that the voltage at every "
+                    "other cell equals the average of the voltages around it"
+                ),
             },
             {
-                "label": "Where the next site lights up",
+                "label": "Which cell burns next",
                 "tex": (
                     r"p_i = \frac{\left|\nabla\phi_i\right|^{\eta}}"
                     r"{\sum_{j \in \partial} \left|\nabla\phi_j\right|^{\eta}}"
                 ),
-                "note": "Eta is the one knob: at 0 every edge site is equally likely",
+                "note": (
+                    "p_i is the chance that cell i burns next. Only cells touching the burn can "
+                    "be chosen, and the sum below the line runs over all of them, so the chances "
+                    "add up to 1. |∇φ_i| is the electric field at cell i: how sharply the voltage "
+                    "changes there. It is raised to the power η (eta). With η = 1, a cell with "
+                    "twice the field is twice as likely to burn next. With η = 2 it is four times "
+                    "as likely. With η = 0 every cell is equally likely"
+                ),
             },
             {
-                "label": "The relaxation that solves it",
+                "label": "How the program finds the voltage",
                 "tex": (
                     r"\phi^{(m+1)}_{r,c} = \tfrac{1}{4}\left(\phi^{(m)}_{r-1,c} + "
                     r"\phi^{(m)}_{r+1,c} + \phi^{(m)}_{r,c-1} + \phi^{(m)}_{r,c+1}\right)"
                 ),
-                "note": "Swept until the field stops moving, then a few sweeps after each growth",
+                "note": (
+                    "φ with (m) above it is the voltage after m rounds; r and c are the row and "
+                    "column of a cell. In each round every cell takes the average of its four "
+                    "neighbours: above, below, left and right. At the start the rounds are "
+                    "repeated until the numbers stop changing. After each new burned cell, a few "
+                    "more rounds bring the voltage up to date"
+                ),
             },
         ],
         "dimension": {
-            "label": "Measured by box counting, and it follows the knob",
+            "label": "The dimension depends on the power η",
             "tex": (
                 r"d(\eta): \; 1.58 \;\text{at}\; \eta = 0.6"
                 r" \;\longrightarrow\; 1.27 \;\text{at}\; \eta = 2"
             ),
-            "note": "A bushy cluster measures high, a thin needle measures low",
+            "note": (
+                "Dimension says how fully the burn fills the flat block: 1 for a line, 2 for a "
+                "filled area. With η = 0.6 the burn measures 1.58, with η = 2 it measures 1.27. "
+                "A dense bush fills more of the block than a thin bolt, so it measures higher"
+            ),
         },
     },
     {
         "id": "dla",
         "name": "Wandering particles",
         "summary": (
-            "One seed, and particles released one at a time that step at random until they touch "
-            "the cluster and stick"
+            "What shape grows when particles wander at random and stick where they land? One "
+            "particle is fixed at the centre of a square grid. Other particles are released one "
+            "at a time. Each one moves by random steps until it lands next to a particle already "
+            "in place, and then it stays there. The clump of stuck particles is called the "
+            "cluster. It grows thin branching arms. The process is called diffusion-limited "
+            "aggregation. Random wandering of particles is called diffusion, and the particles "
+            "gather, or aggregate, only as fast as their wandering brings them"
         ),
         "blocks": [
             {
-                "label": "One step of the walk",
+                "label": "One random step",
                 "tex": (
                     r"\Pr\bigl[(y,x) \to (y \pm 1, x)\bigr] = "
                     r"\Pr\bigl[(y,x) \to (y, x \pm 1)\bigr] = \tfrac14"
                 ),
-                "note": "No direction and no memory",
+                "note": (
+                    "(y, x) is the cell where the particle stands: row y, column x. Pr means "
+                    "the chance. The particle moves one cell up, down, left or right, each with "
+                    "chance 1/4. It prefers no direction and does not remember its earlier steps"
+                ),
             },
             {
-                "label": "Sticking",
+                "label": "When a particle stops",
                 "tex": r"\text{stop at the first site with a neighbour already in the cluster}",
-                "note": "The arms shield the inside, so arrivals land on the outside",
+                "note": (
+                    "A particle stops at the first cell next to the cluster. A wandering particle "
+                    "almost always meets the tips of the arms first, so the gaps between the arms "
+                    "stay nearly empty"
+                ),
             },
             {
-                "label": "The mass-radius law",
+                "label": "How the count of particles grows with distance",
                 "tex": (
                     r"N(r) = k\,r^{d} \qquad \Longleftrightarrow \qquad"
                     r" \log N = d \log r + \log k"
                 ),
-                "note": "The slope on logarithmic axes is the dimension",
+                "note": (
+                    "N(r) is the number of particles within r cells of the centre, k is a fixed "
+                    "number, and d is the dimension. For a filled disc d = 2: twice the radius "
+                    "holds four times the particles. For a line d = 1. A logarithm counts powers: "
+                    "in base 10, log 100 = 2 and log 1000 = 3. Drawn with log N up and log r "
+                    "across, the counts lie on a straight line, and its slope is d"
+                ),
             },
         ],
         "dimension": {
-            "label": "Measured from the mass-radius fit",
+            "label": "Dimension of the cluster",
             "tex": (
                 r"d \approx 1.67 \;\text{measured}, \qquad"
                 r" d \to 1.71 \;\text{for large clusters}"
             ),
-            "note": "Small clusters read low",
+            "note": (
+                "Measured on this page: about 1.67. For very large clusters the value approaches "
+                "1.71. A small cluster gives a value lower than a large one"
+            ),
         },
     },
     {
         "id": "julia",
         "name": "Julia sets",
         "summary": (
-            "For a fixed c, the starting points whose walk under one squaring and one shift never "
-            "escapes"
+            "Which starting points stay near the centre forever when one step is repeated without "
+            "end? Each point of the plane is written as a number with two parts: how far across "
+            "and how far up. Such a number is called a complex number. Its two parts are joined by"
+            " the letter i, a number whose square is minus one. The step squares the point's "
+            "number and adds a fixed number c. The result is the next point, and the step is "
+            "repeated on it. Some starting points stay near the centre. Others move further away "
+            "with every step and never come back: they escape. The points that never escape form a"
+            " filled shape, and its edge is called the Julia set of c. The page starts at c = -0.5"
+            " + 0.5i. The two c sliders change c, and the big picture shows the shape for that c. "
+            "The thing to watch: for some c the shape is one piece, for others it falls apart into"
+            " dust"
         ),
         "blocks": [
             {
-                "label": "The rule",
+                "label": "The step that is repeated",
                 "tex": r"z_{n+1} = z_n^{2} + c",
-                "note": "One turn and stretch, then one slide",
+                "note": (
+                    "z is the current point, written as a complex number, and n counts the steps. "
+                    "Squaring z doubles its angle around the centre and squares its distance from "
+                    "the centre. Adding c then shifts it by a fixed amount. Example with c = 0: "
+                    "the point 0.5 goes to 0.25, then to 0.0625"
+                ),
             },
             {
-                "label": "The set",
+                "label": "The shape of the points that stay",
                 "tex": r"K_c = \left\{ z_0 \in \mathbb{C} \;:\; \sup_n |z_n| < \infty \right\}",
-                "note": "The Julia set proper is the boundary of this body",
+                "note": (
+                    "K_c is the set of starting points z_0 for which the distance |z_n| from the "
+                    "centre never grows without limit. The Julia set is the edge of this shape"
+                ),
             },
             {
-                "label": "The escape test, and it is final",
+                "label": "When a point counts as escaped",
                 "tex": r"|z_n| > 2 \;\Longrightarrow\; |z_{n+k}| \to \infty",
-                "note": "One crossing is enough, which is what makes the picture computable",
+                "note": (
+                    "Once a point is more than 2 away from the centre, every later step takes it "
+                    "further, and it never comes back. So one step past 2 is enough to stop and "
+                    "mark the point as escaped. This is what lets a computer draw the picture in a"
+                    " limited number of steps"
+                ),
             },
             {
-                "label": "Why squaring alone is not enough",
+                "label": "Without the added number, the edge is a plain circle",
                 "tex": (
                     r"c = 0: \; |z_0| < 1 \Rightarrow z_n \to 0, \quad |z_0| > 1 \Rightarrow "
                     r"z_n \to \infty"
                 ),
-                "note": "The boundary is then exactly the unit circle, which is smooth",
+                "note": (
+                    "With c = 0 the step only squares. A point closer than 1 to the centre shrinks"
+                    " towards 0. A point further than 1 grows without limit. The edge between them"
+                    " is the circle of radius 1, a smooth curve. The added number c is what makes "
+                    "the edge rough"
+                ),
             },
         ],
         "dimension": {
-            "label": "Measured by box counting on the boundary",
+            "label": "How rough the edge is: its dimension",
             "tex": r"1 \le \dim_{\mathrm{B}} \partial K_c \le 2",
-            "note": "It depends on c, and reaches 2 for some values",
+            "note": (
+                "Dimension measures roughness here. A smooth curve has dimension 1, a filled area "
+                "has dimension 2. It is found by covering the edge with small squares and counting"
+                " how fast their number grows as the squares shrink. In the formula, dim_B is this"
+                " box-counting dimension and ∂K_c is the edge of K_c. For a Julia set the result "
+                "lies between 1 and 2. It depends on c and reaches 2 for some values of c"
+            ),
         },
     },
     {
         "id": "mandelbrot",
         "name": "The Mandelbrot set",
         "summary": (
-            "The same rule with the start held at zero and c varied across the picture, which "
-            "records exactly which Julia sets hold together in one piece"
+            "Start from 0, square, add a fixed number c, and repeat: for which c does the result "
+            "stay near 0 forever? Each point of the plane is written as a complex number: a number"
+            " with two parts, how far across and how far up, joined by the letter i, a number "
+            "whose square is minus one. Each point of this picture is one value of c. For each c "
+            "the computer starts from 0 and repeats the step. If the result stays within 2 of the "
+            "centre for every step tried, c belongs to the Mandelbrot set and is drawn in the "
+            "solid tone. If it escapes past 2, c is shaded by how many steps that took. The same "
+            "values of c decide another picture, the Julia set of c: it holds together in one "
+            "piece exactly when c is in the Mandelbrot set. The view starts centred on -0.6 with "
+            "half the width of the view at 1.6. A click centres the picture and the zoom slider "
+            "magnifies it. The thing to watch: at every zoom the edge shows new detail"
         ),
         "blocks": [
             {
-                "label": "The set",
+                "label": "Which c belong to the set",
                 "tex": (
                     r"M = \left\{ c \in \mathbb{C} \;:\; \sup_n \left|z_n\right| < \infty, \;"
                     r" z_0 = 0 \right\}"
                 ),
-                "note": "One picture answers the question for every c at once",
+                "note": (
+                    "M is the set of numbers c for which the repeated step, started from z_0 = 0, "
+                    "never takes the point infinitely far away. The bars |z_n| mean the distance "
+                    "of z_n from the centre. One picture answers the question for every c at once"
+                ),
             },
             {
-                "label": "The same condition, read two ways",
+                "label": "The link with Julia sets",
                 "tex": r"c \in M \iff K_c \text{ is connected}",
-                "note": "Inside gives one piece, outside gives dust",
+                "note": (
+                    "For a fixed c, K_c is the shape formed by the starting points that never "
+                    "escape, and its edge is the Julia set. K_c is one connected piece exactly "
+                    "when c is in the Mandelbrot set. For c outside, it breaks into separate "
+                    "specks, like dust"
+                ),
             },
             {
-                "label": "Escape-time colouring",
+                "label": "How the outside is shaded",
                 "tex": r"\nu(c) = \min\{ n : |z_n| > R \}",
-                "note": "The bands of colour are that count",
+                "note": (
+                    "nu(c), written with the Greek letter nu, counts the steps until the point "
+                    "first gets further than R from the centre. R is the escape distance, 2 on "
+                    "this page. The bands of shade in the picture are bands of equal count"
+                ),
             },
         ],
         "dimension": {
-            "label": "Proved, not measured",
+            "label": "The roughness of the edge, proved rather than measured",
             "tex": r"\dim_{\mathrm{H}} \partial M = 2",
-            "note": "The roughest a curve can be; no finite picture reaches the limit",
+            "note": (
+                "Dimension measures roughness: a smooth curve has dimension 1, a filled area has "
+                "2. dim_H is one exact way of measuring it, and ∂M is the edge of the Mandelbrot "
+                "set. It has been proved that this edge has dimension 2, the most a curve in the "
+                "plane can have. No picture with a limited number of pixels can show this limit"
+            ),
         },
     },
     {
         "id": "mandelbulb",
         "name": "The three-dimensional set",
         "summary": (
-            "The squaring is replaced by a power on spherical coordinates, which gives the same "
-            "escape test a solid to bound"
+            "Is there a solid in space built the way the Mandelbrot set is built? The flat "
+            "Mandelbrot set comes from one step: square a point of the plane, add a fixed point c,"
+            " repeat from 0, and keep the c for which the point never runs off. Squaring a point "
+            "of the plane squares its distance from the centre and doubles its angle. A point in "
+            "space has a distance r from the centre and two angles. This solid replaces squaring "
+            "with a power n: the distance is raised to the power n and both angles are multiplied "
+            "by n. Then c is added, and the step is repeated. The points that never run off form "
+            "the solid on the screen, drawn at power 8. The camera circles it. The thing to watch:"
+            " the number of folds around the vertical axis is one fewer than the power"
         ),
         "blocks": [
             {
-                "label": "The power that replaces squaring",
+                "label": "Raising a point of space to a power",
                 "tex": (
                     r"\mathbf{v}^{n} = r^{n}\bigl(\sin n\theta \cos n\varphi,\; "
                     r"\sin n\theta \sin n\varphi,\; \cos n\theta \bigr)"
                 ),
-                "note": "With r, theta and phi the spherical coordinates of the point",
+                "note": (
+                    "v is a point of space. r is its distance from the centre. Theta is its angle "
+                    "down from the vertical axis, phi its angle around that axis. Raising v to the"
+                    " power n raises r to the power n and multiplies both angles by n. In the "
+                    "plane, squaring does the same with the power 2"
+                ),
             },
             {
-                "label": "The iteration",
+                "label": "The step that is repeated",
                 "tex": r"\mathbf{v}_{k+1} = \mathbf{v}_k^{\,n} + \mathbf{c}",
-                "note": "At n equal to 8 the solid has eight-fold symmetry about its axis",
+                "note": (
+                    "k counts the steps. Each step raises the point to the power n and adds a "
+                    "fixed point c. The points c for which the repeated step never runs off to "
+                    "infinity form the solid. At n = 8 the solid has seven identical folds around "
+                    "its axis, one fewer than the power"
+                ),
             },
             {
-                "label": "The distance estimate that lets a ray find it",
+                "label": "How the computer finds the surface",
                 "tex": r"\mathrm{DE} = \frac{|\mathbf{v}|\,\log|\mathbf{v}|}{2\,|\mathbf{v}'|}",
-                "note": "A ray may safely advance by this much without passing through the surface",
+                "note": (
+                    "The picture is drawn by sending a ray from the eye through each pixel. DE, "
+                    "the distance estimate, says how far the ray still is from the surface. It is "
+                    "worked out from the point v and from v', which says how fast v changes when "
+                    "the starting point moves a little. The ray can move forward by DE without "
+                    "passing through the surface, so it reaches the surface in a few long steps"
+                ),
             },
         ],
         "dimension": {
-            "label": "A surface in space",
+            "label": "How rough the surface is",
             "tex": r"2 \le \dim_{\mathrm{B}} \partial \le 3",
-            "note": "The boundary is a surface, not a curve",
+            "note": (
+                "Dimension measures roughness. A smooth surface has dimension 2, a filled solid "
+                "has 3. In the formula, dim_B is the dimension found by counting small boxes, and "
+                "∂ is the surface of the solid. The surface of this solid lies between the two. It"
+                " is a rough surface, not a curve"
+            ),
         },
     },
     {
         "id": "hurst",
-        "name": "A line that remembers: the Hurst exponent",
+        "name": "Does a river remember its past years? The Hurst exponent",
         "summary": (
-            "A random walk whose steps remember, with one number H saying how much; measured the "
-            "way Hurst measured the Nile, and the graph's dimension read off the same number"
+            "A line built from random steps that remember the steps before them. One number, H, "
+            "says how strong the memory is, and Hurst measured it on the Nile. The same number "
+            "gives the roughness of the line."
         ),
         "blocks": [
             {
                 "label": "Steps that remember",
                 "tex": r"\rho(k) = \tfrac{1}{2}\bigl((k+1)^{2H} - 2k^{2H} + (k-1)^{2H}\bigr)",
-                "note": "The correlation between steps k apart in fractional Gaussian noise. H = 0.5 is the coin toss, no memory; above it a run tends to continue, below it to reverse",
+                "note": "Rho of k is the correlation between two steps k places apart: a number from -1 to 1 that says how much one tends to follow the other. The formula is for fractional Gaussian noise, the steps of a walk with memory. H = 0.5 gives zero, a coin toss with no memory. Above 0.5 a run tends to continue; below it a run tends to reverse.",
             },
             {
                 "label": "Hurst's rescaled range",
                 "tex": r"\frac{R}{S}(m) \propto m^{H}",
-                "note": "In a block of m steps, how far the running sum wanders over how much the steps vary. Hurst found 0.72 across the Nile and seventy-four other records, where a coin gives 0.5",
+                "note": "In a block of m steps, R is how far the running sum ranges, from its highest to its lowest point, and S is how much the single steps vary. Their ratio grows like m to the power H. Hurst found 0.72 across the Nile and seventy-four other records, where a coin gives 0.5.",
             },
             {
                 "label": "The spread of the future",
                 "tex": r"\sigma(T) = \sigma\, T^{H}",
-                "note": "How far the walk can be T steps ahead. A coin gives the square root of T; a persistent series spreads faster, so a long horizon is riskier than the square-root rule says",
+                "note": "Sigma of T is how far the walk may be T steps ahead, and sigma alone is the typical size of one step. For a coin toss the spread grows like the square root of T. A series with memory spreads faster, so a long time ahead is riskier than the square-root rule says.",
             },
             {
-                "label": "The graph's dimension",
+                "label": "Roughness of the line",
                 "tex": r"D = 2 - H",
-                "note": "The box-counting dimension of the walk drawn as a line: a persistent walk is a smoother line, an anti-persistent one rougher. The link back to the coastline",
+                "note": "D is the box-counting dimension of the walk drawn as a line: the line is covered with small squares, and the count of squares it touches is followed as the squares shrink. D is 1 for a smooth line and close to 2 for a line so rough that it almost fills an area. A walk whose runs go on draws a smoother line; a walk whose runs reverse draws a rougher one. A coastline is measured the same way.",
             },
         ],
         "dimension": {
             "label": "What it cannot do",
             "tex": r"\mathbb{E}[X_{n+1} \mid X_n] \text{ barely moves}",
-            "note": "H describes how risk grows with horizon and whether runs continue, not what the next value is; and H is hard to read off a short series, which is Lo's 1991 objection",
+            "note": "The formula says that knowing the present value barely changes the expected next one. H describes how risk grows with the time ahead and whether runs continue, not what the next value will be. H is also hard to read from a short series: this was Lo's objection in 1991.",
         },
     },
     {
         "id": "credibility",
-        "name": "Trust the group or trust the record: an actuary's Bayes",
+        "name": "How much to trust a new customer's own record",
         "summary": (
-            "A customer's short record blended with the group's long one; the weight on the record "
-            "is the credibility, and with claims as Poisson and rates as a gamma it is exactly Bayes"
+            "An insurer's price for a new customer mixes the customer's short record with the "
+            "group's long one. The share given to the record is called the credibility. When claims"
+            " arrive at random and the rates across customers follow a gamma curve, this mix is "
+            "exactly what Bayes' rule for updating a belief gives."
         ),
         "blocks": [
             {
-                "label": "The blend",
+                "label": "The mix",
                 "tex": r"\hat{\lambda} = Z\,\bar{x} + (1 - Z)\,\mu, \qquad Z = \frac{n}{n + k}",
-                "note": "Here x bar is the customer's own rate over n years and mu the group's; Z rises from nothing towards one as the years come. Whitney 1918, Bailey 1950, Buhlmann 1967",
+                "note": "Lambda hat is the estimated claim rate. X bar is the customer's own average number of claims a year over n years, and mu is the group's average rate. Z is the weight on the customer's record: it rises from zero towards one as the years come. Whitney 1918, Bailey 1950, Buhlmann 1967.",
             },
             {
                 "label": "What k means",
                 "tex": r"k = \frac{\mathbb{E}[\mathrm{Var}(X \mid \theta)]}{\mathrm{Var}(\mathbb{E}[X \mid \theta])}",
-                "note": "The noise in one customer's outcomes over the spread between customers. Customers who differ a lot from each other earn their own rate quickly; a noisy outcome earns it slowly. Z is one half at n = k",
+                "note": "k is the noise in one customer's results divided by the spread between customers; Var means variance, a measure of spread. When customers differ a lot from each other, k is small and a record earns its own rate quickly. When one customer's results are noisy, k is large and the record earns it slowly. Z is one half when n = k.",
             },
             {
-                "label": "The exact Bayes behind it",
+                "label": "The exact calculation behind it",
                 "tex": r"\lambda \sim \Gamma(a, b),\quad X \mid \lambda \sim \mathrm{Poisson}(\lambda) \;\Rightarrow\; \lambda \mid x \sim \Gamma(a + x,\, b + n)",
-                "note": "The posterior mean (a + x) / (b + n) is the blend with k = b and mu = a / b. The page draws this belief as a curve narrowing year by year",
+                "note": "Before any record, the customer's rate lambda is believed to follow a gamma curve with parameters a and b. Claims follow a Poisson model with that rate. After x claims in n years the belief is again a gamma curve, with parameters a + x and b + n. Its centre, (a + x) / (b + n), is the same mix with k = b and mu = a / b. The page draws this belief as a curve that narrows year by year.",
             },
         ],
         "dimension": {
-            "label": "The same shape elsewhere",
+            "label": "The same mix in other actuarial work",
             "tex": r"\text{reserve} = Z\cdot\text{chain ladder} + (1 - Z)\cdot\text{prior}",
-            "note": "The money set aside for claims not yet paid is blended the same way, the reported fraction as Z; mortality forecasts widen their intervals the same way when the parameters are uncertain",
+            "note": "Money set aside for claims not yet paid is mixed the same way, from the year's own pattern (the chain ladder) and an expectation fixed in advance, with the share already reported as Z. Forecasts of how long people live widen their ranges in the same way when the model's numbers are uncertain.",
         },
     },
     {
         "id": "tails",
-        "name": "Claims with a fractal tail",
+        "name": "When one claim outweighs a thousand",
         "summary": (
-            "Claim sizes with a Pareto tail look the same at every scale, the tail index playing the "
-            "part a dimension plays for a coastline; below two the average never settles"
+            "Insurance claims whose sizes follow a Pareto tail: most are small, a few are enormous,"
+            " and the large ones thin out the same way at every size. The tail index alpha plays "
+            "the part that a dimension plays for a coastline. Below alpha of two the average never "
+            "settles."
         ),
         "blocks": [
             {
                 "label": "The tail",
                 "tex": r"P(X > x) = \left(\frac{x_0}{x}\right)^{\alpha}, \quad x \ge x_0",
-                "note": "A straight line of slope minus alpha on log-log axes, where a thin tail bends down. The same law Pareto found for incomes in 1896",
+                "note": "P(X > x) is the probability that a claim X is larger than x; x0 is the smallest possible claim and alpha the tail index. On log-log axes this is a straight line with slope minus alpha, where a thin tail bends down. Pareto found the same law for incomes in 1896.",
             },
             {
                 "label": "The same at every scale",
                 "tex": r"P(X > x \mid X > u) = \left(\frac{u}{x}\right)^{\alpha}",
-                "note": "Above any threshold the excess is again Pareto with the same alpha: the largest tenth of the claims, rescaled, is distributed like the whole. Self-similarity, as for the coastline",
+                "note": "Given that a claim is above a threshold u, the chance that it is above x follows the same law with the same alpha. So the largest tenth of the claims, rescaled, is spread like all of them. This is self-similarity, the same shape at every scale, as for a coastline.",
             },
             {
                 "label": "The average that never settles",
                 "tex": r"\mathbb{E}[X] = \frac{\alpha x_0}{\alpha - 1}\ (\alpha > 1), \qquad \mathrm{Var}[X] = \infty\ (\alpha \le 2)",
-                "note": "Below two the variance is infinite, and one claim can outweigh all the others so far: Mandelbrot's Noah effect. The running mean keeps jumping however many claims arrive",
+                "note": "E[X] is the average claim, finite only when alpha is above 1. Var[X] is the variance, how far claims stray from the average; it is infinite when alpha is 2 or less. Then one claim can outweigh all the earlier ones, Mandelbrot's Noah effect, and the running average keeps jumping however many claims arrive.",
             },
         ],
         "dimension": {
-            "label": "The index as a dimension",
+            "label": "The tail index as a dimension",
             "tex": r"\alpha = -\frac{d \log P(X > x)}{d \log x}",
-            "note": "Read off the slope of the survival plot as a dimension is read off the box count: the exponent of a power law saying how a count changes with scale",
+            "note": "Alpha is read from the slope of the chart of P(X > x) against x on log-log axes, as a dimension is read from the slope of a box count. Both are exponents of a power law: they say how a count changes with scale.",
         },
     },
 ]
@@ -352,19 +542,28 @@ SYSTEMS = [
 DEFINITIONS = [
     {
         "id": "box",
-        "name": "Box-counting dimension",
+        "name": "Dimension by counting boxes",
         "tex": r"d = \lim_{\varepsilon \to 0} \frac{\log N(\varepsilon)}{\log(1/\varepsilon)}",
         "note": (
-            "Boxes of side epsilon are laid over the shape and the ones it touches are counted; "
-            "the count against the size is a straight line on logarithmic axes and the dimension "
-            "is its slope"
+            "A grid of square boxes, each with side ε (epsilon), is laid over the shape. N(ε) is "
+            "the number of boxes the shape touches. As the boxes shrink, N grows, and the "
+            "dimension d says how fast. In words: d is the logarithm of the count divided by the "
+            "logarithm of 1/ε, as ε goes to zero. A logarithm finds a power, so this asks: to "
+            "what power must the shrink factor be raised to give the growth of the count? With a "
+            "number: if halving the boxes multiplies the count by 2.83, then d = 1.5, because 2 "
+            "to the power 1.5 is 2.83. A line gives d = 1 and a filled square d = 2."
         ),
     },
     {
         "id": "similarity",
-        "name": "Self-similarity dimension",
+        "name": "Dimension of a shape made of copies of itself",
         "tex": r"N s^{d} = 1 \qquad \Longrightarrow \qquad d = \frac{\log N}{\log(1/s)}",
-        "note": "The exact special case, where the shape is a known number of scaled copies",
+        "note": (
+            "Some shapes are made of exactly N copies of themselves, each shrunk by the factor "
+            "s. Then N times s to the power d equals 1, which gives d = log N / log(1/s), where "
+            "log is the logarithm. With numbers: the Koch curve is N = 4 copies, each s = 1/3 of "
+            "its size. So 3 to the power d must equal 4, and d = log 4 / log 3, about 1.262."
+        ),
     },
     {
         "id": "hausdorff",
@@ -374,17 +573,25 @@ DEFINITIONS = [
             r" \qquad d = \inf\{ p : \mathcal{H}^{p}(S) = 0 \}"
         ),
         "note": (
-            "The critical power at which the sum of covered diameters falls from infinite to "
-            "zero; the number box counting approximates"
+            "The strictest definition of dimension. The shape S is covered by small pieces U_i, "
+            "each with a diameter, its widest span, of at most δ (delta). Each diameter is "
+            "raised to a power p, and the results are added. As δ goes to zero, this sum, "
+            "written H^p(S), grows without limit when p is too small and falls to zero when p is "
+            "too large. The dimension d is the power where it switches, the smallest p that "
+            "gives zero. Box counting gives an estimate of this number."
         ),
     },
     {
         "id": "richardson",
-        "name": "The divider method",
+        "name": "Dimension from walking dividers",
         "tex": r"L(\varepsilon) \propto \varepsilon^{1-d}",
         "note": (
-            "Stepping a boundary off with a fixed opening gives a length that grows as the "
-            "opening shrinks, and the slope carries the dimension"
+            "Dividers, two legs set a fixed distance ε apart, are walked along a curve, and the "
+            "steps are added up to a length L(ε). On a smooth curve L hardly changes as ε "
+            "shrinks. On a rough curve L grows in proportion to ε to the power 1 - d, where d is "
+            "the dimension. With a number: for the coast of Britain d = 1.232, so halving the "
+            "opening makes the measured length about 1.17 times as long, since 2 to the power "
+            "0.232 is 1.17."
         ),
     },
 ]

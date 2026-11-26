@@ -21,6 +21,13 @@ export const Route = createFileRoute("/topics/networks/play/line")({
 });
 
 const KINDS: SetKind[] = ["split", "xor", "rings", "spiral"];
+// what each set of dots is, said on this page for a reader who has seen none of them
+const NOTES: Record<SetKind, string> = {
+  split: L("Two groups of dots, one of each colour, that one straight line can separate."),
+  xor: L("Four dots at the corners of a square, with opposite corners of the same colour. This pattern is called exclusive or. No straight line separates the two colours."),
+  rings: L("Dots of one colour form a ring, and dots of the other colour fill its middle. A circle separates them, a straight line cannot."),
+  spiral: L("Two spirals of dots wound into each other. No straight line comes close to separating them."),
+};
 const ONE = "#a5e3a0";
 const TWO = "#c75ab0";
 
@@ -95,7 +102,7 @@ function LinePage() {
     <div>
       <TaskPage
         title={system?.name ?? L("Draw the line by hand")}
-        job={L("Dots of two colours. The job is to put one straight line between them so every dot is on the side of its own colour. The line is placed by hand first; then a machine tries, one correction at a time.")}
+        job={L("Can one straight line separate dots of two colours, so that each colour is on its own side? First the line is placed by hand. Then a machine tries. It looks at one dot at a time, and if that dot is on the wrong side, it turns its line a little towards it. That is one correction. The buttons choose the dots. Press run and count the corrections. With two clouds of 60 dots the machine finishes after a few corrections. With the four dots of exclusive or it never finishes.")}
         input={
           <div className="space-y-3">
             <div className="flex flex-wrap gap-1.5">
@@ -114,12 +121,12 @@ function LinePage() {
                 </Button>
               ))}
             </div>
-            <Text kind="note" as="p">{L(SETS[kind].note)}</Text>
+            <Text kind="note" as="p">{NOTES[kind]}</Text>
             {kind !== "xor" ? (
               <Slider label={L("Another sample")} min={1} max={40} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => { setSeed(Math.round(v)); runner.reset(); setShown(0); }} />
             ) : null}
             <Text kind="note" as="p">
-              {L("The white line is the one to place, and it starts in the wrong place. Drag either of its two ends until no dot is on the wrong side. The count under the picture says how many still are.")}
+              {L("The line with two round handles is the one placed by hand. It starts in a wrong place. Dragging either handle moves the line. The count under the picture says how many dots are still on the wrong side. The slider 'Another sample' draws a new random set of dots of the same kind.")}
             </Text>
           </div>
         }
@@ -136,7 +143,7 @@ function LinePage() {
               }
               runner.toggle();
             }}
-            onStep={(many) => setShown((v) => Math.min(total, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={() => {
               runner.reset();
               setShown(0);
@@ -199,36 +206,36 @@ function LinePage() {
 
               }}
             />
-          </div><Caption>{L("This dot was wrong, so the line turned towards it White: the hand-drawn line, drag its ends.")} {machine ? L("Blue: the machine's line, ringed dots are its mistakes") : L("Blue: the machine's line, once run is pressed")}</Caption></section>
+          </div><Caption>{L("The line with round handles is placed by hand.")} {machine ? L("The thicker line without handles is the machine's line. Small rings mark the dots it has on the wrong side. A large ring marks the dot it corrected last, and the faint lines are its earlier positions.") : L("The machine's line appears once run is pressed.")}</Caption></section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={yoursWrong === 0}>
               {yoursWrong === 0
-                ? L("The hand-drawn line puts {{wrong}} of {{all}} dots on the wrong side. That is the job done.", { wrong: yoursWrong, all: data.X.length })
+                ? L("The hand-drawn line puts {{wrong}} of {{all}} dots on the wrong side. The task is solved.", { wrong: yoursWrong, all: data.X.length })
                 : L("The hand-drawn line puts {{wrong}} of {{all}} dots on the wrong side.", { wrong: yoursWrong, all: data.X.length })}
             </Verdict>
             <Verdict good={machineWrong === null ? undefined : machineWrong === 0}>
               {machine === null
                 ? L("The machine has not started. Press run.")
                 : machineWrong === 0
-                  ? L("The machine's line has none wrong after {{taken}} corrections. It stopped because there was nothing left to correct.", { taken })
+                  ? L("The machine's line has none wrong after {{taken}} corrections: every dot is on the side of its colour. The machine stopped because nothing was left to correct.", { taken })
                   : finished
-                    ? L("After {{total}} corrections the machine still has {{wrong}} wrong, and it will never do better: no straight line can separate these dots, so there is always one to correct and the rule never stops.", { total, wrong: String(machineWrong) })
-                    : L("After {{taken}} corrections the machine has {{wrong}} wrong.", { taken, wrong: String(machineWrong) })}
+                    ? L("After {{total}} corrections the machine still has {{wrong}} dots on the wrong side, and it will never do better: no straight line can separate these dots. There is always a dot to correct, so the machine never stops by itself.", { total, wrong: String(machineWrong) })
+                    : L("After {{taken}} corrections the machine's line has {{wrong}} dots on the wrong side.", { taken, wrong: String(machineWrong) })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 pt-1">
-              <dt>{L("Dots")}</dt>
+              <dt>{L("Number of dots")}</dt>
               <dd className="text-right text-foreground/80">{data.X.length}</dd>
               <dt>{L("Corrections the machine made")}</dt>
               <dd className="text-right text-foreground/80">{L("{{taken}} of {{total}}", { taken, total })}</dd>
-              <dt>{L("Did it stop by itself")}</dt>
-              <dd className="text-right text-foreground/80">{run.converged ? L("Yes, after {{n}}", { n: run.updates }) : L("No, it was stopped")}</dd>
-              <dt>{L("One correction is")}</dt>
-              <dd className="text-right text-foreground/80">{L("One wrong dot, and the line nudged towards it")}</dd>
+              <dt>{L("Did the machine stop by itself")}</dt>
+              <dd className="text-right text-foreground/80">{run.converged ? L("Yes, after {{n}} corrections", { n: run.updates }) : L("No, the page stopped it")}</dd>
+              <dt>{L("One correction")}</dt>
+              <dd className="text-right text-foreground/80">{L("One dot on the wrong side, and the line turned a little towards it")}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("The machine is a perceptron, from 1958. It never sees the whole picture: it looks at one dot, and if that dot is on the wrong side it turns the line a little towards it. On two clouds that is enough. On exclusive or it is not, and nothing about the rule can make it enough. The next pages are about what can.")}
+              {L("This machine is called a perceptron. It dates from 1958. It never looks at all the dots at once: it takes one dot, and if that dot is on the wrong side, it turns the line a little towards it. For two clouds that is enough. For exclusive or it is not, and no rule can make it enough, because no single straight line separates those four dots. Marvin Minsky and Seymour Papert pointed this out in 1969.")}
             </Text>
           </div>
         }

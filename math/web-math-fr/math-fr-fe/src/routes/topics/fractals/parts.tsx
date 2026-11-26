@@ -34,7 +34,7 @@ function TopicPage() {
       <div>
         <Heading level={1} className="mt-6">{HEADING}</Heading>
         <div className="mt-6">
-          <Offline what={L("The beats and the words beside them are served by the backend.")} />
+          <Offline what={L("The videos and the texts beside them come from the server, so this page stays empty until it answers.")} />
         </div>
       </div>
     );
@@ -58,7 +58,7 @@ function TopicPage() {
         <header>
           <Heading level={1} className="mt-6">{HEADING}</Heading>
           <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-            {L("{{count}} clips, one a part, about {{minutes}} minutes of picture in order. Beside each clip is the part's question and a short description of it.", { count: topic.part_list.length, minutes })}
+            {L("What is a fractal, and how can its roughness be measured with a number? A fractal is a shape that stays rough however closely it is looked at, such as a coastline or a fern. This page answers in {{count}} short videos, one for each part, about {{minutes}} minutes in all. Beside each video stand the question that part answers and a short description of what it shows.", { count: topic.part_list.length, minutes })}
           </Text>
         </header>
 

@@ -1,5 +1,5 @@
 import { RouterProvider, createMemoryHistory, createRouter } from "@tanstack/react-router";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { routeTree } from "@/routeTree.gen";
 import { GROUPS, REPLACED, SYSTEMS } from "@/lib/networks";
@@ -13,6 +13,9 @@ async function siteAt(path: string) {
   await router.load();
   return render(<RouterProvider router={router as never} />);
 }
+
+// the count the run bar shows, read from its caption
+const counted = () => Number(screen.getByRole("button", { name: "Reset" }).parentElement!.querySelector('[data-text="caption"]')!.textContent!.split(" / ")[0].replace(/,/g, ""));
 
 function down() {
   vi.stubGlobal(
@@ -31,15 +34,15 @@ const TITLES: Record<string, string> = {
   line: "Draw the line by hand",
   nudge: "A small change, and what it does",
   unit: "Inside one unit",
-  layers: "Many units, one answer",
-  any: "Any curve at all",
-  learn: "How it learns, and how fast",
-  blame: "The correction, one dot at a time",
+  layers: "Several neurons, one answer",
+  any: "Can a network draw any curve?",
+  learn: "How fast a network learns",
+  blame: "How the error is passed back, one dot at a time",
   slow: "Starting sure and wrong",
-  fade: "The first layer learns last",
-  pictures: "The same job on a picture",
-  sequence: "The same job on a sequence",
-  words: "The same job on words",
+  fade: "Why the first layer learns last",
+  pictures: "Finding a shape in a picture",
+  sequence: "Remembering the first number of a sequence",
+  words: "Which earlier word each word looks at",
 };
 
 describe("Topic 3, with the backend down", () => {
@@ -69,7 +72,7 @@ describe("Topic 3, with the backend down", () => {
     for (const s of SYSTEMS) {
       const view = await siteAt(s.to);
       await waitFor(() =>
-        expect(screen.getAllByText("Topic 3 - Calculus into a first neural network").length).toBe(1),
+        expect(screen.getAllByText("Topic 3 - From calculus to a first neural network").length).toBe(1),
       );
       const hrefs = Array.from(document.querySelectorAll("main a")).map((a) =>
         a.getAttribute("href"),
@@ -155,7 +158,7 @@ describe("Topic 3, what a step changes", () => {
     await waitFor(() => expect(screen.getByText(/press run and the car sets off/i)).toBeTruthy());
     fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
     await waitFor(() => expect(screen.getByText(/from two positions .* apart, the speed comes out as/i)).toBeTruthy());
-    expect(screen.getByText("So the speed is that divided by this")).toBeTruthy();
+    expect(screen.getByText("Speed from the two readings: distance divided by time")).toBeTruthy();
   });
 
   it("The line page counts what your line gets wrong before the machine runs", async () => {
@@ -175,17 +178,17 @@ describe("Topic 3, what a step changes", () => {
     await waitFor(() => expect(screen.getByText(/is about to go in/i)).toBeTruthy());
     const one = screen.getByRole("button", { name: "One step" });
     fireEvent.click(one);
-    await waitFor(() => expect(screen.getByText(/goes in\. its two numbers sit on the two input units/i)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/goes in\. its two coordinates sit on the two input neurons/i)).toBeTruthy());
     fireEvent.click(one);
     fireEvent.click(one);
     fireEvent.click(one);
-    await waitFor(() => expect(screen.getByText(/the miss is .*: the answer minus what it wanted/i)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/the miss is .*: the answer minus the right answer/i)).toBeTruthy());
     fireEvent.click(one);
-    await waitFor(() => expect(screen.getByText(/the blame flows back along the wires/i, { selector: '[data-slot="verdict"]' })).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/the error is passed back along the connections/i, { selector: '[data-slot="verdict"]' })).toBeTruthy());
     fireEvent.click(one);
     await waitFor(() => expect(screen.getByText(/every weight moves/i)).toBeTruthy());
-    // the blame agrees with nudging each number by hand
-    const worst = screen.getByText("The same slopes by nudging each number by hand, worst disagreement").nextElementSibling;
+    // the slopes from the backward pass agree with moving each number a tiny amount
+    const worst = screen.getByText("Check: largest difference from the slopes found by moving each number a tiny amount").nextElementSibling;
     expect(Number(worst?.textContent)).toBeLessThan(1e-5);
   });
 
@@ -203,7 +206,7 @@ describe("Topic 3, what a step changes", () => {
     await siteAt("/topics/networks/play/words");
     await waitFor(() => expect(screen.getByText(/10 words\. press run/i)).toBeTruthy());
     fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
-    await waitFor(() => expect(screen.getByText(/the word just before it, as this head was wired to do/i)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/the word right before it, as this head was wired to do/i)).toBeTruthy());
   });
 
   it("The pictures page slides, pools and names the shape", async () => {
@@ -213,5 +216,23 @@ describe("Topic 3, what a step changes", () => {
     await waitFor(() => expect(screen.getByText(/position 1 of 100/i)).toBeTruthy());
     for (let i = 0; i < 11; i++) fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
     await waitFor(() => expect(screen.getByText(/the picture is nearest to a cross/i)).toBeTruthy());
+  });
+
+  it("Run after a few steps carries on from them", async () => {
+    // frames are handed out one at a time, so the first frames of the run can be looked at
+    const queue: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => queue.push(cb));
+    vi.stubGlobal("cancelAnimationFrame", (id: number) => {
+      queue[id - 1] = () => {};
+    });
+    await siteAt("/topics/networks/play/slope");
+    await waitFor(() => expect(screen.getByRole("button", { name: "One step" })).toBeTruthy());
+    for (let i = 0; i < 3; i++) fireEvent.click(screen.getByRole("button", { name: "One step" }));
+    await waitFor(() => expect(counted()).toBe(3));
+    fireEvent.click(screen.getByRole("button", { name: "Run" }));
+    // the run carries on from the third step rather than from the runner's own count
+    for (let i = 0; i < 60 && counted() === 3; i++) act(() => queue.splice(0).forEach((cb) => cb(0)));
+    expect(counted()).toBeGreaterThan(3);
+    fireEvent.click(screen.getByRole("button", { name: "Pause" }));
   });
 });

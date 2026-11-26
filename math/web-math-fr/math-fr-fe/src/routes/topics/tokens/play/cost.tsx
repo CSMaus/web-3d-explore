@@ -59,19 +59,19 @@ function CostPage() {
     <>
       <TaskPage
         title={system?.name ?? L("What a token costs")}
-        job={L("One sentence, the same meaning, in eleven scripts, all cut by the one vocabulary built two pages ago from English text. The job is to count what each costs in tokens, because tokens are what is billed, what fills the window, and what the attention cost grows with the square of.")}
+        job={L("Does the same sentence cost the same number of tokens in every language? A token is a piece of text that a language model treats as one unit. Tokens matter for three reasons. Services that run models charge per token. A model can read only a fixed number of tokens at once, called its window. And the main step of a model compares every token with every other token, so its work grows with the number of tokens multiplied by itself. Here one sentence, 'the cat sleeps on the warm mat by the window', is written in ten languages and once more with emoji. All eleven are cut by one vocabulary, a list of tokens learned with 150 merges from a short English story. In English the sentence is 10 tokens for 44 characters. In Russian it is 64 tokens for 35 characters. Run counts the sentences one at a time. The thing to watch is how the cost grows for writing that the vocabulary never saw.")}
         input={
           <div className="space-y-3">
-            <Slider label={L("A window of")} min={16} max={512} step={16} value={window} format={(v) => L("{{n}} tokens", { n: Math.round(v) })} onChange={(v) => setWindow(Math.round(v))} />
+            <Slider label={L("Window size")} min={16} max={512} step={16} value={window} format={(v) => L("{{n}} tokens", { n: Math.round(v) })} onChange={(v) => setWindow(Math.round(v))} />
             <Text kind="note" as="p">
-              {L("A model can attend over only so many tokens at once. The result panel says how many copies of each sentence fit in this window.")}
+              {L("A model reads at most a fixed number of tokens at once. This number is called its window. Under the picture, the result says how many copies of each sentence fit in a window of this size.")}
             </Text>
             <label className="block">
-              <span data-text="note">{L("A number, cut")}</span>
+              <span data-text="note">{L("A number, cut into tokens")}</span>
               <Input value={number} onChange={(e) => setNumber(e.target.value)} className="mt-1" />
             </label>
             <label className="block">
-              <span data-text="note">{L("Code, cut")}</span>
+              <span data-text="note">{L("A piece of program code, cut into tokens")}</span>
               <Textarea value={code} onChange={(e) => setCode(e.target.value)} rows={2} className="mt-1" />
             </label>
           </div>
@@ -80,13 +80,13 @@ function CostPage() {
           <RunBar
             running={runner.running}
             count={at}
-            what={L("scripts counted")}
+            what={L("sentences counted")}
             limit={rows.length}
             onToggle={() => {
               if (!runner.running && at >= rows.length) reset();
               runner.toggle();
             }}
-            onStep={(many) => setDone((v) => Math.min(rows.length, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -123,7 +123,7 @@ function CostPage() {
                   });
                 }}
               />
-            </div><Caption>{L("Green: characters.  Rose: tokens under the English-trained vocabulary.  One row a script.")}</Caption></div>
+            </div><Caption>{L("One row per language. Upper bar: the number of characters. Lower bar: the number of tokens, with the vocabulary learned from English. On the right: characters / tokens.")}</Caption></div>
             {current ? (
               <div className="rounded border border-border p-3">
                 <div data-text="caption">{current.label}: {L("{{tokens}} tokens for {{chars}} characters", { tokens: current.count, chars: current.chars })}</div>
@@ -132,11 +132,11 @@ function CostPage() {
             ) : null}
             <div className="grid gap-2 lg:grid-cols-2">
               <div className="rounded border border-border p-3">
-                <div data-text="caption">{L("The number: {{n}} tokens. Where does each digit go?", { n: numberTokens.length })}</div>
+                <div data-text="caption">{L("The number: {{n}} tokens. Each box is one token, so the boxes show how the digits are grouped.", { n: numberTokens.length })}</div>
                 <div className="mt-2"><TokenRow tokens={numberTokens} size="sm" /></div>
               </div>
               <div className="rounded border border-border p-3">
-                <div data-text="caption">{L("The code: {{n}} tokens. Every run of spaces is its own cost.", { n: codeTokens.length })}</div>
+                <div data-text="caption">{L("The code: {{n}} tokens. Each box is one token. The spaces used to indent the code cost tokens too.", { n: codeTokens.length })}</div>
                 <div className="mt-2"><TokenRow tokens={codeTokens} size="sm" /></div>
               </div>
             </div>
@@ -146,20 +146,20 @@ function CostPage() {
           <div className="space-y-2">
             <Verdict>
               {at === 0
-                ? L("Press run. Each script is cut in turn and its two counts drawn.")
+                ? L("Nothing is counted yet. Run takes the eleven sentences in turn, cuts each one into tokens and draws its two counts.")
                 : current!.id === "en"
-                  ? L("English: {{tokens}} tokens for {{chars}} characters, {{ratio}} tokens a character. The vocabulary was built on English, so almost every word is one token.", { tokens: current!.count, chars: current!.chars, ratio: current!.ratio.toFixed(2) })
-                  : `${L("{{script}}: {{tokens}} tokens for {{chars}} characters, {{ratio}} tokens a character, {{times}} times the English rate.", { script: current!.label, tokens: current!.count, chars: current!.chars, ratio: current!.ratio.toFixed(2), times: (current!.ratio / english.ratio).toFixed(1) })} ${current!.ratio >= 1 ? L("More tokens than characters: every character is several bytes and the vocabulary has no symbol for any of them, so it falls back to bytes.") : L("The vocabulary has some of these pieces from shared letters, and none of the words.")} ${fits(current!.count) === 1 ? L("in a window of {{window}} tokens this sentence fits {{n}} time; the English one fits {{english}}.", { window, n: fits(current!.count), english: fits(english.count) }) : L("in a window of {{window}} tokens this sentence fits {{n}} times; the English one fits {{english}}.", { window, n: fits(current!.count), english: fits(english.count) })}`}
+                  ? L("English: {{tokens}} tokens for {{chars}} characters, so {{ratio}} tokens per character. The vocabulary was learned from English text, so almost every word is one token.", { tokens: current!.count, chars: current!.chars, ratio: current!.ratio.toFixed(2) })
+                  : `${L("{{script}}: {{tokens}} tokens for {{chars}} characters, so {{ratio}} tokens per character. That is {{times}} times the English figure.", { script: current!.label, tokens: current!.count, chars: current!.chars, ratio: current!.ratio.toFixed(2), times: (current!.ratio / english.ratio).toFixed(1) })} ${current!.ratio >= 1 ? L("There are more tokens than characters. Each character here takes two or more bytes, the small numbers from 0 to 255 that store text. The vocabulary has no token for any of these characters, so each byte becomes a token of its own.") : L("The vocabulary has tokens for some pieces of this sentence, the ones that also occur in the English story. The rest is cut letter by letter or byte by byte.")} ${fits(current!.count) === 1 ? L("A window of {{window}} tokens holds {{n}} copy of this sentence, and {{english}} copies of the English one.", { window, n: fits(current!.count), english: fits(english.count) }) : L("A window of {{window}} tokens holds {{n}} copies of this sentence, and {{english}} copies of the English one.", { window, n: fits(current!.count), english: fits(english.count) })}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               {shown.map((r) => (
-                <Row key={r.id} label={L("{{script}}, tokens a character", { script: r.label })} value={`${r.ratio.toFixed(2)}  (x${(r.ratio / english.ratio).toFixed(1)})`} />
+                <Row key={r.id} label={L("{{script}}: tokens per character (in brackets: how many times the English figure)", { script: r.label })} value={`${r.ratio.toFixed(2)}  (x${(r.ratio / english.ratio).toFixed(1)})`} />
               ))}
-              {current ? <Row label={L("Attention cost for {{script}}, tokens squared", { script: current.label })} value={(current.count * current.count).toLocaleString("en")} /> : null}
-              <Row label={L("The number, digits kept together")} value={numberTokens.some((t) => /^\s?\d{2,}$/.test(t.text)) ? L("some") : L("none")} />
+              {current ? <Row label={L("{{script}}: pairs of tokens the model compares (tokens times tokens)", { script: current.label })} value={(current.count * current.count).toLocaleString("en")} /> : null}
+              <Row label={L("In the number, digits joined into one token")} value={numberTokens.some((t) => /^\s?\d{2,}$/.test(t.text)) ? L("some") : L("none")} />
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("A real vocabulary is trained on many languages and the gap is smaller, but it is never zero, and it always favours whatever the training text had most of. The number is cut wherever the merges happened to fall, so place value can sit across a token boundary; the last page comes back to that.")}
+              {L("The vocabularies of real models are learned from text in many languages, so the gap is smaller than here. It never disappears, and it always favours the languages that the learning text had most of. Numbers are cut wherever merges happened to form. So one token can hold, for example, the thousands digit together with the hundreds digit, and the cuts have nothing to do with the value of the number. In this vocabulary no digit was ever merged, because the English story has no digits.")}
             </Text>
           </div>
         }

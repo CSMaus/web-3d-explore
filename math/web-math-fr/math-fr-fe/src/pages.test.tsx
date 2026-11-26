@@ -43,7 +43,7 @@ describe("Every page with the backend down", () => {
 
   it("The play index lists every system from a local copy", async () => {
     await siteAt("/topics/fractals/play");
-    await waitFor(() => expect(screen.getByText("Pick something to move")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Rules that draw fractals")).toBeTruthy());
     for (const name of ["Iterated maps", "Rewriting systems", "Julia sets"]) {
       expect(screen.getAllByText(name).length).toBeGreaterThan(0);
     }
@@ -54,14 +54,14 @@ describe("Every page with the backend down", () => {
   it("/topics/fractals/theory shows the equations from the snapshot instead of failing", async () => {
     await siteAt("/topics/fractals/theory");
     await waitFor(() => expect(screen.getByRole("heading", { name: "The mathematics, all of it" })).toBeTruthy());
-    expect(screen.queryByText("The backend is not answering")).toBeNull();
+    expect(screen.queryByText("The site's server is not answering")).toBeNull();
     expect(screen.getByLabelText("On this page")).toBeTruthy();
   });
 
   it("/topics/fractals/parts shows the series from the snapshot instead of failing", async () => {
     await siteAt("/topics/fractals/parts");
     await waitFor(() => expect(screen.getByRole("heading", { name: "The series, in order" })).toBeTruthy());
-    expect(screen.queryByText("The backend is not answering")).toBeNull();
+    expect(screen.queryByText("The site's server is not answering")).toBeNull();
   });
 
   it("The series page is named as one section of one topic, not as a lecture", async () => {
@@ -93,18 +93,18 @@ describe("The three-dimensional page", () => {
     await waitFor(() =>
       expect(screen.getByRole("heading", { name: "The three-dimensional set" })).toBeTruthy(),
     );
-    expect(screen.getByRole("button", { name: "Auto" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Manual" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Reset view" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Reset all" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Turns by itself" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Turned by hand" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Reset camera angles" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Reset all settings" })).toBeTruthy();
   });
 
   it("Shows the turn controls only in manual rotation", async () => {
     await siteAt("/topics/fractals/play/mandelbulb");
-    await waitFor(() => expect(screen.getByRole("button", { name: "Manual" })).toBeTruthy());
-    expect(screen.queryByText("Drag the picture to turn it.")).toBeNull();
-    screen.getByRole("button", { name: "Manual" }).click();
-    await waitFor(() => expect(screen.getByText("Drag the picture to turn it.")).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("button", { name: "Turned by hand" })).toBeTruthy());
+    expect(screen.queryByText("Dragging the picture turns the solid.")).toBeNull();
+    screen.getByRole("button", { name: "Turned by hand" }).click();
+    await waitFor(() => expect(screen.getByText("Dragging the picture turns the solid.")).toBeTruthy());
   });
 });
 
@@ -125,18 +125,18 @@ describe("The iterated maps page", () => {
     expect(screen.getByRole("button", { name: "By branch" })).toBeTruthy();
     expect(screen.getByText("EQUATIONS")).toBeTruthy();
     for (const n of [1, 2, 3, 4]) {
-      expect(screen.getAllByText(`move ${n}`).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(`Move ${n}`).length).toBeGreaterThan(0);
     }
-    expect(screen.getByText("Carries the whole shape")).toBeTruthy();
+    expect(screen.getByText("Shrinks the least")).toBeTruthy();
   });
 
   it("Reports which grouping the counts use", async () => {
     await siteAt("/topics/fractals/play/ifs");
-    await waitFor(() => expect(screen.getByText("Grouped by")).toBeTruthy());
-    expect(screen.getByText("The last move used")).toBeTruthy();
+    await waitFor(() => expect(screen.getByText("Points counted by")).toBeTruthy());
+    expect(screen.getByText("The move that placed them")).toBeTruthy();
     screen.getByRole("button", { name: "By branch" }).click();
     await waitFor(() =>
-      expect(screen.getByText(/branch, with move \d as the carrier/i)).toBeTruthy(),
+      expect(screen.getByText(/Branch \(move \d shrinks the least and is not counted\)/)).toBeTruthy(),
     );
   });
 });
@@ -159,7 +159,7 @@ describe("Saving the picture", () => {
       canvas.toDataURL = asUrl as unknown as typeof canvas.toDataURL;
       screen.getByRole("button", { name: "Save image" }).click();
       expect(asUrl).toHaveBeenCalled();
-      expect(screen.queryByText("The picture could not be read back")).toBeNull();
+      expect(screen.queryByText("The picture could not be saved as a file")).toBeNull();
     });
   }
 
@@ -168,7 +168,7 @@ describe("Saving the picture", () => {
     await waitFor(() => expect(screen.getByRole("button", { name: "Save image" })).toBeTruthy());
     screen.getByRole("button", { name: "Save image" }).click();
     await waitFor(() =>
-      expect(screen.getByText("The picture could not be read back")).toBeTruthy(),
+      expect(screen.getByText("The picture could not be saved as a file")).toBeTruthy(),
     );
   });
 });
@@ -197,7 +197,7 @@ describe("The layout of a system page", () => {
 
   it("Names its panels in the same style", async () => {
     await siteAt("/topics/fractals/play/ifs");
-    await waitFor(() => expect(screen.getByText("PRESET")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("READY-MADE SHAPES")).toBeTruthy());
     for (const name of ["MOVE", "COLOUR", "EQUATIONS", "MATHEMATICS"]) {
       expect(screen.getByText(name)).toBeTruthy();
     }

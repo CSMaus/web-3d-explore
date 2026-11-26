@@ -10,6 +10,7 @@ export const COMPLEX = {
     { to: "/topics/complex/play", label: L("Play") },
     { to: "/topics/complex/theory", label: L("Mathematics") },
     { to: "/topics/complex/uses", label: L("Applications") },
+    { to: "/topics/complex/test", label: L("Test") },
   ],
 } as const;
 
@@ -17,7 +18,7 @@ export const TOPIC = "complex";
 
 /** seven pages in reading order: a reader who has never met 𝑖 ends able to read the Mandelbrot set, and meets Hamilton's numbers last. */
 export const SYSTEMS = [
-  { id: "line", to: "/topics/complex/play/line", label: L("The line"), tex: "\\sqrt{-1}", texSaid: L("the square root of minus one") },
+  { id: "line", to: "/topics/complex/play/line", label: L("The number line"), tex: "\\sqrt{-1}", texSaid: L("the square root of minus one") },
   { id: "turn", to: "/topics/complex/play/turn", label: L("What 𝑖 is") },
   { id: "add", to: "/topics/complex/play/add", label: L("Complex numbers: adding") },
   { id: "multiply", to: "/topics/complex/play/multiply", label: L("Complex numbers: multiplying") },

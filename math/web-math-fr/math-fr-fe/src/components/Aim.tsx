@@ -42,16 +42,16 @@ export function Aim({ turning, onTurning, azimuth, elevation, onAim, period, onP
       </div>
       {turning ? (
         <div className="mt-3">
-          <Slider label={L("Loop time")} min={12} max={120} step={1} value={period} format={(v) => `${Math.round(v)} s`} onChange={(v) => onPeriod(Math.round(v))} />
+          <Slider label={L("Time for one full turn")} min={12} max={120} step={1} value={period} format={(v) => `${Math.round(v)} s`} onChange={(v) => onPeriod(Math.round(v))} />
         </div>
       ) : (
         <div className="mt-3 space-y-2">
-          <Slider label={L("Azimuth")} min={-Math.PI} max={Math.PI} step={0.005} value={azimuth} format={(v) => L("{{v}} deg", { v: ((v * 180) / Math.PI).toFixed(0) })} onChange={(v) => onAim(v, elevation)} />
-          <Slider label={L("Elevation")} min={-Math.PI / 2} max={Math.PI / 2} step={Math.PI / 360} value={elevation} format={(v) => L("{{v}} deg", { v: ((v * 180) / Math.PI).toFixed(0) })} onChange={(v) => onAim(azimuth, v)} />
+          <Slider label={L("Turn left or right")} min={-Math.PI} max={Math.PI} step={0.005} value={azimuth} format={(v) => L("{{v}} deg", { v: ((v * 180) / Math.PI).toFixed(0) })} onChange={(v) => onAim(v, elevation)} />
+          <Slider label={L("Tilt up or down")} min={-Math.PI / 2} max={Math.PI / 2} step={Math.PI / 360} value={elevation} format={(v) => L("{{v}} deg", { v: ((v * 180) / Math.PI).toFixed(0) })} onChange={(v) => onAim(azimuth, v)} />
         </div>
       )}
       <Text kind="note" as="p" className="mt-3">
-        {L("Drag the picture to turn it, in either mode; the wheel brings it closer. Dragging switches to manual.")}
+        {L("Dragging the picture turns it, in either mode, and switches the rotation to manual. The mouse wheel moves the picture closer or further away.")}
       </Text>
     </section>
   );

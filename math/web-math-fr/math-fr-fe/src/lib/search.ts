@@ -3,6 +3,8 @@ import { SYSTEMS as CHAOS_PAGES } from "@/lib/chaos";
 import { SYSTEMS as COMPLEX_PAGES } from "@/lib/complex";
 import { SYSTEMS as NETWORK_PAGES } from "@/lib/networks";
 import { SYSTEMS as PRIMES_PAGES } from "@/lib/primes";
+import { SYSTEMS as PROBABILITY_PAGES } from "@/lib/probability";
+import { SYSTEMS as SERIES_PAGES } from "@/lib/series";
 import { SYSTEMS as FRACTAL_PAGES } from "@/lib/systems";
 import { SYSTEMS as TOKEN_PAGES } from "@/lib/tokens";
 import { BUILT } from "@/lib/topic";
@@ -57,6 +59,8 @@ const PLAY = [
   [L("Tokens, embeddings and generation"), TOKEN_PAGES],
   [L("Imaginary numbers"), COMPLEX_PAGES],
   [L("An aside: the gaps between primes"), PRIMES_PAGES],
+  [L("Series: functions built from simple pieces"), SERIES_PAGES],
+  [L("Probability: counting chance"), PROBABILITY_PAGES],
 ] as const;
 
 function baseIndex(): Entry[] {

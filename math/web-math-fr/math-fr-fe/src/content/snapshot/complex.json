@@ -2,7 +2,7 @@
  "slug": "complex",
  "number": 0,
  "title": "Imaginary numbers",
- "summary": "The way in, for a reader who has never met i: the number line and the one question it cannot answer, a quarter turn, adding as arrows, multiplying as turn and stretch, squaring again and again until a Julia set appears, and the exponential going round",
+ "summary": "Which number, multiplied by itself, gives -1? No number on the ordinary number line does. This topic is the place to start, and it needs nothing beyond school arithmetic. It adds a new number, called i, with i × i = -1, and shows that multiplying by i turns a point a quarter of a full turn around zero. A number made of an ordinary part and a part counted in i is called a complex number. The pages add such numbers as arrows placed end to end and multiply them by turning and stretching. Then a number is squared and a fixed number c is added, again and again, to see which starting points stay near zero. Together those points draw a shape called the Mandelbrot set. The last page shows how the number e, about 2.718, raised to a power that contains i, moves round a circle instead of growing.",
  "state": "writing",
  "parts": 0,
  "beats": 0,

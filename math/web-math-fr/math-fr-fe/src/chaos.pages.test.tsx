@@ -1,5 +1,5 @@
 import { RouterProvider, createMemoryHistory, createRouter } from "@tanstack/react-router";
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { routeTree } from "@/routeTree.gen";
 import { SYSTEMS } from "@/lib/chaos";
@@ -14,6 +14,9 @@ async function siteAt(path: string) {
   return render(<RouterProvider router={router as never} />);
 }
 
+// the count the run bar shows, read from its caption
+const counted = () => Number(screen.getByRole("button", { name: "Reset" }).parentElement!.querySelector('[data-text="caption"]')!.textContent!.split(" / ")[0].replace(/,/g, ""));
+
 describe("Topic 2, with the backend down", () => {
   beforeEach(() => {
     vi.stubGlobal(
@@ -24,9 +27,9 @@ describe("Topic 2, with the backend down", () => {
   });
 
   const drawn = [
-    ["/topics/chaos/play/field", "One equation, and its field"],
-    ["/topics/chaos/play/solvers", "Solving it by stepping"],
-    ["/topics/chaos/play/phase", "Two unknowns, and the phase plane"],
+    ["/topics/chaos/play/field", "One equation for change, drawn as strokes"],
+    ["/topics/chaos/play/solvers", "Solving an equation step by step"],
+    ["/topics/chaos/play/phase", "Two quantities at once: the phase plane"],
     ["/topics/chaos/play/logistic", "The logistic map"],
     ["/topics/chaos/play/bifurcation", "The bifurcation diagram"],
   ] as const;
@@ -42,7 +45,7 @@ describe("Topic 2, with the backend down", () => {
 
   it("Every system has a page, and the tab bar reaches all of them", async () => {
     await siteAt("/topics/chaos/play");
-    await waitFor(() => expect(screen.getByText("Pick something to move")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Choose a page to try")).toBeTruthy());
     const hrefs = Array.from(document.querySelectorAll("main a")).map((a) => a.getAttribute("href"));
     for (const s of SYSTEMS) expect(hrefs).toContain(s.to);
     expect(SYSTEMS.length).toBe(7);
@@ -82,16 +85,16 @@ describe("Topic 2, with the backend down", () => {
 
   it("A topic with no clips sends its bare address to its pages, not to an empty series", async () => {
     await siteAt("/topics/chaos");
-    await waitFor(() => expect(screen.getByText("Pick something to move")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Choose a page to try")).toBeTruthy());
   });
 
   it("The series page says plainly that no clip is made, and lists the flow", async () => {
     await siteAt("/topics/chaos/parts");
     await waitFor(() => expect(screen.getByText(/no clip is made yet/i)).toBeTruthy());
-    expect(screen.getByText("The Lorenz system")).toBeTruthy();
-    expect(screen.getByText("Control, and the one experiment")).toBeTruthy();
+    expect(screen.getByText("The Lorenz system: three equations from a simplified model of rising warm air")).toBeTruthy();
+    expect(screen.getByText("Control: the experiment that steadied a chaotic heart rhythm with small, timed pulses")).toBeTruthy();
     // the fractal block is borrowed from topic 1 rather than repeated
-    expect(screen.getAllByText("From topic 1").length).toBe(3);
+    expect(screen.getAllByText("In the Fractals topic").length).toBe(3);
     expect(document.querySelector('main a[href="/topics/fractals/parts"]')).toBeTruthy();
   });
 
@@ -133,12 +136,12 @@ describe("Topic 2, with the backend down", () => {
 
   it("The Lorenz page reports the numbers it measured, not stated ones", async () => {
     await siteAt("/topics/chaos/play/lorenz");
-    await waitFor(() => expect(screen.getByText("Largest Lyapunov exponent")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Largest Lyapunov exponent: how fast a tiny gap grows")).toBeTruthy());
     for (const label of [
-      "Mean divergence",
-      "Third exponent",
-      "Kaplan-Yorke dimension",
-      "Prediction horizon",
+      "Mean divergence: how fast a small blob of states loses volume",
+      "Third Lyapunov exponent: how fast the most squeezed direction shrinks",
+      "Kaplan-Yorke dimension: computed from the three exponents",
+      "Prediction horizon: how long a forecast stays useful",
     ]) {
       expect(screen.getByText(label)).toBeTruthy();
     }
@@ -148,10 +151,28 @@ describe("Topic 2, with the backend down", () => {
 
   it("The bifurcation page shows the cascade it located and the constant", async () => {
     await siteAt("/topics/chaos/play/bifurcation");
-    await waitFor(() => expect(screen.getByText("THE CASCADE")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("WHERE THE DOUBLINGS HAPPEN")).toBeTruthy());
     expect(screen.getByText("2.000000")).toBeTruthy();
     expect(screen.getByText("3.236068")).toBeTruthy();
     expect(screen.getByText("4.6692")).toBeTruthy();
-    expect(screen.getByText("Feigenbaum's delta")).toBeTruthy();
+    expect(screen.getByText("Feigenbaum's constant, known value")).toBeTruthy();
+  });
+
+  it("Run after a few steps carries on from them", async () => {
+    // frames are handed out one at a time, so the first frames of the run can be looked at
+    const queue: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => queue.push(cb));
+    vi.stubGlobal("cancelAnimationFrame", (id: number) => {
+      queue[id - 1] = () => {};
+    });
+    await siteAt("/topics/chaos/play/logistic");
+    await waitFor(() => expect(screen.getByRole("button", { name: "One step" })).toBeTruthy());
+    for (let i = 0; i < 3; i++) fireEvent.click(screen.getByRole("button", { name: "One step" }));
+    await waitFor(() => expect(counted()).toBe(3));
+    fireEvent.click(screen.getByRole("button", { name: "Run" }));
+    // the run carries on from the third step rather than from the runner's own count
+    for (let i = 0; i < 60 && counted() === 3; i++) act(() => queue.splice(0).forEach((cb) => cb(0)));
+    expect(counted()).toBeGreaterThan(3);
+    fireEvent.click(screen.getByRole("button", { name: "Pause" }));
   });
 });

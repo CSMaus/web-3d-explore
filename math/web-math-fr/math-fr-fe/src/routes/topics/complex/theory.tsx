@@ -15,7 +15,7 @@ export const Route = createFileRoute("/topics/complex/theory")({
   component: TheoryPage,
 });
 
-const HEADING = L("The mathematics, all of it");
+const HEADING = L("Every formula of the topic, explained in words");
 
 function TheoryPage() {
   const theory = Route.useLoaderData();
@@ -23,7 +23,7 @@ function TheoryPage() {
   const items = useMemo(() => {
     if (!theory) return [];
     return [
-      { id: "measuring", label: L("The shared machinery") },
+      { id: "measuring", label: L("Basic definitions used on every page") },
       ...theory.systems.map((s) => ({ id: s.id, label: s.name })),
     ];
   }, [theory]);
@@ -35,7 +35,7 @@ function TheoryPage() {
       <div>
         <Heading level={1} className="mt-6">{HEADING}</Heading>
         <div className="mt-6">
-          <Offline what={L("This page is nothing but the equations, so it has nothing to show until the backend answers. The play pages draw their pictures without it.")} />
+          <Offline what={L("This page shows only formulas, and they are loaded from the server, which is not answering now. The interactive pages of the topic work without the server.")} />
         </div>
       </div>
     );
@@ -48,12 +48,12 @@ function TheoryPage() {
       <div className="min-w-0">
         <Heading level={1} className="mt-6">{HEADING}</Heading>
         <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-          {L("Every equation this topic rests on. Each one also sits on the page of the system it belongs to, and every number quoted in a note was measured by the code rather than copied from a reference.")}
+          {L("Every formula of the topic 'Imaginary numbers', with an explanation in words under each one. The same formulas also appear below the interactive page they belong to. The numbers quoted in the explanations were computed by the site's code, not copied from books.")}
         </Text>
 
         <section id="measuring" className="mt-12 scroll-mt-24">
           <Heading level={2}>
-            {L("The shared machinery")}
+            {L("Basic definitions used on every page")}
           </Heading>
           <div className="mt-4 space-y-6">
             {theory.definitions.map((d, i) => (
@@ -69,7 +69,7 @@ function TheoryPage() {
         </section>
 
         <section className="mt-16">
-          <Heading level={2}>{L("The systems")}</Heading>
+          <Heading level={2}>{L("The formulas of each page")}</Heading>
           <div className="mt-4 space-y-10">
             {theory.systems.map((s, i) => (
               <div key={s.id} id={s.id} className="scroll-mt-24">

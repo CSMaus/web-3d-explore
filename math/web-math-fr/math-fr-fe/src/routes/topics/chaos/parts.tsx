@@ -13,28 +13,28 @@ export const Route = createFileRoute("/topics/chaos/parts")({
 
 /** the flow the clips will follow, from math/docs/story2.md. */
 const STEPS = [
-  L("The differential equation, an equation whose unknown is a function"),
-  L("The direction field, the equation as a picture before it is solved"),
-  L("Solving one equation in closed form"),
-  L("Where the closed form runs out"),
-  L("The numerical route"),
-  L("The system, several unknowns on one clock"),
-  L("Complex numbers, and rotation as an eigenvalue"),
-  L("Phase space, the state as a single point"),
-  L("Equilibria, and the local linear stand-in"),
-  L("Stability, and the exponent that measures it"),
-  L("What is conserved, and what leaks"),
-  L("The limit cycle, and why two dimensions are not enough"),
-  L("The attractor"),
-  L("The Lorenz system"),
-  L("The Rossler system, and the folding made plain"),
-  L("Deterministic chaos, stated properly"),
-  L("The fractal block, part one: dimension"),
-  L("The fractal block, part two: escape-time dynamics"),
-  L("Closing the loop: the attractor's dimension, and the map on the real axis"),
-  L("Discrete time, and the logistic map"),
-  L("Bifurcation, the cascade, and Feigenbaum's constants"),
-  L("Control, and the one experiment"),
+  L("Differential equations: equations whose unknown is a whole curve, not a number"),
+  L("The direction field: an equation drawn as arrows before it is solved"),
+  L("Solving one equation exactly, by a formula"),
+  L("Equations that no formula can solve"),
+  L("Solving by small steps on a computer"),
+  L("Systems: several quantities changing together over time"),
+  L("Complex numbers, and how they describe turning motion"),
+  L("Phase space: the whole state of a system drawn as one point"),
+  L("Points of rest, and the straight-line approximation near them"),
+  L("Stability, and the number that measures it"),
+  L("What a system keeps, and what it loses"),
+  L("The limit cycle, a loop the motion settles on, and why two quantities are not enough for chaos"),
+  L("The attractor: the shape that the motion settles onto"),
+  L("The Lorenz system: three equations from a simplified model of rising warm air"),
+  L("The Rossler system, where the folding of the motion is easy to see"),
+  L("Deterministic chaos: what the term means exactly"),
+  L("Fractals, part one: a dimension that is not a whole number"),
+  L("Fractals, part two: points that escape and points that stay"),
+  L("The dimension of an attractor, and the same squaring rule on the number line"),
+  L("Time in whole steps, and the logistic map: a rule that turns one number into the next"),
+  L("Bifurcation: the long-run behaviour splitting in two again and again, and Feigenbaum's constants"),
+  L("Control: the experiment that steadied a chaotic heart rhythm with small, timed pulses"),
 ];
 
 function ChaosParts() {
@@ -43,26 +43,26 @@ function ChaosParts() {
 
   return (
     <div>
-      <Heading level={1} className="mt-6">{L("The series, in order")}</Heading>
+      <Heading level={1} className="mt-6">{L("The planned videos, in order")}</Heading>
 
       {!topic ? (
         <div className="mt-6 max-w-2xl">
-          <Offline what={L("The parts of a topic are served by the backend. The flow below is the plan and needs nothing from it.")} />
+          <Offline what={L("The server that reports finished videos is not answering. The plan below does not depend on it.")} />
         </div>
       ) : null}
 
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
         {made === 0
-          ? L("No clip is made yet. The twenty-two steps below are the order they will be built in, and every one of them already has its mathematics on the play pages.")
-          : L("{{made}} of {{total}} steps have clips.", { made, total: STEPS.length })}
+          ? L("This topic is planned as a series of short videos, called clips. No clip is made yet. The list below gives the 22 steps in the order the clips will be made. The mathematics of every step can already be tried on the interactive pages of this topic, under Play.")
+          : L("Videos made so far: {{made}} of {{total}} steps.", { made, total: STEPS.length })}
       </Text>
 
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-        {L("Steps 17 to 19 are the fractal block, which is")}{" "}
+        {L("Steps 17 to 19 are about fractals: shapes that stay rough however closely they are examined. A separate topic of this site covers them:")}{" "}
         <Link to="/topics/fractals/parts" className="text-selected hover:underline">
-          {L("Topic 1")}
+          {L("Fractals")}
         </Link>
-        {L(". It was built first and out of order, and it stands alone, so this topic keeps it by reference rather than repeating it.")}
+        {L(". It was made first, so this topic links to it instead of repeating it.")}
       </Text>
 
       <ol className="mt-10 max-w-3xl space-y-1">
@@ -76,9 +76,9 @@ function ChaosParts() {
               <span className="w-8 shrink-0 text-muted-foreground">{i + 1}</span>
               <span className={borrowed ? "text-secondary" : "text-foreground/80"}>{title}</span>
               {borrowed ? (
-                <span data-text="note" className="ml-auto shrink-0">{L("From topic 1")}</span>
+                <span data-text="note" className="ml-auto shrink-0">{L("In the Fractals topic")}</span>
               ) : (
-                <span data-text="note" className="ml-auto shrink-0">{L("Not built")}</span>
+                <span data-text="note" className="ml-auto shrink-0">{L("Not made yet")}</span>
               )}
             </li>
           );

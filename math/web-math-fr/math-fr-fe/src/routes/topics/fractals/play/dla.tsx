@@ -14,6 +14,7 @@ import { useGrower } from "@/lib/grower";
 import { useLook } from "@/lib/store";
 import { boxDim } from "@/systems/ifs";
 import { massDim } from "@/systems/growth";
+import { PlayColumns } from "@/components/TaskPage";
 
 export const Route = createFileRoute("/topics/fractals/play/dla")({
   loader: () => api.system(TOPIC, "dla"),
@@ -108,48 +109,54 @@ function DlaPage() {
   return (
     <div>
       <Heading level={1} className="mt-4">{system?.name ?? L("Wandering particles")}</Heading>
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
-        <div data-slot="task-in" className="min-w-0 space-y-4">
+      <PlayColumns
+        input={<>
           <section data-slot="panel">
-            <Label>{L("WALK")}</Label>
+            <Label>{L("SETTINGS")}</Label>
             <div className="mt-3 space-y-2">
-              <Slider label={L("Particles")} min={200} max={4000} step={100} value={target} format={(v) => String(Math.round(v))} onChange={(v) => setTarget(Math.round(v))} />
-              <Slider label={L("Grid width")} min={81} max={201} step={10} value={size} format={(v) => String(Math.round(v) | 1)} onChange={(v) => setSize(Math.round(v) | 1)} />
-              <Slider label={L("Drift limit")} min={1.5} max={4} step={0.1} value={kill} format={(v) => L("{{v}} x r", { v: v.toFixed(1) })} onChange={setKill} />
-              <Slider label={L("Walks shown")} min={0} max={6} step={1} value={traced} format={(v) => String(Math.round(v))} onChange={(v) => setTraced(Math.round(v))} />
-              <Slider label={L("Seed")} min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
+              <Slider label={L("Particles to stick")} min={200} max={4000} step={100} value={target} format={(v) => String(Math.round(v))} onChange={(v) => setTarget(Math.round(v))} />
+              <Slider label={L("Grid width in cells")} min={81} max={201} step={10} value={size} format={(v) => String(Math.round(v) | 1)} onChange={(v) => setSize(Math.round(v) | 1)} />
+              <Slider label={L("Wander limit")} min={1.5} max={4} step={0.1} value={kill} format={(v) => L("{{v}} x ring radius", { v: v.toFixed(1) })} onChange={setKill} />
+              <Slider label={L("Paths to draw")} min={0} max={6} step={1} value={traced} format={(v) => String(Math.round(v))} onChange={(v) => setTraced(Math.round(v))} />
+              <Slider label={L("Random seed")} min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
               <PaletteBar />
             </div>
             <Text kind="note" as="p" className="mt-3">
-              {L("A particle starts on the ring, steps to one of four neighbours with chance a quarter each, and stops the moment it touches the cluster. Let go at is how far it may drift before it is abandoned and another is released. Walks kept draws the paths the last few particles actually took.")}
+              {L("What shape grows when particles wander at random and stick where they land? The picture is a square grid of cells. One particle is fixed at the centre and drawn as a larger square. Other particles are released one at a time from a random point on a ring, the thin circle a little outside the clump. At each step a particle moves one cell up, down, left or right, each with chance one quarter. It stops for good as soon as it lands next to a particle already in place. The clump of stuck particles is called the cluster.")}
+            </Text>
+            <Text kind="note" as="p" className="mt-3">
+              {L("Particles to stick: the growth stops when this many particles have stuck. Grid width: how many cells across the grid is. Wander limit: a particle that gets farther from the centre than this many times the radius of the ring is dropped, and a new one is released. A particle that reaches the edge of the grid is dropped too. Paths to draw: how many of the latest particles have their whole path drawn as thin lines. Random seed: a number that fixes the chain of random choices, so the same seed always gives the same cluster.")}
             </Text>
           </section>
 
           <Equations system={system} />
-        </div>
+        </>}
 
-        <div data-slot="task-out" className="min-w-0 space-y-3 lg:sticky lg:top-24 lg:self-start">
+        output={<>
           <section ref={stage} data-slot="plot" className="h-[min(620px,calc(100vh-12rem))] overflow-hidden" style={{ background: palette.back }}>
             <Frame draw={draw} className="block h-full w-full" />
           </section>
           <SaveImage stage={stage} name="wandering-particles" />
           <Readout
             rows={[
-              [L("Particles stuck"), tick ? L("{{stuck}} of {{target}}", { stuck: tick.order.length.toLocaleString(), target }) : L("starting")],
-              [L("reach"), tick ? L("{{r}} cells of {{half}}", { r: tick.radius.toFixed(0), half: size >> 1 }) : "-"],
-              [L("mass-radius dimension"), numbers.mass ? numbers.mass.toFixed(3) : "-"],
-              [L("Box dimension"), numbers.box ? numbers.box.toFixed(3) : "-"],
+              [L("Particles stuck to the cluster"), tick ? L("{{stuck}} of {{target}}", { stuck: tick.order.length.toLocaleString(), target }) : L("Starting")],
+              [L("Distance from the centre to the farthest particle"), tick ? L("{{r}} cells, of {{half}} to the edge", { r: tick.radius.toFixed(0), half: size >> 1 }) : "-"],
+              [L("Dimension, measured by counting particles in circles"), numbers.mass ? numbers.mass.toFixed(3) : "-"],
+              [L("Dimension, measured by counting boxes"), numbers.box ? numbers.box.toFixed(3) : "-"],
               [
-                L("Walks drawn"),
+                L("Paths drawn"),
                 tick && tick.tracks.length
-                  ? L("{{walks}}, {{steps}} steps between them", { walks: tick.tracks.length, steps: numbers.steps.toLocaleString() })
+                  ? L("{{walks}} paths, {{steps}} steps in all", { walks: tick.tracks.length, steps: numbers.steps.toLocaleString() })
                   : "-",
               ],
-              [L("state"), tick?.done ? L("The cluster reached the edge") : tick?.finished ? L("finished") : L("growing")],
+              [L("Status"), tick?.done ? L("Stopped: the cluster reached the edge of the grid") : tick?.finished ? L("Stopped: all the particles set on the slider have stuck") : L("Growing")],
             ]}
           />
-        </div>
-      </div>
+          <Text kind="note" as="p" className="mt-3">
+            {L("Dimension: a number that says how fully a shape fills a flat picture. A line has dimension 1, a filled square has dimension 2, and a branching cluster lies between. Counting particles in circles: circles of growing size are drawn around the centre and the particles inside each are counted. For a filled disc, a circle twice as wide holds four times as many particles. For a line, it holds twice as many. How fast the count grows gives the dimension. Counting boxes: the picture is covered with square boxes, the boxes that hold a particle are counted, and this is repeated with smaller boxes. A dash means there are too few particles to measure yet.")}
+          </Text>
+        </>}
+      />
     </div>
   );
 }

@@ -7,14 +7,16 @@ def test_the_index_lists_every_topic_in_reading_order(client: TestClient):
     """chaos sits next to fractals, which it contains, and the two
     neural-network topics sit next to each other."""
     body = client.get("/api/topics").json()
-    assert [t["number"] for t in body] == [0, 1, 2, 3, 4, 5]
+    assert [t["number"] for t in body] == [0, 1, 2, 3, 4, 5, 6, 7]
     assert [t["slug"] for t in body] == [
         "complex",
         "fractals",
         "chaos",
         "networks",
         "tokens",
+        "series",
         "primes",
+        "probability",
     ]
     for card in body:
         assert card["title"]
@@ -32,6 +34,8 @@ def test_only_the_finished_topic_says_it_is_ready(client: TestClient):
         "tokens": WRITING,
         "primes": WRITING,
         "complex": WRITING,
+        "series": WRITING,
+        "probability": WRITING,
     }
 
 
@@ -157,6 +161,37 @@ def test_the_tokens_topic_carries_its_fourteen_systems(client: TestClient):
         for block in system["blocks"]:
             assert block["tex"] and block["label"] and block["note"], system["id"]
     assert client.get("/api/topics/networks/equations/attend").status_code == 404
+
+
+def test_the_probability_topic_carries_its_twelve_systems(client: TestClient):
+    card = next(t for t in client.get("/api/topics").json() if t["slug"] == "probability")
+    assert card["number"] == 7
+    assert card["systems"] == 12
+    assert card["parts"] == 0
+    assert not card["aside"]
+    body = client.get("/api/topics/probability/equations").json()
+    assert len(body["definitions"]) == 3
+    assert [s["id"] for s in body["systems"]] == [
+        "dice",
+        "birthdays",
+        "test",
+        "doors",
+        "game",
+        "hats",
+        "galton",
+        "poisson",
+        "bins",
+        "memory",
+        "walks",
+        "ruin",
+    ]
+    for system in body["systems"]:
+        assert system["blocks"], system["id"]
+        assert system["dimension"]["tex"], system["id"]
+        for block in system["blocks"]:
+            assert block["tex"] and block["label"] and block["note"], system["id"]
+    assert client.get("/api/topics/probability/equations/ruin").json()["name"] == "Gambler's ruin"
+    assert client.get("/api/topics/series/equations/ruin").status_code == 404
 
 
 def test_the_fractals_topic_carries_the_whole_series(client: TestClient):

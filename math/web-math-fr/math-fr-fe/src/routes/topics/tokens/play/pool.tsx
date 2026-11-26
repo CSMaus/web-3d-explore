@@ -25,8 +25,8 @@ export const Route = createFileRoute("/topics/tokens/play/pool")({
 });
 
 const WAYS = [
-  { id: "mean", label: L("Average every position") },
-  { id: "last", label: L("Read off the last position") },
+  { id: "mean", label: L("Average of all positions") },
+  { id: "last", label: L("Last position only") },
 ];
 const PAIRS = [
   { id: "same", label: L("Same meaning, other words"), a: "the cat sleeps on the warm mat", b: "the cat is asleep on the mat" },
@@ -88,8 +88,8 @@ function PoolPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? L("One vector for a whole passage")}
-        job={L("Everything since the lookup page has been one vector per position, and yet people say the embedding of a document. That object has to be made on purpose: the per-position vectors collapsed into one. The job is to make it, two ways, for two passages, and to measure what the one vector can and cannot tell apart.")}
+        title={system?.name ?? L("One list of numbers for a whole passage")}
+        job={L("Can a whole passage be summed up by one list of numbers? A model cuts text into tokens, pieces such as words, and keeps one list of 16 numbers, called a vector, for each position. For tasks such as search, one list per passage is wanted instead. So the lists are collapsed into one: by averaging them, or by keeping only the last. Two passages are then compared by the cosine of the angle between their lists, seen as arrows: 1 means the same direction, 0 unrelated, a negative value opposite. The model is small and trained in the browser on a short text about a cat, a dog and a man. The question: do two passages with opposite meanings get lists that are far apart?")}
         input={
           <div className="space-y-3">
             <Choices options={PAIRS} value={pair} onPick={(id) => { const p = PAIRS.find((x) => x.id === id)!; setPair(id); setA(p.a); setB(p.b); reset(); }} />
@@ -109,13 +109,13 @@ function PoolPage() {
           <RunBar
             running={runner.running}
             count={at}
-            what={L("positions folded in")}
+            what={L("positions added in")}
             limit={most}
             onToggle={() => {
               if (!runner.running && at >= most) reset();
               runner.toggle();
             }}
-            onStep={(many) => setDone((v) => Math.min(most, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -126,7 +126,7 @@ function PoolPage() {
           <section ref={stage} className="space-y-2">
             {[{ label: L("Passage one"), t: ta, h: ha, v: va }, { label: L("Passage two"), t: tb, h: hb, v: vb }].map((side) => (
               <div key={side.label} className="rounded border border-border p-3">
-                <div data-text="caption">{side.label}: {L("{{n}} positions, {{n}} vectors of {{width}}", { n: side.t.length, width: WIDTH })}</div>
+                <div data-text="caption">{side.label}: {L("{{n}} tokens, so {{n}} lists of {{width}} numbers", { n: side.t.length, width: WIDTH })}</div>
                 <div className="mt-2"><TokenRow tokens={side.t} size="sm" dimFrom={at} /></div>
                 <div><div className="mt-2 h-[120px]">
                   <Plot
@@ -156,7 +156,7 @@ function PoolPage() {
                       ctx.fillText(at > 0 ? side.v.slice(0, 6).map((v) => v.toFixed(2)).join(" ") + " ..." : "", x0, 72);
                     }}
                   />
-                </div><Caption>{way === "mean" ? L("Collapsed: the average") : L("Collapsed: the last row")}</Caption></div>
+                </div><Caption>{way === "mean" ? L("Left: one row per token, one cell per number; the two colours mark positive and negative. Right: the single list made so far, the average of the rows added in, with its first six numbers.") : L("Left: one row per token, one cell per number; the two colours mark positive and negative. Right: the single list made so far, the last row added in, with its first six numbers.")}</Caption></div>
               </div>
             ))}
           </section>
@@ -165,22 +165,22 @@ function PoolPage() {
           <div className="space-y-2">
             <Verdict good={at === 0 ? undefined : pair === "opposite" ? false : undefined}>
               {at === 0
-                ? L("Two passages, {{a}} and {{b}} tokens, so {{a}} and {{b}} vectors. Press run to fold them into one vector each and compare.", { a: ta.length, b: tb.length })
-                : `${L(at === 1 ? "After folding in {{n}} position the two passage vectors have cosine {{cos}}." : "After folding in {{n}} positions the two passage vectors have cosine {{cos}}.", { n: at, cos: cos.toFixed(3) })}${at >= most ? ` ${L("Across the three pairs, {{how}} gives: {{list}}.", { how: way === "mean" ? L("averaging") : L("the last position"), list: all.map((p) => `${p.label} ${p.cos.toFixed(2)}`).join("; ") })} ${all[1].cos > all[2].cos ? L("The pair with opposite meaning sits closer than the pair with a different subject: the one vector is a summary of the words used, and a single \"not\" barely moves it.") : L("On this model the different subject is furthest, and the opposite pair is not far behind the same-meaning pair.")}` : ""}`}
+                ? L("The two passages have {{a}} and {{b}} tokens, so {{a}} and {{b}} lists of numbers. Run collapses each passage into one list and compares the two.", { a: ta.length, b: tb.length })
+                : `${L(at === 1 ? "After {{n}} position, the cosine between the two passage lists is {{cos}}." : "After {{n}} positions, the cosine between the two passage lists is {{cos}}.", { n: at, cos: cos.toFixed(3) })}${at >= most ? ` ${L("Across the three pairs, {{how}} gives: {{list}}.", { how: way === "mean" ? L("averaging") : L("taking the last position"), list: all.map((p) => `${p.label} ${p.cos.toFixed(2)}`).join("; ") })} ${all[1].cos > all[2].cos ? L("The pair with opposite meanings is closer than the pair about different things. One list sums up which words were used, and a single \"not\" hardly changes it.") : L("With this model the pair about different things is furthest apart, and the pair with opposite meanings is nearly as close as the pair with the same meaning.")}` : ""}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("Vectors before collapsing")}</dt>
-              <dd className="text-right text-foreground/80">{L("{{a}} and {{b}}, Each {{width}} wide", { a: ta.length, b: tb.length, width: WIDTH })}</dd>
-              <dt>{L("Vectors after")}</dt>
-              <dd className="text-right text-foreground/80">{L("1 and 1, each {{width}} wide", { width: WIDTH })}</dd>
-              <dt>{L("Cosine between them now")}</dt>
+              <dt>{L("Lists before collapsing")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{a}} and {{b}}, each of {{width}} numbers", { a: ta.length, b: tb.length, width: WIDTH })}</dd>
+              <dt>{L("Lists after")}</dt>
+              <dd className="text-right text-foreground/80">{L("1 and 1, each of {{width}} numbers", { width: WIDTH })}</dd>
+              <dt>{L("Cosine between the two lists now")}</dt>
               <dd className="text-right text-foreground/80">{at > 0 ? cos.toFixed(4) : "-"}</dd>
               {all.map((p) => (
-                <Row key={p.id} label={L("{{pair}}, fully folded", { pair: p.label })} value={p.cos.toFixed(3)} />
+                <Row key={p.id} label={L("{{pair}}: cosine with all positions in", { pair: p.label })} value={p.cos.toFixed(3)} />
               ))}
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("A retrieval model makes exactly this vector, but trains for it: pairs that belong together are pulled close and pairs that do not are pushed apart, a different loss on the same kind of vector. Searching a store of passages is then nearest neighbours over these. The weakness shown here survives that training in weaker form: the vector is a lossy summary, and passages that share words and structure sit close whatever they say. A generative model never makes this vector at all.")}
+              {L("Search systems that find passages by meaning build this kind of single list too, but they are trained for it. Pairs of passages that belong together are pulled close, and other pairs are pushed apart. A search then returns the passages whose lists are nearest to the list of the query. The weakness shown here survives that training in a milder form: one list loses detail, and passages that share words and structure stay close whatever they say. A model that writes text never builds this single list at all.")}
             </Text>
           </div>
         }

@@ -10,6 +10,8 @@ import { SYSTEMS as CHAOS_PAGES } from "@/lib/chaos";
 import { SYSTEMS as COMPLEX_PAGES } from "@/lib/complex";
 import { SYSTEMS as NETWORK_PAGES } from "@/lib/networks";
 import { SYSTEMS as PRIMES_PAGES } from "@/lib/primes";
+import { SYSTEMS as PROBABILITY_PAGES } from "@/lib/probability";
+import { SYSTEMS as SERIES_PAGES } from "@/lib/series";
 import { SHAPES, topicLabel } from "@/lib/shapes";
 import { SYSTEMS as FRACTAL_PAGES } from "@/lib/systems";
 import { SYSTEMS as TOKEN_PAGES } from "@/lib/tokens";
@@ -30,6 +32,8 @@ const PAGES = {
   networks: NETWORK_PAGES,
   tokens: TOKEN_PAGES,
   primes: PRIMES_PAGES,
+  series: SERIES_PAGES,
+  probability: PROBABILITY_PAGES,
 } as const;
 
 type PlayPage = { id: string; to: string; label: string; tex?: string; texSaid?: string };

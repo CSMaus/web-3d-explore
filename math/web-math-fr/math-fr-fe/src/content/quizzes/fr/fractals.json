@@ -1,0 +1,266 @@
+{
+  "slug": "fractals",
+  "title": "Test : fractales",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Une côte est mesurée au compas à pointes sèches : un instrument à deux branches écartées d'une distance fixe, qui avance pas à pas le long de la côte. L'écartement des branches est divisé par deux, encore et encore. Que devient la longueur mesurée ?",
+      "options": [
+        {
+          "text": "Elle se fixe sur une valeur, comme la longueur d'un cercle",
+          "correct": false,
+          "why": "Se fixer, c'est ce que fait une courbe lisse comme un cercle. Une côte ne se fixe pas : sa longueur mesurée continue d'augmenter."
+        },
+        {
+          "text": "Elle diminue, car chaque pas plus court oublie plus de côte",
+          "correct": false,
+          "why": "Un pas plus court oublie moins de côte, pas davantage. Il entre dans les petites baies qu'un pas plus long enjambait."
+        },
+        {
+          "text": "Elle augmente sans cesse, car les pas courts suivent les baies que les longs coupent",
+          "correct": true,
+          "why": "Sur une carte de la Grande-Bretagne, la longueur mesurée est passée de 17,7 à 33,4 quand le pas a été divisé par deux quatre fois. Un pas plus petit trouve des baies plus petites, et le total ne se fixe jamais."
+        },
+        {
+          "text": "Elle reste la même, car la côte elle-même ne change pas du tout",
+          "correct": false,
+          "why": "La côte ne change pas, mais ce qu'un pas d'une taille donnée peut suivre change. Le nombre de pas augmente plus vite que le pas ne raccourcit."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Les points du plan peuvent être traités comme des nombres, appelés nombres complexes, qui peuvent être élevés au carré et additionnés. L'ensemble de Mandelbrot est fait des points c pour lesquels la règle « partir de zéro, élever au carré, ajouter c, recommencer » reste à moins de 2 de zéro. L'ensemble de Julia de c vient de la même règle, avec c fixé et le point de départ qui change : il est fait des points de départ qui restent. Que dit l'ensemble de Mandelbrot des ensembles de Julia ?",
+      "options": [
+        {
+          "text": "Pour quels c l'ensemble de Julia est d'un seul tenant, et pour quels c il est poussière",
+          "correct": true,
+          "why": "Si c est dans l'ensemble de Mandelbrot, l'ensemble de Julia de c tient d'un seul morceau. Si c est dehors, il se brise en grains séparés, comme de la poussière. Le chemin parti de zéro reste à moins de 2 exactement quand l'ensemble de Julia est d'un seul tenant."
+        },
+        {
+          "text": "Quels points de départ s'échappent pour une seule valeur fixée de c",
+          "correct": false,
+          "why": "Cela décrit un seul ensemble de Julia. L'ensemble de Mandelbrot fait varier c et part toujours de zéro."
+        },
+        {
+          "text": "Combien d'étapes il faut pour dessiner chaque ensemble de Julia à l'écran",
+          "correct": false,
+          "why": "Les bandes de couleur autour de l'ensemble de Mandelbrot comptent, pour chaque c, les étapes avant la fuite. L'appartenance de c dépend de ce que son ensemble de Julia tient d'un seul morceau ou non."
+        },
+        {
+          "text": "Quels ensembles de Julia remplissent une surface, de dimension exactement 2",
+          "correct": false,
+          "why": "L'ensemble de Mandelbrot ne trie pas les ensembles de Julia par dimension. Il les trie en ensembles d'un seul tenant et en poussière."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Une figure de Lichtenberg est la trace ramifiée qu'une décharge électrique grave dans le verre ou le bois. Un ordinateur la fait pousser point par point : à chaque étape, un point voisin de la figure s'y ajoute. La chance d'un point est proportionnelle à l'intensité du champ électrique en ce point, élevée à une puissance η (êta), appelée puissance du champ. Le champ est le plus fort aux pointes. Que se passe-t-il quand η monte au-dessus de 0 ?",
+      "options": [
+        {
+          "text": "Tous les points voisins de la figure ont la même chance de s'y ajouter",
+          "correct": false,
+          "why": "Les chances égales correspondent à η = 0, car tout nombre élevé à la puissance 0 vaut 1. Monter η éloigne de ce cas, vers les pointes."
+        },
+        {
+          "text": "La figure se ramifie davantage, devient touffue et sa dimension augmente",
+          "correct": false,
+          "why": "C'est l'inverse. Une figure touffue vient d'un η faible, une aiguille fine d'un η fort."
+        },
+        {
+          "text": "La croissance cesse d'être aléatoire, et chaque essai donne la même figure",
+          "correct": false,
+          "why": "Chaque nouveau point est toujours tiré au hasard, donc deux essais ne se ressemblent jamais. La puissance η change les chances, pas le hasard."
+        },
+        {
+          "text": "Les pointes gagnent plus de points, la figure s'affine et sa dimension baisse",
+          "correct": true,
+          "why": "Une puissance plus forte favorise le champ le plus fort, situé aux pointes : la figure s'affine jusqu'à un seul canal. Sa dimension, un nombre qui mesure à quel point les branches remplissent la surface, passe de 1,603 pour η = 0,6 à 1,208 pour η = 2,0."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Le tapis de Sierpinski part d'un carré découpé par une grille de 3 sur 3 en 9 petits carrés. Celui du milieu est retiré, les 8 autres sont gardés, et la même découpe se répète dans chaque carré gardé, sans fin. Pour une forme faite de N copies d'elle-même, chacune k fois moins large, la dimension d est la puissance à laquelle il faut élever k pour obtenir N. Quelle est la dimension du tapis ? (log désigne le logarithme, qui trouve une telle puissance.)",
+      "options": [
+        {
+          "text": "8/3, environ 2,667, le nombre de copies divisé par 3",
+          "correct": false,
+          "why": "La dimension est une puissance, trouvée avec des logarithmes, pas un quotient. Une valeur au-dessus de 2 voudrait dire plus qu'un carré plein."
+        },
+        {
+          "text": "log 8 / log 3, environ 1,893",
+          "correct": true,
+          "why": "Ici N = 8 et k = 3, donc 3 puissance d doit valoir 8. Cela donne d = log 8 / log 3 = 1,893."
+        },
+        {
+          "text": "log 3 / log 8, environ 0,528",
+          "correct": false,
+          "why": "La formule est à l'envers. Le nombre de copies va en haut, car 3 puissance d doit valoir 8."
+        },
+        {
+          "text": "log 3 / log 2, environ 1,585",
+          "correct": false,
+          "why": "C'est le triangle de Sierpinski : 3 copies, chacune deux fois moins large. Le tapis garde davantage, sa dimension est donc plus proche de 2."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Un carré est découpé par une grille de 3 sur 3. Le carré central et les quatre carrés au milieu des côtés sont gardés, 5 en tout, et les quatre coins sont retirés. La même découpe se répète dans chaque carré gardé, sans fin. Pour une forme faite de N copies d'elle-même, chacune k fois moins large, la dimension d est la puissance à laquelle il faut élever k pour obtenir N. Combien vaut d ? (log désigne le logarithme, qui trouve une telle puissance.)",
+      "options": [
+        {
+          "text": "5/3, environ 1,667",
+          "correct": false,
+          "why": "La dimension est une puissance, trouvée avec un logarithme. Le simple quotient des deux nombres n'en est pas une."
+        },
+        {
+          "text": "log 5 / log 2, environ 2,322",
+          "correct": false,
+          "why": "Ce calcul suppose des copies deux fois moins larges. Ici chaque copie est trois fois moins large, la base est donc 3."
+        },
+        {
+          "text": "2, parce que les morceaux sont des carrés",
+          "correct": false,
+          "why": "La forme des morceaux ne décide rien. Garder 5 carrés sur 9 à chaque étape laisse bien moins qu'un carré plein."
+        },
+        {
+          "text": "log 5 / log 3, environ 1,465",
+          "correct": true,
+          "why": "La règle donne 5 copies, chacune trois fois moins large. Donc 3 puissance d vaut 5, et d = log 5 / log 3 = 1,465."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "La courbe de Koch part d'un segment de longueur 1. À chaque étape, chaque morceau est remplacé par 4 morceaux trois fois plus courts : le tiers du milieu du morceau est relevé en une pointe à deux côtés. Quelle est la longueur de la courbe après 3 étapes ?",
+      "options": [
+        {
+          "text": "(4/3)³ = 64/27, environ 2,37",
+          "correct": true,
+          "why": "Chaque étape multiplie la longueur par 4 × 1/3 = 4/3. Trois étapes donnent (4/3)³ = 2,37. Un facteur fixe plus grand que 1, répété, n'a pas de plafond."
+        },
+        {
+          "text": "2, en ajoutant un tiers à chaque étape",
+          "correct": false,
+          "why": "La longueur est multipliée à chaque étape, elle n'augmente pas d'une quantité fixe. Chaque étape ajoute un tiers de la longueur du moment, et cette longueur ne cesse de grandir."
+        },
+        {
+          "text": "64, le nombre de morceaux",
+          "correct": false,
+          "why": "64 est le nombre de morceaux, mais chacun ne mesure que 1/27. La longueur est le nombre de morceaux multiplié par la longueur d'un morceau."
+        },
+        {
+          "text": "1, parce que la courbe reste dans le même rectangle",
+          "correct": false,
+          "why": "Le rectangle ne change pas, mais la courbe s'y froisse de plus en plus. Une courbe enfermée dans une petite région peut quand même s'allonger sans limite."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "Le comptage de boîtes pose une grille de cases carrées sur une forme et compte les cases qu'elle touche. Pour une taille de case, une forme touche 200 cases. Avec des cases deux fois moins larges, elle en touche 566. Diviser les cases par deux multiplie leur nombre par 2 puissance d, où d est la dimension. Combien vaut d ? (log désigne le logarithme, qui trouve une puissance.)",
+      "options": [
+        {
+          "text": "Environ 2,83, le facteur de croissance du nombre",
+          "correct": false,
+          "why": "2,83 est le facteur lui-même. La dimension est la puissance qui change 2 en 2,83."
+        },
+        {
+          "text": "Environ 0,67, soit log 2 / log 2,83",
+          "correct": false,
+          "why": "La formule est à l'envers. La croissance du nombre de cases va en haut, le facteur 2 en bas."
+        },
+        {
+          "text": "Environ 1,50, soit log(566/200) / log 2",
+          "correct": true,
+          "why": "Le nombre de cases a été multiplié par 566 / 200 = 2,83, et 2 puissance 1,5 vaut 2,83."
+        },
+        {
+          "text": "Exactement 2, puisque les cases sont des carrés",
+          "correct": false,
+          "why": "Une surface pleine toucherait 4 fois plus de cases en les divisant par deux. 2,83 est inférieur à 4 : la forme se situe entre une courbe et une surface pleine."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "L'ensemble de Mandelbrot se teste par un chemin : partir de 0, puis encore et encore élever le nombre au carré et ajouter c. Si une valeur passe un jour à plus de 2 de zéro, le chemin s'échappe et c est hors de l'ensemble. Un point c hors de l'ensemble reçoit la couleur du nombre d'étapes avant ce moment. Pour c = 0,5, le chemin donne 0,5, 0,75, 1,06, 1,63, 3,15. Quel est son nombre d'étapes ?",
+      "options": [
+        {
+          "text": "4, car 1,63 est assez proche de 2",
+          "correct": false,
+          "why": "1,63 est encore inférieur à 2. Le test a un seul seuil, et seule une valeur au-dessus de 2 compte."
+        },
+        {
+          "text": "5, car 3,15 est la première valeur au-dessus de 2",
+          "correct": true,
+          "why": "3,15 est la première valeur qui dépasse 2 : 0,5 est donc hors de l'ensemble, avec 5 étapes. Les points plus proches du bord de l'ensemble mettent plus d'étapes à s'échapper."
+        },
+        {
+          "text": "Aucun nombre : 0,5 est dans l'ensemble, car il est inférieur à 2",
+          "correct": false,
+          "why": "Que c soit inférieur à 2 ne décide rien. Le chemin parti de zéro doit rester à moins de 2 pour toujours, et celui-ci sort."
+        },
+        {
+          "text": "1, car la première étape tombe déjà sur c",
+          "correct": false,
+          "why": "Tout chemin parti de zéro tombe sur c à la première étape. Le compte est la première étape dont la valeur est à plus de 2 de zéro."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "La fougère de Barnsley est dessinée par quatre déplacements. Chacun rétrécit, tourne et décale un point. Un point est déplacé encore et encore, par un déplacement tiré au hasard à chaque fois, et chaque endroit où il arrive est marqué. La même fougère apparaît quel que soit le point de départ, même très éloigné. Pourquoi ?",
+      "options": [
+        {
+          "text": "Chacun des quatre déplacements rapproche deux points quelconques : le départ s'oublie",
+          "correct": true,
+          "why": "Chaque déplacement réduit les distances d'un facteur inférieur à 1 : 0,160, 0,851, 0,341 et 0,379. Les distances diminuent à chaque étape, donc depuis n'importe quel départ les points sont attirés vers la même forme."
+        },
+        {
+          "text": "Les déplacements sont tirés au hasard, et sur de nombreuses étapes le hasard efface le départ",
+          "correct": false,
+          "why": "La même liste de déplacements tirés au hasard, lancée depuis trois départs différents, donne la même fougère. C'est le rétrécissement qui agit. Le tirage au hasard décide seulement où, sur la fougère, tombe la marque suivante."
+        },
+        {
+          "text": "Le deuxième déplacement est tiré 85 fois sur 100, il décide donc seul de la forme",
+          "correct": false,
+          "why": "Ce poids explique pourquoi la plupart des marques viennent du deuxième déplacement. Il n'explique pas pourquoi le départ s'oublie, et les quatre déplacements façonnent la fougère."
+        },
+        {
+          "text": "Le point de départ est d'abord placé sur la fougère, avant que le dessin commence",
+          "correct": false,
+          "why": "Cette étape n'existe pas. Un départ loin de la fougère, même un cercle ou un carré entier, aboutit à la même fougère."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Le comptage de boîtes pose une grille de cases sur une forme et compte les cases qu'elle touche. Sur le bord de l'ensemble de Mandelbrot, il donne une dimension de 0,919, 1,055 et 1,114 pour des images de 256, 512 et 1024 pixels de large. La dimension, un nombre qui mesure la rugosité, vaut ici exactement 2, et c'est démontré. Qu'est-ce qui explique l'écart ?",
+      "options": [
+        {
+          "text": "Le comptage de boîtes ne marche pas du tout sur les courbes, ces trois nombres ne veulent rien dire",
+          "correct": false,
+          "why": "Le comptage de boîtes a donné 1,228 sur la côte de la Grande-Bretagne, à côté de 1,232 obtenu au compas. Il marche sur les courbes. Ici, il n'a pas encore atteint sa valeur finale."
+        },
+        {
+          "text": "La vraie dimension est d'environ 1,1, et la valeur démontrée de 2 n'est qu'une estimation",
+          "correct": false,
+          "why": "Une démonstration est exacte. Des nombres qui montent quand l'image devient plus fine n'ont pas encore atteint la réponse."
+        },
+        {
+          "text": "Le bord a des détails à toutes les échelles, aucune image finie n'atteint la limite",
+          "correct": true,
+          "why": "Chaque image plus fine trouve plus de détails, et la valeur mesurée monte à chaque gain de résolution. Grossi 1074 fois, le bord montre encore de nouvelles spirales : toute grille en manque une partie. La valeur est connue par une démonstration, pas par un comptage."
+        },
+        {
+          "text": "Le bord est lisse, une courbe lisse a pour dimension 1, donc 2 est une erreur",
+          "correct": false,
+          "why": "Seul le contour du corps principal de l'ensemble est lisse. Le bord entier porte des filaments fins à toutes les échelles, et sa dimension vaut 2."
+        }
+      ]
+    }
+  ]
+}

@@ -24,18 +24,18 @@ export const Route = createFileRoute("/topics/networks/play/blame")({
 
 const PHASES = [
   L("The dot goes in"),
-  L("The middle units answer"),
-  L("The last unit answers"),
-  L("How wrong, at the output"),
-  L("The blame flows back"),
+  L("The middle neurons answer"),
+  L("The output neuron answers"),
+  L("The error at the output"),
+  L("The error is passed back"),
   L("Every number moves a little"),
 ] as const;
 const PICKS = [
   { id: "cycle", label: L("Each dot in turn") },
-  { id: "0", label: L("(0,0) wants rose") },
-  { id: "1", label: L("(0,1) wants green") },
-  { id: "2", label: L("(1,0) wants green") },
-  { id: "3", label: L("(1,1) wants rose") },
+  { id: "0", label: L("Only (0, 0), right answer 0") },
+  { id: "1", label: L("Only (0, 1), right answer 1") },
+  { id: "2", label: L("Only (1, 0), right answer 1") },
+  { id: "3", label: L("Only (1, 1), right answer 0") },
 ];
 
 /**
@@ -65,7 +65,7 @@ function BlamePage() {
   const system = Route.useLoaderData();
   const stage = useRef<HTMLElement | null>(null);
   const [pick, setPick] = useState("cycle");
-  const [rate, setRate] = useState(2);
+  const [rate, setRate] = useState(4.2);
   const [perFrame, setPerFrame] = useState(0.04);
   const data = useMemo(() => dataset("xor", 4), []);
   const box = useMemo(() => boxOf(data.X, 0.5), [data]);
@@ -150,43 +150,43 @@ function BlamePage() {
     switch (phase) {
       case -1:
         return y[0]
-          ? L("The dot ({{a}}, {{b}}) is about to go in. It wants green. Press run, or one step, and watch it pass through six moments.", { a: x[0], b: x[1] })
-          : L("The dot ({{a}}, {{b}}) is about to go in. It wants rose. Press run, or one step, and watch it pass through six moments.", { a: x[0], b: x[1] });
+          ? L("The dot ({{a}}, {{b}}) is about to go in. The right answer for it is 1. Press Run or One step to follow it through six moments.", { a: x[0], b: x[1] })
+          : L("The dot ({{a}}, {{b}}) is about to go in. The right answer for it is 0. Press Run or One step to follow it through six moments.", { a: x[0], b: x[1] });
       case 0:
-        return L("The dot ({{a}}, {{b}}) goes in. Its two numbers sit on the two input units.", { a: x[0], b: x[1] });
+        return L("The dot ({{a}}, {{b}}) goes in. Its two coordinates sit on the two input neurons.", { a: x[0], b: x[1] });
       case 1:
-        return L("Each middle unit weighs the two inputs with its own weights, adds its bias, and squashes: {{values}}.", { values: t.pass.a[1].map((v) => v.toFixed(2)).join(", ") });
+        return L("Each middle neuron multiplies the two inputs by its own weights, adds its bias and squashes the total. Their answers: {{values}}.", { values: t.pass.a[1].map((v) => v.toFixed(2)).join(", ") });
       case 2:
-        return L("The last unit weighs those three answers and squashes: {{out}}. It wanted {{want}}.", { out: t.pass.a[2][0].toFixed(3), want: y[0] });
+        return L("The output neuron multiplies those three answers by its weights, adds its bias and squashes: {{out}}. The right answer is {{want}}.", { out: t.pass.a[2][0].toFixed(3), want: y[0] });
       case 3:
-        return L("The miss is {{miss}}: the answer minus what it wanted. Through the squash's own slope that becomes a blame of {{blame}} on the last unit. {{meaning}}", {
+        return L("The miss is {{miss}}: the answer minus the right answer. Multiplied by the slope of the output's squashing function at that point, it becomes the output neuron's error signal: {{blame}}. {{meaning}}", {
           miss: t.miss.toFixed(3),
           blame: t.dOut[0].toFixed(3),
-          meaning: t.miss > 0 ? L("Rose means: the answer was too high.") : L("Green means: the answer was too low."),
+          meaning: t.miss > 0 ? L("A positive signal means the answer was too high.") : L("A negative signal means the answer was too low."),
         });
       case 4:
-        return L("The blame flows back along the wires. Each middle unit gets a share in proportion to its weight into the last unit, times its own squash's slope: {{shares}}. Unit {{unit}} carries the most, because its wire to the output is the strongest and it was not saturated.", {
+        return L("The error is passed back along the connections. Each middle neuron gets a share: the output's error signal, times the weight of its connection to the output, times the slope of its own squashing function. The shares: {{shares}}. Neuron {{unit}} gets the largest share, because for it the product of connection weight and slope is the largest.", {
           shares: t.dHid.map((d) => d.toFixed(3)).join(", "),
           unit: strongest + 1,
         });
       default:
         return Math.abs(after - y[0]) < Math.abs(t.pass.a[2][0] - y[0])
-          ? L("Every weight moves: by minus the step size, times the blame on the unit it feeds, times the value that came along it. The halo on each wire shows the move (green up, rose down). The output for this dot was {{was}} and is now {{now}}, closer to {{want}}.", { was: t.pass.a[2][0].toFixed(3), now: after.toFixed(3), want: y[0] })
-          : L("Every weight moves: by minus the step size, times the blame on the unit it feeds, times the value that came along it. The halo on each wire shows the move (green up, rose down). The output for this dot was {{was}} and is now {{now}}, not closer to {{want}}.", { was: t.pass.a[2][0].toFixed(3), now: after.toFixed(3), want: y[0] });
+          ? L("Every weight moves by minus the step size, times the error signal of the neuron it feeds, times the value that came along it. The halo around each connection shows its move, one colour for up and the other for down. For this dot the output was {{was}} and is now {{now}}, closer to {{want}}.", { was: t.pass.a[2][0].toFixed(3), now: after.toFixed(3), want: y[0] })
+          : L("Every weight moves by minus the step size, times the error signal of the neuron it feeds, times the value that came along it. The halo around each connection shows its move, one colour for up and the other for down. For this dot the output was {{was}} and is now {{now}}, not closer to {{want}}.", { was: t.pass.a[2][0].toFixed(3), now: after.toFixed(3), want: y[0] });
     }
   })();
 
   return (
     <div>
       <TaskPage
-        title={system?.name ?? L("The correction, one dot at a time")}
-        job={L("The last two pages moved every number downhill and did not say how the downhill was found. This page does one correction slowly, on the four dots of exclusive or: a dot goes forward through the network, the miss is measured at the end, and the blame for it flows back along the same wires. Each number then moves by the share of the blame that reached it.")}
+        title={system?.name ?? L("How the error is passed back, one dot at a time")}
+        job={L("How does a neural network find out which way to move each of its numbers? This page follows one correction slowly. The network has 2 inputs, 3 neurons in a middle layer and 1 output neuron. A neuron multiplies each input by a number called a weight, adds a number called a bias and squashes the total into a narrow range. With all weights and biases, the network has 13 numbers. The data are four dots at the corners of a square: (0, 0) and (1, 1) should get the answer 0, (0, 1) and (1, 0) the answer 1. No straight line divides them. One correction goes like this. A dot goes forward through the network and gives an answer. The answer is compared with the right one. The difference, the error, is then passed backwards along the same connections, and each neuron receives its share of it. Each number then moves in proportion to the share that reached it. This way of finding the moves is called backpropagation.")}
         input={
           <div className="space-y-3">
             <Choices options={PICKS} value={pick} onPick={(id) => { setPick(id); restart(); }} />
             <Slider label={L("Step size")} min={0.1} max={5} step={0.1} value={rate} format={(v) => v.toFixed(1)} onChange={setRate} />
             <Text kind="note" as="p">
-              {L("One step here is one of six moments, not one correction. Six steps make one correction on one dot. Run it fast and the plane at the right learns exclusive or, which one line could not do.")}
+              {L("Here one step of the run is one of six moments, not a whole correction: six steps make one correction on one dot. The buttons above choose the dot: each in turn, or always the same one. 'Step size' sets how far the numbers move in each correction. Run fast, and the network learns to divide the four dots, which no single straight line can do.")}
             </Text>
           </div>
         }
@@ -194,7 +194,7 @@ function BlamePage() {
           <RunBar
             running={runner.running}
             count={tick}
-            what={L("moments, {{n}} corrections", { n: Math.floor(tick / 6) })}
+            what={L("moments, {{n}} corrections done", { n: Math.floor(tick / 6) })}
             limit={limit * 6}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 10, max: 2000, step: 10 }}
@@ -223,7 +223,7 @@ function BlamePage() {
                       values: phase >= 3 && phase <= 4 ? [x, phase === 4 ? t.dHid : t.pass.a[1], t.dOut] : values,
                       tint,
                       upTo: phase < 0 ? 0 : phase <= 2 ? upTo : 3,
-                      labels: [L("in"), L("middle"), L("out")],
+                      labels: [L("inputs"), L("middle"), L("output")],
                       change: phase === 5 ? t.change : undefined,
                       radius: 18,
                     });
@@ -235,7 +235,7 @@ function BlamePage() {
                       const [ox, oy] = l.at[2][0];
                       ctx.fillStyle = MUTED;
                       ctx.textAlign = "center";
-                      ctx.fillText(L("Wanted {{y}}", { y: y[0] }), ox, oy + 34);
+                      ctx.fillText(L("Right answer {{y}}", { y: y[0] }), ox, oy + 34);
                       ctx.textAlign = "right";
                       ctx.textAlign = "left";
                     }
@@ -259,7 +259,7 @@ function BlamePage() {
                     }
                   }}
                 />
-              </div><Caption>{phase < 0 ? L("Six moments, in order:") : L("Moment {{n}} of 6: {{name}}", { n: phase + 1, name: PHASES[phase] })}. {phase === 4 ? L("Circles now show blame") : L("Circle shows blame")}</Caption></div>
+              </div><Caption>{phase < 0 ? L("The network as circles: 2 inputs, 3 middle neurons, 1 output, joined by their connections") : L("Moment {{n}} of 6: {{name}}", { n: phase + 1, name: PHASES[phase] })}. {phase === 4 ? L("Numbers in the middle and output circles: error signals") : phase === 3 ? L("Number in the output circle: its error signal") : L("Numbers in the circles: the neurons' answers")}</Caption></div>
               <div className="space-y-2">
                 <div><div data-slot="plot" className="h-[230px] overflow-hidden">
                   <Plot
@@ -278,7 +278,7 @@ function BlamePage() {
 
                     }}
                   />
-                </div><Caption>{L("The four dots and the answer so far")}</Caption></div>
+                </div><Caption>{L("The four dots on the plane. Shading: the network's answer at every point so far. Small ring: a dot on the wrong side. Large ring: the dot in use now")}</Caption></div>
                 <div><div data-slot="plot" className="h-[142px] overflow-hidden">
                   <Plot
                     className="h-full w-full"
@@ -290,7 +290,7 @@ function BlamePage() {
                       pen.line(view.history, ONE, 1.8);
                     }}
                   />
-                </div><Caption>{L("How wrong, per correction")}</Caption></div>
+                </div><Caption>{L("Up: the error score over all four dots. Across: corrections made")}</Caption></div>
               </div>
             </div>
           </section>
@@ -299,29 +299,29 @@ function BlamePage() {
           <div className="space-y-2">
             <Verdict>{words}</Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("The dot, and what it wants")}</dt>
-              <dd className="text-right text-foreground/80">({x[0]}, {x[1]}) {L("Wants {{y}}", { y: y[0] })}</dd>
+              <dt>{L("The dot in use, and its right answer")}</dt>
+              <dd className="text-right text-foreground/80">({x[0]}, {x[1]}) {L("right answer {{y}}", { y: y[0] })}</dd>
               <dt>{L("The network's answer for it")}</dt>
               <dd className="text-right text-foreground/80">{t.pass.a[2][0].toFixed(4)}</dd>
-              <dt>{L("Blame at the output")}</dt>
+              <dt>{L("Error signal at the output")}</dt>
               <dd className="text-right text-foreground/80">{t.dOut[0].toFixed(4)}</dd>
-              <dt>{L("Blame reaching the three middle units")}</dt>
+              <dt>{L("Error signals reaching the three middle neurons")}</dt>
               <dd className="text-right text-foreground/80">{t.dHid.map((d) => d.toFixed(3)).join(", ")}</dd>
-              <dt>{L("Largest move any weight makes this correction")}</dt>
+              <dt>{L("Largest move of any weight in this correction")}</dt>
               <dd className="text-right text-foreground/80">{Math.max(...t.change.flat(2).map(Math.abs)).toFixed(4)}</dd>
-              <dt>{L("The same slopes by nudging each number by hand, worst disagreement")}</dt>
+              <dt>{L("Check: largest difference from the slopes found by moving each number a tiny amount")}</dt>
               <dd className="text-right text-foreground/80">{check.toExponential(1)}</dd>
-              <dt>{L("How wrong over all four dots")}</dt>
+              <dt>{L("Error score over all four dots")}</dt>
               <dd className="text-right text-foreground/80">{loss(view.net, data, "mse").toFixed(5)}</dd>
-              <dt>{L("Slopes needed, one per number in the network")}</dt>
+              <dt>{L("Slopes needed: one per number in the network")}</dt>
               <dd className="text-right text-foreground/80">{params(shown.net).total}</dd>
-              <dt>{L("Work to get them all by one pass back, in forward passes")}</dt>
+              <dt>{L("Cost of finding them all in one backward pass, counted in forward passes")}</dt>
               <dd className="text-right text-foreground/80">{L("about {{n}}", { n: 1 + passes(shown.net).ratio })}</dd>
-              <dt>{L("Work to get them all by nudging each number, in forward passes")}</dt>
+              <dt>{L("Cost of finding them by moving each number separately, counted in forward passes")}</dt>
               <dd className="text-right text-foreground/80">{2 * params(shown.net).total}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("The blame at a unit is the slope from the first page: how much the miss changes when that unit's total changes a hair. Passing it back through a wire multiplies by the wire's weight; passing it through a squash multiplies by the squash's slope there. That is the chain rule, and it gives every one of the thirteen slopes from one pass back, instead of thirteen separate nudges. The last line above is the two agreeing.")}
+              {L("What is an error signal? For one neuron, it is how much the miss changes when that neuron's total changes by a tiny amount: a rate of change, called a derivative. Passed back through a connection, the signal is multiplied by the connection's weight. Passed back through a squashing function, it is multiplied by that function's slope at that point. Multiplying slopes along a path in this way is called the chain rule. It gives all 13 slopes from one pass backwards, instead of 13 separate trials, each moving one number. The 'Check' line above compares the two ways: they agree to many decimal places.")}
             </Text>
           </div>
         }

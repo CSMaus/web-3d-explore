@@ -33,11 +33,11 @@ const STEPS = 120000;
 const PER = 40;
 const TICKS = STEPS / PER;
 const PRESETS = [
-  { id: "2.5", label: L("One cycle"), c: 2.5 },
-  { id: "3.5", label: L("Doubled"), c: 3.5 },
-  { id: "4.1", label: L("Four"), c: 4.1 },
-  { id: "5.7", label: L("The attractor"), c: 5.7 },
-  { id: "12", label: L("Wider"), c: 12 },
+  { id: "2.5", label: L("c = 2.5: one loop"), c: 2.5 },
+  { id: "3.5", label: L("c = 3.5: two loops"), c: 3.5 },
+  { id: "4.1", label: L("c = 4.1: four loops"), c: 4.1 },
+  { id: "5.7", label: L("c = 5.7: chaos"), c: 5.7 },
+  { id: "12", label: L("c = 12: a larger c"), c: 12 },
 ];
 
 /** how many distinct values a list of crossings has, to a picture's tolerance. */
@@ -121,15 +121,15 @@ function RosslerPage() {
     <div>
       <TaskPage
         title={system?.name ?? L("The Rossler system")}
-        job={L("Rossler built this system in 1976 to be the plainest flow that is still chaotic, and it is the usual test case for every method that studies an attractor: the exponent, the dimension, the section. A flow in three dimensions with one non-linear term. The job is to reduce it to something a person can read: put a plane through it, record only where the orbit pierces the plane, and plot each crossing against the next. A three-dimensional flow becomes a map on a line, and the map is the one the next two pages are about.")}
+        job={L("Does a point that moves by three simple rules ever come back to where it was? The point has three coordinates: x, y and z. The rules say how fast each coordinate changes at the point's current position. x changes at the rate -y - z. y changes at the rate x + a y. z changes at the rate b + z (x - c). The letters a, b and c are fixed numbers, set by the sliders. Only one rule multiplies two coordinates together: z times x. Otto Rossler wrote these rules in 1976 as the simplest he could find that still give chaos. Chaos here means two things: the path never repeats, and two starts that are very close end up far apart. The large picture draws the path in three dimensions. After a while the path stays on one shape and keeps circling over it. Such a shape is called an attractor. A path in space is hard to read, so a flat plane is placed across it, and only the places where the path passes through the plane are kept. The small pictures show those places. The question: does the path come back to the same few places on the plane, or to a new place every time?")}
         input={
           <div className="space-y-3">
             <Choices options={PRESETS} value={preset} onPick={(id) => { setLook((was) => ({ ...was, a: 0.2, b: 0.2, c: Number(id) })); reset(); }} />
-            <Slider label="a" min={0.05} max={0.55} step={0.005} value={look.a} format={(v) => v.toFixed(3)} onChange={(v) => { set("a")(v); reset(); }} />
-            <Slider label="b" min={0.05} max={2} step={0.01} value={look.b} format={(v) => v.toFixed(2)} onChange={(v) => { set("b")(v); reset(); }} />
-            <Slider label="c" min={2} max={18} step={0.05} value={look.c} format={(v) => v.toFixed(2)} onChange={(v) => { set("c")(v); reset(); }} />
+            <Slider label={L("a: how fast the circling in x and y spirals outward")} min={0.05} max={0.55} step={0.005} value={look.a} format={(v) => v.toFixed(3)} onChange={(v) => { set("a")(v); reset(); }} />
+            <Slider label={L("b: a steady push that makes z grow")} min={0.05} max={2} step={0.01} value={look.b} format={(v) => v.toFixed(2)} onChange={(v) => { set("b")(v); reset(); }} />
+            <Slider label={L("c: how large x must be before z shoots up")} min={2} max={18} step={0.05} value={look.c} format={(v) => v.toFixed(2)} onChange={(v) => { set("c")(v); reset(); }} />
             <Text kind="note" as="p">
-              {L("Walk c up through the presets: a single loop, then a doubled one, then four, then the attractor. The same doubling the logistic map does, met here in a flow.")}
+              {L("The buttons set c and put a and b back to 0.2. As c grows, the path changes in jumps. At c = 2.5 it is one closed loop. At c = 3.5 the loop splits in two: the path goes round twice before it repeats. At c = 4.1 it goes round four times before it repeats. At c = 5.7 it never repeats. This splitting of a loop into two is called period doubling. The same doubling happens to a single number under the rule x becomes r x (1 - x), called the logistic map, which another page of this topic studies.")}
             </Text>
             <PaletteBar />
           </div>
@@ -146,7 +146,7 @@ function RosslerPage() {
               if (!runner.running && shown >= Math.min(TICKS, Math.round(limit / (PER * DT)))) reset();
               runner.toggle();
             }}
-            onStep={(many) => setShown((v) => Math.min(TICKS, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -211,7 +211,7 @@ function RosslerPage() {
                   pen.line([[look.c, sweepBox.y0], [look.c, sweepBox.y1]], INK, 1);
                 }}
               />
-            </div><Caption>{L("The flow's bifurcation diagram: c along the bottom, x at each crossing above. Click to set c. A cycle is one point, doubled is two, then four, then the smear.")}</Caption></div>
+            </div><Caption>{L("Picture under the large one: c runs along the bottom, from 2 to 18. Above each value of c, the dots are the values of x at which the path crosses the plane y = 0, once the path has settled. One dot means one loop. Two dots mean the path goes round twice before it repeats, then four dots mean four times. A smeared column means the path never repeats. The vertical line marks the current c. A click on the picture sets c. A picture of this kind is called a bifurcation diagram.")}</Caption></div>
             <div className="grid gap-2 lg:grid-cols-2">
               <div><div data-slot="plot" className="h-[200px] overflow-hidden">
                 <Plot
@@ -229,7 +229,7 @@ function RosslerPage() {
 
                   }}
                 />
-              </div><Caption>{L("The plane y = 0, crossed upward: {{n}} times so far", { n: seen.length })}</Caption></div>
+              </div><Caption>{L("The plane y = 0 seen face on. Each dot is a place where the path passed through it, going from negative y to positive y. Across: x. Up: z. The ring marks the latest crossing. Crossings so far: {{n}}", { n: seen.length })}</Caption></div>
               <div><div data-slot="plot" className="h-[200px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
@@ -247,7 +247,7 @@ function RosslerPage() {
 
                   }}
                 />
-              </div><Caption>{L("Each crossing against the next")}</Caption></div>
+              </div><Caption>{L("Each crossing against the next one. A dot's position across is x at one crossing. Its height is x at the following crossing. The thin diagonal line marks where the two are equal.")}</Caption></div>
             </div>
           </section>
         }
@@ -255,33 +255,33 @@ function RosslerPage() {
           <div className="space-y-2">
             <Verdict>
               {upTo === 0
-                ? L("Press run. The orbit is drawn as it is integrated, and every time it pierces the plane a dot lands on the section and one on the return map.")
+                ? L("Press run to set the point moving. The path is drawn while it is being computed. Each time the path passes through the plane y = 0, a dot appears in each of the two small pictures.")
                 : seen.length < 3
                   ? seen.length === 1
-                    ? L("{{t}} time units in, {{n}} crossing so far. The section needs a few more before it says anything.", { t: t.toFixed(0), n: seen.length })
-                    : L("{{t}} time units in, {{n}} crossings so far. The section needs a few more before it says anything.", { t: t.toFixed(0), n: seen.length })
+                    ? L("After {{t}} time units, the path has crossed the plane {{n}} time. A few more crossings are needed before a pattern shows.", { t: t.toFixed(0), n: seen.length })
+                    : L("After {{t}} time units, the path has crossed the plane {{n}} times. A few more crossings are needed before a pattern shows.", { t: t.toFixed(0), n: seen.length })
                   : kinds <= 8 && measured.l.lambda < 0.005
                     ? kinds === 1
-                      ? L("{{t}} time units in, {{n}} crossings, and they land on {{k}} point over and over: a closed orbit of period {{k}}. The return map is {{k}} dot on the diagonal, and the orbit repeats exactly.", { t: t.toFixed(0), n: seen.length, k: kinds })
-                      : L("{{t}} time units in, {{n}} crossings, and they land on {{k}} points over and over: a closed orbit of period {{k}}. The return map is {{k}} dots, and the orbit repeats exactly.", { t: t.toFixed(0), n: seen.length, k: kinds })
-                    : L("{{t}} time units in, {{n}} crossings and no two alike: the section is filling a curve, not a set of points, and the return map is a hump. The hump is a one-dimensional map, and the next page iterates one just like it.", { t: t.toFixed(0), n: seen.length })}
+                      ? L("After {{t}} time units and {{n}} crossings, the path keeps passing through the plane at one and the same place. So the path is a closed loop: it comes back to where it was and repeats itself exactly. A path that repeats after one turn is called a cycle of period {{k}}. In the picture of each crossing against the next, it shows as {{k}} dot on the diagonal line.", { t: t.toFixed(0), n: seen.length, k: kinds })
+                      : L("After {{t}} time units and {{n}} crossings, the path keeps passing through the plane at the same {{k}} places, in turn. So the path goes round {{k}} times and then repeats itself exactly. Such a path is called a cycle of period {{k}}. In the picture of each crossing against the next, it shows as {{k}} dots.", { t: t.toFixed(0), n: seen.length, k: kinds })
+                    : L("After {{t}} time units and {{n}} crossings, no two crossings are at the same place. On the plane, the dots line up along a curve instead of sitting at a few points. In the picture of each crossing against the next, the dots form a hump: low at both ends, high in the middle. So each crossing fixes the next one by a simple rule from one number to another, even though the path in space never repeats. A rule with the same hump shape, x becomes r x (1 - x), is studied on another page of this topic.", { t: t.toFixed(0), n: seen.length })}
             </Verdict>
             <Readout
               rows={[
-                [L("Largest Lyapunov exponent"), measured.l.lambda.toFixed(4)],
-                [L("Which means"), measured.l.lambda > 0.005 ? L("Neighbours separate: chaos") : L("Neighbours do not separate: a cycle")],
-                [L("Distinct crossing values, last forty"), String(kinds)],
-                [L("Divergence at (1,1,1)"), (look.a + 1 - look.c).toFixed(4)],
-                [L("Mean divergence along the orbit"), measured.md.toFixed(4)],
-                [L("And they differ because"), L("A + x - c depends on the state")],
-                [L("Third exponent"), measured.ky.lambda3.toFixed(4)],
-                [L("Kaplan-Yorke dimension"), Number.isFinite(measured.ky.dimension) ? measured.ky.dimension.toFixed(3) : "-"],
-                [L("Box counting, on this sample"), measured.box.dimension.toFixed(3)],
-                [L("Crossings in the whole run"), String(cuts.length)],
+                [L("Largest Lyapunov exponent: how fast two very close paths move apart, per time unit"), measured.l.lambda.toFixed(4)],
+                [L("What that number says"), measured.l.lambda > 0.005 ? L("Above zero: close paths move apart, so the motion is chaotic") : L("Near zero: close paths stay close, so the path is a repeating loop")],
+                [L("Different values of x among the last 40 crossings"), String(kinds)],
+                [L("Divergence at the point (1, 1, 1): how fast a tiny cloud of starts grows (plus) or shrinks (minus) there"), (look.a + 1 - look.c).toFixed(4)],
+                [L("Divergence averaged along the whole path"), measured.md.toFixed(4)],
+                [L("Why the two divergences differ"), L("The divergence equals a + x - c, and x changes along the path")],
+                [L("Third Lyapunov exponent: how fast nearby paths are pulled in onto the attractor, per time unit"), measured.ky.lambda3.toFixed(4)],
+                [L("Dimension of the attractor from the exponents (Kaplan-Yorke): 1 is a line, 2 a surface"), Number.isFinite(measured.ky.dimension) ? measured.ky.dimension.toFixed(3) : "-"],
+                [L("Dimension by counting the small boxes the computed path touches"), measured.box.dimension.toFixed(3)],
+                [L("Crossings of the plane along the whole computed path"), String(cuts.length)],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              {L("The section removes one dimension and the clock at once: a periodic orbit is a finite set of points on it, and the attractor is a dust along a curve. Plotting each crossing against the next turns the flow into a map, and that map has the shape of the logistic one.")}
+              {L("Keeping only the crossings of the plane drops one coordinate and drops the passing of time. A path that repeats becomes a few fixed places on the plane. A chaotic path becomes a dust of points along a curve. Plotting each crossing against the next turns the motion in space into a rule that takes one number to the next. That rule has the same hump shape as the rule x becomes r x (1 - x), the logistic map.")}
             </Text>
           </div>
         }

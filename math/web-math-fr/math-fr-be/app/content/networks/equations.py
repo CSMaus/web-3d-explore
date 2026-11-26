@@ -11,276 +11,267 @@ SYSTEMS = [
         "id": "rate",
         "name": "How fast is it going",
         "summary": (
-            "A car on a road. Its speed, read from nothing but where it is: a change divided by "
-            "a change, with the gap made as small as you like. That is the derivative"
+            "How fast is a car going when only its position is known? Its speed is the distance covered between two close moments, divided by the time between them. As that time shrinks to zero, the result is the speed at one moment, called the derivative of the position"
         ),
         "blocks": [
             {
                 "label": "Speed from two positions",
                 "tex": r"v \approx \frac{s(t + h/2) - s(t - h/2)}{h}",
-                "note": "How far it moved, divided by how long that took. The page's slider is h",
+                "note": "s(t) is the car's distance from the start, in metres, at the time t, in seconds. h is the time between the two readings, set by the page's slider: one reading at t - h/2, one at t + h/2. v is the speed, in m/s. In words: the distance covered between the two readings, divided by the time between them. Example: the braking car at t = 4 s with h = 2 s is at 25.5 m at 3 s and at 37.5 m at 5 s, so v is 12 / 2 = 6 m/s, exactly its true speed",
             },
             {
-                "label": "And the limit",
+                "label": "The speed at one moment",
                 "tex": r"v(t) = s'(t) = \lim_{h \to 0} \frac{s(t + h/2) - s(t - h/2)}{h}",
-                "note": "The same ratio with the gap taken to nothing. The ring lands on the dot",
+                "note": "The same ratio, with the time h taken closer and closer to zero. lim, the limit, is the value the ratio approaches. The result, written s'(t) and read 's prime of t', is called the derivative of s. On the page, this is the ring landing on the dot",
             },
             {
-                "label": "How wrong the two-position speed is",
+                "label": "How far off the two-position speed is",
                 "tex": r"\frac{s(t+h/2) - s(t-h/2)}{h} = s'(t) + \frac{h^{2}}{24}\,s^{(3)}(t) + \ldots",
-                "note": "The error goes as the square of the gap: halve the gap, quarter the error. On a straight-line or braking car the third derivative is zero and there is no error at all",
+                "note": "The ratio equals the true speed s'(t) plus an error. s⁽³⁾(t), the third derivative, says how fast the acceleration changes. The error grows as the square of h: halving the time between readings divides the error by four. For the steady, speeding-up and braking cars the acceleration never changes, so the third derivative is zero and there is no error at all",
             },
         ],
         "dimension": {
             "label": "The five motions on the page",
             "tex": r"s = 4t,\quad 0.4t^{2},\quad 10t - \tfrac{1}{2}t^{2},\quad 12\sin(t/2),\quad 3t + 2\sin(1.4t)",
-            "note": "Steady, speeding up, braking, there and back, stop and go. The exact speeds the page scores against are their derivatives",
+            "note": "Steady, speeding up, braking, there and back, stop and go, in that order, with s in metres and t in seconds. The true speeds the page compares against are their derivatives: 4, 0.8t, 10 - t, 6cos(t/2) and 3 + 2.8cos(1.4t)",
         },
     },
     {
         "id": "rate2",
         "name": "Is it speeding up or slowing down",
         "summary": (
-            "The same ratio taken of the speed instead of the position. The acceleration, its "
-            "sign, and what a change of a change looks like"
+            "Is the car speeding up or slowing down? The acceleration is the change in speed per second. It is found from the speed the same way the speed is found from the position, so it is a change of a change, called the second derivative"
         ),
         "blocks": [
             {
                 "label": "The second derivative",
                 "tex": r"a(t) = v'(t) = s''(t)",
-                "note": "The steepness of the speed curve, which is the steepness of the steepness of the position curve",
+                "note": "a(t) is the acceleration at the time t, in metres per second each second. v'(t) is the derivative of the speed v. s''(t), read 's double prime of t', is the derivative of the derivative of the position s. In words: the acceleration is the steepness of the speed curve, and the speed is the steepness of the position curve",
             },
             {
                 "label": "From three positions",
                 "tex": r"a \approx \frac{s(t+h) - 2s(t) + s(t-h)}{h^{2}}",
-                "note": "Two speeds a gap apart, each from two positions a gap apart, is this. The page does it the long way so the two stages are visible",
+                "note": "h is the time between readings, set by the slider. Two speeds h apart, each found from two positions h apart, combine into this one formula: the position after, minus twice the position now, plus the position before, divided by h squared. The page does the two stages separately so both can be seen. Example: for the braking car with h = 1 s the top of the fraction is always -1 m, so a = -1 m/s each second",
             },
             {
                 "label": "What the sign says",
                 "tex": r"a > 0 \Rightarrow v \text{ rising}, \qquad a < 0 \Rightarrow v \text{ falling}",
-                "note": "The rose arrow points against the green one while the car brakes, even though the car still moves forward",
+                "note": "An acceleration above zero means the speed v is rising. Below zero it means the speed is falling. While the braking car still moves forward its speed falls, so the acceleration arrow on the page points backward",
             },
         ],
         "dimension": {
             "label": "At the turning point",
             "tex": r"v(t^{*}) = 0,\quad a(t^{*}) \neq 0",
-            "note": "Where the car turns round its speed is zero and its acceleration is not: the speed passes through zero, it does not stop there",
+            "note": "t* is the moment the car turns round. There its speed is zero but its acceleration is not: the speed passes through zero without staying there. Example: the braking car at t* = 10 s has speed 0 and acceleration -1 m/s each second",
         },
     },
     {
         "id": "accumulate",
         "name": "Adding it back up",
         "summary": (
-            "Given only the speed, the distance: slices of speed times duration, added up. The "
-            "integral, and the fact that it undoes the derivative"
+            "Given only the speed of a car, how far has it gone? The time is cut into short slices, each slice gives speed times time, and the slices are added up. With thinner and thinner slices the sum becomes the integral, which undoes the derivative"
         ),
         "blocks": [
             {
                 "label": "One slice",
                 "tex": r"\Delta s_i = v\!\left(t_i + \tfrac{\Delta t}{2}\right)\Delta t",
-                "note": "Speed times duration is distance. The speed is read at the middle of the slice",
+                "note": "Δt, read 'delta t', is the length of one slice, in seconds. tᵢ is the time at which slice number i starts, and v is the speed, in m/s, read at the middle of the slice, tᵢ + Δt/2. Δsᵢ is the distance covered in that slice: speed times time. Example: 5 m/s for Δt = 2 s gives 10 m",
             },
             {
                 "label": "All the slices",
                 "tex": r"s(T) - s(0) \approx \sum_{i} v\!\left(t_i + \tfrac{\Delta t}{2}\right)\Delta t \;\longrightarrow\; \int_{0}^{T} v(t)\,dt",
-                "note": "The sum, with the slices made as thin as you like. The staircase becomes the curve",
+                "note": "s(T) - s(0) is how far the car has moved between the time 0 and the time T. The sign Σ means: add up over all slices i. The sign ∫ from 0 to T, the integral, means the same sum with the slices made as thin as wanted. On the page, the staircase of sums turns into the smooth curve",
             },
             {
                 "label": "The error of the midpoint rule",
                 "tex": r"\left|\text{sum} - \int\right| \le \frac{T\,\Delta t^{2}}{24}\max|v''|",
-                "note": "Double the slices and the error falls by four. On a speed that is a straight line the error is zero, so the page opens on a speed that bends",
+                "note": "Reading the speed at the middle of each slice is called the midpoint rule. Its error is at most T times Δt squared, divided by 24, times the largest size of v''. v'' is the second derivative of the speed and says how much the speed curve bends. Doubling the number of slices halves Δt, so the error falls by four. When the speed is a straight line in time, v'' is zero and there is no error, so the page opens on a speed that bends",
             },
             {
                 "label": "The derivative undone",
                 "tex": r"\frac{d}{dT}\int_{0}^{T} v(t)\,dt = v(T)",
-                "note": "The steepness of the accumulated distance is the speed that was added up. The first page in reverse",
+                "note": "d/dT means the derivative with respect to T: how fast what follows changes as T changes. In words: the steepness of the added-up distance is the speed that was added up. Adding up a speed and then taking the derivative gives the same speed back",
             },
         ],
         "dimension": {
             "label": "Signed area",
             "tex": r"v < 0 \Rightarrow \Delta s_i < 0",
-            "note": "On the way back the slices count negative and the total comes back down: this is displacement, not distance travelled",
+            "note": "When the speed v is below zero the car moves backwards, and each slice's distance Δsᵢ counts as negative. The total then comes back down: it measures how far the car is from the start, not how far it has driven",
         },
     },
     {
         "id": "growth",
         "name": "The thing that grows by how much there is",
         "summary": (
-            "Money at interest, a population with room. The growth is a fixed fraction of the "
-            "amount, and that one rule picks out the exponential"
+            "An amount that always grows by a fixed share of itself, like money at interest or a population with room to spread. That one rule gives the exponential curve, a fixed doubling time, and the logarithm as the answer to the question 'when'"
         ),
         "blocks": [
             {
                 "label": "The rule",
                 "tex": r"\frac{dA}{dt} = r\,A",
-                "note": "How fast it grows is the rate times how much there is. The lower chart on the page is the two sides of this, divided, and it never moves",
+                "note": "A is the amount, t the time in years, r the yearly rate as a fraction (12 % is 0.12). dA/dt is how fast the amount grows, its derivative. In words: the speed of growth is the rate times the amount. Example: A = 100 and r = 0.12 give a growth of 12 a year. The page's lower chart is dA/dt divided by A, which is always r, so it never moves",
             },
             {
                 "label": "The only curve that obeys it",
                 "tex": r"A(t) = A_0\,e^{rt}",
-                "note": "The number e is the base for which the steepness equals the height exactly, so that the constant is the rate and nothing else",
+                "note": "A₀, read 'A nought', is the starting amount. e is a fixed number, about 2.718. In words: the amount is the start times e to the power rate times time. Example: 100 at r = 0.12 after 10 years is 100 times e to the power 1.2, about 332. The number e is the base for which the steepness of the curve equals its height exactly, so the constant in the rule is the rate and nothing else",
             },
             {
                 "label": "Doubling time",
                 "tex": r"t_{2} = \frac{\ln 2}{r}",
-                "note": "The same for every doubling, which is why the ticks on the page are evenly spaced",
+                "note": "t₂ is the time the amount takes to double. ln is the natural logarithm, the operation that undoes e to a power; ln 2 is about 0.693. Example: r = 0.12 gives 0.693 / 0.12 = 5.78 years. Every doubling takes the same time, which is why the doubling marks on the page are evenly spaced",
             },
             {
                 "label": "When does it reach a target",
                 "tex": r"t^{*} = \frac{1}{r}\ln\frac{A^{*}}{A_0}",
-                "note": "The logarithm, read as a question about time",
+                "note": "t* is the time at which the amount reaches the target A*. In words: divide the target by the start, take the natural logarithm, divide by the rate. Example: from 100 to 800 at r = 0.12 takes ln 8 / 0.12 = 17.33 years",
             },
         ],
         "dimension": {
             "label": "Against a straight line",
             "tex": r"A_0(1 + rt) \le A_0 e^{rt}",
-            "note": "Growing by a fixed amount a year, matched to the first moment's speed, falls behind at once and stays behind",
+            "note": "A₀(1 + rt) is growth by the same amount every year, A₀ times r, starting at the same speed as the exponential. It falls behind at once and stays behind. Example: from 100 at r = 0.12, after 20 years the straight line gives 340 and the exponential about 1102",
         },
     },
     {
         "id": "slope",
         "name": "Which way is down",
         "summary": (
-            "A ball on a landscape, knowing only the ground under its own feet. The gradient, "
-            "and stepping against it"
+            "A ball on a landscape, knowing only the ground under it. At each step it measures the steepness in each direction, together called the gradient, and steps the opposite way. This is gradient descent"
         ),
         "blocks": [
             {
                 "label": "Two slopes, one for each way to move",
                 "tex": r"\frac{\partial h}{\partial x} \approx \frac{h(x+\epsilon, y) - h(x-\epsilon, y)}{2\epsilon}, \qquad \frac{\partial h}{\partial y} \approx \frac{h(x, y+\epsilon) - h(x, y-\epsilon)}{2\epsilon}",
-                "note": "The first page's ratio, taken once per direction, with everything else held still",
+                "note": "h(x, y) is the height of the ground at the point (x, y) of the map, x across and y up. ε, read 'epsilon', is a tiny distance. ∂h/∂x, read 'partial h by x', is the steepness when only x changes and y is held still; ∂h/∂y is the same for y. Each is the height a little ahead minus the height a little behind, divided by the distance between them, 2ε",
             },
             {
                 "label": "The gradient",
                 "tex": r"\nabla h = \left(\frac{\partial h}{\partial x}, \frac{\partial h}{\partial y}\right)",
-                "note": "The two slopes as one arrow. It points the steepest way uphill, and its length is how steep",
+                "note": "∇h, read 'nabla h' or 'the gradient of h', is the pair of the two steepnesses, drawn as one arrow. It points the steepest way uphill, and its length says how steep. Example: in the round bowl at the point (2, 1) the gradient is (2, 1)",
             },
             {
                 "label": "One step",
                 "tex": r"(x, y) \leftarrow (x, y) - \eta\,\nabla h(x, y)",
-                "note": "Against the arrow, by the step size times the steepness. Gradient descent",
+                "note": "η, read 'eta', is the step size set by the slider. The arrow ← means: replace the left side by the right side. In words: move against the gradient, by the step size times the steepness. Example: from (2, 1) in the round bowl with η = 0.1 the ball moves to (1.8, 0.9). Repeating this step is called gradient descent",
             },
             {
                 "label": "When the step is too big",
                 "tex": r"\eta > \frac{2}{\lambda_{\max}} \Rightarrow \text{diverges}",
-                "note": "On the narrow valley the across-slope is twelve times the along-slope, so a step that suits the floor overshoots the walls. The ball bounces higher each time",
+                "note": "λ_max, read 'lambda max', is the largest curvature of the landscape: how fast the steepness grows in its most sharply bent direction. If the step size η is larger than 2 divided by λ_max, each step lands further from the bottom and the ball runs away. In the narrow valley the curvature is 12 across and 1 along, so a step size above 2/12, about 0.167, makes the ball bounce higher each time",
             },
         ],
         "dimension": {
             "label": "Flat is not bottom",
             "tex": r"\nabla h = 0 \;\not\Rightarrow\; \text{minimum}",
-            "note": "At the middle of the saddle the ball stops with the ground falling away either side. The four landscapes on the page are a bowl, a narrow valley, a saddle and two hills",
+            "note": "A gradient of zero means flat ground, not the lowest point. In the middle of the saddle the ball stops while the ground falls away in one direction. The four landscapes on the page are a bowl, a narrow valley, a saddle and two hills",
         },
     },
     {
         "id": "line",
         "name": "Draw the line by hand",
         "summary": (
-            "Two colours of dots. The reader draws the dividing line, then Rosenblatt's perceptron "
-            "tries, one correction at a time, and hits the wall it hit in 1969"
+            "Dots of two colours, and one straight line to separate them. The line is drawn by hand, then Rosenblatt's perceptron tries, one correction at a time. On the four dots of exclusive or it fails, as Minsky and Papert showed in 1969"
         ),
         "blocks": [
             {
                 "label": "A line as three numbers",
                 "tex": r"w_1 x + w_2 y + b = 0",
-                "note": "The two weights are the direction across the line and the bias is how far from the origin. The white line's two handles are turned into these",
+                "note": "x and y are a point's coordinates. w₁ and w₂ are called weights and b the bias. The points where this sum is exactly zero form a straight line. The weights set which way the line faces, and the bias how far it is from the centre (0, 0). The page turns the two handles of the hand-drawn line into these three numbers",
             },
             {
                 "label": "The unit",
                 "tex": r"\hat{y} = \begin{cases} 1 & w_1 x + w_2 y + b > 0 \\ 0 & \text{otherwise}\end{cases}",
-                "note": "Which side of the line. A weighted sum and a hard threshold, nothing else",
+                "note": "ŷ, read 'y hat', is the machine's answer for a dot: 1 when the sum is above zero, 0 otherwise. In words: which side of the line the dot is on. A weighted sum and a hard cut at zero, nothing else. This calculation is called a unit, or an artificial neuron",
             },
             {
                 "label": "One correction",
                 "tex": r"w \leftarrow w + \eta\,(y - \hat{y})\,x, \qquad b \leftarrow b + \eta\,(y - \hat{y})",
-                "note": "Look at one dot; if it is on the wrong side, turn the line a little towards it. The ringed dot on the page is that dot",
+                "note": "y is the dot's right answer, 1 or 0, and ŷ the machine's answer. η is a small step, 0.1 on the page. If the answer is right, y - ŷ is 0 and nothing changes. If it is wrong, y - ŷ is 1 or -1, and the weights and the bias move so that the line turns a little towards the dot. The large ring on the page marks that dot",
             },
             {
                 "label": "It stops, if it can",
                 "tex": r"\text{updates} \le \left(\frac{R}{\gamma}\right)^{2}",
-                "note": "When a separating line exists the rule finds one in a finite number of corrections. On two clouds of sixty dots, the page counts two",
+                "note": "R is the distance of the furthest dot from the centre. γ, read 'gamma', is the gap between the nearest dot and the best separating line. When such a line exists, the number of corrections is at most (R/γ) squared, so the rule always stops. On two clouds of sixty dots the page counts two",
             },
             {
                 "label": "And when it cannot",
                 "tex": r"\mathrm{xor}(0,0)=0,\ \mathrm{xor}(0,1)=1,\ \mathrm{xor}(1,0)=1,\ \mathrm{xor}(1,1)=0",
-                "note": "No straight line puts the four dots right, so there is always one to correct and the rule never stops. Minsky and Papert, 1969",
+                "note": "xor, exclusive or, gives 1 when exactly one of its two inputs is 1. Its four dots sit at the corners of a square, with opposite corners alike. No straight line puts all four on their right sides, so there is always a dot to correct and the rule never stops. Marvin Minsky and Seymour Papert, 1969",
             },
         ],
         "dimension": {
-            "label": "What the reader can check by hand",
+            "label": "The count for the hand-drawn line",
             "tex": r"\text{wrong} = \min\left(\#\{\text{side} \neq y\},\ \#\{\text{side} = y\}\right)",
-            "note": "Either side of a hand-drawn line may be either colour, so the count is the smaller of the two readings",
+            "note": "#{...} means 'the number of dots for which...'. A hand-drawn line does not say which side belongs to which colour, so the page counts the mistakes both ways and keeps the smaller count",
         },
     },
     {
         "id": "nudge",
         "name": "A small change, and what it does",
         "summary": (
-            "One weight moved by the same small amount, again and again, on a hard unit and a "
-            "smooth one that share the numbers. One answer creeps, the other jumps or does "
-            "nothing. The reason every method after the perceptron needs the smooth one"
+            "One weight moved by the same small amount, again and again, on a hard unit and a smooth one that share their numbers. The smooth answer changes a little each time, the hard one stays still or jumps. Learning needs the smooth one, because only its changes show which way to move"
         ),
         "blocks": [
             {
                 "label": "The two units on the same three numbers",
                 "tex": r"\hat{y} = \big[\,w_1 x + w_2 y + b > 0\,\big], \qquad a = \sigma(w_1 x + w_2 y + b)",
-                "note": "The perceptron's hard yes-or-no, and the same total put through the squash instead",
+                "note": "x and y are the dot's coordinates, w₁ and w₂ the weights and b the bias. The square brackets give 1 when the statement inside is true and 0 when it is false: this is the hard unit's answer ŷ. σ, read 'sigma', is the smooth curve 1 / (1 + e to the power -z), which turns any total z into a number a between 0 and 1. Example: a total of 0 gives 0.5, a total of 2 gives about 0.88",
             },
             {
                 "label": "One nudge",
                 "tex": r"w_1 \leftarrow w_1 + \epsilon",
-                "note": "The page's slider is epsilon. Nothing else changes",
+                "note": "ε, read 'epsilon', is the size of one nudge, set by the page's slider. Each step adds ε to the weight w₁ and changes nothing else",
             },
             {
                 "label": "What the smooth answer does",
                 "tex": r"\Delta a \approx \sigma'(z)\,x\,\epsilon",
-                "note": "The slope of the squash at this dot's total, times the dot's x, times the nudge. Small, and the same every time, so the direction to move is readable",
+                "note": "Δa is the change in the smooth answer after one nudge. σ'(z) is the steepness of the smooth curve at the dot's total z. In words: the steepness of the curve, times the dot's x, times the nudge. Example: at z = 0 the steepness is 0.25, so with x = 0.4 and ε = 0.01 the answer moves by 0.001. Small, nearly the same every time, and its sign shows the direction to move",
             },
             {
                 "label": "What the hard answer does",
                 "tex": r"\Delta \hat{y} \in \{0, \pm 1\}",
-                "note": "Nothing until the total crosses zero, then a jump of one. No slope anywhere, so no direction",
+                "note": "Δŷ is the change in the hard answer. It can only be 0, 1 or -1: nothing until the total crosses zero, then a jump of one. The hard answer has no steepness anywhere, so it shows no direction",
             },
         ],
         "dimension": {
-            "label": "Why descent needs the smooth one",
+            "label": "Why learning needs the smooth one",
             "tex": r"\frac{\partial L}{\partial w_1} = (a - y)\,\sigma'(z)\,x",
-            "note": "How wrong changes with a weight only because sigma has a slope. For a step, the same expression is zero everywhere and undefined at the jump",
+            "note": "L is the error and a - y the miss between the answer a and the right answer y. ∂L/∂w₁ says how fast the error changes as w₁ changes. It exists only because σ has a steepness σ'. For the hard unit the same expression is zero everywhere and undefined at the jump",
         },
     },
     {
         "id": "unit",
         "name": "Inside one unit",
         "summary": (
-            "Three numbers and a squash. Move them by hand and watch the plane recolour, then "
-            "let the unit move them itself, downhill on how wrong it is"
+            "One artificial neuron: two weights, a bias and a squash curve. The three numbers are moved by hand while the shading of the plane follows, then the neuron moves them itself, downhill on its error"
         ),
         "blocks": [
             {
                 "label": "The unit",
                 "tex": r"a = g(w_1 x + w_2 y + b)",
-                "note": "Weigh, sum, shift, squash. The diagram on the page is this expression drawn",
+                "note": "x and y are a dot's coordinates, w₁ and w₂ the weights, b the bias. g is the squash, a curve chosen with the page's buttons, and a is the answer. In words: multiply, add up, shift, squash. Example: x = 0.6 and y = -0.4 with w₁ = 0.3, w₂ = -0.25 and b = 0.15 give a total of 0.43, and the squash to 0..1 turns it into 0.61",
             },
             {
                 "label": "The squashes on offer",
                 "tex": r"\sigma(z) = \frac{1}{1+e^{-z}}, \quad \tanh(z), \quad \max(0, z), \quad z",
-                "note": "To 0..1, to -1..1, cut below zero, none. The first is the exponential page's curve, folded",
+                "note": "σ, read 'sigma', squeezes any total z into the range 0 to 1. tanh squeezes it into -1 to 1. max(0, z) keeps a positive total and cuts a negative one to zero. z alone means no squash. σ is built from the exponential curve e to the power -z",
             },
             {
-                "label": "How wrong, as one number",
+                "label": "The error, as one number",
                 "tex": r"L = \frac{1}{2N}\sum_{n}\left(a^{(n)} - y^{(n)}\right)^{2}",
-                "note": "The average squared miss over every dot. This is the height the ball rolls down",
+                "note": "N is the number of dots and n numbers them. a⁽ⁿ⁾ is the unit's answer for dot n and y⁽ⁿ⁾ its right answer. Σ adds over all dots. In words: the squared misses, added up and divided by twice the number of dots. This error is the height that each run step goes down",
             },
             {
                 "label": "One step on three numbers",
                 "tex": r"w_i \leftarrow w_i - \eta\,\frac{\partial L}{\partial w_i}, \qquad \frac{\partial L}{\partial w_i} = \frac{1}{N}\sum_n (a - y)\,g'(z)\,x_i",
-                "note": "The hill page with three directions instead of two. The slope needs the squash to have a slope, which the hard threshold did not",
+                "note": "wᵢ stands for any of the three numbers, and xᵢ for what it multiplies: x, y, or 1 for the bias. η is the step size. ∂L/∂wᵢ is how fast the error L changes as wᵢ changes. g'(z) is the steepness of the squash at the total z. In words: move each number against the steepness of the error, as a ball steps downhill, with three directions instead of two. This needs the squash to have a steepness, which the hard 0-or-1 rule does not have",
             },
         ],
         "dimension": {
             "label": "The line is still there",
             "tex": r"a = \tfrac{1}{2} \iff w_1 x + w_2 y + b = 0",
-            "note": "Where the squash gives one half is the perceptron's line. The squash adds how sure, on either side of it",
+            "note": "⟺ means 'exactly when'. With the squash to 0..1, the answer is one half exactly where the total is zero, and those points form a straight line. The squash adds how sure the unit is, on either side of that line",
         },
     },
     {

@@ -24,7 +24,7 @@ export const Route = createFileRoute("/topics/complex/play/square")({
 /**
  * which values of c stay: start at zero, square and add c, again and again. the map is the
  * Mandelbrot set, every c whose path stays; c travels round a loop that crosses its edge, the same
- * motion as the fractals series figure "Which points stay?", and the path from zero is drawn for
+ * motion as the fractals series figure "Which points stay near zero? The Mandelbrot set", and the path from zero is drawn for
  * each c, staying near or running away. a click holds c where it lands.
  */
 
@@ -83,11 +83,11 @@ function SquarePage() {
 
   return (
     <TaskPage
-      title={system?.name ?? L("Which points stay?")}
-      job={L("Take a number c. Start at zero, square, add c, and do it again and again. Each squaring doubles the angle and squares the length, as on the page before, and c moves the result. For some values of c the path stays near zero for ever; for others its length passes two and it runs away. Every c whose path stays is filled in, and together they form the Mandelbrot set. Here c travels round a loop that crosses the edge of the set, so the path can be watched changing from staying to running away.")}
+      title={system?.name ?? L("Which points stay near zero? The Mandelbrot set")}
+      job={L("Which numbers c keep a repeated calculation close to zero? The calculation: start at zero, multiply the result by itself, add c, and repeat again and again. Here c is a complex number: a point of a flat plane, written a + bi, where a is how far across from zero and b is how far up. Multiplying a complex number by itself doubles its angle and squares its length, the distance from zero; adding c then shifts the result. The results form a path of points that starts at zero. For some c the path stays close to zero for ever. For other c the distance from zero grows past two, and after that the path always runs off. The values of c whose paths stay are filled in on the map, and together they form a shape called the Mandelbrot set. On this page c moves round a loop that crosses the edge of the set, so the path can be seen switching from staying to running off.")}
       input={
         <Text kind="note" as="p">
-          {L("Click anywhere on the map to put c there and hold it. Press run to send c round the loop again.")}
+          {L("A click anywhere on the map puts c there and holds it still. Pressing run sends c round the loop again.")}
         </Text>
       }
       run={
@@ -95,7 +95,7 @@ function SquarePage() {
           running={runner.running && held === null}
           count={degrees}
           limit={ROUND}
-          what={L("degrees round the loop")}
+          what={L("degrees of the way round the loop")}
           onToggle={() => {
             if (held !== null || degrees >= ROUND) {
               again();
@@ -106,7 +106,7 @@ function SquarePage() {
           }}
           onStep={(many) => {
             setHeld(null);
-            setDegrees((v) => Math.min(ROUND, v + many));
+            runner.once(many);
           }}
           onReset={again}
           perFrame={perFrame}
@@ -141,7 +141,7 @@ function SquarePage() {
             />
           </div>
           <Caption>
-            {L("Filled shape: every c whose path stays. Lighter outside it, near its edge: the path runs away later. The dot: c. The line: the path from zero, one point for every square and add. Faint loop: the route c travels. Faint circle: length two, past which the path never comes back.")}
+            {L("A map of values of c. The filled shape: every c whose path stays near zero, the Mandelbrot set. Just outside the shape, shading shows how long the path takes to run off: the nearer the shape, the longer the path stays. The dot: the current c. The line from zero: its path, one point for each squaring and adding of c. The thin loop: the route that c travels. The thin circle around zero: the points at distance two; a path that goes past it never comes back.")}
           </Caption>
         </section>
       }
@@ -149,21 +149,21 @@ function SquarePage() {
         <div className="space-y-2">
           <Verdict good={stays}>
             {stays
-              ? L("c = {{c}}: the path stays near zero for all {{n}} steps. This c is in the Mandelbrot set.", { c: show(c), n: MOST })
+              ? L("c = {{c}}: for all {{n}} steps the path stayed within distance two of zero. This c is in the Mandelbrot set.", { c: show(c), n: MOST })
               : left === 1
-                ? L("c = {{c}}: after {{n}} step the length passed two and the path runs away. This c is outside the set.", { c: show(c), n: left })
-                : L("c = {{c}}: after {{n}} steps the length passed two and the path runs away. This c is outside the set.", { c: show(c), n: left })}
+                ? L("c = {{c}}: after {{n}} step the distance from zero passed two, so the path runs off. This c is outside the set.", { c: show(c), n: left })
+                : L("c = {{c}}: after {{n}} steps the distance from zero passed two, so the path runs off. This c is outside the set.", { c: show(c), n: left })}
           </Verdict>
           <Readout
             rows={[
               ["c", show(c)],
-              [L("Length of c"), abs(c).toFixed(3)],
-              [L("Last point inside length two"), show(last)],
-              [L("Left, after"), left === null ? L("not within {{n}}", { n: MOST }) : left === 1 ? L("{{n}} step", { n: left }) : L("{{n}} steps", { n: left })],
+              [L("Length of c: its distance from zero"), abs(c).toFixed(3)],
+              [L("Last point of the path within distance two of zero"), show(last)],
+              [L("The path ran off"), left === null ? L("not within {{n}} steps", { n: MOST }) : L("at step {{n}}", { n: left })],
             ]}
           />
           <Text kind="note" as="p" className="pt-1">
-            {L("The edge of the filled shape is where the path changes from staying to running away. The fractals topic zooms into that edge.")}
+            {L("The edge of the filled shape is where the paths change from staying to running off. Magnified, the edge shows finer and finer detail without end. Another topic of this site, 'Fractals', zooms into that edge.")}
           </Text>
         </div>
       }

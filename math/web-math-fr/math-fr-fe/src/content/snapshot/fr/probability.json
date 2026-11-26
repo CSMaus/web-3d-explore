@@ -1,0 +1,13 @@
+{
+  "slug": "probability",
+  "number": 7,
+  "title": "Probabilités : compter le hasard",
+  "summary": "Une probabilité est un nombre de 0 à 1 qui dit à quelle fréquence une chose se produit quand l'essai est répété souvent. Le thème la calcule dans des situations de tous les jours. Avec deux dés, pourquoi un total de 7 sort six fois plus souvent qu'un total de 2. Ce que vaut vraiment un test médical positif. Où un jeu de hasard laisse un joueur après mille parties. Combien de fois une minute entière passe sans aucun événement, quand les événements arrivent au hasard, et combien de temps dure une attente. Et combien de fois un joueur atteint un objectif avant de perdre tout son argent.",
+  "state": "writing",
+  "parts": 0,
+  "beats": 0,
+  "seconds": 0,
+  "systems": 12,
+  "aside": false,
+  "part_list": []
+}

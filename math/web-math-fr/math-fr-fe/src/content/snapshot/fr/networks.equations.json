@@ -2,253 +2,253 @@
  "systems": [
   {
    "id": "rate",
-   "name": "À quelle vitesse il avance",
-   "summary": "Une voiture sur une route. Sa vitesse, lue uniquement à partir de sa position : un changement divisé par un changement, avec un écart aussi petit que voulu. C'est la dérivée",
+   "name": "À quelle vitesse roule la voiture",
+   "summary": "À quelle vitesse roule une voiture dont seule la position est connue ? Sa vitesse est la distance parcourue entre deux instants proches, divisée par le temps qui les sépare. Quand ce temps tend vers zéro, le résultat est la vitesse à un instant, appelée dérivée de la position",
    "blocks": [
     {
-     "label": "La vitesse à partir de deux positions",
+     "label": "Vitesse à partir de deux positions",
      "tex": "v \\approx \\frac{s(t + h/2) - s(t - h/2)}{h}",
-     "note": "La distance parcourue, divisée par le temps mis. Le curseur de la page est h"
+     "note": "s(t) est la distance de la voiture au départ, en mètres, à l'instant t, en secondes. h est le temps entre les deux relevés, réglé par le curseur de la page : un relevé à t - h/2, l'autre à t + h/2. v est la vitesse, en m/s. En mots : la distance parcourue entre les deux relevés, divisée par le temps qui les sépare. Exemple : la voiture qui freine, à t = 4 s avec h = 2 s, est à 25.5 m à 3 s et à 37.5 m à 5 s, donc v vaut 12 / 2 = 6 m/s, exactement sa vraie vitesse"
     },
     {
-     "label": "Et la limite",
+     "label": "La vitesse à un instant",
      "tex": "v(t) = s'(t) = \\lim_{h \\to 0} \\frac{s(t + h/2) - s(t - h/2)}{h}",
-     "note": "Le même rapport avec un écart réduit à rien. L'anneau se pose sur le point"
+     "note": "Le même rapport, avec un temps h de plus en plus proche de zéro. lim, la limite, est la valeur dont le rapport s'approche. Le résultat s'écrit s'(t) et se lit « s prime de t » ; il s'appelle la dérivée de s. Sur la page, c'est le moment où l'anneau se pose sur le point"
     },
     {
-     "label": "L'erreur de la vitesse à deux positions",
+     "label": "L'erreur de la vitesse à partir de deux positions",
      "tex": "\\frac{s(t+h/2) - s(t-h/2)}{h} = s'(t) + \\frac{h^{2}}{24}\\,s^{(3)}(t) + \\ldots",
-     "note": "L'erreur varie comme le carré de l'écart : écart divisé par deux, erreur divisée par quatre. Pour une voiture à vitesse constante ou qui freine, la dérivée troisième est nulle et il n'y a aucune erreur"
+     "note": "Le rapport vaut la vraie vitesse s'(t) plus une erreur. s⁽³⁾(t), la dérivée troisième, dit à quelle vitesse l'accélération change. L'erreur croît comme le carré de h : diviser par deux le temps entre les relevés divise l'erreur par quatre. Pour les voitures régulière, qui accélère et qui freine, l'accélération ne change jamais, la dérivée troisième est nulle et il n'y a aucune erreur"
     }
    ],
    "dimension": {
     "label": "Les cinq mouvements de la page",
     "tex": "s = 4t,\\quad 0.4t^{2},\\quad 10t - \\tfrac{1}{2}t^{2},\\quad 12\\sin(t/2),\\quad 3t + 2\\sin(1.4t)",
-    "note": "Régulier, en accélération, au freinage, aller et retour, avec arrêts. Les vitesses exactes auxquelles la page compare les réponses sont leurs dérivées"
+    "note": "Dans l'ordre : régulier, accélération, freinage, aller et retour, par à-coups, avec s en mètres et t en secondes. Les vraies vitesses auxquelles la page compare sont leurs dérivées : 4, 0.8t, 10 - t, 6cos(t/2) et 3 + 2.8cos(1.4t)"
    }
   },
   {
    "id": "rate2",
-   "name": "Accélère-t-il ou ralentit-il",
-   "summary": "Le même rapport, appliqué à la vitesse au lieu de la position. L'accélération, son signe, et l'allure d'un changement de changement",
+   "name": "La voiture accélère-t-elle ou ralentit-elle",
+   "summary": "La voiture accélère-t-elle ou ralentit-elle ? L'accélération est la variation de vitesse par seconde. Elle se tire de la vitesse comme la vitesse se tire de la position : c'est une variation d'une variation, appelée dérivée seconde",
    "blocks": [
     {
      "label": "La dérivée seconde",
      "tex": "a(t) = v'(t) = s''(t)",
-     "note": "La raideur de la courbe de vitesse, c'est-à-dire la raideur de la raideur de la courbe de position"
+     "note": "a(t) est l'accélération à l'instant t, en mètres par seconde chaque seconde. v'(t) est la dérivée de la vitesse v. s''(t), lu « s seconde de t », est la dérivée de la dérivée de la position s. En mots : l'accélération est la pente de la courbe de vitesse, et la vitesse est la pente de la courbe de position"
     },
     {
      "label": "À partir de trois positions",
      "tex": "a \\approx \\frac{s(t+h) - 2s(t) + s(t-h)}{h^{2}}",
-     "note": "Deux vitesses séparées d'un écart, chacune tirée de deux positions séparées d'un écart, donnent cette formule. La page fait le calcul en entier pour que les deux étapes soient visibles"
+     "note": "h est le temps entre les relevés, réglé par le curseur. Deux vitesses séparées de h, chacune tirée de deux positions séparées de h, se combinent en cette seule formule : la position d'après, moins deux fois la position actuelle, plus la position d'avant, le tout divisé par h au carré. La page fait les deux étapes séparément pour que les deux se voient. Exemple : pour la voiture qui freine, avec h = 1 s, le numérateur vaut toujours -1 m, donc a = -1 m/s par seconde"
     },
     {
      "label": "Ce que dit le signe",
      "tex": "a > 0 \\Rightarrow v \\text{ rising}, \\qquad a < 0 \\Rightarrow v \\text{ falling}",
-     "note": "La flèche rose pointe à l'opposé de la verte pendant que la voiture freine, alors que la voiture avance toujours"
+     "note": "Une accélération au-dessus de zéro signifie que la vitesse v augmente. En dessous de zéro, elle baisse. Tant que la voiture qui freine avance encore, sa vitesse baisse, donc la flèche d'accélération de la page pointe vers l'arrière"
     }
    ],
    "dimension": {
-    "label": "Au point de demi-tour",
+    "label": "Au moment du demi-tour",
     "tex": "v(t^{*}) = 0,\\quad a(t^{*}) \\neq 0",
-    "note": "Là où la voiture fait demi-tour, sa vitesse est nulle et son accélération ne l'est pas : la vitesse passe par zéro, elle ne s'y arrête pas"
+    "note": "t* est l'instant où la voiture fait demi-tour. À cet instant sa vitesse est nulle mais pas son accélération : la vitesse passe par zéro sans s'y arrêter. Exemple : la voiture qui freine, à t* = 10 s, a une vitesse de 0 et une accélération de -1 m/s par seconde"
    }
   },
   {
    "id": "accumulate",
-   "name": "Tout additionner à nouveau",
-   "summary": "Avec seulement la vitesse, la distance : des tranches « vitesse fois durée », additionnées. L'intégrale, et le fait qu'elle défait la dérivée",
+   "name": "Additionner les morceaux",
+   "summary": "Si seule la vitesse d'une voiture est connue, quelle distance a-t-elle parcourue ? Le temps est découpé en tranches courtes, chaque tranche donne vitesse fois temps, et les tranches s'additionnent. Avec des tranches de plus en plus fines, la somme devient l'intégrale, qui défait la dérivée",
    "blocks": [
     {
      "label": "Une tranche",
      "tex": "\\Delta s_i = v\\!\\left(t_i + \\tfrac{\\Delta t}{2}\\right)\\Delta t",
-     "note": "La vitesse fois la durée donne la distance. La vitesse est lue au milieu de la tranche"
+     "note": "Δt, lu « delta t », est la durée d'une tranche, en secondes. tᵢ est l'instant où commence la tranche numéro i, et v est la vitesse, en m/s, relevée au milieu de la tranche, à tᵢ + Δt/2. Δsᵢ est la distance parcourue pendant cette tranche : vitesse fois temps. Exemple : 5 m/s pendant Δt = 2 s donnent 10 m"
     },
     {
      "label": "Toutes les tranches",
      "tex": "s(T) - s(0) \\approx \\sum_{i} v\\!\\left(t_i + \\tfrac{\\Delta t}{2}\\right)\\Delta t \\;\\longrightarrow\\; \\int_{0}^{T} v(t)\\,dt",
-     "note": "La somme, avec des tranches aussi fines que voulu. L'escalier devient la courbe"
+     "note": "s(T) - s(0) est le déplacement de la voiture entre l'instant 0 et l'instant T. Le signe Σ veut dire : additionner sur toutes les tranches i. Le signe ∫ de 0 à T, l'intégrale, désigne la même somme avec des tranches aussi fines que voulu. Sur la page, l'escalier des sommes devient la courbe lisse"
     },
     {
      "label": "L'erreur de la méthode du point milieu",
      "tex": "\\left|\\text{sum} - \\int\\right| \\le \\frac{T\\,\\Delta t^{2}}{24}\\max|v''|",
-     "note": "Deux fois plus de tranches, et l'erreur est divisée par quatre. Pour une vitesse en ligne droite l'erreur est nulle, donc la page s'ouvre sur une vitesse qui se courbe"
+     "note": "Prendre la vitesse au milieu de chaque tranche s'appelle la méthode du point milieu. Son erreur est au plus T fois Δt au carré, divisé par 24, fois la plus grande taille de v''. v'' est la dérivée seconde de la vitesse et dit à quel point la courbe de vitesse se courbe. Doubler le nombre de tranches divise Δt par deux, donc l'erreur par quatre. Quand la vitesse est une droite dans le temps, v'' est nulle et il n'y a pas d'erreur, c'est pourquoi la page s'ouvre sur une vitesse qui se courbe"
     },
     {
      "label": "La dérivée défaite",
      "tex": "\\frac{d}{dT}\\int_{0}^{T} v(t)\\,dt = v(T)",
-     "note": "La raideur de la distance accumulée est la vitesse qui a été additionnée. La première page à l'envers"
+     "note": "d/dT désigne la dérivée par rapport à T : à quelle vitesse change ce qui suit quand T change. En mots : la pente de la distance additionnée est la vitesse qui a été additionnée. Additionner une vitesse puis prendre la dérivée redonne la même vitesse"
     }
    ],
    "dimension": {
-    "label": "Aire algébrique",
+    "label": "Aire avec signe",
     "tex": "v < 0 \\Rightarrow \\Delta s_i < 0",
-    "note": "Au retour, les tranches comptent en négatif et le total redescend : c'est un déplacement, pas une distance parcourue"
+    "note": "Quand la vitesse v est au-dessous de zéro, la voiture recule, et la distance Δsᵢ de chaque tranche compte comme négative. Le total redescend alors : il mesure à quelle distance du départ se trouve la voiture, pas le chemin qu'elle a parcouru en tout"
    }
   },
   {
    "id": "growth",
    "name": "Ce qui croît d'autant plus qu'il y en a",
-   "summary": "De l'argent placé à intérêt, une population qui a de la place. La croissance est une fraction fixe de la quantité, et cette seule règle désigne l'exponentielle",
+   "summary": "Une quantité qui croît toujours d'une part fixe d'elle-même, comme de l'argent placé à intérêts ou une population qui a de la place. Cette seule règle donne la courbe exponentielle, un temps de doublement fixe, et le logarithme comme réponse à la question « quand »",
    "blocks": [
     {
      "label": "La règle",
      "tex": "\\frac{dA}{dt} = r\\,A",
-     "note": "La vitesse de croissance est le taux fois la quantité présente. Le graphique du bas de la page est le quotient des deux membres de cette égalité, et il ne bouge jamais"
+     "note": "A est la quantité, t le temps en années, r le taux annuel sous forme de fraction (12 % s'écrit 0.12). dA/dt est la vitesse de croissance de la quantité, sa dérivée. En mots : la vitesse de croissance est le taux fois la quantité. Exemple : A = 100 et r = 0.12 donnent une croissance de 12 par an. Le graphique du bas de la page montre dA/dt divisé par A, qui vaut toujours r, donc il ne bouge pas"
     },
     {
-     "label": "La seule courbe qui la respecte",
+     "label": "La seule courbe qui obéit à la règle",
      "tex": "A(t) = A_0\\,e^{rt}",
-     "note": "Le nombre e est la base pour laquelle la raideur est exactement égale à la hauteur, de sorte que la constante est le taux et rien d'autre"
+     "note": "A₀, lu « A zéro », est la quantité de départ. e est un nombre fixe, environ 2.718. En mots : la quantité est la quantité de départ fois e puissance taux fois temps. Exemple : 100 à r = 0.12 au bout de 10 ans donnent 100 fois e puissance 1.2, environ 332. Le nombre e est la base pour laquelle la pente de la courbe est exactement égale à sa hauteur, de sorte que la constante de la règle est le taux et rien d'autre"
     },
     {
      "label": "Temps de doublement",
      "tex": "t_{2} = \\frac{\\ln 2}{r}",
-     "note": "Le même pour chaque doublement, ce qui explique les graduations régulièrement espacées sur la page"
+     "note": "t₂ est le temps que met la quantité à doubler. ln est le logarithme naturel, l'opération qui défait e puissance ; ln 2 vaut environ 0.693. Exemple : r = 0.12 donne 0.693 / 0.12 = 5.78 ans. Chaque doublement prend le même temps, c'est pourquoi les marques de doublement sur la page sont également espacées"
     },
     {
-     "label": "Quand atteint-il une cible",
+     "label": "Quand atteint-elle une cible",
      "tex": "t^{*} = \\frac{1}{r}\\ln\\frac{A^{*}}{A_0}",
-     "note": "Le logarithme, lu comme une question sur le temps"
+     "note": "t* est l'instant où la quantité atteint la cible A*. En mots : diviser la cible par la quantité de départ, prendre le logarithme naturel, diviser par le taux. Exemple : de 100 à 800 à r = 0.12, il faut ln 8 / 0.12 = 17.33 ans"
     }
    ],
    "dimension": {
     "label": "Face à une droite",
     "tex": "A_0(1 + rt) \\le A_0 e^{rt}",
-    "note": "Une croissance d'une quantité fixe par an, calée sur la vitesse du premier instant, prend du retard tout de suite et ne le rattrape jamais"
+    "note": "A₀(1 + rt) est une croissance de la même quantité chaque année, A₀ fois r, qui part à la même vitesse que l'exponentielle. Elle prend du retard tout de suite et le garde. Exemple : à partir de 100 à r = 0.12, après 20 ans la droite donne 340 et l'exponentielle environ 1102"
    }
   },
   {
    "id": "slope",
    "name": "Par où descendre",
-   "summary": "Une balle sur un relief, qui ne connaît que le sol sous ses pieds. Le gradient, et le pas dans le sens opposé",
+   "summary": "Une bille sur un terrain, qui ne connaît que le sol sous elle. À chaque pas elle mesure la pente dans chaque direction, l'ensemble s'appelle le gradient, et fait un pas dans la direction opposée. C'est la descente de gradient",
    "blocks": [
     {
-     "label": "Deux pentes, une pour chaque direction de déplacement",
+     "label": "Deux pentes, une par direction",
      "tex": "\\frac{\\partial h}{\\partial x} \\approx \\frac{h(x+\\epsilon, y) - h(x-\\epsilon, y)}{2\\epsilon}, \\qquad \\frac{\\partial h}{\\partial y} \\approx \\frac{h(x, y+\\epsilon) - h(x, y-\\epsilon)}{2\\epsilon}",
-     "note": "Le rapport de la première page, pris une fois par direction, tout le reste étant tenu fixe"
+     "note": "h(x, y) est la hauteur du sol au point (x, y) de la carte, x en largeur et y en hauteur. ε, lu « epsilon », est une toute petite distance. ∂h/∂x, lu « dérivée partielle de h par rapport à x », est la pente quand seul x change et que y reste fixe ; ∂h/∂y est la même chose pour y. Chacune est la hauteur un peu devant moins la hauteur un peu derrière, divisée par la distance qui les sépare, 2ε"
     },
     {
      "label": "Le gradient",
      "tex": "\\nabla h = \\left(\\frac{\\partial h}{\\partial x}, \\frac{\\partial h}{\\partial y}\\right)",
-     "note": "Les deux pentes réunies en une flèche. Elle pointe vers la montée la plus raide, et sa longueur indique la raideur"
+     "note": "∇h, lu « nabla h » ou « gradient de h », est le couple des deux pentes, dessiné comme une seule flèche. Elle indique la montée la plus raide, et sa longueur dit à quel point c'est raide. Exemple : dans le bol rond, au point (2, 1), le gradient vaut (2, 1)"
     },
     {
      "label": "Un pas",
      "tex": "(x, y) \\leftarrow (x, y) - \\eta\\,\\nabla h(x, y)",
-     "note": "À l'opposé de la flèche, de la taille du pas fois la raideur. La descente de gradient"
+     "note": "η, lu « êta », est la taille du pas réglée par le curseur. La flèche ← veut dire : remplacer le membre de gauche par celui de droite. En mots : se déplacer à l'opposé du gradient, de la taille du pas fois la pente. Exemple : depuis (2, 1) dans le bol rond avec η = 0.1, la bille va en (1.8, 0.9). Répéter ce pas s'appelle la descente de gradient"
     },
     {
      "label": "Quand le pas est trop grand",
      "tex": "\\eta > \\frac{2}{\\lambda_{\\max}} \\Rightarrow \\text{diverges}",
-     "note": "Dans la vallée étroite, la pente transversale est douze fois la pente longitudinale, donc un pas adapté au fond dépasse les parois. La balle rebondit plus haut à chaque fois"
+     "note": "λ_max, lu « lambda max », est la plus grande courbure du terrain : à quelle vitesse la pente augmente dans la direction où le sol est le plus courbé. Si la taille du pas η dépasse 2 divisé par λ_max, chaque pas retombe plus loin du fond et la bille s'enfuit. Dans la vallée étroite, la courbure vaut 12 en travers et 1 en long, donc un pas au-dessus de 2/12, environ 0.167, fait rebondir la bille de plus en plus haut"
     }
    ],
    "dimension": {
-    "label": "Plat ne veut pas dire fond",
+    "label": "Plat ne veut pas dire au fond",
     "tex": "\\nabla h = 0 \\;\\not\\Rightarrow\\; \\text{minimum}",
-    "note": "Au milieu de la selle, la balle s'arrête alors que le sol descend de part et d'autre. Les quatre reliefs de la page sont une cuvette, une vallée étroite, une selle et deux collines"
+    "note": "Un gradient nul signifie un sol plat, pas le point le plus bas. Au centre de la selle, la bille s'arrête alors que le sol descend dans une direction. Les quatre terrains de la page sont un bol, une vallée étroite, une selle et deux collines"
    }
   },
   {
    "id": "line",
    "name": "Tracer la droite à la main",
-   "summary": "Des points de deux couleurs. Le lecteur trace la droite de séparation, puis le perceptron de Rosenblatt essaie, une correction à la fois, et se heurte au mur qu'il a heurté en 1969",
+   "summary": "Des points de deux couleurs, et une droite pour les séparer. La droite est d'abord tracée à la main, puis le perceptron de Rosenblatt essaie, une correction à la fois. Sur les quatre points du ou exclusif il échoue, comme Minsky et Papert l'ont montré en 1969",
    "blocks": [
     {
      "label": "Une droite en trois nombres",
      "tex": "w_1 x + w_2 y + b = 0",
-     "note": "Les deux poids donnent la direction perpendiculaire à la droite et le biais sa distance à l'origine. Les deux poignées de la droite blanche sont converties en ces nombres"
+     "note": "x et y sont les coordonnées d'un point. w₁ et w₂ s'appellent des poids et b le biais. Les points où cette somme vaut exactement zéro forment une droite. Les poids fixent l'orientation de la droite, et le biais sa distance au centre (0, 0). La page transforme les deux poignées de la droite tracée à la main en ces trois nombres"
     },
     {
      "label": "Le neurone",
      "tex": "\\hat{y} = \\begin{cases} 1 & w_1 x + w_2 y + b > 0 \\\\ 0 & \\text{otherwise}\\end{cases}",
-     "note": "De quel côté de la droite. Une somme pondérée et un seuil strict, rien d'autre"
+     "note": "ŷ, lu « y chapeau », est la réponse de la machine pour un point : 1 quand la somme est au-dessus de zéro, 0 sinon. En mots : de quel côté de la droite se trouve le point. Une somme pondérée et une coupure nette à zéro, rien d'autre. Ce calcul s'appelle un neurone artificiel"
     },
     {
      "label": "Une correction",
      "tex": "w \\leftarrow w + \\eta\\,(y - \\hat{y})\\,x, \\qquad b \\leftarrow b + \\eta\\,(y - \\hat{y})",
-     "note": "Regarder un point ; s'il est du mauvais côté, tourner un peu la droite vers lui. Le point entouré sur la page est ce point"
+     "note": "y est la bonne réponse du point, 1 ou 0, et ŷ la réponse de la machine. η est un petit pas, 0.1 sur la page. Si la réponse est juste, y - ŷ vaut 0 et rien ne change. Si elle est fausse, y - ŷ vaut 1 ou -1, et les poids et le biais bougent pour que la droite tourne un peu vers le point. Le grand anneau sur la page marque ce point"
     },
     {
-     "label": "Il s'arrête, s'il le peut",
+     "label": "Elle s'arrête, si c'est possible",
      "tex": "\\text{updates} \\le \\left(\\frac{R}{\\gamma}\\right)^{2}",
-     "note": "Quand une droite de séparation existe, la règle en trouve une en un nombre fini de corrections. Sur deux nuages de soixante points, la page en compte deux"
+     "note": "R est la distance du point le plus éloigné au centre. γ, lu « gamma », est l'écart entre le point le plus proche et la meilleure droite de séparation. Quand une telle droite existe, le nombre de corrections est au plus (R/γ) au carré, donc la règle s'arrête toujours. Sur deux nuages de soixante points, la page en compte deux"
     },
     {
-     "label": "Et quand il ne le peut pas",
+     "label": "Et quand c'est impossible",
      "tex": "\\mathrm{xor}(0,0)=0,\\ \\mathrm{xor}(0,1)=1,\\ \\mathrm{xor}(1,0)=1,\\ \\mathrm{xor}(1,1)=0",
-     "note": "Aucune droite ne place correctement les quatre points, il en reste donc toujours un à corriger et la règle ne s'arrête jamais. Minsky et Papert, 1969"
+     "note": "xor, le ou exclusif, donne 1 quand exactement une de ses deux entrées vaut 1. Ses quatre points sont aux coins d'un carré, les coins opposés étant pareils. Aucune droite ne met les quatre de leur bon côté, donc il reste toujours un point à corriger et la règle ne s'arrête jamais. Marvin Minsky et Seymour Papert, 1969"
     }
    ],
    "dimension": {
-    "label": "Ce que le lecteur peut vérifier à la main",
+    "label": "Le compte pour la droite tracée à la main",
     "tex": "\\text{wrong} = \\min\\left(\\#\\{\\text{side} \\neq y\\},\\ \\#\\{\\text{side} = y\\}\\right)",
-    "note": "Chaque côté d'une droite tracée à la main peut être de l'une ou l'autre couleur, donc le compte est le plus petit des deux"
+    "note": "#{...} veut dire « le nombre de points pour lesquels... ». Une droite tracée à la main ne dit pas quel côté va avec quelle couleur, donc la page compte les erreurs dans les deux sens et garde le plus petit compte"
    }
   },
   {
    "id": "nudge",
    "name": "Un petit changement, et ce qu'il produit",
-   "summary": "Un poids déplacé de la même petite quantité, encore et encore, sur un neurone strict et un neurone lisse qui partagent les mêmes nombres. Une réponse avance doucement, l'autre saute ou ne fait rien. La raison pour laquelle chaque méthode après le perceptron a besoin du neurone lisse",
+   "summary": "Un poids déplacé de la même petite quantité, encore et encore, sur un neurone dur et un neurone lisse qui partagent leurs nombres. La réponse lisse change un peu à chaque fois, la réponse dure reste immobile ou saute. L'apprentissage a besoin du neurone lisse, car seuls ses changements indiquent dans quel sens aller",
    "blocks": [
     {
      "label": "Les deux neurones sur les trois mêmes nombres",
      "tex": "\\hat{y} = \\big[\\,w_1 x + w_2 y + b > 0\\,\\big], \\qquad a = \\sigma(w_1 x + w_2 y + b)",
-     "note": "Le oui ou non strict du perceptron, et le même total passé dans la fonction d'écrasement"
+     "note": "x et y sont les coordonnées du point, w₁ et w₂ les poids et b le biais. Les crochets donnent 1 quand l'affirmation à l'intérieur est vraie et 0 quand elle est fausse : c'est la réponse ŷ du neurone dur. σ, lu « sigma », est la courbe lisse 1 / (1 + e puissance -z), qui transforme n'importe quel total z en un nombre a entre 0 et 1. Exemple : un total de 0 donne 0.5, un total de 2 donne environ 0.88"
     },
     {
-     "label": "Un petit coup de pouce",
+     "label": "Une poussée",
      "tex": "w_1 \\leftarrow w_1 + \\epsilon",
-     "note": "Le curseur de la page est epsilon. Rien d'autre ne change"
+     "note": "ε, lu « epsilon », est la taille d'une poussée, réglée par le curseur de la page. Chaque pas ajoute ε au poids w₁ et ne change rien d'autre"
     },
     {
      "label": "Ce que fait la réponse lisse",
      "tex": "\\Delta a \\approx \\sigma'(z)\\,x\\,\\epsilon",
-     "note": "La pente de la fonction d'écrasement au total de ce point, fois le x du point, fois le coup de pouce. Petit, et le même à chaque fois, donc la direction à suivre se lit"
+     "note": "Δa est la variation de la réponse lisse après une poussée. σ'(z) est la pente de la courbe lisse au total z du point. En mots : la pente de la courbe, fois le x du point, fois la poussée. Exemple : à z = 0 la pente vaut 0.25, donc avec x = 0.4 et ε = 0.01 la réponse bouge de 0.001. C'est petit, presque pareil à chaque fois, et son signe indique le sens à suivre"
     },
     {
-     "label": "Ce que fait la réponse stricte",
+     "label": "Ce que fait la réponse dure",
      "tex": "\\Delta \\hat{y} \\in \\{0, \\pm 1\\}",
-     "note": "Rien tant que le total ne franchit pas zéro, puis un saut de un. Aucune pente nulle part, donc aucune direction"
+     "note": "Δŷ est la variation de la réponse dure. Elle ne peut valoir que 0, 1 ou -1 : rien tant que le total ne franchit pas zéro, puis un saut de un. La réponse dure n'a de pente nulle part, donc elle n'indique aucun sens"
     }
    ],
    "dimension": {
-    "label": "Pourquoi la descente a besoin du neurone lisse",
+    "label": "Pourquoi l'apprentissage a besoin du neurone lisse",
     "tex": "\\frac{\\partial L}{\\partial w_1} = (a - y)\\,\\sigma'(z)\\,x",
-    "note": "L'erreur ne varie avec un poids que parce que sigma a une pente. Pour une marche, la même expression est nulle partout et indéfinie au saut"
+    "note": "L est l'erreur et a - y l'écart entre la réponse a et la bonne réponse y. ∂L/∂w₁ dit à quelle vitesse l'erreur change quand w₁ change. Cette quantité n'existe que parce que σ a une pente σ'. Pour le neurone dur, la même expression est nulle partout et non définie au saut"
    }
   },
   {
    "id": "unit",
    "name": "À l'intérieur d'un neurone",
-   "summary": "Trois nombres et une fonction d'écrasement. Déplacez-les à la main et regardez le plan changer de couleur, puis laissez le neurone les déplacer lui-même, en descendant la pente de son erreur",
+   "summary": "Un neurone artificiel : deux poids, un biais et une courbe d'écrasement. Les trois nombres sont d'abord bougés à la main, et la teinte du plan suit, puis le neurone les bouge lui-même, en descendant le long de son erreur",
    "blocks": [
     {
      "label": "Le neurone",
      "tex": "a = g(w_1 x + w_2 y + b)",
-     "note": "Pondérer, additionner, décaler, écraser. Le schéma de la page est cette expression dessinée"
+     "note": "x et y sont les coordonnées d'un point, w₁ et w₂ les poids, b le biais. g est l'écrasement, une courbe choisie avec les boutons de la page, et a est la réponse. En mots : multiplier, additionner, décaler, écraser. Exemple : x = 0.6 et y = -0.4 avec w₁ = 0.3, w₂ = -0.25 et b = 0.15 donnent un total de 0.43, et l'écrasement entre 0 et 1 le transforme en 0.61"
     },
     {
-     "label": "Les fonctions d'écrasement proposées",
+     "label": "Les écrasements proposés",
      "tex": "\\sigma(z) = \\frac{1}{1+e^{-z}}, \\quad \\tanh(z), \\quad \\max(0, z), \\quad z",
-     "note": "Vers 0..1, vers -1..1, coupure sous zéro, aucune. La première est la courbe de la page sur l'exponentielle, repliée"
+     "note": "σ, lu « sigma », ramène n'importe quel total z entre 0 et 1. tanh le ramène entre -1 et 1. max(0, z) garde un total positif et coupe un total négatif à zéro. z seul veut dire aucun écrasement. σ est construite à partir de la courbe exponentielle e puissance -z"
     },
     {
-     "label": "L'erreur en un seul nombre",
+     "label": "L'erreur, en un seul nombre",
      "tex": "L = \\frac{1}{2N}\\sum_{n}\\left(a^{(n)} - y^{(n)}\\right)^{2}",
-     "note": "La moyenne des carrés des écarts sur tous les points. C'est la hauteur que la balle descend"
+     "note": "N est le nombre de points et n leur numéro. a⁽ⁿ⁾ est la réponse du neurone pour le point n et y⁽ⁿ⁾ sa bonne réponse. Σ additionne sur tous les points. En mots : les écarts au carré, additionnés puis divisés par deux fois le nombre de points. Cette erreur est la hauteur que chaque pas de la course fait descendre"
     },
     {
      "label": "Un pas sur trois nombres",
      "tex": "w_i \\leftarrow w_i - \\eta\\,\\frac{\\partial L}{\\partial w_i}, \\qquad \\frac{\\partial L}{\\partial w_i} = \\frac{1}{N}\\sum_n (a - y)\\,g'(z)\\,x_i",
-     "note": "La page de la colline avec trois directions au lieu de deux. La pente exige que la fonction d'écrasement ait une pente, ce que le seuil strict n'avait pas"
+     "note": "wᵢ désigne l'un quelconque des trois nombres, et xᵢ ce qu'il multiplie : x, y, ou 1 pour le biais. η est la taille du pas. ∂L/∂wᵢ dit à quelle vitesse l'erreur L change quand wᵢ change. g'(z) est la pente de l'écrasement au total z. En mots : déplacer chaque nombre à l'opposé de la pente de l'erreur, comme une bille qui descend, avec trois directions au lieu de deux. Il faut pour cela que l'écrasement ait une pente, ce que la règle dure 0 ou 1 n'a pas"
     }
    ],
    "dimension": {
     "label": "La droite est toujours là",
     "tex": "a = \\tfrac{1}{2} \\iff w_1 x + w_2 y + b = 0",
-    "note": "Là où la fonction d'écrasement donne un demi se trouve la droite du perceptron. L'écrasement ajoute le degré de certitude, de chaque côté"
+    "note": "⟺ veut dire « exactement quand ». Avec l'écrasement entre 0 et 1, la réponse vaut un demi exactement là où le total est nul, et ces points forment une droite. L'écrasement ajoute à quel point le neurone est sûr, de chaque côté de cette droite"
    }
   },
   {

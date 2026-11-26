@@ -1,0 +1,266 @@
+{
+  "slug": "primes",
+  "title": "Test : Nombres premiers",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Une application de retour est une image construite à partir d'une suite de nombres. Que montre chacun de ses points ?",
+      "options": [
+        {
+          "text": "Une valeur de la suite face à sa position dans la liste",
+          "correct": false,
+          "why": "Cette image montre les valeurs dans l'ordre du temps. Une application de retour laisse de côté la position et associe chaque valeur à la suivante."
+        },
+        {
+          "text": "Une valeur de la suite face à la valeur qui la suit",
+          "correct": true,
+          "why": "Chaque paire de valeurs voisines, x_n et x_(n+1), donne un point. Si une règle fixe la valeur suivante, les points sont sur le graphe de cette règle."
+        },
+        {
+          "text": "Le nombre de fois où chaque valeur apparaît dans la suite",
+          "correct": false,
+          "why": "C'est un histogramme, un diagramme en barres des effectifs. Il ne dit rien de quelle valeur suit quelle autre."
+        },
+        {
+          "text": "Un nombre premier face à l'écart qui vient après lui",
+          "correct": false,
+          "why": "Pour les nombres premiers, l'application de retour associe un écart à l'écart suivant, pas un nombre premier à son écart."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "L'application logistique avec r = 4 est la règle x_(n+1) = 4x_n(1 - x_n). Elle prend un nombre entre 0 et 1 et donne le suivant. Ses valeurs sautent sans ordre visible, et pourtant, sur une application de retour (chaque valeur face à la suivante), ses points tombent sur une seule courbe. Pourquoi ?",
+      "options": [
+        {
+          "text": "La règle n'est pas chaotique à r = 4, et ses valeurs se répètent en cycle",
+          "correct": false,
+          "why": "Elle y est chaotique : deux valeurs de départ presque égales s'écartent, en moyenne d'un facteur 2 par pas. Le chaos et une courbe sur l'application de retour vont ensemble."
+        },
+        {
+          "text": "Trop peu de points sont dessinés pour remplir un nuage",
+          "correct": false,
+          "why": "La comparaison dure autant de pas qu'il y a d'écarts entre nombres premiers. Plus de points remplissent la même courbe, pas un nuage."
+        },
+        {
+          "text": "Ses valeurs sont toujours des nombres pairs, comme les écarts",
+          "correct": false,
+          "why": "Les valeurs de l'application logistique sont des nombres entre 0 et 1, et la plupart ne sont pas entières. Les nombres pairs sont ceux des écarts entre nombres premiers."
+        },
+        {
+          "text": "La règle fixe chaque valeur suivante à partir de la valeur actuelle",
+          "correct": true,
+          "why": "La règle est chaotique, mais c'est une règle. La valeur suivante est une fonction de la valeur actuelle, donc chaque point est sur le graphe de 4x(1 - x), une parabole, et l'application de retour la dessine."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Une suite produite par une règle et une suite sans règle peuvent toutes deux avoir l'air aléatoires. Qu'est-ce qui rend une suite chaotique ?",
+      "options": [
+        {
+          "text": "Une règle fixe la produit, et cette règle écarte des départs proches",
+          "correct": true,
+          "why": "Chaotique veut dire qu'une règle donne chaque valeur suivante, et que deux valeurs de départ séparées d'une distance minuscule donnent bientôt des suites complètement différentes. Avoir l'air aléatoire ne suffit pas. Il faut que la règle soit là."
+        },
+        {
+          "text": "Elle ne répète jamais une valeur, aussi longtemps qu'elle dure",
+          "correct": false,
+          "why": "Beaucoup de suites ne se répètent jamais, y compris des suites sans aucune règle. L'absence de répétition ne décide pas du chaos."
+        },
+        {
+          "text": "Ses sauts entre valeurs sont plus grands que ceux d'une suite au hasard",
+          "correct": false,
+          "why": "La taille des sauts n'est pas le critère. Le critère est de savoir si une règle donne la valeur suivante à partir de la valeur actuelle."
+        },
+        {
+          "text": "Elle réussit tous les tests statistiques de hasard",
+          "correct": false,
+          "why": "Sur une application de retour, chaque valeur face à la suivante, une règle chaotique dessine une courbe. Elle échoue donc à un test que les écarts entre nombres premiers réussissent."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Un nombre premier est un nombre entier plus grand que 1 qui n'est divisible que par 1 et par lui-même. Chaque écart entre nombres premiers voisins, sauf le premier, est un nombre pair. Pourquoi ?",
+      "options": [
+        {
+          "text": "Les nombres premiers vont par paires distantes de 2, et chaque écart est une somme de 2",
+          "correct": false,
+          "why": "Des paires distantes de 2 existent, comme 11 et 13, mais la plupart des écarts sont plus grands : de 23 à 29, l'écart vaut 6. La parité vaut pour tous les écarts."
+        },
+        {
+          "text": "Les nombres premiers sont trouvés en barrant les impairs, ce qui laisse des pas pairs",
+          "correct": false,
+          "why": "La méthode habituelle, le crible d'Ératosthène, barre les multiples de chaque nombre premier. Cela retire les nombres pairs au-dessus de 2, pas les impairs."
+        },
+        {
+          "text": "Tout nombre premier après 2 est impair, et impair moins impair est pair",
+          "correct": true,
+          "why": "Le premier écart, 3 - 2 = 1, est le seul impair. Après lui, les deux bouts de chaque écart sont des nombres impairs."
+        },
+        {
+          "text": "Les écarts sont arrondis à des nombres pairs pour l'image",
+          "correct": false,
+          "why": "Rien n'est arrondi. Les écarts sont des différences exactes, et ils sont pairs d'eux-mêmes."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "L'écart entre deux nombres premiers voisins est leur différence. Une application de retour dessine chaque écart face à l'écart suivant, sous forme de point. Quels points donnent les nombres premiers 23, 29, 31, 37, 41, 43, 47 ?",
+      "options": [
+        {
+          "text": "(23, 29), (29, 31), (31, 37), (37, 41), (41, 43), (43, 47)",
+          "correct": false,
+          "why": "Ce sont des paires de nombres premiers, pas d'écarts. L'application de retour dessine chaque écart face à l'écart qui le suit."
+        },
+        {
+          "text": "(1, 6), (2, 2), (3, 6), (4, 4), (5, 2), (6, 4)",
+          "correct": false,
+          "why": "Ici chaque écart est associé à sa position dans la liste. L'application de retour associe chaque écart à l'écart suivant."
+        },
+        {
+          "text": "(6, 2), (2, 6), (6, 4), (4, 2), (2, 4), (4, 6)",
+          "correct": false,
+          "why": "Le dernier écart, 4, n'a pas d'écart suivant dans cette liste. Six écarts ne font que cinq paires."
+        },
+        {
+          "text": "(6, 2), (2, 6), (6, 4), (4, 2), (2, 4)",
+          "correct": true,
+          "why": "Les écarts valent 6, 2, 6, 4, 2, 4. En associant chaque écart au suivant, il y a cinq points."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Le crible d'Ératosthène trouve les nombres premiers en barrant les multiples de 2, puis de 3, puis de 5, et ainsi de suite. Pour trouver tous les nombres premiers jusqu'à 400, il faut barrer les multiples de quels nombres premiers ?",
+      "options": [
+        {
+          "text": "Tous les nombres premiers jusqu'à √400 = 20",
+          "correct": true,
+          "why": "Ce sont 2, 3, 5, 7, 11, 13, 17 et 19. Un nombre jusqu'à 400 qui n'est pas premier a un diviseur au plus égal à 20. Les nombres premiers plus grands n'ont plus de multiples à barrer."
+        },
+        {
+          "text": "Seulement 2, 3, 5 et 7, les premiers sous 10",
+          "correct": false,
+          "why": "Ils suffisent jusqu'à 100. Jusqu'à 400, des nombres comme 121 = 11 × 11 et 361 = 19 × 19 resteraient."
+        },
+        {
+          "text": "Tous les premiers jusqu'à 200, la moitié de la limite",
+          "correct": false,
+          "why": "C'est bien plus que nécessaire. Tout multiple d'un nombre premier au-dessus de 20 qui est sous 400 a un diviseur plus petit, il est donc déjà barré."
+        },
+        {
+          "text": "Tous les nombres jusqu'à 400, premiers ou non",
+          "correct": false,
+          "why": "Les multiples d'un nombre qui n'est pas premier sont déjà des multiples de ses facteurs premiers. Les barrer de nouveau ne change rien."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "Quelle est à peu près la taille de l'écart moyen entre nombres premiers voisins près d'un million ?",
+      "options": [
+        {
+          "text": "Environ 6, le logarithme décimal",
+          "correct": false,
+          "why": "La règle utilise le logarithme népérien, ln, dont la base est le nombre e ≈ 2,718. Le logarithme décimal d'un million vaut 6. Le népérien est environ 2,3 fois plus grand."
+        },
+        {
+          "text": "Environ 14, le logarithme népérien",
+          "correct": true,
+          "why": "ln(1 000 000) ≈ 13,8. Le théorème des nombres premiers dit que, près d'un grand nombre p, environ un nombre sur ln p est premier, et les nombres premiers voisins y sont donc distants d'environ ln p."
+        },
+        {
+          "text": "Environ 1000, la racine carrée",
+          "correct": false,
+          "why": "La racine carrée d'un million, 1000, dit jusqu'où le crible d'Ératosthène doit aller. Elle ne dit pas à quelle distance les nombres premiers sont les uns des autres."
+        },
+        {
+          "text": "Environ 0,07, un sur le logarithme",
+          "correct": false,
+          "why": "1 / ln p ≈ 0,07 est à peu près la part des nombres premiers parmi les nombres proches de p. L'écart moyen est l'inverse de cette part."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "Sur beaucoup d'écarts entre nombres premiers, la dispersion de l'écart suivant (son écart type : la distance habituelle à sa moyenne) vaut 5,0 quand rien n'est connu. Elle vaut 4,8 en moyenne une fois l'écart actuel connu. La mesure divise la seconde dispersion par la première. Que donne-t-elle, et que veut-elle dire ?",
+      "options": [
+        {
+          "text": "0,96, ce qui est proche d'une règle qui fixe l'écart suivant",
+          "correct": false,
+          "why": "L'échelle va dans l'autre sens. Une règle qui fixe la valeur suivante donne 0. Proche de 1 veut dire presque aucune aide."
+        },
+        {
+          "text": "0,04, connaître un écart retire donc 96 % de la dispersion",
+          "correct": false,
+          "why": "0,04 vaut 1 - 0,96. La mesure est le rapport lui-même, et elle dit que seuls 4 % de la dispersion sont retirés."
+        },
+        {
+          "text": "0,96, connaître un écart réduit donc à peine la dispersion",
+          "correct": true,
+          "why": "4,8 / 5,0 = 0,96. Une valeur de 1 veut dire que connaître l'écart n'aide pas, et 0 qu'une règle fixe l'écart suivant. 0,96 est à peu près ce que donnent les mêmes écarts dans un ordre aléatoire."
+        },
+        {
+          "text": "1,04, connaître un écart rend le suivant plus dur à deviner",
+          "correct": false,
+          "why": "C'est le rapport à l'envers, 5,0 / 4,8. La dispersion avec l'écart connu va au numérateur."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Les écarts entre nombres premiers sont mélangés dans un ordre aléatoire. Sur une application de retour (chaque écart face au suivant), ils donnent le même nuage que les écarts dans leur vrai ordre, et connaître un écart n'aide pas plus qu'avant. Que montre ce résultat ?",
+      "options": [
+        {
+          "text": "L'ordre des écarts n'apprend rien à cette image sur l'écart suivant",
+          "correct": true,
+          "why": "Le mélange garde chaque écart et ne détruit que leur ordre. Si l'ordre portait une règle, les vrais écarts seraient plus faciles à prévoir que les écarts mélangés, et ce n'est pas le cas."
+        },
+        {
+          "text": "Les nombres premiers sont des nombres au hasard, tirés sans aucune règle",
+          "correct": false,
+          "why": "Les nombres premiers forment une liste fixe, trouvée en barrant des multiples. Le test montre seulement qu'un écart ne donne pas le suivant par une règle."
+        },
+        {
+          "text": "Le mélange a échoué, car un vrai mélange donnerait un autre nuage",
+          "correct": false,
+          "why": "Un mélange garde le même ensemble d'écarts, donc le nombre d'écarts de chaque taille reste le même. Seul un effet de l'ordre pourrait changer l'image."
+        },
+        {
+          "text": "Les écarts suivent une règle chaotique qu'un mélange de leur ordre ne casse pas",
+          "correct": false,
+          "why": "Une règle se verrait comme une courbe, et connaître un écart fixerait le suivant. Le mélange détruirait une telle règle, mais il n'y avait rien à détruire."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Pour une règle chaotique, l'exposant de Lyapunov mesure à quelle vitesse deux valeurs de départ presque égales s'écartent. Pourquoi ne peut-il pas être mesuré pour les écarts entre nombres premiers ?",
+      "options": [
+        {
+          "text": "Les nombres premiers grandissent trop vite pour calculer l'exposant",
+          "correct": false,
+          "why": "La taille n'est pas l'obstacle. L'obstacle est l'absence de règle qui mène d'une valeur à la suivante."
+        },
+        {
+          "text": "L'exposant des nombres premiers vaut exactement zéro",
+          "correct": false,
+          "why": "Zéro est une valeur qu'une règle peut avoir. Les nombres premiers n'ont pas d'exposant du tout, et non un exposant nul."
+        },
+        {
+          "text": "Les écarts sont entiers, et l'exposant demande des nombres réels",
+          "correct": false,
+          "why": "Les nombres entiers ne sont pas le problème. L'exposant demande une règle qui mène d'une valeur à la suivante."
+        },
+        {
+          "text": "Il n'y a pas de règle pour faire avancer deux départs proches",
+          "correct": true,
+          "why": "Les nombres premiers forment une liste fixe. Il n'y a ni règle, ni valeur de départ qui pourrait être un peu changée. Sans règle, il n'y a rien à mesurer."
+        }
+      ]
+    }
+  ]
+}

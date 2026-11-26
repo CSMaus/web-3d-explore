@@ -59,7 +59,7 @@ export const CURVES: Record<Curve, { label: string; f: (x: number) => number }> 
   bump: { label: "A bump", f: (x) => Math.exp(-(((x - 0.5) / 0.12) ** 2)) },
   wave: { label: "A wave", f: (x) => 0.5 + 0.4 * Math.sin(3 * Math.PI * x) },
   dip: { label: "A ramp with a dip", f: (x) => x - 0.6 * Math.exp(-(((x - 0.7) / 0.08) ** 2)) },
-  saw: { label: "A saw", f: (x) => (x * 3) % 1 },
+  saw: { label: "Saw teeth", f: (x) => (x * 3) % 1 },
 };
 
 /** where the k-th of n steps sits: strictly inside the interval, evenly spaced. */

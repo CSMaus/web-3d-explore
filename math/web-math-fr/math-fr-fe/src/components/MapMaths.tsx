@@ -44,7 +44,7 @@ export function MapMaths({ maps, active, carrier, colourOf, tinted, onPick }: Pr
                 {L("Move {{n}}", { n: i + 1 })}
               </span>
               <span className="text-muted-foreground">
-                {i === carrier ? L("Carries the whole shape") : L("Chance {{p}}", { p: m.p.toFixed(3) })}
+                {i === carrier ? L("Shrinks the least") : L("Chance of being picked: {{p}}", { p: m.p.toFixed(3) })}
               </span>
             </div>
             <div data-text="note" className="mt-1">

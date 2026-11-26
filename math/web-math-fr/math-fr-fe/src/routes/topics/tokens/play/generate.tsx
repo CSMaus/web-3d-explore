@@ -28,7 +28,7 @@ export const Route = createFileRoute("/topics/tokens/play/generate")({
 
 const RULES: { id: string; label: string; rule: Decoding }[] = [
   { id: "greedy", label: L("Always the most likely"), rule: GREEDY },
-  { id: "warm", label: L("Draw, temperature 0.8"), rule: { temperature: 0.8, topK: 0, topP: 1, penalty: 0 } },
+  { id: "warm", label: L("Random draw, temperature 0.8"), rule: { temperature: 0.8, topK: 0, topP: 1, penalty: 0 } },
 ];
 const MOST = 40;
 
@@ -97,27 +97,27 @@ function GeneratePage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? L("One token at a time")}
-        job={L("A distribution over the next token is one token, and a paragraph is not. The rest is a loop short enough to write on one line: run the model, choose one token from the distribution at the last position, append it, run again. The appended token goes in as an ordinary token, no different from the prompt's.")}
+        title={system?.name ?? L("Writing one token at a time")}
+        job={L("How does a model write a whole paragraph when it can only guess the next token? It repeats one short loop. It reads the text so far. It chooses one token from its guess for the next position. It adds that token to the end of the text and reads again. A token is a piece of text such as a word. An added token is read exactly like the tokens typed at the start. The model here is small and trained in the browser on a short text about a cat, a dog and a man. The question: what does the loop write, and when does it start repeating itself?")}
         input={
           <div className="space-y-3">
             <label className="block">
-              <span data-text="note">{L("The prompt")}</span>
+              <span data-text="note">{L("The start of the text")}</span>
               <Input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className="mt-1" />
             </label>
             <Choices options={RULES} value={ruleId} onPick={(id) => { setRuleId(id); reset(); }} />
-            <Slider label={L("The window")} min={3} max={CONTEXT} step={1} value={window} format={(v) => L("{{n}} tokens", { n: Math.round(v) })} onChange={(v) => { setWindow(Math.round(v)); reset(); }} />
+            <Slider label={L("Window")} min={3} max={CONTEXT} step={1} value={window} format={(v) => L("{{n}} tokens", { n: Math.round(v) })} onChange={(v) => { setWindow(Math.round(v)); reset(); }} />
             <Text kind="note" as="p">
-              {L("The model can attend over this many tokens at once and no more; it was trained with a window of {{n}}. When the text is longer, the oldest tokens fall out and are gone.", { n: CONTEXT })}
+              {L("The window is how many of the latest tokens the model reads at each step. It was trained with a window of {{n}}. When the text grows longer, the oldest tokens drop out and the model no longer sees them. \"Always the most likely\" takes the token with the highest probability. \"Random draw\" picks a token at random with the model's probabilities; temperature 0.8 makes the likely tokens a little likelier still.", { n: CONTEXT })}
             </Text>
-            {!trained ? <Text kind="warning" as="p">{L("The model is still training ({{done}} of {{total}} steps). What it writes will improve as that finishes; start again to see.", { done: store.model.steps, total: MODEL_STEPS })}</Text> : null}
+            {!trained ? <Text kind="warning" as="p">{L("The model is still training ({{done}} of {{total}} steps). Its text gets better once training ends; Reset then starts the text again.", { done: store.model.steps, total: MODEL_STEPS })}</Text> : null}
           </div>
         }
         run={
           <RunBar
             running={runner.running}
             count={made.length}
-            what={L("tokens generated")}
+            what={L("tokens written")}
             limit={limit}
             onLimit={(v) => setLimit(v)}
             limitRange={{ min: 10, max: 200, step: 10 }}
@@ -135,7 +135,7 @@ function GeneratePage() {
         picture={
           <section ref={stage} className="space-y-2">
             <div className="rounded border border-border p-3">
-              <div data-text="caption">{L("The text so far. Dim: fallen out of the window. Sky border: the prompt. Green border: generated.")}</div>
+              <div data-text="caption">{L("The text so far, one box per token. The first boxes are the start that was typed; the rest were written by the model. Faded boxes have dropped out of the window. The last written token has a ring around it.")}</div>
               <div className="mt-2 flex flex-wrap gap-1">
                 {all.map((id, i) => (
                   <span
@@ -172,11 +172,11 @@ function GeneratePage() {
                     ctx.fillRect(120, y, ((W - 240) * r.p) / top, 18);
                     ctx.globalAlpha = 1;
                     ctx.fillStyle = MUTED;
-                    ctx.fillText(chosen ? L("{{pct}} %   chosen, appended, goes in next", { pct: (r.p * 100).toFixed(1) }) : `${(r.p * 100).toFixed(1)} %`, 126 + ((W - 240) * r.p) / top, y + 14);
+                    ctx.fillText(chosen ? L("{{pct}} %   chosen and added to the text", { pct: (r.p * 100).toFixed(1) }) : `${(r.p * 100).toFixed(1)} %`, 126 + ((W - 240) * r.p) / top, y + 14);
                   });
                 }}
               />
-            </div><Caption>{L("The distribution the last token was drawn from will appear here.")} {L("Step {{n}}: the model's distribution at the last position, and the token the rule chose", { n: made.length })}</Caption></div>
+            </div><Caption>{made.length === 0 ? L("After the first step, this shows the six likeliest next tokens and their probabilities.") : L("Step {{n}}: the six likeliest next tokens by the model, with their probabilities. The bar drawn solid, not faded, is the token that was chosen.", { n: made.length })}</Caption></div>
             <div data-text="body" className="rounded border border-border p-3">
               {decode(VOCAB, all)}
             </div>
@@ -186,23 +186,23 @@ function GeneratePage() {
           <div className="space-y-2">
             <Verdict good={repeated ? false : undefined}>
               {!last
-                ? L("The prompt is {{n}} tokens. Press run: each step runs the model over the window, draws one token, and appends it.", { n: prompt.length })
-                : `${L("Step {{step}}: the model was run over {{seen}} tokens and {{how}} {{token}}, which it gave {{pct}} %. It is now token {{pos}} of the text and will be read next step like any other.", { step: made.length, seen: Math.min(window, all.length - 1), how: ruleId === "greedy" ? L("took its most likely token") : L("drew"), token: visible(tokenText(last.id)), pct: (last.p * 100).toFixed(0), pos: all.length })}${dropped > 0 ? ` ${dropped === 1 ? L("The window is full: {{n}} token has fallen out of it, prompt included, and the model has no memory of them.", { n: dropped }) : L("The window is full: {{n}} tokens have fallen out of it, prompt included, and the model has no memory of them.", { n: dropped })}` : ""}${repeated ? ` ${L("The last {{n}} tokens repeat the {{n}} before them: with the most likely token always chosen, the loop has found a cycle and will stay in it.", { n: repeated })}` : ""}`}
+                ? L("The start of the text is {{n}} tokens long. At each step, Run reads the window, chooses one token and adds it to the text.", { n: prompt.length })
+                : `${L("Step {{step}}: the model read {{seen}} tokens and {{how}} {{token}}, to which it gave {{pct}} %. This token is now number {{pos}} in the text, and the next step reads it like any other.", { step: made.length, seen: Math.min(window, all.length - 1), how: ruleId === "greedy" ? L("took its likeliest token,") : L("drew the token"), token: visible(tokenText(last.id)), pct: (last.p * 100).toFixed(0), pos: all.length })}${dropped > 0 ? ` ${dropped === 1 ? L("The window is full: {{n}} token has dropped out of it, counting from the start of the text, and the model no longer sees it.", { n: dropped }) : L("The window is full: {{n}} tokens have dropped out of it, counting from the start of the text, and the model no longer sees them.", { n: dropped })}` : ""}${repeated ? ` ${L("The last {{n}} tokens repeat the {{n}} before them: the text has started going round in a circle.", { n: repeated })}` : ""}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>{L("Tokens in the text now")}</dt>
-              <dd className="text-right text-foreground/80">{all.length} {L("({{prompt}} prompt, {{made}} generated)", { prompt: prompt.length, made: made.length })}</dd>
+              <dd className="text-right text-foreground/80">{all.length} {L("({{prompt}} typed, {{made}} written by the model)", { prompt: prompt.length, made: made.length })}</dd>
               <dt>{L("Tokens the model can see")}</dt>
               <dd className="text-right text-foreground/80">{L("{{a}} of {{b}}", { a: Math.min(window, all.length), b: all.length })}</dd>
-              <dt>{L("Keys and values it keeps rather than recomputes")}</dt>
+              <dt>{L("Numbers kept so they are not computed again (the key and value of each earlier token)")}</dt>
               <dd className="text-right text-foreground/80">{L("{{n}} positions x {{width}} x 2 = {{total}} numbers", { n: Math.min(window, all.length), width: WIDTH, total: cache.toLocaleString("en") })}</dd>
-              <dt>{L("Work per new token, with that cache")}</dt>
-              <dd className="text-right text-foreground/80">{L("One position, not {{n}}", { n: Math.min(window, all.length) })}</dd>
-              <dt>{L("Tokens that can be revised")}</dt>
+              <dt>{L("Positions computed for each new token, thanks to that store")}</dt>
+              <dd className="text-right text-foreground/80">{L("1, not {{n}}", { n: Math.min(window, all.length) })}</dd>
+              <dt>{L("Written tokens the model can change later")}</dt>
               <dd className="text-right text-foreground/80">{L("None")}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("The mask from the attention page is why this works: during training the prediction at each position used only earlier positions, which is exactly the situation here. An emitted token is conditioned on for the rest of the generation and cannot be taken back. The prompt is the only conditioning there is; the model does not know which of its tokens were an instruction and which were data.")}
+              {L("This works because of how the model was trained. In training, the guess at each position could use only earlier positions, which is exactly the situation when writing. A written token stays in the text, and every later step reads it; it cannot be taken back. The start of the text is all the model has to go on. It has no way to tell which tokens were an instruction and which were material to work on.")}
             </Text>
           </div>
         }

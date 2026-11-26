@@ -2,7 +2,7 @@
  "slug": "chaos",
  "number": 2,
  "title": "Équations différentielles, attracteurs et chaos",
- "summary": "Une équation dont l'inconnue est une fonction, résolue sous forme explicite tant que c'est possible, puis numériquement, l'attracteur sur lequel un système se pose, le chaos déterministe, l'entrée par le doublement de période, et la seule expérience où toute la chaîne a servi à faire quelque chose",
+ "summary": "Beaucoup de choses qui changent avec le temps suivent une règle qui relie la vitesse de changement d'une grandeur à sa valeur actuelle. Une telle règle s'appelle une équation différentielle, et sa réponse n'est pas un seul nombre mais toute une courbe au cours du temps. Certaines de ces équations se résolvent par une formule. Quand il n'y a pas de formule, l'ordinateur construit la courbe en beaucoup de petits pas. Avec le temps, un système se pose souvent sur une forme fixe, appelée un attracteur. Certains systèmes suivent une règle exacte et restent pourtant imprévisibles à long terme : cela s'appelle le chaos. Le thème montre comment le chaos apparaît quand un réglage augmente, à travers un cycle dont la longueur double encore et encore. Il se termine par une expérience de 1992 qui s'est servie de cette chaîne d'idées pour régulariser les battements irréguliers d'un tissu cardiaque, par de petites impulsions bien placées dans le temps.",
  "state": "writing",
  "parts": 0,
  "beats": 0,

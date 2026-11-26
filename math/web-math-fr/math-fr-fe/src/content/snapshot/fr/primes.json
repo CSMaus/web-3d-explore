@@ -1,8 +1,8 @@
 {
  "slug": "primes",
- "number": 5,
- "title": "Une parenthèse : les écarts entre nombres premiers",
- "summary": "Les écarts entre nombres premiers consécutifs, tracés comme l'application de premier retour d'un flot chaotique, à côté d'une application qui a une règle, pour montrer ce que le chaos n'est pas",
+ "number": 6,
+ "title": "Les écarts entre nombres premiers",
+ "summary": "L'écart jusqu'au nombre premier suivant peut-il être prévu à partir de l'écart précédent : test sur jusqu'à 20 000 nombres premiers et comparaison avec une règle chaotique",
  "state": "writing",
  "parts": 0,
  "beats": 0,

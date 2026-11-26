@@ -9,7 +9,7 @@ export function Equations({ system }: { system: System | null }) {
       <section data-slot="panel">
         <Label>{L("MATHEMATICS")}</Label>
         <Text kind="note" as="p" className="mt-2">
-          {L("The equations are served by the backend, which is not answering. The picture beside this panel is drawn in the browser and needs nothing from it.")}
+          {L("The formulas for this page come from the site's server, and the server is not answering right now. The picture beside this panel is drawn by the browser itself and works without the server.")}
         </Text>
       </section>
     );

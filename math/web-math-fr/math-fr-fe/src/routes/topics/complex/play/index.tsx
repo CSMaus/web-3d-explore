@@ -13,13 +13,13 @@ export const Route = createFileRoute("/topics/complex/play/")({
 
 /** the same names and summaries the backend serves, so the page stands alone. */
 export const LOCAL: { id: string; name: string; summary: string }[] = [
-  { id: "line", name: L("Numbers on a line, and the one question they cannot answer"), summary: L("Adding slides the line, multiplying stretches it, minus one flips it. Try every number: none of them squares to minus one.") },
-  { id: "turn", name: L("What 𝑖 is"), summary: L("Minus one is a half turn. The number that does half of that, a quarter turn, is 𝑖, and twice is minus one. Watch it go round.") },
-  { id: "add", name: L("Complex numbers: adding"), summary: L("Every number is an arrow. Add two by walking one out from the other's tip. The two parts never mix.") },
-  { id: "multiply", name: L("Complex numbers: multiplying"), summary: L("Lengths multiply, angles add. Watch one arrow turned and stretched into the product.") },
-  { id: "square", name: L("Which points stay?"), summary: L("Start at zero, square and add c, again and again. For some c the path stays near zero; for others it runs away. The values of c that stay form the Mandelbrot set.") },
-  { id: "round", name: L("Euler's formula"), summary: L("Growth at an imaginary rate does not grow: it circles. Its two shadows are the sine and the cosine, and at half a turn it lands on minus one.") },
-  { id: "quaternions", name: L("Quaternions"), summary: L("Three units for the three axes of space. Pick an axis and an angle, turn the house step by step, and read the four numbers that do it.") },
+  { id: "line", name: L("Numbers on a line, and the one question they cannot answer"), summary: L("Every ordinary number is a point on a line. Adding a number slides the line, multiplying stretches it, and multiplying by minus one flips it over. The numbers from minus three to three are tried one by one: none of them, multiplied by itself, gives minus one.") },
+  { id: "turn", name: L("What 𝑖 is"), summary: L("Multiplying by minus one turns every arrow from zero half way round. A number that turns an arrow only a quarter of the way round is written i. Two quarter turns make a half turn, so i times i is minus one.") },
+  { id: "add", name: L("Complex numbers: adding"), summary: L("A complex number is a point of a flat plane: so far across and so far up. Drawn as an arrow from zero, two such numbers are added by placing a copy of the second arrow at the tip of the first. The across parts add together, and the up parts add together.") },
+  { id: "multiply", name: L("Complex numbers: multiplying"), summary: L("Each arrow from zero has a length and an angle. Multiplying two complex numbers multiplies their lengths and adds their angles. The page turns and stretches one arrow until it becomes the product.") },
+  { id: "square", name: L("Which points stay near zero? The Mandelbrot set"), summary: L("Start at zero, multiply the number by itself, add a fixed complex number c, and repeat. For some values of c the results stay close to zero for ever; for others they run off. The values of c that stay close form a shape called the Mandelbrot set.") },
+  { id: "round", name: L("Euler's formula: a point that goes round a circle"), summary: L("A point that is always pushed at right angles to the line from zero goes round a circle. Written with i, this motion is Euler's formula. Its shadows on the two axes are the cosine and the sine waves, and half a turn lands on minus one.") },
+  { id: "quaternions", name: L("Quaternions: turns in space"), summary: L("A turn in three-dimensional space can be written with four numbers, called a quaternion: one for how far to turn and three for the axis. An axis and an angle are chosen, a house turns step by step, and the four numbers of the turn are shown.") },
 ];
 
 function ComplexIndex() {
@@ -29,10 +29,10 @@ function ComplexIndex() {
     <>
       <Heading level={1} className="mt-4">{L("The pages, in order")}</Heading>
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-        {L("For a reader who has never met an imaginary number. Every page has the same three parts in the same places: what goes in, run, what came out. By the last page the Mandelbrot set on the fractals pages is something that can be read.")}
+        {L("Seven pages for a reader who has never met an imaginary number. They start from the ordinary number line and the one question it cannot answer: which number, multiplied by itself, gives minus one? Each page has the same three parts in the same places: the settings, a run button, and what came out. By the fifth page a well-known shape, the Mandelbrot set, can be read as a map of a calculation.")}
       </Text>
       {!theory ? (
-        <Text kind="note" as="p" className="mt-3">{L("The descriptions come from the backend, which is not answering; this page needs nothing from it.")}</Text>
+        <Text kind="note" as="p" className="mt-3">{L("The page descriptions could not be loaded from the server, so copies built into the site are shown. Everything on these pages works without the server.")}</Text>
       ) : null}
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {items.map((s, i) => (

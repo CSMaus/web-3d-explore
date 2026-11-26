@@ -15,7 +15,7 @@ export const Route = createFileRoute("/topics/tokens/theory")({
   component: TheoryPage,
 });
 
-const HEADING = L("The mathematics, all of it");
+const HEADING = L("All the formulas of this topic");
 
 function TheoryPage() {
   const theory = Route.useLoaderData();
@@ -23,7 +23,7 @@ function TheoryPage() {
   const items = useMemo(() => {
     if (!theory) return [];
     return [
-      { id: "measuring", label: L("The shared machinery") },
+      { id: "measuring", label: L("Formulas used on several pages") },
       ...theory.systems.map((s) => ({ id: s.id, label: s.name })),
     ];
   }, [theory]);
@@ -35,7 +35,7 @@ function TheoryPage() {
       <div>
         <Heading level={1} className="mt-6">{HEADING}</Heading>
         <div className="mt-6">
-          <Offline what={L("This page is nothing but the equations, so it has nothing to show until the backend answers. The play pages draw their pictures without it.")} />
+          <Offline what={L("This page shows only formulas, and they come from the site's server. The server is not answering, so there is nothing to show. The interactive pages work without it.")} />
         </div>
       </div>
     );
@@ -48,12 +48,12 @@ function TheoryPage() {
       <div className="min-w-0">
         <Heading level={1} className="mt-6">{HEADING}</Heading>
         <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-          {L("Every equation this topic rests on. Each one also sits on the page of the system it belongs to, and every number quoted in a note was measured by the code rather than copied from a reference.")}
+          {L("Every formula behind this topic, which shows how a language model cuts text into tokens (pieces such as words), turns them into numbers and writes text one token at a time. Each formula also appears on the interactive page it belongs to, with a note in plain words. Every number in the notes was computed by the site's code, not copied from a book.")}
         </Text>
 
         <section id="measuring" className="mt-12 scroll-mt-24">
           <Heading level={2}>
-            {L("The shared machinery")}
+            {L("Formulas used on several pages")}
           </Heading>
           <div className="mt-4 space-y-6">
             {theory.definitions.map((d, i) => (
@@ -69,7 +69,7 @@ function TheoryPage() {
         </section>
 
         <section className="mt-16">
-          <Heading level={2}>{L("The systems")}</Heading>
+          <Heading level={2}>{L("Formulas, page by page")}</Heading>
           <div className="mt-4 space-y-10">
             {theory.systems.map((s, i) => (
               <div key={s.id} id={s.id} className="scroll-mt-24">

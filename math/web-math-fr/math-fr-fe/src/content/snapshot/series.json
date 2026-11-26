@@ -1,0 +1,13 @@
+{
+ "slug": "series",
+ "number": 5,
+ "title": "Series: functions built from simple pieces",
+ "summary": "A series is a sum of many simple pieces that together rebuild a complicated curve. The topic shows how a calculator finds sin(x), the sine of an angle, with only additions and multiplications. It shows why such a sum can stop matching the curve beyond a certain point, even when the curve is smooth. And it shows how any wave, any drawn outline and any photograph is rebuilt from turning circles and simple waves.",
+ "state": "writing",
+ "parts": 0,
+ "beats": 0,
+ "seconds": 0,
+ "systems": 5,
+ "aside": false,
+ "part_list": []
+}

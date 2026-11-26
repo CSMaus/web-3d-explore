@@ -87,7 +87,7 @@ export function RunBar({
             max={4}
             step={0.02}
             value={perFrame}
-            format={(v) => (v < 1 ? L("every {{n}} frames", { n: Math.round(1 / v) }) : `x${v.toFixed(0)}`)}
+            format={(v) => (v < 1 ? L("one step per {{n}} screen redraws", { n: Math.round(1 / v) }) : `x${v.toFixed(0)}`)}
             onChange={onSpeed}
           />
         ) : (

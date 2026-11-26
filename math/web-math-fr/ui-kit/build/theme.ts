@@ -49,7 +49,7 @@ function font(f: string) {
 function styleRules(s: TextStyle, withColour = true): string {
   const lines = [
     `font-family: ${font(s.font)};`,
-    `font-size: ${px(s.size)};`,
+    `font-size: ${s.fluid !== undefined ? `min(${px(s.size)}, ${s.fluid}vw)` : px(s.size)};`,
     `font-weight: ${s.weight};`,
     `line-height: ${s.leading};`,
     `letter-spacing: ${s.tracking}em;`,
@@ -124,7 +124,7 @@ ${topicLights(p).map((x, i) => `  --c-topic-${i + 1}: ${x};`).join("\n")}`;
 }
 
 /** how many topics carry a light of their own */
-const TOPIC_LIGHTS = 6;
+const TOPIC_LIGHTS = 8;
 
 /** the light of every topic: the palette's own, else the chart colours in turn */
 function topicLights(p: Palette): string[] {
@@ -1047,6 +1047,12 @@ function pieces(t: Theme): string {
   pointer-events: none;
 }
 
+/* on a phone the kittens are smaller and a little faint, so they cover less of the page */
+@media (max-width: 640px) {
+  [data-slot="kitten"] { transform: scale(0.66); transform-origin: bottom right; opacity: 0.85; right: 64px; }
+  [data-slot="kitten"][data-kind="playing"] { transform-origin: bottom left; }
+}
+
 [data-slot="kitten"][data-kind="playing"] {
   right: auto;
   left: 16px;
@@ -1398,6 +1404,35 @@ a[data-tile] { display: flex; border: 1px solid ${v("border")}; border-radius: 1
 a[data-tile]:hover, a[data-tile]:focus-visible { transform: translateY(-3px); border-color: ${v("selected")}; }
 a[data-tile]:is(:hover, :focus-visible) [data-slot="edge-figure"] :is(.edge-core, .edge-tail, .edge-halo) { animation-duration: var(--figure-seconds), var(--breathe-seconds); }
 [data-slot="topic-graph"] a[data-slot="panel"][data-lit] { transform: translateY(-6px); border-color: ${v("selected")}; }
+/* a test's answer: a row with its letter; once picked, the right one in green, a wrong pick in red,
+   the others faded, and under each the line saying why */
+[data-slot="quiz-option"] { display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px; border: 1px solid ${v("border")}; border-radius: 10px; background: color-mix(in oklab, ${v("card")} 70%, transparent); color: ${v("foreground")}; transition: border-color 0.2s ease, background 0.2s ease; }
+[data-slot="quiz-option"][data-state="open"] { cursor: pointer; }
+[data-slot="quiz-option"][data-state="open"]:hover, [data-slot="quiz-option"][data-state="open"]:focus-visible { border-color: ${v("selected")}; }
+[data-slot="quiz-option"][data-state="right"] { border-color: ${v("success")}; background: color-mix(in oklab, ${v("success")} 14%, transparent); }
+[data-slot="quiz-option"][data-state="wrong"] { border-color: ${v("destructive")}; background: color-mix(in oklab, ${v("destructive")} 12%, transparent); }
+[data-slot="quiz-option"][data-state="other"] { opacity: 0.7; }
+[data-slot="quiz-letter"] { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 999px; border: 1px solid ${v("border")}; font-family: var(--font-label); font-size: 12px; }
+[data-slot="quiz-option"][data-state="right"] [data-slot="quiz-letter"] { border-color: ${v("success")}; color: ${v("success")}; }
+[data-slot="quiz-option"][data-state="wrong"] [data-slot="quiz-letter"] { border-color: ${v("destructive")}; color: ${v("destructive")}; }
+
+/* a word or a number in the theme's accent, among plain text (dates on About, the owner's name among authors) */
+[data-tone="accent"] { color: ${v("primary")}; }
+/* the line that opens a part of a long page: thin, fading out at both ends */
+[data-slot="part-rule"] { height: 1px; width: 100%; background: linear-gradient(90deg, transparent, ${v("border")} 12%, ${v("border")} 88%, transparent); }
+/* a row held under the bar on a solid ground that reaches both edges of the screen */
+[data-slot="sticky-row"] { background: ${v("background")}; box-shadow: 0 0 0 100vmax ${v("background")}; clip-path: inset(0 -100vmax); }
+/* a screenshot of a real product: a thin frame and rounded corners, so it reads as a picture of a screen */
+[data-slot="shot"] { border: 1px solid ${v("border")}; border-radius: 10px; }
+/* a picture that fades in once what is drawn over it is finished */
+[data-fade] { transition: opacity 1s; }
+[data-fade="hidden"] { opacity: 0; }
+/* a project's fact: a thin line on its left */
+[data-slot="fact"] { border-left: 1px solid ${v("border")}; }
+/* a lifted card leaves an empty strip under it, as tall as the lift: without it the pointer at the
+   card's bottom edge falls off, the card drops back under it, lifts again, and the card shakes */
+[data-slot="topic-graph"] a[data-slot="panel"], a[data-tile] { position: relative; }
+a[data-tile]:is(:hover, :focus-visible)::after, [data-slot="topic-graph"] a[data-slot="panel"][data-lit]::after { content: ""; position: absolute; inset-inline: 0; top: 100%; height: 7px; }
 [data-slot="topic-graph"] [data-lit] [data-slot="edge-figure"] .edge-halo { stroke-opacity: 0.45; }
 [data-slot="topic-graph"] [data-lit] [data-slot="graph-open"] { color: ${v("selected")}; }
 @media (prefers-reduced-motion: reduce) {

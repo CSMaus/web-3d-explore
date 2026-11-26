@@ -1,3 +1,4 @@
+import { PlayColumns } from "@/components/TaskPage";
 import { createFileRoute } from "@tanstack/react-router";
 import { L } from "@/lib/lang";
 import { Label, Text, Heading } from "@kit/index";
@@ -31,6 +32,12 @@ export const Route = createFileRoute("/topics/fractals/play/ifs")({
 
 const MODES = ["single", "per move", "by branch", "one move"] as const;
 type Mode = (typeof MODES)[number];
+const MODE_LABEL: Record<Mode, string> = {
+  single: L("One colour"),
+  "per move": L("By move"),
+  "by branch": L("By branch"),
+  "one move": L("One branch"),
+};
 
 function IfsPage() {
   const system = Route.useLoaderData();
@@ -113,10 +120,13 @@ function IfsPage() {
   return (
     <div>
       <Heading level={1} className="mt-4">{system?.name ?? L("Iterated maps")}</Heading>
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
-        <div data-slot="task-in" className="min-w-0 space-y-4">
+      <Text kind="body" as="p" className="mt-2 max-w-2xl">
+        {L("Can a few rules draw a fern? This page draws a shape with one point and a few moves. A move is a rule that takes a point and gives a new one: it shrinks the plane, turns it and shifts it. The page starts from one point, picks a move at random, applies it, marks the new point and repeats this about 90,000 times. The points do not scatter: they pile up on one fixed shape, at first a fern made by four moves. The chips load other shapes, and the sliders change the numbers of one move. Two things to look for: which part of the shape each move draws, and the dimension, a number that says how much of the plane the shape fills (1 for a line, 2 for a filled area).")}
+      </Text>
+      <PlayColumns
+        input={<>
           <section data-slot="panel">
-            <Label>{L("PRESET")}</Label>
+            <Label>{L("READY-MADE SHAPES")}</Label>
             <div className="mt-3">
               <Chips items={Object.keys(IFS_PRESETS).map((k) => L(k))} active={L(preset)} onPick={(item) => pickPreset(Object.keys(IFS_PRESETS).find((k) => L(k) === item) ?? item)} />
             </div>
@@ -126,14 +136,17 @@ function IfsPage() {
             <Label>{L("MOVE")}</Label>
             <div className="mt-3">
               <Chips
-                items={maps.map((_, i) => L("move {{n}}", { n: i + 1 }))}
-                active={L("move {{n}}", { n: spot + 1 })}
-                onPick={(item) => setActive(maps.findIndex((_, i) => L("move {{n}}", { n: i + 1 }) === item))}
+                items={maps.map((_, i) => L("Move {{n}}", { n: i + 1 }))}
+                active={L("Move {{n}}", { n: spot + 1 })}
+                onPick={(item) => setActive(maps.findIndex((_, i) => L("Move {{n}}", { n: i + 1 }) === item))}
                 tint={(_, i) =>
                   mode === "single" ? undefined : palette.roles[i % palette.roles.length]
                 }
               />
             </div>
+            <Text kind="note" as="p" className="mt-3">
+              {L("The chips pick the move to change. A move sends a point with coordinates x (across) and y (up) to a new point: new x = a·x + b·y + e, new y = c·x + d·y + f. The numbers a, b, c and d shrink, stretch and turn the shape, e and f shift it. The last slider sets how often this move is picked at each step.")}
+            </Text>
             <div className="mt-4 space-y-2">
               {KEYS.map((key) => (
                 <Slider
@@ -147,7 +160,7 @@ function IfsPage() {
                 />
               ))}
               <Slider
-                label={L("Probability")}
+                label={L("Chance of being picked")}
                 min={0}
                 max={1}
                 step={0.005}
@@ -160,8 +173,8 @@ function IfsPage() {
                 const s = contraction(m);
                 return (
                   <div key={i} className={s < 1 ? "text-muted-foreground" : "text-destructive"}>
-                    {L("Move {{n}} shrinks by {{s}}", { n: i + 1, s: s.toFixed(3) })}
-                    {s < 1 ? "" : `  - ${L("Above 1, this one spreads out")}`}
+                    {L("Move {{n}} multiplies lengths by at most {{s}}", { n: i + 1, s: s.toFixed(3) })}
+                    {s < 1 ? "" : `  - ${L("more than 1, so this move stretches")}`}
                   </div>
                 );
               })}
@@ -171,7 +184,7 @@ function IfsPage() {
           <section data-slot="panel">
             <Label>{L("EQUATIONS")}</Label>
             <Text kind="note" as="p" className="mt-2">
-              {L("Each move is coloured to match the points it puts on the picture, so a change to one of its six numbers is a change to the part of the shape in that colour. Tap one to edit it above.")}
+              {L("Every move written out with its current numbers: x' and y' are the coordinates of the new point. A move has the same colour as the points it places on the picture, so changing its numbers changes the part of the shape in that colour. Tapping a move selects it for the sliders above.")}
             </Text>
             <div className="mt-3">
               <MapMaths
@@ -188,10 +201,10 @@ function IfsPage() {
           <section data-slot="panel">
             <Label>{L("COLOUR")}</Label>
             <div className="mt-3 space-y-3">
-              <Chips items={MODES.map((m) => L(m[0].toUpperCase() + m.slice(1)))} active={L(mode[0].toUpperCase() + mode.slice(1))} onPick={(item) => setMode(MODES.find((m) => L(m[0].toUpperCase() + m.slice(1)) === item) ?? mode)} />
+              <Chips items={MODES.map((m) => MODE_LABEL[m])} active={MODE_LABEL[mode]} onPick={(item) => setMode(MODES.find((m) => MODE_LABEL[m] === item) ?? mode)} />
               <PaletteBar />
               <Slider
-                label={L("Points")}
+                label={L("Points drawn")}
                 min={2000}
                 max={300000}
                 step={2000}
@@ -200,7 +213,7 @@ function IfsPage() {
                 onChange={(v) => setPoints(Math.round(v))}
               />
               <Slider
-                label={L("Discard")}
+                label={L("Points skipped at the start")}
                 min={0}
                 max={200}
                 step={5}
@@ -208,13 +221,16 @@ function IfsPage() {
                 format={(v) => String(Math.round(v))}
                 onChange={(v) => setDrop(Math.round(v))}
               />
+              <Text kind="note" as="p">
+                {L("One colour paints every point alike. By move gives each point the colour of the move that placed it. By branch gives each point the colour of the last move it went through, not counting the move that shrinks the least, because that move only repeats the whole shape a little smaller. In the fern this colours the leaves on one side of the stem, the leaves on the other side and the stem itself. One branch lights only the branch of the move chosen above. The first points are computed but not drawn, because they have not yet reached the shape.")}
+              </Text>
             </div>
           </section>
 
           <Equations system={system} />
-        </div>
+        </>}
 
-        <div data-slot="task-out" className="min-w-0 space-y-3 lg:sticky lg:top-24 lg:self-start">
+        output={<>
           <section
             ref={stage}
             data-slot="plot"
@@ -224,28 +240,33 @@ function IfsPage() {
             <Frame draw={draw} className="block h-full w-full" />
             {run.escaped ? (
               <Text kind="warning" as="p" className="absolute inset-x-0 top-1/2 px-8 text-center">
-                {L("The point ran away - at least one move stretches instead of shrinking, so there is no attractor to draw")}
+                {L("The point flew off far away, so there is no shape to draw. This happens when a move stretches lengths (its number above is more than 1) and is picked too often.")}
               </Text>
             ) : null}
           </section>
           <SaveImage stage={stage} name="iterated-maps" />
           <Readout
             rows={[
-              [L("Points kept"), run.kept.toLocaleString()],
-              [L("Measured box dimension"), dimension ? dimension.toFixed(3) : "-"],
+              [L("Points on the picture"), run.kept.toLocaleString()],
+              [L("Dimension (1 means a line, 2 a filled area)"), dimension ? dimension.toFixed(3) : "-"],
               [
-                L("Grouped by"),
+                L("Points counted by"),
                 mode === "by branch" || mode === "one move"
-                  ? L("branch, with move {{n}} as the carrier", { n: carrier + 1 })
-                  : L("The last move used"),
+                  ? L("Branch (move {{n}} shrinks the least and is not counted)", { n: carrier + 1 })
+                  : L("The move that placed them"),
               ],
               ...maps.map(
-                (_, i) => [L("points from move {{n}}", { n: i + 1 }), tally[i].toLocaleString()] as [string, string],
+                (_, i) => [
+                  mode === "by branch" || mode === "one move"
+                    ? L("Points on the branch of move {{n}}", { n: i + 1 })
+                    : L("Points placed by move {{n}}", { n: i + 1 }),
+                  tally[i].toLocaleString(),
+                ] as [string, string],
               ),
             ]}
           />
-        </div>
-      </div>
+        </>}
+      />
     </div>
   );
 }

@@ -1,0 +1,313 @@
+{
+  "systems": [
+    {
+      "id": "dice",
+      "name": "Deux dés : pourquoi 7 sort six fois plus souvent que 2",
+      "summary": "Deux dés peuvent tomber de 36 façons également probables, et six d'entre elles donnent une somme de 7, contre une seule pour une somme de 2. Des milliers de lancers montrent la part de 7 qui se stabilise sur 6/36.",
+      "blocks": [
+        {
+          "label": "Une probabilité comme une part",
+          "tex": "P(A) = \\frac{\\text{outcomes in } A}{\\text{all outcomes}}",
+          "note": "P(A) est la probabilité d'un événement A, un nombre de 0 à 1. Quand toutes les issues sont également probables, c'est le nombre d'issues de A divisé par le nombre de toutes les issues. Deux dés ont 6 x 6 = 36 issues, en distinguant le premier dé du second"
+        },
+        {
+          "label": "La somme 7 et la somme 2",
+          "tex": "P(\\text{sum} = 7) = \\frac{6}{36} = 0.1667, \\quad P(\\text{sum} = 2) = \\frac{1}{36}",
+          "note": "Une somme de 7 vient de six paires : (1,6), (2,5), (3,4), (4,3), (5,2), (6,1). Une somme de 2 vient de (1,1) seulement"
+        },
+        {
+          "label": "Le nombre de façons d'obtenir une somme s",
+          "tex": "N(s) = 6 - |s - 7|, \\quad s = 2, \\dots, 12",
+          "note": "N(s) est le nombre de paires dont la somme vaut s, et |s - 7| est la distance de s à 7. De 2 à 12, ces nombres sont 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, et les barres des lancers se stabilisent dessus"
+        }
+      ],
+      "dimension": {
+        "label": "Pourquoi les lancers se stabilisent",
+        "tex": "\\frac{\\text{count of } A \\text{ in } n \\text{ throws}}{n} \\to P(A)",
+        "note": "Sur n lancers, la part des lancers où A se produit se rapproche de la probabilité de A. La flèche veut dire « se rapproche de quand n grandit ». L'écart diminue comme 1/sqrt(n), un divisé par la racine carrée de n"
+      }
+    },
+    {
+      "id": "birthdays",
+      "name": "Anniversaires communs",
+      "summary": "Combien faut-il de personnes dans une pièce pour qu'il y ait une chance sur deux que deux d'entre elles aient le même anniversaire ? D'abord une estimation, puis la courbe : 23 personnes donnent une probabilité de 50.7 pour cent.",
+      "blocks": [
+        {
+          "label": "Le calcul à l'envers",
+          "tex": "P(\\text{some pair shares}) = 1 - P(\\text{all different})",
+          "note": "La probabilité qu'une chose arrive est 1 moins la probabilité qu'elle n'arrive pas. La probabilité que personne ne partage son anniversaire est plus facile à compter : chaque personne, à son tour, évite les jours déjà pris"
+        },
+        {
+          "label": "Tous les anniversaires différents",
+          "tex": "P(\\text{all different}) = \\frac{365}{365}\\cdot\\frac{364}{365}\\cdots\\frac{365-n+1}{365}",
+          "note": "n est le nombre de personnes. Chaque fraction est la probabilité que la personne suivante évite tous les anniversaires déjà présents. Tous les jours de l'année sont considérés comme également probables, et le 29 février est laissé de côté"
+        }
+      ],
+      "dimension": {
+        "label": "Pourquoi si peu de personnes suffisent",
+        "tex": "\\binom{23}{2} = 253 \\text{ pairs}",
+        "note": "Le symbole est le nombre de façons de choisir 2 personnes parmi 23. Vingt-trois personnes forment 253 paires, et chaque paire peut avoir le même anniversaire. 23 personnes donnent une probabilité de 0.507"
+      }
+    },
+    {
+      "id": "test",
+      "name": "Un test positif",
+      "summary": "Un test détecte 99 pour cent des malades et déclare à tort malades 5 pour cent des personnes en bonne santé. Une personne sur 1000 est malade. Le comptage de 100,000 personnes montre que 1.94 pour cent seulement des résultats positifs concernent des malades.",
+      "blocks": [
+        {
+          "label": "Le comptage",
+          "tex": "\\frac{99}{99 + 4995} = \\frac{99}{5094} = 0.0194",
+          "note": "Sur 100,000 personnes, 100 sont malades et 99 d'entre elles ont un résultat positif. 99,900 sont en bonne santé, et 5 pour cent d'entre elles, 4,995 personnes, ont aussi un résultat positif"
+        },
+        {
+          "label": "Une probabilité quand une chose est connue",
+          "tex": "P(A \\mid B) = \\frac{P(A \\text{ and } B)}{P(B)}",
+          "note": "P(A | B) se lit « probabilité de A sachant B » : la probabilité de A une fois qu'il est connu que B s'est produit. Savoir B ne laisse que les issues de B, et la probabilité de A est sa part parmi elles"
+        },
+        {
+          "label": "La formule de Bayes",
+          "tex": "P(\\text{ill} \\mid +) = \\frac{P(+ \\mid \\text{ill})\\,P(\\text{ill})}{P(+ \\mid \\text{ill})\\,P(\\text{ill}) + P(+ \\mid \\text{healthy})\\,P(\\text{healthy})}",
+          "note": "Le signe plus désigne un résultat positif. La formule est le même comptage, avec chaque nombre divisé par le nombre de personnes : 0.99 x 0.001 divisé par 0.99 x 0.001 + 0.05 x 0.999"
+        }
+      ],
+      "dimension": {
+        "label": "Deux questions différentes",
+        "tex": "P(+ \\mid \\text{ill}) = 0.99 \\ne P(\\text{ill} \\mid +) = 0.0194",
+        "note": "La probabilité d'un résultat positif pour une personne malade vaut 0.99. La probabilité d'être malade pour une personne au résultat positif vaut 0.0194. Ce sont deux nombres différents"
+      }
+    },
+    {
+      "id": "doors",
+      "name": "Trois portes : garder ou changer",
+      "summary": "Une voiture se trouve derrière l'une de trois portes. Après le choix du joueur, le présentateur ouvre une autre porte, avec une chèvre derrière. Mille parties avec chaque choix montrent si changer aide, puis la même chose avec 100 portes.",
+      "blocks": [
+        {
+          "label": "Garder",
+          "tex": "P(\\text{win by staying}) = \\frac{1}{n}",
+          "note": "n est le nombre de portes. Le premier choix cache la voiture une fois sur n, et les portes ouvertes par le présentateur ne changent rien à ce choix"
+        },
+        {
+          "label": "Changer",
+          "tex": "P(\\text{win by switching}) = 1 - \\frac{1}{n}",
+          "note": "Quand le premier choix était mauvais, le présentateur doit laisser fermée la porte de la voiture, donc changer gagne. Cela donne 2/3 avec 3 portes et 99/100 avec 100"
+        }
+      ],
+      "dimension": {
+        "label": "Ce que sait le présentateur",
+        "tex": "P(\\text{car} \\mid \\text{a goat shown at random}) = \\tfrac{1}{2}",
+        "note": "Supposer que le présentateur ouvre une porte au hasard et qu'elle montre par chance une chèvre. Les deux portes fermées seraient alors également probables. Changer n'est payant que parce que le présentateur sait où est la voiture"
+      }
+    },
+    {
+      "id": "game",
+      "name": "Un jeu de dé : payer 2, gagner 10 sur un six",
+      "summary": "Une partie coûte 2, et un six au dé rapporte 10. En moyenne, une partie fait perdre 1/3. Sur mille parties, la moyenne par partie se stabilise sur -1/3, tandis que le total baisse d'environ 333.",
+      "blocks": [
+        {
+          "label": "L'espérance",
+          "tex": "E[X] = \\sum_x x\\,P(X = x) = 10\\cdot\\tfrac{1}{6} - 2 = -\\tfrac{1}{3}",
+          "note": "X est le gain d'une partie. E[X], son espérance, est chaque gain possible multiplié par sa probabilité, le tout additionné. Ici, c'est le prix multiplié par la probabilité d'un six, moins la mise"
+        },
+        {
+          "label": "L'écart type d'une partie",
+          "tex": "\\sigma = 10\\sqrt{\\tfrac{1}{6}\\cdot\\tfrac{5}{6}} = 3.73",
+          "note": "La lettre grecque sigma désigne l'écart type : une distance typique entre le gain d'une partie et l'espérance de gain, dans la même unité que le gain"
+        },
+        {
+          "label": "Après n parties",
+          "tex": "E[S_n] = -\\tfrac{n}{3}, \\qquad \\sigma_{S_n} = 3.73\\sqrt{n}",
+          "note": "S_n est le total après n parties. Après 1000 parties, il est d'environ -333, à environ 118 près. La moyenne par partie varie de moins en moins, et le total de plus en plus"
+        }
+      ],
+      "dimension": {
+        "label": "Un jeu équitable",
+        "tex": "\\tfrac{\\text{prize}}{6} - 2 = 0 \\iff \\text{prize} = 12",
+        "note": "Un jeu est équitable quand son espérance de gain est nulle. Un prix de 12 le rend équitable"
+      }
+    },
+    {
+      "id": "hats",
+      "name": "Des chapeaux rendus au hasard",
+      "summary": "Des chapeaux sont rendus à leurs propriétaires dans un ordre pris au hasard. En moyenne, exactement 1 personne récupère son propre chapeau, avec 3 chapeaux comme avec 100.",
+      "blocks": [
+        {
+          "label": "Un nombre oui ou non pour chaque personne",
+          "tex": "M = I_1 + I_2 + \\cdots + I_n, \\quad I_k = 1 \\text{ if person } k \\text{ gets hat } k",
+          "note": "M est le nombre de personnes qui ont leur propre chapeau, et n le nombre de personnes. I_k vaut 1 si la personne numéro k reçoit son propre chapeau et 0 sinon. M est la somme de ces nombres"
+        },
+        {
+          "label": "Les moyennes s'additionnent",
+          "tex": "E[M] = \\sum_k E[I_k] = n\\cdot\\tfrac{1}{n} = 1",
+          "note": "E désigne la moyenne sur beaucoup de tirages. La moyenne d'une somme est la somme des moyennes, même si les personnes dépendent les unes des autres"
+        }
+      ],
+      "dimension": {
+        "label": "Personne n'a son propre chapeau",
+        "tex": "P(M = 0) = \\sum_{j=0}^{n} \\frac{(-1)^j}{j!} \\to e^{-1} = 0.368",
+        "note": "La factorielle d'un nombre entier, notée avec le signe !, est le produit de tous les entiers de 1 à ce nombre : 3! = 1 x 2 x 3 = 6. Le nombre e, environ 2.718, est une constante. La probabilité vaut un tiers pour 3 chapeaux, et 0.368 pour 10 chapeaux ou plus"
+      }
+    },
+    {
+      "id": "galton",
+      "name": "La planche de Galton",
+      "summary": "Des billes tombent à travers des rangées de clous et vont à droite ou à gauche à chaque clou. Les cases du bas se remplissent selon une forme que le comptage des chemins prévoit. Incliner la planche change la probabilité d'aller à droite.",
+      "blocks": [
+        {
+          "label": "La loi binomiale",
+          "tex": "P(K = k) = \\binom{n}{k} p^k (1-p)^{n-k}",
+          "note": "n est le nombre de rangées, p la probabilité d'aller à droite à un clou, et K le nombre de passages à droite d'une bille. La probabilité de k passages à droite est le nombre de chemins qui en comptent k, multiplié par la probabilité de chaque chemin"
+        },
+        {
+          "label": "La case du milieu",
+          "tex": "\\binom{10}{5} \\Big/ 2^{10} = \\frac{252}{1024} = 0.246",
+          "note": "Avec dix rangées et une probabilité d'un demi à chaque clou, 252 des 1024 chemins finissent dans la case du milieu. Environ un quart des billes y tombent"
+        }
+      ],
+      "dimension": {
+        "label": "Où se trouve le tas",
+        "tex": "E[K] = np, \\qquad \\sigma_K = \\sqrt{np(1-p)}",
+        "note": "La case moyenne est le nombre de rangées multiplié par la probabilité d'aller à droite, et sigma est la distance typique à cette case. Incliner la planche déplace le tas vers n p et le rend plus étroit"
+      }
+    },
+    {
+      "id": "poisson",
+      "name": "Événements rares : une minute sans appel",
+      "summary": "Un centre d'appels reçoit en moyenne 3 appels par minute, au hasard. Découper la minute en tranches de plus en plus fines donne la probabilité d'une minute sans appel : e^-3 = 0.0498.",
+      "blocks": [
+        {
+          "label": "Aucun appel dans n tranches",
+          "tex": "\\left(1 - \\frac{3}{n}\\right)^n \\to e^{-3} = 0.0498",
+          "note": "La minute est découpée en n tranches, chacune contenant un appel avec la probabilité 3/n. La probabilité qu'aucune tranche ne contienne d'appel vaut 0.0282 pour 10 tranches, 0.0476 pour 100 et 0.0496 pour 1000"
+        },
+        {
+          "label": "La loi de Poisson",
+          "tex": "P(K = k) = e^{-\\lambda}\\,\\frac{\\lambda^k}{k!}",
+          "note": "K est le nombre d'appels en une minute, et la lettre grecque lambda est la moyenne, ici 3. Ces probabilités sont la limite des tranches quand elles s'affinent. Deux appels en une minute ont la probabilité 0.224"
+        }
+      ],
+      "dimension": {
+        "label": "À quel point les deux listes sont proches",
+        "tex": "d = \\tfrac{1}{2}\\sum_k \\left|\\mathrm{Bin}(n, \\tfrac{3}{n})(k) - \\mathrm{Poi}(3)(k)\\right|",
+        "note": "d est la moitié de la somme des écarts entre les probabilités avec n tranches et les probabilités de Poisson, pour chaque nombre d'appels k. La page le lit à mesure que n grandit"
+      }
+    },
+    {
+      "id": "bins",
+      "name": "Des barres à une courbe : l'attente d'un taxi",
+      "summary": "10,000 attentes d'un taxi, de 10 minutes en moyenne, sont comptées dans des classes de temps de plus en plus étroites, jusqu'à ce que les barres deviennent une courbe. La probabilité d'attendre plus de 20 minutes est l'aire sous la courbe : e^-2 = 0.135.",
+      "blocks": [
+        {
+          "label": "La hauteur d'une barre",
+          "tex": "\\text{height} = \\frac{\\text{count in bin}}{n \\times \\text{bin width}}",
+          "note": "n est le nombre d'attentes. Divisées par la largeur, les barres gardent leur hauteur quand les classes se resserrent, et la somme de leurs aires vaut 1"
+        },
+        {
+          "label": "La densité exponentielle",
+          "tex": "f(t) = \\frac{1}{10}\\,e^{-t/10}, \\quad t \\ge 0",
+          "note": "f(t) est la hauteur de la courbe pour une attente de t minutes, et e, environ 2.718, est une constante. Cette courbe décrit des attentes de 10 minutes en moyenne quand les taxis arrivent au hasard"
+        },
+        {
+          "label": "Une probabilité comme une aire",
+          "tex": "P(T > 20) = \\int_{20}^{\\infty} f(t)\\,dt = e^{-2} = 0.135",
+          "note": "T est l'attente en minutes. Le signe intégrale désigne l'aire sous la courbe, ici à partir de 20 minutes. Une attente exacte a une probabilité nulle. Un intervalle d'attentes a pour probabilité l'aire au-dessus de lui"
+        }
+      ],
+      "dimension": {
+        "label": "La même moyenne, une autre forme",
+        "tex": "T \\sim \\mathrm{U}(0, 20): \\quad P(T > 20) = 0",
+        "note": "U(0, 20) désigne une attente répartie uniformément de 0 à 20 minutes : un bus toutes les 20 minutes, rejoint à un moment pris au hasard. L'attente vaut aussi 10 minutes en moyenne et ne dépasse jamais 20 minutes"
+      }
+    },
+    {
+      "id": "memory",
+      "name": "Une attente qui oublie le passé",
+      "summary": "Les taxis arrivent au hasard. Après 10 minutes d'attente, l'attente qui reste est en moyenne aussi longue qu'au début. Un bus qui suit un horaire se comporte autrement.",
+      "blocks": [
+        {
+          "label": "Une attente sans mémoire",
+          "tex": "P(T > s + t \\mid T > s) = \\frac{e^{-(s+t)/10}}{e^{-s/10}} = e^{-t/10}",
+          "note": "T est l'attente totale, s les minutes déjà attendues et t les minutes en plus. Avoir attendu s minutes ne change rien à l'attente qui reste"
+        },
+        {
+          "label": "L'attente qui reste après 10 minutes",
+          "tex": "P(T > 20 \\mid T > 10) = e^{-1} = 0.368",
+          "note": "Après 10 minutes, la probabilité de 10 minutes de plus est la même que la probabilité de plus de 10 minutes depuis le début. L'attente moyenne qui reste vaut toujours 10 minutes"
+        }
+      ],
+      "dimension": {
+        "label": "Un horaire a de la mémoire",
+        "tex": "T \\sim \\mathrm{U}(0, 20): \\quad E[T - 10 \\mid T > 10] = 5",
+        "note": "Avec un bus toutes les 20 minutes, l'attente est répartie uniformément de 0 à 20. Après 10 minutes d'attente, il reste 5 minutes en moyenne"
+      }
+    },
+    {
+      "id": "walks",
+      "name": "Cinquante marches de lancers de pièce",
+      "summary": "Un compteur monte d'un pas à chaque pile et descend d'un pas à chaque face. Les marches s'écartent comme la racine carrée du nombre de lancers, et la plupart passent presque tout leur temps ou presque aucun temps au-dessus de zéro.",
+      "blocks": [
+        {
+          "label": "Une marche",
+          "tex": "S_n = X_1 + \\cdots + X_n, \\quad X_k = \\pm 1 \\text{ each with chance } \\tfrac{1}{2}",
+          "note": "X_k est le pas numéro k, plus un ou moins un, et S_n la position après n pas. Aucun pas ne dépend des précédents"
+        },
+        {
+          "label": "À quelle distance les marches s'écartent",
+          "tex": "E[S_n] = 0, \\qquad \\sqrt{E[S_n^2]} = \\sqrt{n}",
+          "note": "En moyenne, la position est zéro. La distance typique à zéro, racine carrée de la moyenne des carrés des positions, vaut la racine carrée de n : environ 20 après 400 pas"
+        },
+        {
+          "label": "La loi de l'arc sinus",
+          "tex": "P(\\text{share of time above } 0 \\le x) \\to \\frac{2}{\\pi}\\arcsin\\sqrt{x}",
+          "note": "La probabilité qu'une longue marche passe au plus une part x de son temps au-dessus de zéro. D'après cette loi, 0.41 des longues marches passent moins d'un dixième ou plus de neuf dixièmes de leur temps au-dessus de zéro, et seulement 0.128 entre 0.4 et 0.6"
+        }
+      ],
+      "dimension": {
+        "label": "Une marche reste d'un côté",
+        "tex": "f(x) = \\frac{1}{\\pi\\sqrt{x(1-x)}}",
+        "note": "La densité de la part x du temps passée au-dessus de zéro. Sa courbe a la forme d'un U, haute près de 0 et de 1 : une marche équilibrée a tendance à rester d'un côté"
+      }
+    },
+    {
+      "id": "ruin",
+      "name": "La ruine du joueur",
+      "summary": "Un joueur part de 10 et mise 1 à la fois jusqu'à atteindre 20 ou 0. Avec une pièce équilibrée, 20 est atteint une fois sur deux, après 100 mises en moyenne. Une pièce qui gagne 49 fois sur 100 n'atteint 20 que dans une part de 0.40 des parties.",
+      "blocks": [
+        {
+          "label": "Une pièce équilibrée",
+          "tex": "P(\\text{reach } N \\text{ from } a) = \\frac{a}{N}, \\qquad E[\\text{bets}] = a(N - a)",
+          "note": "a est l'argent de départ et N l'objectif. De 10 à 20, la probabilité est d'un demi, et la partie dure 100 mises en moyenne"
+        },
+        {
+          "label": "Une pièce déséquilibrée",
+          "tex": "P(\\text{reach } N \\text{ from } a) = \\frac{1 - r^a}{1 - r^N}, \\quad r = \\frac{1-p}{p}",
+          "note": "p est la probabilité de gagner une mise. Avec p = 0.49, de 10 à 20 la probabilité vaut 0.401. De 100 à 200, la même pièce donne 0.018"
+        }
+      ],
+      "dimension": {
+        "label": "D'où vient la formule",
+        "tex": "h(a) = p\\,h(a+1) + (1-p)\\,h(a-1), \\quad h(0) = 0,\\ h(N) = 1",
+        "note": "h(a) est la probabilité d'atteindre l'objectif en partant de a. Après la première mise, l'argent vaut a + 1 avec la probabilité p ou a - 1 avec la probabilité 1 - p, et h(a) est la moyenne des deux probabilités qui suivent"
+      }
+    }
+  ],
+  "definitions": [
+    {
+      "id": "chance",
+      "name": "Une probabilité",
+      "tex": "0 \\le P(A) \\le 1, \\qquad P(\\text{not } A) = 1 - P(A)",
+      "note": "P(A) est la probabilité d'un événement A : un nombre de 0, jamais, à 1, toujours, qui dit à quelle fréquence A se produit quand l'essai est répété souvent. La probabilité que A ne se produise pas vaut 1 moins ce nombre"
+    },
+    {
+      "id": "independent",
+      "name": "Événements indépendants",
+      "tex": "P(A \\text{ and } B) = P(A)\\,P(B)",
+      "note": "Deux événements sont indépendants quand savoir l'un ne dit rien sur l'autre, comme deux lancers d'un dé. La probabilité des deux à la fois est alors le produit de leurs probabilités"
+    },
+    {
+      "id": "expectation",
+      "name": "Les moyennes s'additionnent",
+      "tex": "E[X + Y] = E[X] + E[Y]",
+      "note": "E[X] est la moyenne d'une grandeur X sur beaucoup d'essais. La moyenne d'une somme est la somme des moyennes, pour deux grandeurs quelconques, indépendantes ou non. La page sur les chapeaux repose sur cette règle"
+    }
+  ]
+}

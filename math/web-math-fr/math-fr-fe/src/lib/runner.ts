@@ -48,15 +48,18 @@ export function useRunner(
     return () => cancelAnimationFrame(frame);
   }, [running, stopAt]);
 
+  // the step buttons go through here too, so a run started after them carries on from where they
+  // left the page rather than from the runner's own last count
   const once = useCallback(
     (many = 1) => {
       for (let i = 0; i < many; i++) {
+        if (stopAt !== undefined && at.current >= stopAt) break;
         at.current += 1;
         work.current(at.current);
       }
       setCount(at.current);
     },
-    [],
+    [stopAt],
   );
 
   const reset = useCallback(() => {

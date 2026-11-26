@@ -33,12 +33,16 @@ export const PALETTES: Record<string, Colours> = {
       chart: ["#e6748e", "#6bb1ad", "#a7bcbd", "#e5a9a9", "#edecdb"],
       selected: "#6bb1ad",
       destructive: "#c9566a",
+      // the colour of a right answer (a test's right option); a green that reads on both grounds
+      success: "#6fbf86",
     },
     {
       primary: "#e6748e",
       secondary: "#6bb1ad",
       chart: ["#e6748e", "#6bb1ad", "#a7bcbd", "#e5a9a9", "#edecdb"],
       destructive: "#c9566a",
+      // the colour of a right answer (a test's right option); a green that reads on both grounds
+      success: "#6fbf86",
       selected: "#6bb1ad",
     },
   ),

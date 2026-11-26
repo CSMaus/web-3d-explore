@@ -33,16 +33,16 @@ const FAMILY: Record<string, { label: string; family: Family; slope: (r: number)
 // the same diagram for the two flows the reader has already run: one knob turned, the rest held
 // at the values their pages open with, and one number read off each pass of the attractor
 const FLOWS = {
-  lorenz: { label: L("Lorenz system"), knob: "rho", range: [0.5, 60] as [number, number], columns: 300, reads: L("the height of each peak of z"), held: "sigma = 10, beta = 8/3", page: "Lorenz" },
-  rossler: { label: L("Rossler system"), knob: "c", range: [2, 18] as [number, number], columns: 320, reads: L("x at each crossing of the plane y = 0"), held: "a = 0.2, b = 0.2", page: "Rossler" },
+  lorenz: { label: L("Lorenz system"), knob: "rho", range: [0.5, 60] as [number, number], columns: 300, reads: L("the value of z at each of its peaks"), held: "sigma = 10, beta = 8/3", page: "Lorenz" },
+  rossler: { label: L("Rossler system"), knob: "c", range: [2, 18] as [number, number], columns: 320, reads: L("the value of x each time y passes upward through 0"), held: "a = 0.2, b = 0.2", page: "Rossler" },
 };
 type FlowName = keyof typeof FLOWS;
 // one row of four: the two maps, then the two flows. picking one changes what the diagram is of
 const NAMES = [
-  { id: "logistic", label: L("Logistic map, r x (1 - x)") },
-  { id: "sine", label: L("Sine map, r sin(pi x)") },
-  { id: "lorenz", label: L("Lorenz system, knob rho") },
-  { id: "rossler", label: L("Rossler system, knob c") },
+  { id: "logistic", label: L("Logistic map: x becomes r x (1 - x)") },
+  { id: "sine", label: L("Sine map: x becomes r sin(pi x)") },
+  { id: "lorenz", label: L("Lorenz system, turning rho") },
+  { id: "rossler", label: L("Rossler system, turning c") },
 ];
 const isFlow = (id: string): id is FlowName => id === "lorenz" || id === "rossler";
 function flowDiagram(name: FlowName) {
@@ -150,38 +150,38 @@ function BifurcationPage() {
     <div>
       <TaskPage
         title={system?.name ?? L("The bifurcation diagram")}
-        job={L("A bifurcation diagram is a map of everything a system can settle into as one knob is turned: the knob along the bottom, the long-run values above it. It shows at a glance where one answer splits into two, then four, then into chaos, and the same picture appears for many different rules. The last page fixed r and iterated. This one turns r up slowly, one column at a time, and above each value plots only what the number still visits once the approach is thrown away. One value, then two, then four, then a smear. The job is to watch that happen and to find where each doubling lands.")}
+        job={L("What happens to a repeated rule when one of its numbers is turned up slowly? The rule takes a number x between 0 and 1 and gives the next one: x becomes r x (1 - x). Here r is a fixed number, from about 2 to 4. Applied again and again, the rule makes x do one of three things. It settles on one value. Or it jumps in turn between 2, 4, 8 or more values: this is called a cycle. Or it never repeats at all: this is called chaos. The picture is a bifurcation diagram (bifurcation means splitting in two). Along the bottom is r. Above each r are the values x keeps visiting once its first 1200 steps are thrown away. Pressing run draws the columns from left to right, one value of r at a time. What to look for: at r = 3 the single line splits into two, then into four, then eight, faster and faster. Near r = 3.57 the lines turn into a band of scattered dots. Each split is called a doubling.")}
         input={
           <div className="space-y-3">
             <Choices options={NAMES} value={name} onPick={(id) => { setName(id); if (!isFlow(id)) { setFrom(FAMILY[id].full[0]); setTo(FAMILY[id].full[1]); } setPicked(null); setKnobPick(null); reset(); }} />
             <Text kind="note" as="p">
-              {L("What the diagram is of. The two maps take one number to the next, as on the last page; the knob is r. The two systems are the Lorenz and Rossler pages, with one of their knobs turned and everything else held: above each value of the knob, one dot for each pass of the attractor. The same picture, drawn for four different rules.")}
+              {L("The four buttons choose the rule behind the diagram. The first two turn one number into the next: x becomes r x (1 - x), or x becomes r sin(pi x), a hump of a similar shape. For them the number turned up is r. The other two are the Lorenz and Rossler systems. Each describes a point moving in space. Its position is three numbers x, y and z, and three equations say how fast each of them changes. The point keeps coming round in loops. For these two, one number in the equations is turned up and the others stay fixed. Above each of its values, the diagram puts one dot for each loop.")}
             </Text>
             {flow ? (
               <Text kind="note" as="p">
-                {L("For the {{label}} the knob runs from {{from}} to {{to}} with {{held}} held, and the number read off each pass is {{reads}}. Click any column to see what the attractor visits there.", { label: flow.label, from: flow.range[0], to: flow.range[1], held: flow.held, reads: flow.reads })}
+                {L("{{label}}: the number turned up, {{knob}}, runs from {{from}} to {{to}}, while {{held}} stay fixed. Each dot is {{reads}}. Clicking a column of the diagram shows its values one after another in the picture below it.", { label: flow.label, knob: flow.knob, from: flow.range[0], to: flow.range[1], held: flow.held, reads: flow.reads })}
               </Text>
             ) : null}
             {!flow ? (<>
-            <Slider label={L("r from")} min={spec.full[0]} max={spec.full[1]} step={0.0005} value={from} format={(v) => v.toFixed(4)} onChange={(v) => { setFrom(Math.min(v, to - 0.001)); reset(); }} />
-            <Slider label={L("r to")} min={spec.full[0]} max={spec.full[1]} step={0.0005} value={to} format={(v) => v.toFixed(4)} onChange={(v) => { setTo(Math.max(v, from + 0.001)); reset(); }} />
-            <Slider label={L("Columns")} min={200} max={1600} step={50} value={columns} format={(v) => String(Math.round(v))} onChange={(v) => { setColumns(Math.round(v)); reset(); }} />
-            <Slider label={L("Points a column")} min={40} max={400} step={10} value={keep} format={(v) => String(Math.round(v))} onChange={(v) => { setKeep(Math.round(v)); reset(); }} />
+            <Slider label={L("Smallest r shown")} min={spec.full[0]} max={spec.full[1]} step={0.0005} value={from} format={(v) => v.toFixed(4)} onChange={(v) => { setFrom(Math.min(v, to - 0.001)); reset(); }} />
+            <Slider label={L("Largest r shown")} min={spec.full[0]} max={spec.full[1]} step={0.0005} value={to} format={(v) => v.toFixed(4)} onChange={(v) => { setTo(Math.max(v, from + 0.001)); reset(); }} />
+            <Slider label={L("Columns: how many values of r")} min={200} max={1600} step={50} value={columns} format={(v) => String(Math.round(v))} onChange={(v) => { setColumns(Math.round(v)); reset(); }} />
+            <Slider label={L("Dots in each column")} min={40} max={400} step={10} value={keep} format={(v) => String(Math.round(v))} onChange={(v) => { setKeep(Math.round(v)); reset(); }} />
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" type="button" onClick={() => setWithExponent((v) => !v)} aria-pressed={withExponent}>
-                {L("Exponent panel")}
+                {L("Show or hide the Lyapunov exponent")}
               </Button>
               {found.points.length > 3 ? (
                 <Button variant="outline" size="sm" type="button" onClick={() => { const last = found.points[found.points.length - 1]; setFrom(found.points[2]); setTo(last + (last - found.points[2]) * 0.08); reset(); }}>
-                  {L("Zoom to the cascade")}
+                  {L("Zoom in on the doublings")}
                 </Button>
               ) : null}
               <Button variant="outline" size="sm" type="button" onClick={() => { setFrom(spec.full[0]); setTo(spec.full[1]); reset(); }}>
-                {L("Reset range")}
+                {L("Show the full range of r")}
               </Button>
             </div>
             <Text kind="note" as="p">
-              {L("Click any column of the diagram to see that r's cobweb below it. Drag to move the range once it is narrower than the whole.")}
+              {L("Clicking a column of the diagram picks that value of r. The lowest picture then shows its cobweb: the steps of the rule drawn as a staircase. The two sliders above set which part of r is shown.")}
             </Text>
             </>) : null}
             <PaletteBar />
@@ -197,7 +197,7 @@ function BifurcationPage() {
               if (!runner.running && shown >= total) reset();
               runner.toggle();
             }}
-            onStep={(many) => setDrawn((v) => Math.min(total, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -205,13 +205,13 @@ function BifurcationPage() {
         }
         more={flow ? null : (
           <section data-slot="panel">
-            <Label>{L("THE CASCADE")}</Label>
+            <Label>{L("WHERE THE DOUBLINGS HAPPEN")}</Label>
             <div data-text="caption" className="mt-2">
               <div className="flex text-muted-foreground">
-                <span className="w-12">{L("Period")}</span>
-                <span className="w-24">{L("Superstable r")}</span>
+                <span className="w-12">{L("Cycle")}</span>
+                <span className="w-24">{L("At r")}</span>
                 <span className="w-20">{L("Gap")}</span>
-                <span>{L("Ratio")}</span>
+                <span>{L("Gap ratio")}</span>
               </div>
               {found.points.map((p, i) => (
                 <div key={i} className="flex">
@@ -223,7 +223,7 @@ function BifurcationPage() {
               ))}
             </div>
             <Text kind="note" as="p" className="mt-3">
-              {L("Each r is found by bisection on the condition that the critical point returns to itself after that many steps. The ratio of successive gaps approaches Feigenbaum's constant, {{delta}}, And it is the same number for both families.", { delta: DELTA.toFixed(6) })}
+              {L("Each row is one cycle length: 1, 2, 4, 8 and so on. Its r is the value at which x = 0.5, the top of the hump, comes back to itself after exactly that many steps. The page finds that r by halving an interval again and again until it is pinned down. The gap is the distance from the r of the row above. The gap ratio is the gap of the row above divided by this one. The ratios approach {{delta}}, a number called Feigenbaum's constant. The sine rule gives the same number.", { delta: DELTA.toFixed(6) })}
             </Text>
           </section>
         )}
@@ -250,7 +250,7 @@ function BifurcationPage() {
                   if (knobCol && knobPick !== null) pen.line([[knobCol.p, sweepBox.y0], [knobCol.p, sweepBox.y1]], second, 1);
                 }}
               />
-            </div><Caption>{L("The {{label}}, {{held}} held. Along the bottom: {{knob}}. Above each value: {{reads}}, after the approach is thrown away. One dot is a steady state, a few a cycle, a smear the attractor, with windows in it where a cycle comes back. Click a column to look at it.", { label: flow.label, held: flow.held, knob: flow.knob, reads: flow.reads })}</Caption></div>
+            </div><Caption>{L("{{label}}, with {{held}} fixed. Along the bottom: {{knob}}, the number being turned up. Above each value: {{reads}}, after the start of the motion is thrown away. One dot means the same value on every loop. A few dots mean a cycle that repeats after a few loops. A band of scattered dots means chaos: the motion never repeats. Inside the band there are gaps where a cycle comes back for a while. Clicking a column shows its values below.", { label: flow.label, held: flow.held, knob: flow.knob, reads: flow.reads })}</Caption></div>
             <div><div data-slot="plot" className="h-[170px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -263,7 +263,7 @@ function BifurcationPage() {
                   knobCol.values.forEach((v, i) => pen.dot(i, v, 1.8, second));
                 }}
               />
-            </div><Caption>{knobCol ? `${L("At {{knob}} = {{value}}: {{reads}}, pass after pass, {{n}} passes along the bottom.", { knob: flow.knob, value: knobCol.p.toFixed(2), reads: flow.reads, n: knobCol.values.length })} ${knobPeriod === 1 ? L("The same value every pass: a steady rhythm, one line.") : knobPeriod > 1 ? L("The same {{k}} values in turn: a cycle of {{k}}.", { k: knobPeriod }) : L("No repeat within 64 passes: the attractor.")}` : L("Click a column above.")}</Caption></div>
+            </div><Caption>{knobCol ? `${L("At {{knob}} = {{value}}: {{reads}}, loop after loop. Along the bottom: the loop count, {{n}} loops in all.", { knob: flow.knob, value: knobCol.p.toFixed(2), reads: flow.reads, n: knobCol.values.length })} ${knobPeriod === 1 ? L("The same value on every loop: the motion repeats after one loop, and the dots form one line.") : knobPeriod > 1 ? L("The same {{k}} values come round in turn: the motion repeats after {{k}} loops.", { k: knobPeriod }) : L("No value repeats within 64 loops: the motion is chaotic.")}` : L("Clicking a column in the picture above shows its values here.")}</Caption></div>
           </section>
         ) : (
           <section ref={stage} className="space-y-2">
@@ -294,7 +294,7 @@ function BifurcationPage() {
                   if (picked !== null) pen.line([[diagram[pickCol].r, reach.lo - pad], [diagram[pickCol].r, reach.hi + pad]], second, 1);
                 }}
               />
-            </div><Caption>{L("Above each r: what the number still visits after 1200 steps. Click a column for its cobweb.")}</Caption></div>
+            </div><Caption>{L("Along the bottom: r. Above each r: the values x keeps visiting after its first 1200 steps are thrown away. Thin upright lines mark the doublings found, with the number of values before and after. Clicking a column shows its cobweb in the lowest picture.")}</Caption></div>
             {withExponent ? (
               <div><div data-slot="plot" className="h-[170px] overflow-hidden">
                 <Plot
@@ -307,7 +307,7 @@ function BifurcationPage() {
                     pen.line([[from, 0], [to, 0]], "#3a4048", 1);
                     pen.line([[from, Math.LN2], [to, Math.LN2]], "#243a2c", 1);
                     plate(pen, L("zero"), from + (to - from) * 0.01, 0.12, MUTED);
-                    plate(pen, L("ln 2, the most at r = 4"), from + (to - from) * 0.01, Math.LN2 + 0.12, MUTED);
+                    plate(pen, L("ln 2, the highest, reached at r = 4"), from + (to - from) * 0.01, Math.LN2 + 0.12, MUTED);
                     // the curve, clipped to the panel: the dips at superstable cycles run to minus infinity
                     const seen = curve.filter((p) => p[0] <= rNow || shown >= columns).map(([r, v]) => [r, Math.max(lyapBox.y0 + 0.05, v)] as [number, number]);
                     pen.line(seen, second, 1.4);
@@ -315,7 +315,7 @@ function BifurcationPage() {
                     if (picked !== null) pen.line([[diagram[pickCol].r, lyapBox.y0], [diagram[pickCol].r, lyapBox.y1]], INK, 1);
                   }}
                 />
-              </div><Caption>{L("The exponent along r. Below zero: a cycle. Zero: a doubling. Above: the smear. A dip in the smear is a periodic window; to the floor, a superstable cycle.")}</Caption></div>
+              </div><Caption>{L("The Lyapunov exponent for each r. It measures how fast two starts that differ very slightly move apart. At each step their distance is multiplied, on average, by e (about 2.718) to the power of this exponent. Below zero the starts come together, and x settles on a cycle. At zero a doubling happens. Above zero the starts move apart, and x never settles: this is chaos. A dip inside the part above zero is a window where a cycle returns. A dip down to the bottom edge marks an r where the cycle is as stable as it can be.")}</Caption></div>
             ) : null}
             <div><div data-slot="plot" className="h-[170px] overflow-hidden">
               <Plot
@@ -335,7 +335,7 @@ function BifurcationPage() {
 
                 }}
               />
-            </div><Caption>{L("The cobweb at r = {{r}}: {{settles}}, exponent {{lambda}}. White dots: the values in that column", { r: diagram[pickCol].r.toFixed(4), settles: periods[pickCol] ? L("a cycle of {{k}}", { k: periods[pickCol] }) : L("no cycle within 64"), lambda: lambdaPick.toFixed(3) })}</Caption></div>
+            </div><Caption>{L("The cobweb at r = {{r}}. The hump is the rule: its height above x is the next x. The straight line from corner to corner is the diagonal, where the next x equals the current x. From the start, a step up or down to the hump gives the next x. A step across to the diagonal makes it the new start. Sixty such steps draw a staircase. Here {{settles}}, and the Lyapunov exponent is {{lambda}}. Dots on the diagonal: the values in that column of the diagram.", { r: diagram[pickCol].r.toFixed(4), settles: periods[pickCol] ? L("x repeats every {{k}} steps", { k: periods[pickCol] }) : L("x does not repeat within 64 steps"), lambda: lambdaPick.toFixed(3) })}</Caption></div>
           </section>
         )}
         result={
@@ -343,36 +343,36 @@ function BifurcationPage() {
             <Verdict>
               {flow
                 ? shown === 0
-                  ? L("The {{label}}, with {{knob}} turned from {{from}} to {{to}} in {{columns}} columns. Press run and the diagram is built left to right, one value of {{knob}} at a time, each column a full run of the system.", { label: flow.label, knob: flow.knob, from: flow.range[0], to: flow.range[1], columns: flow.columns })
-                  : `${L("{{shown}} of {{columns}} columns, up to {{knob}} = {{value}}.", { shown, columns: flow.columns, knob: flow.knob, value: knobNow.toFixed(2) })} ${knobCol && knobPick === null ? (knobPeriod === 1 ? L("There the system settles on one value: a steady rhythm.") : knobPeriod > 1 ? L("There the system repeats every {{k}} passes: a cycle of {{k}}.", { k: knobPeriod }) : L("There the system never repeats: the attractor, the smear.")) : ""}${knobCol && knobPick !== null ? ` ${L("The column looked at is {{knob}} = {{value}}: {{settles}}.", { knob: flow.knob, value: knobCol.p.toFixed(2), settles: knobPeriod === 1 ? L("a steady rhythm") : knobPeriod > 1 ? L("a cycle of {{k}}", { k: knobPeriod }) : L("the attractor") })}` : ""} ${L("The same doublings and the same windows as the maps, read off three differential equations instead of one line of arithmetic.")}`
+                  ? L("{{label}}: {{knob}} is turned up from {{from}} to {{to}}, in {{columns}} columns. Pressing run builds the diagram from left to right, one value of {{knob}} at a time. Each column is a full computation of the motion for that value.", { label: flow.label, knob: flow.knob, from: flow.range[0], to: flow.range[1], columns: flow.columns })
+                  : `${L("{{shown}} of {{columns}} columns drawn, up to {{knob}} = {{value}}.", { shown, columns: flow.columns, knob: flow.knob, value: knobNow.toFixed(2) })} ${knobCol && knobPick === null ? (knobPeriod === 1 ? L("At that value the same number comes back on every loop: the motion repeats after one loop.") : knobPeriod > 1 ? L("At that value the motion repeats after {{k}} loops.", { k: knobPeriod }) : L("At that value the motion never repeats: it is chaotic, and the column is a band of scattered dots.")) : ""}${knobCol && knobPick !== null ? ` ${L("The chosen column is {{knob}} = {{value}}: {{settles}}.", { knob: flow.knob, value: knobCol.p.toFixed(2), settles: knobPeriod === 1 ? L("the motion repeats after one loop") : knobPeriod > 1 ? L("the motion repeats after {{k}} loops", { k: knobPeriod }) : L("the motion never repeats") })}` : ""} ${L("The picture reads as for the one-number rules: one line, a few lines, or a band of scattered dots. Here it comes from three equations for a moving point, not from one line of arithmetic.")}`
                 : shown === 0
-                ? L("r runs from {{from}} to {{to}} in {{columns}} columns. Press run and the diagram is built left to right, one r at a time.", { from: from.toFixed(3), to: to.toFixed(3), columns })
-                : `${L("{{shown}} of {{columns}} columns, up to {{knob}} = {{value}}.", { shown, columns, knob: "r", value: rNow.toFixed(4) })} ${periodNow === 1 ? L("The number settles on one value: a single line.") : periodNow > 1 ? (passed.length ? L("The number settles on {{n}} values; the last doubling, {{from}} to {{to}}, landed at r = {{r}}.", { n: periodNow, from: passed[passed.length - 1].from, to: passed[passed.length - 1].to, r: passed[passed.length - 1].r.toFixed(4) }) : L("The number settles on {{n}} values.", { n: periodNow })) : inWindows.length ? L("The number settles on nothing within 64 steps: the smear. {{n}} doublings came before it, closer and closer together, and {{k}} more inside the periodic windows within the smear.", { n: passed.length, k: inWindows.length }) : L("The number settles on nothing within 64 steps: the smear. {{n}} doublings came before it, closer and closer together.", { n: passed.length })}${lambdaNow !== null ? ` ${L("The exponent there is {{lambda}}: {{meaning}}.", { lambda: lambdaNow.toFixed(3), meaning: lambdaNow > 0.01 ? L("positive, so two nearby starts drift apart and the number never settles") : lambdaNow < -0.01 ? L("negative, so nearby starts are pulled together onto the cycle") : L("about zero, which is what a doubling looks like from the exponent's side") })}` : ""}${picked !== null ? ` ${L("The cobweb below is r = {{r}}.", { r: diagram[pickCol].r.toFixed(4) })}` : ""}`}
+                ? L("r runs from {{from}} to {{to}}, in {{columns}} columns. Pressing run builds the diagram from left to right, one value of r at a time.", { from: from.toFixed(3), to: to.toFixed(3), columns })
+                : `${L("{{shown}} of {{columns}} columns drawn, up to {{knob}} = {{value}}.", { shown, columns, knob: "r", value: rNow.toFixed(4) })} ${periodNow === 1 ? L("At this r, x settles on one value: the diagram is a single line.") : periodNow > 1 ? (passed.length ? L("At this r, x jumps in turn between {{n}} values. The last doubling, from {{from}} to {{to}} values, happened at r = {{r}}.", { n: periodNow, from: passed[passed.length - 1].from, to: passed[passed.length - 1].to, r: passed[passed.length - 1].r.toFixed(4) }) : L("At this r, x jumps in turn between {{n}} values.", { n: periodNow })) : inWindows.length ? L("At this r, x does not repeat within 64 steps: the column is a band of scattered dots, which means chaos. Before this r there were {{n}} doublings, each closer to the next. {{k}} more doublings happened inside windows, short stretches of r where a cycle returns.", { n: passed.length, k: inWindows.length }) : L("At this r, x does not repeat within 64 steps: the column is a band of scattered dots, which means chaos. Before this r there were {{n}} doublings, each closer to the next.", { n: passed.length })}${lambdaNow !== null ? ` ${L("The Lyapunov exponent at this r is {{lambda}}: {{meaning}}.", { lambda: lambdaNow.toFixed(3), meaning: lambdaNow > 0.01 ? L("it is positive, so two starts that differ very slightly move apart, and x never settles") : lambdaNow < -0.01 ? L("it is negative, so two close starts are pulled together onto the same cycle") : L("it is close to zero, which is what the exponent shows at a doubling") })}` : ""}${picked !== null ? ` ${L("The cobweb in the lowest picture is for r = {{r}}.", { r: diagram[pickCol].r.toFixed(4) })}` : ""}`}
             </Verdict>
             <Readout
               rows={flow ? [
-                [L("System"), L("{{label}}, {{held}} held", { label: flow.label, held: flow.held })],
-                [L("Knob"), L("{{knob}}, {{from}} to {{to}} in {{columns}} columns", { knob: flow.knob, from: flow.range[0], to: flow.range[1], columns: flow.columns })],
-                [L("Read off each pass"), flow.reads],
-                [L("Column looked at"), knobCol ? L("{{knob}} = {{value}}, {{n}} passes kept", { knob: flow.knob, value: knobCol.p.toFixed(3), n: knobCol.values.length }) : "-"],
-                [L("What it settles on there"), knobCol ? (knobPeriod === 1 ? L("one value") : knobPeriod > 1 ? L("a cycle of {{k}}", { k: knobPeriod }) : L("no repeat within 64: the attractor")) : "-"],
-                [L("Steps a column"), flowName === "lorenz" ? L("3,000 discarded, 6,000 kept, at dt = 0.01") : L("4,000 discarded, 8,000 kept, at dt = 0.01")],
+                [L("Rule behind the diagram"), L("{{label}}, with {{held}} fixed", { label: flow.label, held: flow.held })],
+                [L("Number being turned up"), L("{{knob}}, from {{from}} to {{to}}, in {{columns}} columns", { knob: flow.knob, from: flow.range[0], to: flow.range[1], columns: flow.columns })],
+                [L("Value plotted for each loop"), flow.reads],
+                [L("Chosen column"), knobCol ? L("{{knob}} = {{value}}, {{n}} loops recorded", { knob: flow.knob, value: knobCol.p.toFixed(3), n: knobCol.values.length }) : "-"],
+                [L("What the motion does in the chosen column"), knobCol ? (knobPeriod === 1 ? L("repeats after one loop") : knobPeriod > 1 ? L("the motion repeats after {{k}} loops", { k: knobPeriod }) : L("no repeat within 64 loops: chaos")) : "-"],
+                [L("Computation for each column"), flowName === "lorenz" ? L("time steps of 0.01: the first 3,000 thrown away, the next 6,000 used") : L("time steps of 0.01: the first 4,000 thrown away, the next 8,000 used")],
               ] : [
-                [L("Family"), spec.tex.replace(/[\\{}]/g, "")],
-                [L("Range shown"), L("{{from}} to {{to}}", { from: from.toFixed(5), to: to.toFixed(5) })],
-                [L("Doublings found so far"), passed.map((d) => `${d.r.toFixed(4)}`).join(", ") || L("None yet")],
-                [L("Gaps between them, each over the next"), passed.length >= 3 ? passed.slice(2).map((d, i) => ((passed[i + 1].r - passed[i].r) / (d.r - passed[i + 1].r)).toFixed(2)).join(", ") : L("Needs three")],
-                [L("Exponent at the current r"), lambdaNow !== null ? lambdaNow.toFixed(4) : "-"],
-                [L("Exponent at r = 4, exactly ln 2"), Math.LN2.toFixed(4)],
-                [L("Feigenbaum's delta"), DELTA.toFixed(5)],
-                [L("Delta from the located cascade"), found.ratios.length ? found.ratios[found.ratios.length - 1].toFixed(5) : "-"],
-                [L("Off by"), found.ratios.length ? Math.abs(found.ratios[found.ratios.length - 1] - DELTA).toExponential(1) : "-"],
-                [L("Cascade accumulates near"), found.points.length ? found.points[found.points.length - 1].toFixed(6) : "-"],
-                [L("Orbits computed"), L("{{columns}} columns of {{keep}} points, after 1200 discarded", { columns, keep })],
+                [L("Rule"), spec.tex.replace(/[\\{}]/g, "")],
+                [L("Range of r shown"), L("{{from}} to {{to}}", { from: from.toFixed(5), to: to.toFixed(5) })],
+                [L("r of each doubling found so far"), passed.map((d) => `${d.r.toFixed(4)}`).join(", ") || L("None yet")],
+                [L("Each gap between doublings divided by the next gap"), passed.length >= 3 ? passed.slice(2).map((d, i) => ((passed[i + 1].r - passed[i].r) / (d.r - passed[i + 1].r)).toFixed(2)).join(", ") : L("Needs three doublings")],
+                [L("Lyapunov exponent at the current r"), lambdaNow !== null ? lambdaNow.toFixed(4) : "-"],
+                [L("Lyapunov exponent at r = 4, exactly ln 2"), Math.LN2.toFixed(4)],
+                [L("Feigenbaum's constant, known value"), DELTA.toFixed(5)],
+                [L("Feigenbaum's constant, as measured on this page"), found.ratios.length ? found.ratios[found.ratios.length - 1].toFixed(5) : "-"],
+                [L("Difference between the two values"), found.ratios.length ? Math.abs(found.ratios[found.ratios.length - 1] - DELTA).toExponential(1) : "-"],
+                [L("r where the doublings pile up, approximately"), found.points.length ? found.points[found.points.length - 1].toFixed(6) : "-"],
+                [L("Numbers computed"), L("{{columns}} columns of {{keep}} dots, each after 1200 steps thrown away", { columns, keep })],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              {L("The doublings crowd together: each gap is about 4.669 times shorter than the one before, and that number does not depend on the rule. Switch to the sine family and it is the same. Past the accumulation point the number settles on nothing, except in windows where a cycle returns for a while. Pick the Lorenz or Rossler system above and the same picture is drawn for a flow: the route into chaos does not care what the system is.")}
+              {L("The doublings come closer and closer together. Each gap between two doublings is about 4.669 times longer than the next one. This number, Feigenbaum's constant, does not depend on the rule: the sine rule gives the same. Past the point where the doublings pile up, x does not settle, except in windows where a cycle returns for a while. The Lorenz and Rossler buttons draw the same kind of diagram for a point moving in space.")}
             </Text>
           </div>
         }

@@ -14,12 +14,21 @@ import i18n from "@/i18n";
 
 type Dictionary = Record<string, string>;
 
-const files = import.meta.glob<{ default: Dictionary }>("../locales/*/text/*.json", { eager: true });
+// each language's files load only when that language is read, so a page never carries the others
+const files = import.meta.glob<{ default: Dictionary }>("../locales/*/text/*.json");
 
 const byLanguage: Record<string, Dictionary> = {};
-for (const [path, mod] of Object.entries(files)) {
-  const code = path.split("/")[2];
-  byLanguage[code] = { ...(byLanguage[code] ?? {}), ...mod.default };
+
+/**
+ * the reader's dictionary, loaded once before the pages: page modules call L as they load, so
+ * main.tsx waits for this before it brings them in. english needs none.
+ */
+export async function loadLanguage(code: string): Promise<void> {
+  const lang = code.slice(0, 2);
+  if (lang === "en" || byLanguage[lang]) return;
+  const own = Object.entries(files).filter(([path]) => path.split("/")[2] === lang);
+  const mods = await Promise.all(own.map(([, load]) => load()));
+  byLanguage[lang] = Object.assign({}, ...mods.map((m) => m.default));
 }
 
 /** the reader's language, two letters */

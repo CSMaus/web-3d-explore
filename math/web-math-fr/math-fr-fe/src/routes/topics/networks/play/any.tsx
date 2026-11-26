@@ -61,15 +61,15 @@ function AnyPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? L("Any curve at all")}
-        job={L("The last page bent one boundary out of a few units. This one asks how far that goes. Pick a curve. A network with one input, one row of squashing units and one output is built so that each hidden unit is a single step of a staircase: switched on at one place along the line, with a height. Run adds the units one at a time, and the staircase follows the curve. More units, or steeper steps, and it follows as closely as wanted. That is what a network can draw: anything, out of enough small steps.")}
+        title={system?.name ?? L("Can a network draw any curve?")}
+        job={L("Can a neural network draw any curve at all? The network on this page takes one number x, between 0 and 1, and gives back one number, its output. Between the two sits a row of neurons, the middle layer. A neuron is a small calculation: here it multiplies x by a number called its weight, adds a number called its bias, and squashes the total into a value between 0 and 1. With a large weight the squash is almost a sharp step: about 0 before one place on the x axis, about 1 after it. The output neuron multiplies each step by a height and adds them all up. So the output is a staircase. Nothing is trained on this page: the place and the height of every step are read off the chosen curve. Run switches the middle neurons on one at a time, and the staircase grows along the curve. The question: how close to the curve can such a staircase come?")}
         input={
           <div className="space-y-3">
             <Choices options={SHAPES} value={curve} onPick={(id) => { setCurve(id); restart(); }} />
-            <Slider label={L("Units")} min={2} max={40} step={1} value={n} format={(v) => `${v}`} onChange={(v) => { setN(v); restart(); }} />
+            <Slider label={L("Middle neurons (steps)")} min={2} max={40} step={1} value={n} format={(v) => `${v}`} onChange={(v) => { setN(v); restart(); }} />
             <Slider label={L("Steepness")} min={5} max={300} step={5} value={steep} format={(v) => `${v}`} onChange={(v) => { setSteep(v); restart(); }} />
             <Text kind="note" as="p">
-              {L("Units is how many steps the staircase has. Steepness is the weight into each unit: a low value makes each step a gentle slope, a high one makes it a sharp edge. The heights are read from the curve; nothing here is trained, so what is shown is what the structure can hold, before any learning.")}
+              {L("The first slider sets how many middle neurons there are, so how many steps the staircase has. 'Steepness' is the weight that multiplies x inside each middle neuron. A low value makes each step a gentle slope, a high value makes it a sharp edge. The heights come from the curve. Since nothing is learned here, the page shows what a network of this shape is able to draw, before any training.")}
             </Text>
           </div>
         }
@@ -77,7 +77,7 @@ function AnyPage() {
           <RunBar
             running={runner.running}
             count={on}
-            what={L("units on")}
+            what={L("neurons on")}
             limit={n}
             onToggle={() => {
               if (!runner.running && on >= n) restart();
@@ -107,12 +107,12 @@ function AnyPage() {
                   if (on > 0) {
                     const s = stepAt(on - 1, n);
                     pen.line([[s, pen.box.y0], [s, pen.box.y1]], SKY, 1);
-                    plate(pen, L("Unit {{n}} switches on here", { n: on }), s > 0.6 ? s - 0.01 : s + 0.01, pen.box.y1 - (pen.box.y1 - pen.box.y0) * 0.06, SKY, s > 0.6 ? "right" : "left");
+                    plate(pen, L("Neuron {{n}} switches on here", { n: on }), s > 0.6 ? s - 0.01 : s + 0.01, pen.box.y1 - (pen.box.y1 - pen.box.y0) * 0.06, SKY, s > 0.6 ? "right" : "left");
                   }
-                  plate(pen, L("Grey: the curve to draw.  Green: the network"), pen.box.x0 + 0.02, pen.box.y0 + (pen.box.y1 - pen.box.y0) * 0.05, MUTED);
+                  plate(pen, L("Thin line: the curve to draw.  Thick line: the network"), pen.box.x0 + 0.02, pen.box.y0 + (pen.box.y1 - pen.box.y0) * 0.05, MUTED);
                 }}
               />
-            </div><Caption>{L("The target and the network's output over the input, from 0 to 1")}</Caption></div>
+            </div><Caption>{L("Across: the input x, from 0 to 1. Up: the value. Thin line: the chosen curve. Thick line: the network's output. Faint line: the output before the newest neuron was switched on. Vertical line: where the newest neuron's step is")}</Caption></div>
             <div><div data-slot="plot" className="h-[200px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -129,43 +129,43 @@ function AnyPage() {
                   }
                 }}
               />
-            </div><Caption>{L("Each hidden unit on its own: one squash, one height. The green curve above is their sum plus a bias")}</Caption></div>
+            </div><Caption>{L("Each middle neuron on its own: one step, times its height, which can go up or down. The thicker line is the newest one. Added together, plus the output bias, they give the thick line of the picture above")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={on >= n ? fit.worst < 0.1 : undefined}>
               {on === 0
-                ? L("No unit is on. The network's output is flat at {{bias}}, its output bias. Press run: each step switches on one more hidden unit, and each unit adds one step to the staircase.", { bias: net.b[1][0].toFixed(3) })
+                ? L("No middle neuron is on yet, so the output is flat at {{bias}}. That number is the output neuron's bias, set to the height of the curve near its left end. Press Run: each step switches on one more middle neuron, and each neuron adds one step to the staircase.", { bias: net.b[1][0].toFixed(3) })
                 : on < n
-                  ? L("{{on}} of {{n}} units on. The network's curve is within {{worst}} of the target everywhere so far, the worst gap at x = {{at}}, which is {{where}}.", {
+                  ? L("{{on}} of {{n}} middle neurons are on. The largest gap between the network's output and the curve is {{worst}}, at x = {{at}}, {{where}}.", {
                       on,
                       n,
                       worst: fit.worst.toFixed(3),
                       at: fit.at.toFixed(2),
-                      where: fit.at > stepAt(on - 1, n) ? L("to the right of the last step, where no unit has switched on yet") : L("inside the part already built"),
+                      where: fit.at > stepAt(on - 1, n) ? L("to the right of the newest step, where no neuron is on yet") : L("inside the part already built"),
                     })
-                  : L("All {{n}} units on. The network's curve is within {{worst}} of the target everywhere, average gap {{mean}}. {{why}} There is no curve that cannot be followed this way, which is the reason a network can do any job of this kind: not cleverness, but enough small steps.", {
+                  : L("All {{n}} middle neurons are on. Nowhere does the network's output differ from the curve by more than {{worst}}; the average gap is {{mean}}. {{why}} Any curve over this interval can be followed this way, as closely as wanted. This is why a network with enough neurons can draw any curve: not by cleverness, but by enough small steps.", {
                       n,
                       worst: fit.worst.toFixed(3),
                       mean: fit.mean.toFixed(4),
-                      why: fit.worst > 0.1 ? L("The gap is set by the steps: more units make them narrower, more steepness makes them sharper, and either shrinks it.") : L("More units or steeper steps shrink the gap further, without limit."),
+                      why: fit.worst > 0.1 ? L("The gap comes from the steps. More neurons make the steps narrower, more steepness makes their edges sharper, and either one shrinks the gap.") : L("More neurons or steeper steps shrink the gap further, as far as wanted."),
                     })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("Hidden units on")}</dt>
+              <dt>{L("Middle neurons switched on")}</dt>
               <dd className="text-right text-foreground/80">{L("{{on}} of {{n}}", { on, n })}</dd>
-              <dt>{L("Numbers in the network")}</dt>
+              <dt>{L("Numbers in the network (weights and biases)")}</dt>
               <dd className="text-right text-foreground/80">{count.total}</dd>
-              <dt>{L("Worst gap to the target")}</dt>
+              <dt>{L("Largest gap between output and curve")}</dt>
               <dd className="text-right text-foreground/80">{L("{{worst}} at x = {{at}}", { worst: fit.worst.toFixed(4), at: fit.at.toFixed(2) })}</dd>
-              <dt>{L("Average gap")}</dt>
+              <dt>{L("Average gap between output and curve")}</dt>
               <dd className="text-right text-foreground/80">{fit.mean.toFixed(4)}</dd>
-              <dt>{L("Height of the last step switched on")}</dt>
+              <dt>{L("Height of the newest step")}</dt>
               <dd className="text-right text-foreground/80">{on > 0 ? net.W[1][0][on - 1].toFixed(3) : L("none")}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("A hidden unit's total is the steepness times the input minus its bias, so the unit switches from near zero to near one where the input passes one fixed place. Its output weight is the height of that step. The output unit adds every step up. On the saw, the sharp drops need a very steep unit, and a gentle one shows exactly why.")}
+              {L("How does one neuron make one step? Inside middle neuron k, the total is the steepness times (x minus the place of step k). Left of that place the total is negative and the squash gives almost 0. Right of it the total is positive and the squash gives almost 1. The weight from that neuron to the output is the height of the step, and the output neuron adds all the steps. On 'Saw teeth', the sharp drops need very steep neurons; a low steepness shows the drops smeared out.")}
             </Text>
           </div>
         }

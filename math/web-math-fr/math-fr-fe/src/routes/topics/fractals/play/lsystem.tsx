@@ -13,6 +13,7 @@ import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/systems";
 import { useLook } from "@/lib/store";
 import { LSYS_PRESETS, expand, parseRules, rngFrom, turtle } from "@/systems/lsystem";
+import { PlayColumns } from "@/components/TaskPage";
 
 export const Route = createFileRoute("/topics/fractals/play/lsystem")({
   loader: () => api.system(TOPIC, "lsystem"),
@@ -20,6 +21,10 @@ export const Route = createFileRoute("/topics/fractals/play/lsystem")({
 });
 
 const CAP = 900000;
+
+/** the chip name of each preset, in sentence case */
+const NAME: Record<string, string> = { plant: "Branching plant", dragon: "Dragon curve" };
+const nameOf = (key: string) => L(NAME[key] ?? key);
 
 function LsystemPage() {
   const system = Route.useLoaderData();
@@ -95,42 +100,45 @@ function LsystemPage() {
   return (
     <div>
       <Heading level={1} className="mt-4">{system?.name ?? L("Rewriting systems")}</Heading>
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
-        <div data-slot="task-in" className="min-w-0 space-y-4">
+      <Text kind="body" as="p" className="mt-2 max-w-2xl">
+        {L("How can a short word grow into a plant? This page starts from a short word of letters. One pass replaces every letter of the word at once by its replacement from the rules, so the word grows. After several passes the page reads the word as orders for a pen: F draws one step forward, plus and minus turn the pen, and brackets make side branches. At first the word is X, and six passes of two short rules turn it into a branching plant. The chips load other shapes, and the rules can be typed by hand. The thing to look for: the drawing after each pass holds smaller copies of the drawing before it.")}
+      </Text>
+      <PlayColumns
+        input={<>
           <section data-slot="panel">
-            <Label>{L("PRESET")}</Label>
+            <Label>{L("READY-MADE SHAPES")}</Label>
             <div className="mt-3">
-              <Chips items={Object.keys(LSYS_PRESETS).map((k) => L(k))} active={L(preset)} onPick={(item) => pickPreset(Object.keys(LSYS_PRESETS).find((k) => L(k) === item) ?? item)} />
+              <Chips items={Object.keys(LSYS_PRESETS).map(nameOf)} active={nameOf(preset)} onPick={(item) => pickPreset(Object.keys(LSYS_PRESETS).find((k) => nameOf(k) === item) ?? item)} />
             </div>
           </section>
 
           <section data-slot="panel">
-            <Label>{L("AXIOM AND RULES")}</Label>
+            <Label>{L("STARTING WORD AND RULES")}</Label>
             <div className="mt-3 space-y-2">
               <Input
                 value={axiom}
                 onChange={(e) => setAxiom(e.target.value)}
                 spellCheck={false}
-                aria-label={L("Axiom, the starting string")}
+                aria-label={L("Starting word")}
               />
               <Textarea
                 value={rules}
                 onChange={(e) => setRules(e.target.value)}
                 spellCheck={false}
                 rows={3}
-                aria-label={L("Rules, one a line")}
+                aria-label={L("Rules, one on each line")}
               />
               <Text kind="note" as="p">
-                {L("One rule a line, as symbol = replacement. Any capital letter draws a step except X and Y, which only carry the rule along. Plus and minus turn, brackets remember and return to a point.")}
+                {L("The first box holds the starting word, called the axiom. The second holds the rules, one on each line, written as letter = replacement, for example F = FF. Every capital letter draws one step, except X and Y: they draw nothing and only grow by their rules. A small f moves one step without drawing. Plus turns the pen left by the angle, minus turns it right. An opening bracket saves the place and direction of the pen, and the closing bracket brings the pen back there.")}
               </Text>
             </div>
           </section>
 
           <section data-slot="panel">
-            <Label>{L("TURTLE")}</Label>
+            <Label>{L("PEN")}</Label>
             <div className="mt-3 space-y-2">
               <Slider
-                label={L("Azimuth")}
+                label={L("Turn angle")}
                 min={0}
                 max={120}
                 step={0.5}
@@ -139,7 +147,7 @@ function LsystemPage() {
                 onChange={setAngle}
               />
               <Slider
-                label={L("Passes")}
+                label={L("Rewriting passes")}
                 min={0}
                 max={14}
                 step={1}
@@ -148,7 +156,7 @@ function LsystemPage() {
                 onChange={(v) => setPasses(Math.round(v))}
               />
               <Slider
-                label={L("Jitter")}
+                label={L("Wobble")}
                 min={0}
                 max={0.6}
                 step={0.01}
@@ -157,7 +165,7 @@ function LsystemPage() {
                 onChange={setJitter}
               />
               <Slider
-                label={L("Seed")}
+                label={L("Wobble pattern")}
                 min={1}
                 max={200}
                 step={1}
@@ -166,13 +174,16 @@ function LsystemPage() {
                 onChange={(v) => setSeed(Math.round(v))}
               />
               <PaletteBar />
+              <Text kind="note" as="p">
+                {L("The turn angle is how far plus and minus turn the pen, in degrees. Rewriting passes is how many times the rules are applied to the word. Wobble makes each turn larger or smaller at random, by up to the share set: 0.20 means up to 20 per cent. The pattern number picks a different set of random wobbles. When the drawing has no more than 40,000 steps, branches inside more brackets are drawn with thinner lines.")}
+              </Text>
             </div>
           </section>
 
           <Equations system={system} />
-        </div>
+        </>}
 
-        <div data-slot="task-out" className="min-w-0 space-y-3 lg:sticky lg:top-24 lg:self-start">
+        output={<>
           <section
             ref={stage}
             data-slot="plot"
@@ -184,19 +195,19 @@ function LsystemPage() {
           <SaveImage stage={stage} name="rewriting" />
           <Readout
             rows={[
-              [L("Word length"), grown.word.length.toLocaleString()],
-              [L("segments"), segs.length.toLocaleString()],
-              [L("Passes drawn"), L("{{reached}} of {{passes}}", { reached: grown.reached, passes })],
-              [L("Deepest branch"), String(deepest)],
+              [L("Letters in the final word"), grown.word.length.toLocaleString()],
+              [L("Steps drawn"), segs.length.toLocaleString()],
+              [L("Passes completed"), L("{{reached}} of {{passes}}", { reached: grown.reached, passes })],
+              [L("Deepest nesting of brackets"), String(deepest)],
             ]}
           />
           {grown.capped ? (
             <Text kind="warning" as="p">
-              {L("The word passed the limit, so it stopped expanding early - lower the passes")}
+              {L("The word grew past 900,000 letters, so the rewriting stopped early. Fewer passes keep the word under this limit.")}
             </Text>
           ) : null}
-        </div>
-      </div>
+        </>}
+      />
     </div>
   );
 }

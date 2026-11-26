@@ -58,13 +58,13 @@ function TurnPage() {
     <>
       <TaskPage
         title={system?.name ?? L("What 𝑖 is")}
-        job={L("Multiplying by minus one is a half turn about zero. The last page asked for a number that does half of that, so that doing it twice is a half turn. Give the line a second direction, up, and a quarter turn is available. The number that turns an arrow by a quarter is written i. The job is to multiply by it again and again and watch what happens.")}
+        job={L("Which number, multiplied by itself, gives minus one? No number on the ordinary number line does. Multiplying by minus one sends 2 to minus 2. Drawn as an arrow from zero, the arrow turns half way round. A number that turns an arrow a quarter of the way round would answer the question, because two quarter turns make a half turn. A quarter turn needs a second direction, so the picture has two axes: across and up. The number that turns every arrow a quarter turn anticlockwise, without changing its length, is written 𝑖. Pressing run multiplies the arrow by 𝑖 again and again. The thing to watch: where the arrow points after two multiplications.")}
         input={
           <div className="space-y-3">
-            <Slider label={L("Start, along")} min={-2} max={2} step={0.1} value={start[0]} format={(v) => v.toFixed(1)} onChange={(v) => { setStart([v, start[1]]); reset(); }} />
-            <Slider label={L("Start, up")} min={-2} max={2} step={0.1} value={start[1]} format={(v) => v.toFixed(1)} onChange={(v) => { setStart([start[0], v]); reset(); }} />
+            <Slider label={L("Starting point, across")} min={-2} max={2} step={0.1} value={start[0]} format={(v) => v.toFixed(1)} onChange={(v) => { setStart([v, start[1]]); reset(); }} />
+            <Slider label={L("Starting point, up")} min={-2} max={2} step={0.1} value={start[1]} format={(v) => v.toFixed(1)} onChange={(v) => { setStart([start[0], v]); reset(); }} />
             <Text kind="note" as="p">
-              {L("Click the picture to put the starting arrow anywhere. Each step multiplies it by 𝑖, which turns it a quarter of the way round and leaves its length alone.")}
+              {L("A point of the plane is written a + bi: a is how far across, b is how far up. For example, 2 + 3i is 2 across and 3 up. The two sliders set the starting point this way, and a click on the picture puts it where the click lands. Each step multiplies the arrow by 𝑖: the arrow turns a quarter turn anticlockwise about zero, and its length stays the same.")}
             </Text>
           </div>
         }
@@ -78,7 +78,7 @@ function TurnPage() {
               if (!runner.running && at >= MOST * FRAMES) reset();
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(MOST * FRAMES, v + many * FRAMES))}
+            onStep={(many) => runner.once(many * FRAMES)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -113,41 +113,41 @@ function TurnPage() {
                     pen.arrow(0, 0, now[0], now[1], INK);
                     pen.dot(now[0], now[1], 4, INK);
                   }
-                  pen.text(L("Along"), BOX.x1 - 0.5, -0.3, SKY, "center");
+                  pen.text(L("Across"), BOX.x1 - 0.5, -0.3, SKY, "center");
                   pen.text(L("Up"), 0.25, BOX.y1 - 0.4, TWO, "left");
                 }}
               />
             </div>
-            <Caption>{L("The plane: the old number line runs along, the new direction runs up. Green: the arrow after the multiplications so far. White: the turn in progress. The grey circle is the arrow's length, which never changes.")}</Caption>
+            <Caption>{L("The plane of numbers. The horizontal axis is the ordinary number line; the vertical axis is the new direction, up. Every arrow starts at zero. Each multiplication leaves its arrow drawn, so the arrows after one, two, three and four steps can be compared. During a step, a moving arrow shows the turn in progress. The thin circle around zero has the arrow's length as its radius: the tip never leaves it.")}</Caption>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={done >= 4 ? true : undefined}>
               {done === 0 && within === 0
-                ? L("The arrow starts at {{z}}. Press run: times 𝑖, four times.", { z: show(start) })
+                ? L("The arrow starts at {{z}}. Press run: the arrow is multiplied by 𝑖, one step at a time.", { z: show(start) })
                 : done < MOST && within > 0
-                  ? L("Turning: multiplication {{n}} is a quarter of the way round, {{p}} per cent done.", { n: done + 1, p: (within * 100).toFixed(0) })
+                  ? L("Multiplication number {{n}} by 𝑖 is under way: the arrow has done {{p}} per cent of its quarter turn.", { n: done + 1, p: (within * 100).toFixed(0) })
                   : (done === 1
-                      ? L("After {{n}} multiplication by 𝑖 the arrow is at {{z}}, the same length as it started, turned {{n}} quarter. {{more}}", { n: done, z: show(chain[done]), more: "" })
-                      : L("After {{n}} multiplications by 𝑖 the arrow is at {{z}}, the same length as it started, turned {{n}} quarters. {{more}}", {
+                      ? L("After {{n}} multiplication by 𝑖 the arrow points to {{z}}. It has turned {{n}} quarter turn and kept its length. {{more}}", { n: done, z: show(chain[done]), more: "" })
+                      : L("After {{n}} multiplications by 𝑖 the arrow points to {{z}}. It has turned {{n}} quarter turns and kept its length. {{more}}", {
                           n: done,
                           z: show(chain[done]),
-                          more: done === 2 ? L("Two quarter turns is a half turn: the arrow points the opposite way, which is what times minus one does. So 𝑖 times 𝑖 is minus one, and the last page's question has its answer.") : done === 4 ? L("Four quarters is a whole turn: back where it started. Times 𝑖 four times is times one.") : done > 4 ? L("Past four it repeats: the pattern is 1, 𝑖, minus 1, minus 𝑖, and round again.") : "",
+                          more: done === 2 ? L("Two quarter turns make a half turn: the arrow now points the opposite way, which is exactly what multiplying by minus one does. So 𝑖 times 𝑖 is minus one. This is the number that no point of the ordinary number line could be.") : done === 4 ? L("Four quarter turns make a whole turn: the arrow is back where it started. Multiplying by 𝑖 four times is the same as multiplying by one.") : done > 4 ? L("After four steps the pattern repeats. Starting from 1, the results are 1, 𝑖, minus 1, minus 𝑖, then 1 and round again.") : "",
                         }))}
             </Verdict>
             <Readout
               rows={[
-                [L("Start"), show(start)],
-                [L("After 1: times 𝑖"), show(chain[1])],
-                [L("After 2: times 𝑖, twice"), L("{{z}}, which is minus the start", { z: show(chain[2]) })],
-                [L("After 3"), show(chain[3])],
-                [L("After 4"), L("{{z}}, the start again", { z: show(chain[4]) })],
-                [L("Length, throughout"), abs(start).toFixed(3)],
+                [L("Starting point"), show(start)],
+                [L("After 1 multiplication by 𝑖"), show(chain[1])],
+                [L("After 2 multiplications"), L("{{z}}: the starting point times minus one", { z: show(chain[2]) })],
+                [L("After 3 multiplications"), show(chain[3])],
+                [L("After 4 multiplications"), L("{{z}}: the starting point again", { z: show(chain[4]) })],
+                [L("Length of the arrow, at every step"), abs(start).toFixed(3)],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              {L("A number is now a place in the plane: so much along, so much up, written a + bi. The old numbers are the ones with nothing up. The word imaginary was an insult from the seventeenth century that stuck; nothing on the up axis is less real than a length.")}
+              {L("Every point of the plane is now a number, written a + bi: a is how far across, b is how far up. Such numbers are called complex numbers. The ordinary numbers are the ones with b equal to zero: the points of the horizontal axis. The numbers on the vertical axis are called imaginary. The name was given in the seventeenth century as mockery, and it stayed. A number on the vertical axis is no less real than a length.")}
             </Text>
           </div>
         }

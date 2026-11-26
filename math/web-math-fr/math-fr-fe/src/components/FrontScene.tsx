@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Label, TextLink } from "@kit/index";
 import { paletteOf } from "@/lib/palettes";
 import { CONTOUR_LIGHT, FRONT_LIGHT_SET, FRONT_PALETTE } from "@/lib/site";
+import { SEQUENCE } from "@/lib/sequence";
 
 const Bulb = lazy(() => import("@/components/Bulb").then((m) => ({ default: m.Bulb })));
 
@@ -62,7 +63,7 @@ export function FrontScene() {
         <p data-slot="lede">{t("front.lede")}</p>
         <div data-slot="hero-actions" className="flex flex-wrap items-center justify-center gap-6">
           <Button asChild>
-            <Link to="/topics/fractals/parts">{t("front.start")}</Link>
+            <Link to={SEQUENCE[0].to}>{t("front.start")}</Link>
           </Button>
           <TextLink asChild>
             <Link to="/topics">{t("front.browse")}</Link>

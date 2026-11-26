@@ -24,6 +24,10 @@ export type Project = {
   hero: string;
   /** the numbers that are results of the work; only where there are such numbers */
   facts?: { value: string; label: string }[];
+  /** one sentence on how the work stands against the market, sourced, naming no company */
+  market?: string;
+  /** screenshots of the real product, in public/projects/<slug>/ */
+  shots?: { file: string; alt: string; caption: string }[];
   steps: Step[];
   /** a closing sentence for what the steps leave out */
   more?: string;
@@ -42,11 +46,18 @@ export const PROJECTS: Project[] = [
     title: L("WebPAUT, ultrasonic inspection in the browser"),
     summary: L("A web platform for ultrasonic inspection of welds and parts: open a scan file in the browser, see every view of it, find and size the flaws, and produce the report."),
     hero: L("A simulated inspection. Drag the probe along the plate: the fan shows the echoes inside the steel, the trace shows the beam pointing straight down, and the lower plot keeps the strongest echo at every position. The flaw is found with a threshold set from the noise of a clean stretch, and sized where its echo falls to half its peak, the rules WebPAUT uses."),
+    // measured in the WebPAUT repository (COSTS-GCP.md, HANDOFF.md, 19-Radiography.md); see docs/research/webpaut-metrics.html
     facts: [
-      { value: "5", label: L("views of a scan: A, B, C, D and sector") },
-      { value: ".nde", label: L("the open file format it reads") },
-      { value: "3", label: L("kinds of data: ultrasound, eddy current, radiography") },
-      { value: "2026", label: L("built from scratch") },
+      { value: "< 1 s", label: L("to open a 330 MB weld scan") },
+      { value: "17 / 17", label: L("vendor example files open: linear, sectorial, TOFD, TFM, FMC, eddy current") },
+      { value: "90.9 %", label: L("weld flaws found in X-ray images, at 1.8 % false alarms") },
+      { value: "500", label: L("automated tests, 90 % code coverage") },
+    ],
+    market: L("Opens .nde scan files in the browser, with no vendor software. When checked, only the manufacturer's own programs could open this format."),
+    shots: [
+      { file: "scans.jpg", alt: L("WebPAUT showing a B-scan and an A-scan of a test plate, with the gates at 1.7 and 8.9 mm and the view settings"), caption: L("The views of a scan: a B-scan across the plate and the A-scan at the chosen point, with the two gates.") },
+      { file: "analysis.jpg", alt: L("WebPAUT's analysis panel with a threshold set from the noise, 14.6 dB above it, and the flaws it found boxed in pink"), caption: L("Analysis: the threshold set from the noise of a clean stretch, and the flaws it finds boxed.") },
+      { file: "dashboard.jpg", alt: L("WebPAUT's dashboard of inspections with demo data, the parts to act on first, and the assistant that answers questions about them"), caption: L("The dashboard, on demo data: the parts to act on first, and an assistant that answers questions over the inspections.") },
     ],
     steps: [
       { figure: "pulse", title: L("Sound in, echo back"), text: L("A probe sends a short pulse of ultrasound into the part. A flaw sends part of it back early, and the far wall sends the rest back later.") },

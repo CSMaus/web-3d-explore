@@ -1,0 +1,266 @@
+{
+  "slug": "networks",
+  "title": "Test : Du calcul différentiel au premier réseau de neurones",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Sur la première page, comment la vitesse de la voiture est-elle trouvée à partir de ses seules positions ?",
+      "options": [
+        {
+          "text": "Diviser la variation de position par le temps mis, puis réduire l'écart",
+          "correct": true,
+          "why": "Entre deux positions séparées d'un petit écart, une variation divisée par une variation, avec un écart aussi petit que voulu, c'est la dérivée."
+        },
+        {
+          "text": "Diviser la position actuelle par tout le temps écoulé depuis le départ",
+          "correct": false,
+          "why": "C'est la vitesse moyenne sur tout le trajet. Elle ne dit pas à quelle vitesse la voiture roule à un instant donné."
+        },
+        {
+          "text": "Prendre la distance entre deux positions proches, sans diviser par le temps",
+          "correct": false,
+          "why": "La distance seule dépend de l'écart choisi. La diviser par le temps mis la transforme en vitesse."
+        },
+        {
+          "text": "Additionner les positions au cours du temps, comme l'aire sous la courbe",
+          "correct": false,
+          "why": "Additionner, c'est l'intégrale, qui va dans l'autre sens : de la vitesse vers la distance."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Le perceptron trouve une droite de séparation sur deux nuages de points, mais sur le ou exclusif il ne s'arrête jamais. Pourquoi ?",
+      "options": [
+        {
+          "text": "Sa taille de pas est trop grande, donc chaque correction dépasse les quatre points",
+          "correct": false,
+          "why": "Changer la taille du pas n'aide pas. La réponse demande une frontière courbe, qu'une seule droite ne peut pas donner."
+        },
+        {
+          "text": "Quatre points sont trop peu pour que la règle en apprenne une frontière",
+          "correct": false,
+          "why": "Le nombre de points n'est pas en cause. Un réseau avec une couche intermédiaire apprend les mêmes quatre points."
+        },
+        {
+          "text": "Aucune droite ne place les quatre points chacun de son côté",
+          "correct": true,
+          "why": "Il reste donc toujours un point à corriger. La règle ne peut que tourner et déplacer une seule droite, et quand aucune droite ne convient, chaque correction laisse un point mal placé."
+        },
+        {
+          "text": "Il corrige tous les points à la fois au lieu d'un point à la fois",
+          "correct": false,
+          "why": "Le perceptron examine bien les points un par un. Il échoue parce qu'aucune droite unique n'existe."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Sur la page du relief, que montre la flèche du gradient sous la bille, et dans quel sens la bille fait-elle son pas ?",
+      "options": [
+        {
+          "text": "La plus forte pente descendante ; la bille avance le long de la flèche",
+          "correct": false,
+          "why": "Le gradient pointe vers le haut. La descente va contre lui, d'où le signe moins dans le pas."
+        },
+        {
+          "text": "La plus forte pente montante ; la bille avance dans le sens opposé",
+          "correct": true,
+          "why": "La longueur de la flèche indique la raideur du terrain. La descente de gradient soustrait la taille du pas multipliée par le gradient, donc chaque pas va contre la flèche montante."
+        },
+        {
+          "text": "La direction de la bille vers le point le plus bas de tout le relief",
+          "correct": false,
+          "why": "La bille ne connaît que le sol sous elle. Le gradient est local et peut pointer à l'opposé du vrai fond."
+        },
+        {
+          "text": "Le sens de la montée, que la bille suit pour grimper",
+          "correct": false,
+          "why": "Suivre la flèche fait monter. Le but est le fond, donc le pas va dans l'autre sens."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "La position d'une voiture est s = 0.4t² mètres. À t = 4 s elle est à 6.4 m et à t = 6 s à 14.4 m. Quelle vitesse la règle des deux positions donne-t-elle à t = 5 s ?",
+      "options": [
+        {
+          "text": "8.0 m/s",
+          "correct": false,
+          "why": "8.0 m est la distance parcourue. Il faut la diviser par les 2 secondes qu'elle a prises."
+        },
+        {
+          "text": "2.0 m/s",
+          "correct": false,
+          "why": "C'est s(5) / 5 = 10 / 5, la vitesse moyenne depuis le départ, pas la vitesse à t = 5."
+        },
+        {
+          "text": "Environ 3.9 m/s, puisqu'un écart large sous-estime toujours",
+          "correct": false,
+          "why": "Pour une voiture à accélération constante, la règle des deux positions ne fait aucune erreur. La vraie vitesse, 0.8 × 5 = 4.0, sort exactement."
+        },
+        {
+          "text": "4.0 m/s, exactement la vraie vitesse",
+          "correct": true,
+          "why": "(14.4 - 6.4) / 2 = 4.0. L'erreur de la règle dépend de la dérivée troisième, nulle pour 0.4t², donc même un écart large est exact."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Une quantité croît chaque année de 7 % d'elle-même, dA/dt = 0.07A. Combien de temps dure environ chaque doublement ?",
+      "options": [
+        {
+          "text": "Environ 14.3 ans, 1 / 0.07",
+          "correct": false,
+          "why": "C'est le temps de doublement pour une croissance d'une quantité fixe chaque année. Une croissance d'une fraction fixe de soi-même est plus rapide."
+        },
+        {
+          "text": "Environ 9.9 ans, ln 2 / 0.07",
+          "correct": true,
+          "why": "L'exponentielle double tous les ln 2 / r. Avec r = 0.07, cela fait 9.9 ans, et c'est le même pour chaque doublement."
+        },
+        {
+          "text": "Cela dépend de la quantité de départ",
+          "correct": false,
+          "why": "Chaque doublement prend le même temps, quel que soit le départ, ce qui explique pourquoi les repères de doublement de la page sont régulièrement espacés."
+        },
+        {
+          "text": "Environ 0.1 an",
+          "correct": false,
+          "why": "Ici le taux est divisé par ln 2 au lieu de ln 2 par le taux. Un petit taux signifie un long temps de doublement, pas un court."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Un perceptron a w = (1, -1), b = 0 et une taille de pas de 0.5. Le point (1, 2) doit être du côté 1. Que fait une correction ?",
+      "options": [
+        {
+          "text": "w devient (1.5, 0) et b devient 0.5",
+          "correct": true,
+          "why": "Le total vaut 1 - 2 + 0 = -1, donc le neurone répond 0 et le point est mal placé. La règle ajoute 0.5 × (1 - 0) × (1, 2) à w et 0.5 à b ; le nouveau total, 2, est du bon côté."
+        },
+        {
+          "text": "Rien ne change, car le point est déjà du bon côté",
+          "correct": false,
+          "why": "Le total vaut -1, qui n'est pas supérieur à zéro, donc le neurone répond 0 et le point demande une correction."
+        },
+        {
+          "text": "w devient (0.5, -2) et b devient -0.5",
+          "correct": false,
+          "why": "Ici la correction est soustraite. La règle tourne la droite vers un point mal placé, en utilisant y moins la réponse, qui vaut ici +1."
+        },
+        {
+          "text": "w devient (1.5, 0) et b reste 0",
+          "correct": false,
+          "why": "Le biais est corrigé lui aussi, de la taille du pas multipliée par l'écart. Sans cela la droite ne pourrait que tourner autour de l'origine."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "Une image de 28 sur 28 pixels est parcourue par un motif de 5 sur 5 à chaque position, puis chaque bloc de 2 sur 2 ne garde que sa plus grande valeur. Combien de nombres restent ?",
+      "options": [
+        {
+          "text": "784 dans la carte, un par pixel, puis 196",
+          "correct": false,
+          "why": "Cela suppose que le motif tient à chaque pixel. Un motif de 5 sur 5 doit se trouver entièrement dans l'image, donc chaque côté perd 4 positions."
+        },
+        {
+          "text": "529 dans la carte, puis 121",
+          "correct": false,
+          "why": "Ici 28 - 5 = 23 positions sont comptées. La première et la dernière position comptent toutes les deux, donc il y en a 28 - 5 + 1 = 24."
+        },
+        {
+          "text": "576 dans la carte, puis 288",
+          "correct": false,
+          "why": "Le regroupement garde un nombre par bloc de quatre, donc le compte est divisé par quatre, pas par deux."
+        },
+        {
+          "text": "576 dans la carte, puis 144",
+          "correct": true,
+          "why": "Le motif tient à 28 - 5 + 1 = 24 positions dans chaque sens, donc 24 × 24 = 576. Le regroupement divise chaque côté par deux, ce qui laisse 12 × 12 = 144."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "Pourquoi l'entraînement par descente a-t-il besoin d'une fonction d'écrasement lisse plutôt que du oui ou non tranché du perceptron ?",
+      "options": [
+        {
+          "text": "La fonction d'écrasement lisse est plus rapide à calculer que le seuil tranché",
+          "correct": false,
+          "why": "Le seuil tranché coûte moins cher. La raison n'est pas la vitesse ; c'est l'existence d'une pente."
+        },
+        {
+          "text": "Le neurone tranché ne trace que des courbes, jamais la droite qu'il faut pour une frontière",
+          "correct": false,
+          "why": "C'est l'inverse : le neurone tranché trace exactement une droite. Le neurone lisse trace la même droite là où il répond un demi."
+        },
+        {
+          "text": "La réponse lisse a une pente à suivre ; la réponse tranchée est plate, puis saute",
+          "correct": true,
+          "why": "La réponse lisse change un peu à chaque petit ajustement, donc sa pente indique dans quel sens aller. Le déplacement d'un poids est la pente de la fonction d'écrasement multipliée par l'entrée ; pour une marche tranchée, cette pente est nulle partout sauf au saut, où elle n'est pas un nombre."
+        },
+        {
+          "text": "Une fonction lisse donne toujours la bonne réponse, donc l'entraînement n'a rien à corriger",
+          "correct": false,
+          "why": "Un neurone lisse peut se tromper, et il commence par se tromper. Ses erreurs arrivent avec une direction pour les corriger, et c'est tout l'intérêt."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Un neurone à une seule entrée égale à 1 commence par répondre 0.9 alors que la bonne réponse est 0. Pourquoi se corrige-t-il lentement avec l'écart au carré, mais pas avec l'entropie croisée ?",
+      "options": [
+        {
+          "text": "L'écart au carré multiplie le déplacement par la pente, faible sur le plat ; l'entropie croisée l'annule",
+          "correct": true,
+          "why": "L'entropie croisée laisse l'écart lui-même. Pour une réponse de 0.9, la pente vaut 0.9 × 0.1 = 0.09, donc l'écart au carré déplace w de 0.9 × 0.09 = 0.081, contre 0.9 avec l'entropie croisée."
+        },
+        {
+          "text": "L'entropie croisée utilise une taille de pas plus grande, donc chaque déplacement est plus long",
+          "correct": false,
+          "why": "Les deux copies utilisent la même taille de pas. La différence tient au déplacement que demande chaque coût."
+        },
+        {
+          "text": "L'écart au carré pointe dans le mauvais sens pour une réponse oui ou non et doit revenir en arrière",
+          "correct": false,
+          "why": "Il pointe dans le bon sens ; il est seulement lent. La page le dit non pas faux, mais lent dans le cas qui compte le plus."
+        },
+        {
+          "text": "Une réponse sûre est là où la pente est forte, donc l'écart au carré dépasse la cible à chaque pas",
+          "correct": false,
+          "why": "Une réponse sûre se trouve sur la partie plate de la fonction d'écrasement, où la pente est presque nulle. Le déplacement est trop petit, pas trop grand."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Un réseau profond de fonctions d'écrasement entre 0 et 1, aux poids faibles, renvoie le blâme à travers cinq couches. Pourquoi la première couche apprend-elle en dernier ?",
+      "options": [
+        {
+          "text": "La première couche est mise à jour en dernier à chaque pas, donc elle attend que les couches suivantes aient bougé",
+          "correct": false,
+          "why": "Toutes les couches bougent au même pas, à partir d'une seule passe arrière. La première couche bouge le moins parce que son blâme est le plus faible."
+        },
+        {
+          "text": "Chaque couche en arrière multiplie le blâme par au plus 1/4, donc après cinq il est au moins 4^5 = 1024 fois plus petit",
+          "correct": true,
+          "why": "La plus forte pente de la fonction d'écrasement vaut 1/4, et les facteurs se multiplient. La première couche, celle qui voit les points, reçoit le blâme le plus faible et bouge à peine."
+        },
+        {
+          "text": "La première couche a moins de poids que les autres, donc moins de moyens d'apprendre",
+          "correct": false,
+          "why": "Chaque couche cachée de la page a six neurones. Le déficit vient des facteurs qui se multiplient, pas d'un nombre de poids."
+        },
+        {
+          "text": "Chaque couche en arrière ajoute 1/4 au blâme, donc après cinq couches il est trop grand pour servir",
+          "correct": false,
+          "why": "Les facteurs se multiplient au lieu de s'additionner, et chacun est inférieur à un, donc le blâme s'éteint au lieu de croître."
+        }
+      ]
+    }
+  ]
+}

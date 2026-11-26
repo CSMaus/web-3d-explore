@@ -1,0 +1,143 @@
+{
+ "systems": [
+  {
+   "id": "taylor",
+   "name": "Série de Taylor : une courbe faite de puissances de x",
+   "summary": "Comment une calculatrice trouve sin(0.5) en ne faisant qu'additionner et multiplier : une somme de puissances de x qui copie la courbe en un point, construite terme par terme",
+   "blocks": [
+    {
+     "label": "La série de Taylor de centre a",
+     "tex": "f(x) = \\sum_{n=0}^{\\infty} \\frac{f^{(n)}(a)}{n!}\\,(x-a)^n",
+     "note": "f est la fonction, a le centre, et n numérote les termes à partir de 0. Le signe Σ veut dire : additionner les termes pour n = 0, 1, 2 et ainsi de suite. f^(n)(a) est la dérivée n-ième de f en a. La dérivée mesure la vitesse à laquelle une fonction change : pour n = 1 c'est la pente, pour n = 2 la courbure. n! est la factorielle, 1 × 2 × ... × n. Chaque nouveau terme fait coïncider la somme avec la fonction pour une dérivée de plus en a. La page ajoute les termes un par un et trace chaque somme"
+    },
+    {
+     "label": "La série de sin x de centre 0",
+     "tex": "\\sin x = x - \\frac{x^3}{3!} + \\frac{x^5}{5!} - \\frac{x^7}{7!} + \\cdots",
+     "note": "Seules les puissances impaires de x apparaissent, avec des signes alternés. En x = 0.5, les trois premiers termes donnent 0.4794271. La valeur exacte de sin(0.5) est 0.4794255"
+    },
+    {
+     "label": "Une borne de l'erreur",
+     "tex": "|R_n(x)| \\le \\frac{M\\,|x-a|^{n+1}}{(n+1)!}",
+     "note": "R_n(x) est l'erreur qui reste après le terme de puissance n. M est la plus grande taille que prend la dérivée suivante entre a et x. La factorielle du dénominateur croît plus vite que la puissance du numérateur, donc pour sin x et e^x l'erreur tend vers zéro pour tout x"
+    }
+   ],
+   "dimension": {
+    "label": "Pourquoi la série marche loin du centre",
+    "tex": "\\frac{x^{n}}{n!} \\to 0 \\text{ pour tout } x",
+    "note": "Une puissance de x divisée par une factorielle se rapproche de 0 quand n grandit, quel que soit x. La puissance grandit, mais la factorielle grandit plus vite. Dans la série de ln(1 + x), le terme de puissance n n'est divisé que par n, et non par n!. Cette série cesse donc de marcher à la distance 1 + a du centre"
+   }
+  },
+  {
+   "id": "radius",
+   "name": "Là où une série cesse de marcher",
+   "summary": "La courbe 1/(1 + x^2) est lisse partout, et pourtant sa série de centre 0 échoue pour x au-delà de 1 ou en deçà de -1. La cause est deux points situés hors de la droite des nombres ordinaires",
+   "blocks": [
+    {
+     "label": "La série de centre 0",
+     "tex": "\\frac{1}{1+x^2} = 1 - x^2 + x^4 - x^6 + \\cdots \\quad (|x| < 1)",
+     "note": "Chaque terme est le précédent multiplié par -x^2. La somme marche quand |x| < 1, c'est-à-dire pour x entre -1 et 1. En x = 1 et x = -1, les termes cessent de diminuer, et au-delà ils grandissent"
+    },
+    {
+     "label": "Le rayon de convergence",
+     "tex": "R = \\text{distance de } a \\text{ à } i = \\sqrt{1 + a^2}",
+     "note": "R dit jusqu'où la série marche autour du centre a. i est le nombre complexe dont le carré vaut -1. Les nombres complexes se dessinent comme les points d'un plan, traversé par la droite des nombres ordinaires. La fonction n'est pas définie en i et -i. Une série de centre a marche à l'intérieur du plus grand cercle de centre a qui évite ces deux points, et le rayon de ce cercle vaut sqrt(1 + a^2)"
+    }
+   ],
+   "dimension": {
+    "label": "Ce que la droite des nombres ordinaires ne montre pas",
+    "tex": "1 + z^2 = 0 \\iff z = \\pm i",
+    "note": "1 + z^2 vaut zéro exactement quand z vaut i ou -i. Rien sur la droite des nombres ordinaires ne signale x = 1 ni x = -1. La limite de la série est fixée par i et -i, deux points situés hors de la droite"
+   }
+  },
+  {
+   "id": "fourier",
+   "name": "Série de Fourier : une onde faite de cercles qui tournent",
+   "summary": "Une onde carrée, une onde en dents de scie et une onde triangulaire construites avec des sinusoïdes. Chaque sinusoïde vient d'un cercle qui tourne, et des cercles posés sur des cercles tracent l'onde entière",
+   "blocks": [
+    {
+     "label": "L'onde carrée comme somme de sinusoïdes",
+     "tex": "\\operatorname{sq}(x) = \\frac{4}{\\pi}\\left(\\sin x + \\frac{\\sin 3x}{3} + \\frac{\\sin 5x}{5} + \\cdots\\right)",
+     "note": "sq(x) est l'onde carrée : 1 pour x entre 0 et pi, -1 pour x entre -pi et 0, et de même à chaque tour suivant. Seules les vitesses impaires 1, 3, 5 et ainsi de suite apparaissent, et la sinusoïde de vitesse k est k fois moins haute que la première"
+    },
+    {
+     "label": "La taille d'un cercle",
+     "tex": "b_n = \\frac{1}{\\pi}\\int_{-\\pi}^{\\pi} f(x)\\,\\sin(nx)\\,dx",
+     "note": "b_n dit combien l'onde f contient de la sinusoïde de vitesse n. L'onde est multipliée par cette sinusoïde et le résultat est additionné sur un tour, ce que veut dire le signe ∫. Deux sinusoïdes différentes donnent zéro de cette façon, donc chaque b_n se trouve à part"
+    },
+    {
+     "label": "Le dépassement à un saut",
+     "tex": "\\max S_N \\to \\frac{2}{\\pi}\\operatorname{Si}(\\pi) \\approx 1.179",
+     "note": "S_N est la somme des N premiers termes. Près d'un saut, la somme monte au-dessus de l'onde d'environ 9 pour cent du saut, quel que soit le nombre de termes ajoutés. Le pic devient plus étroit mais pas plus bas. C'est le phénomène de Gibbs. Si est le sinus intégral, une fonction usuelle"
+    }
+   ],
+   "dimension": {
+    "label": "Une sinusoïde comme un cercle qui tourne",
+    "tex": "\\sin(nx) = \\operatorname{Im}\\, e^{inx}",
+    "note": "e^(inx) est un point sur un cercle de rayon 1. Il fait n fois le tour du cercle pendant que x fait un tour. Im prend sa hauteur. Chaque terme est donc la hauteur d'un point sur un cercle qui tourne, et additionner des termes revient à poser des cercles sur des cercles"
+   }
+  },
+  {
+   "id": "draw",
+   "name": "N'importe quel contour dessiné par des cercles qui tournent",
+   "summary": "Le contour d'une lettre ou d'une image envoyée, redessiné par une chaîne de cercles qui tournent, d'un seul cercle jusqu'à deux cents",
+   "blocks": [
+    {
+     "label": "Le contour en nombres",
+     "tex": "z_k = x_k + i\\,y_k, \\quad k = 0, \\dots, N-1",
+     "note": "Chaque point du contour, x_k à l'horizontale et y_k à la verticale, s'écrit comme un seul nombre complexe z_k, où i est le nombre dont le carré vaut -1. La page fait une fois le tour du plus long contour de l'image et y prend N points régulièrement espacés"
+    },
+    {
+     "label": "Les cercles",
+     "tex": "c_n = \\frac{1}{N}\\sum_{k=0}^{N-1} z_k\\, e^{-2\\pi i n k / N}",
+     "note": "c_n donne le cercle de vitesse n. Ce cercle fait n tours pendant un tour du contour, dans l'autre sens quand n est négatif. Son rayon est |c_n|, la taille de c_n, et son angle de départ est l'angle de c_n"
+    },
+    {
+     "label": "Le dessin",
+     "tex": "z(t) = \\sum_{n} c_n\\, e^{2\\pi i n t}",
+     "note": "z(t) est le point qui dessine à l'instant t, et t va de 0 à 1 pendant un tour du contour. Chaque cercle est posé sur le bord du précédent, les plus grands d'abord. Avec les N cercles, le point passe par chaque point du contour"
+    }
+   ],
+   "dimension": {
+    "label": "Combien de cercles demande une figure",
+    "tex": "\\text{erreur} = \\sum_{n \\text{ écartés}} |c_n|^2",
+    "note": "L'erreur du dessin, mesurée comme la moyenne du carré de la distance au contour, est égale à la somme des carrés des rayons des cercles écartés. C'est le théorème de Parseval. Les contours lisses demandent peu de cercles, les angles beaucoup"
+   }
+  },
+  {
+   "id": "frequencies",
+   "name": "Une photo réduite à ses ondes les plus fortes",
+   "summary": "Une photo découpée en blocs de 8 sur 8 pixels, chaque bloc écrit comme une somme de 64 ondes puis reconstruit avec seulement les plus fortes : l'idée principale du JPEG",
+   "blocks": [
+    {
+     "label": "Un bloc en ondes",
+     "tex": "F(u,v) = \\frac{c_u c_v}{4}\\sum_{x=0}^{7}\\sum_{y=0}^{7} f(x,y)\\cos\\frac{(2x+1)u\\pi}{16}\\cos\\frac{(2y+1)v\\pi}{16}",
+     "note": "f(x, y) est le niveau de gris du pixel de la colonne x et de la ligne y du bloc, les deux numérotées de 0 à 7. F(u, v) est la force de l'onde qui varie u fois plus vite dans la largeur du bloc et v fois plus vite dans sa hauteur. C'est la transformée en cosinus, avec c_0 = 1/sqrt(2) et c_u = 1 sinon. 64 pixels donnent 64 forces, et rien n'est perdu"
+    },
+    {
+     "label": "Garder les ondes les plus fortes",
+     "tex": "\\hat F(u,v) = \\begin{cases} F(u,v) & \\text{parmi les } k \\text{ plus grandes} \\\\ 0 & \\text{sinon} \\end{cases}",
+     "note": "Chaque bloc garde ses k plus grandes forces, par taille, et met les autres à zéro. Le bloc est ensuite reconstruit en appliquant la transformée à rebours"
+    }
+   ],
+   "dimension": {
+    "label": "Pourquoi une photo résiste",
+    "tex": "\\sum_{x,y} f^2 = \\sum_{u,v} F^2",
+    "note": "La somme des carrés des niveaux de gris est égale à la somme des carrés des forces, donc la transformée conserve l'énergie totale. Dans une photo, l'essentiel de l'énergie est dans quelques ondes lentes, donc jeter les faibles coûte peu. Le JPEG arrondit aussi les forces gardées, ce que cette page laisse de côté"
+   }
+  }
+ ],
+ "definitions": [
+  {
+   "id": "series",
+   "name": "Une série",
+   "tex": "\\sum_{n=0}^{\\infty} a_n = \\lim_{N \\to \\infty} \\sum_{n=0}^{N} a_n",
+   "note": "Une série est une somme sans fin : a_0 + a_1 + a_2 + ... La somme des premiers termes, jusqu'à a_N, s'appelle une somme partielle. La valeur de la série est le nombre dont les sommes partielles se rapprochent quand N grandit, s'il existe. lim désigne ce nombre. Les pages tracent les sommes partielles"
+  },
+  {
+   "id": "orthogonal",
+   "name": "Des ondes qui ne se chevauchent pas",
+   "tex": "\\int_{-\\pi}^{\\pi} \\sin(mx)\\sin(nx)\\,dx = 0 \\quad (m \\ne n)",
+   "note": "Deux sinusoïdes de vitesses différentes m et n sont multipliées et le résultat est additionné sur un tour : le résultat est zéro. C'est pourquoi la taille de chaque cercle se mesure à part"
+  }
+ ]
+}

@@ -1,0 +1,266 @@
+{
+  "slug": "networks",
+  "title": "Test: Calculus into a first neural network",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "On the first page, how is the car's speed found from nothing but its positions?",
+      "options": [
+        {
+          "text": "Divide the change in position by the time it took, then shrink the gap",
+          "correct": true,
+          "why": "Between two positions a small gap apart, a change divided by a change, with the gap made as small as wanted, is the derivative."
+        },
+        {
+          "text": "Divide the current position by the whole time since the start of the trip",
+          "correct": false,
+          "why": "That is the average speed over the whole trip. It misses how fast the car goes at one moment."
+        },
+        {
+          "text": "Take the distance between two nearby positions, without dividing by the time",
+          "correct": false,
+          "why": "Distance alone depends on the gap chosen. Dividing by the time taken turns it into a speed."
+        },
+        {
+          "text": "Add up the positions over time, as the area under the curve",
+          "correct": false,
+          "why": "Adding up is the integral, which goes the other way: from speed back to distance."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "The perceptron finds a separating line on two clouds of dots, but on exclusive or it never stops. Why?",
+      "options": [
+        {
+          "text": "Its step size is too large, so each correction overshoots the four dots",
+          "correct": false,
+          "why": "Changing the step size does not help. The answer needs a bent boundary, which one line cannot give."
+        },
+        {
+          "text": "Four dots are too few for the rule to learn a boundary from",
+          "correct": false,
+          "why": "The number of dots is not the issue. A network with a middle layer learns the same four dots."
+        },
+        {
+          "text": "No straight line puts all four dots on their own sides",
+          "correct": true,
+          "why": "So there is always a dot left to correct. The rule can only turn and shift one line, and when no line works, every correction leaves a wrong dot."
+        },
+        {
+          "text": "It corrects every dot at once instead of one dot at a time",
+          "correct": false,
+          "why": "The perceptron does look at one dot at a time. It fails because no single line exists."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "On the landscape page, what does the gradient arrow under the ball show, and which way does the ball step?",
+      "options": [
+        {
+          "text": "The steepest way downhill; the ball steps along the arrow",
+          "correct": false,
+          "why": "The gradient points uphill. Descent goes against it, which is why the step has a minus sign."
+        },
+        {
+          "text": "The steepest way uphill; the ball steps the opposite way",
+          "correct": true,
+          "why": "The arrow's length gives how steep the ground is. Gradient descent subtracts the step size times the gradient, so each step goes against the uphill arrow."
+        },
+        {
+          "text": "The direction from the ball to the lowest point of the whole landscape",
+          "correct": false,
+          "why": "The ball knows only the ground under its feet. The gradient is local and can point away from the true bottom."
+        },
+        {
+          "text": "The way uphill, and the ball steps along it to climb",
+          "correct": false,
+          "why": "Following the arrow climbs. The goal is the bottom, so the step goes the other way."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "A car's position is s = 0.4t² metres. At t = 4 s it is at 6.4 m and at t = 6 s at 14.4 m. What speed does the two-position rule give at t = 5 s?",
+      "options": [
+        {
+          "text": "8.0 m/s",
+          "correct": false,
+          "why": "8.0 m is the distance moved. It has to be divided by the 2 seconds it took."
+        },
+        {
+          "text": "2.0 m/s",
+          "correct": false,
+          "why": "That is s(5) / 5 = 10 / 5, the average speed since the start, not the speed at t = 5."
+        },
+        {
+          "text": "About 3.9 m/s, since a wide gap always undershoots",
+          "correct": false,
+          "why": "For a car with constant acceleration the two-position rule has no error at all. The true speed, 0.8 × 5 = 4.0, comes out exactly."
+        },
+        {
+          "text": "4.0 m/s, exactly the true speed",
+          "correct": true,
+          "why": "(14.4 - 6.4) / 2 = 4.0. The rule's error depends on the third derivative, which is zero for 0.4t², so even a wide gap is exact."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "An amount grows by 7 per cent of itself each year, dA/dt = 0.07A. About how long does each doubling take?",
+      "options": [
+        {
+          "text": "About 14.3 years, 1 / 0.07",
+          "correct": false,
+          "why": "That is the doubling time for growth by a fixed amount each year. Growth by a fixed fraction of itself is faster."
+        },
+        {
+          "text": "About 9.9 years, ln 2 / 0.07",
+          "correct": true,
+          "why": "The exponential doubles every ln 2 / r. With r = 0.07 this is 9.9 years, and it is the same for every doubling."
+        },
+        {
+          "text": "It depends on the starting amount",
+          "correct": false,
+          "why": "Every doubling takes the same time, whatever the start, which is why the doubling ticks on the page are evenly spaced."
+        },
+        {
+          "text": "About 0.1 years",
+          "correct": false,
+          "why": "This divides the rate by ln 2 instead of ln 2 by the rate. A small rate means a long doubling time, not a short one."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "A perceptron has w = (1, -1), b = 0 and step size 0.5. The dot (1, 2) belongs on the 1 side. What does one correction do?",
+      "options": [
+        {
+          "text": "w becomes (1.5, 0) and b becomes 0.5",
+          "correct": true,
+          "why": "The total is 1 - 2 + 0 = -1, so the unit answers 0 and the dot is wrong. The rule adds 0.5 × (1 - 0) × (1, 2) to w and 0.5 to b; the new total, 2, is on the right side."
+        },
+        {
+          "text": "Nothing changes, because the dot is already on the right side",
+          "correct": false,
+          "why": "The total is -1, which is not above zero, so the unit answers 0 and the dot needs a correction."
+        },
+        {
+          "text": "w becomes (0.5, -2) and b becomes -0.5",
+          "correct": false,
+          "why": "This subtracts the correction. The rule turns the line towards a wrong dot, using y minus the answer, which is +1 here."
+        },
+        {
+          "text": "w becomes (1.5, 0) and b stays 0",
+          "correct": false,
+          "why": "The bias is corrected too, by the step size times the miss. Without that the line could only turn about the origin."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "A picture of 28 by 28 pixels is scanned by a 5 by 5 pattern at every position, then each 2 by 2 block keeps only its largest value. How many numbers are left?",
+      "options": [
+        {
+          "text": "784 in the map, one per pixel, then 196",
+          "correct": false,
+          "why": "This assumes the pattern fits at every pixel. A 5 by 5 pattern must lie wholly inside the picture, so each side loses 4 positions."
+        },
+        {
+          "text": "529 in the map, then 121",
+          "correct": false,
+          "why": "This counts 28 - 5 = 23 positions. Both the first and the last position count, so it is 28 - 5 + 1 = 24."
+        },
+        {
+          "text": "576 in the map, then 288",
+          "correct": false,
+          "why": "Pooling keeps one number from each block of four, so the count falls by four, not by two."
+        },
+        {
+          "text": "576 in the map, then 144",
+          "correct": true,
+          "why": "The pattern fits at 28 - 5 + 1 = 24 positions each way, so 24 × 24 = 576. Pooling halves each side, leaving 12 × 12 = 144."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "Why does training by descent need a smooth squash instead of the perceptron's hard yes-or-no?",
+      "options": [
+        {
+          "text": "The smooth squash is faster to compute than the hard threshold",
+          "correct": false,
+          "why": "The hard threshold is cheaper. Speed is not the reason; having a slope is."
+        },
+        {
+          "text": "The hard unit can only draw curves, never the straight line a boundary needs",
+          "correct": false,
+          "why": "It is the other way round: the hard unit draws exactly a straight line. The smooth unit draws the same line where it answers one half."
+        },
+        {
+          "text": "The smooth answer has a slope to follow; the hard answer is flat, then jumps",
+          "correct": true,
+          "why": "The smooth answer changes a little with each small nudge, so its slope shows which way to move. The move on a weight is the squash's slope times the input; for a hard step that slope is zero everywhere except at the jump, where it is not a number."
+        },
+        {
+          "text": "A smooth squash always gives the right answer, so training has no misses to correct",
+          "correct": false,
+          "why": "A smooth unit can be wrong, and starts wrong. Its mistakes come with a direction to fix them, which is the point."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "A unit with one input of 1 starts by answering 0.9 when the right answer is 0. Why does it correct slowly under the squared miss but not under cross entropy?",
+      "options": [
+        {
+          "text": "The squared miss scales the move by the squash's slope, small on the flat; cross entropy cancels it",
+          "correct": true,
+          "why": "Cross entropy leaves the miss itself. At an answer of 0.9 the slope is 0.9 × 0.1 = 0.09, so the squared miss moves w by 0.9 × 0.09 = 0.081, against 0.9 under cross entropy."
+        },
+        {
+          "text": "Cross entropy uses a larger step size, so each of its moves is longer",
+          "correct": false,
+          "why": "Both copies use the same step size. The difference is in the move each cost asks for."
+        },
+        {
+          "text": "The squared miss points the wrong way for a yes-or-no answer and has to turn back",
+          "correct": false,
+          "why": "It points the right way; it is only slow. The page calls it not wrong, but slow in the case that matters most."
+        },
+        {
+          "text": "A sure answer sits where the squash's slope is large, so the squared miss overshoots on every step",
+          "correct": false,
+          "why": "A sure answer sits on the flat part of the squash, where the slope is near zero. The move is too small, not too big."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "A deep network of squashes to 0..1, with small weights, sends blame back through five layers. Why does the first layer learn last?",
+      "options": [
+        {
+          "text": "The first layer is updated last in each step, so it has to wait until all the later layers have moved",
+          "correct": false,
+          "why": "All layers move in the same step, from one pass back. The first layer moves least because its blame is the smallest."
+        },
+        {
+          "text": "Each layer back multiplies the blame by at most 1/4, so after five it is at least 4^5 = 1024 times smaller",
+          "correct": true,
+          "why": "The largest slope of the squash is 1/4, and the factors multiply. The first layer, the one that sees the dots, receives the faintest blame and barely moves."
+        },
+        {
+          "text": "The first layer has fewer weights than the others, so it has less to learn with",
+          "correct": false,
+          "why": "Every hidden layer on the page has six units. The shortfall comes from the multiplying factors, not from a count of weights."
+        },
+        {
+          "text": "Each layer back adds 1/4 to the blame, so after five layers it is too large to use",
+          "correct": false,
+          "why": "The factors multiply rather than add, and each is below one, so the blame fades instead of growing."
+        }
+      ]
+    }
+  ]
+}

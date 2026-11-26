@@ -87,7 +87,7 @@ export function JuliaSquarePage() {
               if (!runner.running && n >= path.path.length - 1) reset();
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(MOST, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}

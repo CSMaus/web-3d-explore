@@ -25,6 +25,7 @@ export const Route = createFileRoute("/topics/chaos/play/solvers")({
 
 const METHODS: Method[] = ["euler", "midpoint", "rk4"];
 const ORDER: Record<Method, number> = { euler: 1, midpoint: 2, rk4: 4 };
+const NAME: Record<Method, string> = { euler: L("Euler's method"), midpoint: L("Midpoint method"), rk4: L("Runge-Kutta method") };
 const TURN = 2 * Math.PI;
 
 /**
@@ -107,15 +108,15 @@ function SolversPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? L("Solving it by stepping")}
-        job={L("A swing with no friction: after a whole number of turns it is exactly back where it began, so the true answer is known and the stepping can be scored. The job is to step round one turn with each method, halve the step, do it again, and read off how fast each method's error falls.")}
+        title={system?.name ?? L("Solving an equation step by step")}
+        job={L("How much better does the answer get when the step is made shorter? The test case is a weight on a spring, with no friction. It swings back and forth, and after each full swing, called a turn, it is exactly back where it started. So the exact answer is known, and the error of each stepping method can be measured. The page runs the swing with three methods. Euler's method moves straight along the direction found at the start of each step. The midpoint method first looks half a step ahead. The Runge-Kutta method looks at four places inside the step. The page starts with 16 steps a turn, then halves the step again and again, and records how far each method ends from the start. The question: when the step is halved, how many times smaller does each error get?")}
         input={
           <div className="space-y-3">
-            <Slider label={L("Turns")} min={1} max={8} step={1} value={turns} format={(v) => String(Math.round(v))} onChange={(v) => { setTurns(Math.round(v)); reset(); }} />
-            <Slider label={L("Coarsest steps")} min={8} max={64} step={4} value={coarsest} format={(v) => L("{{n}} a turn", { n: Math.round(v) })} onChange={(v) => { setCoarsest(Math.round(v)); reset(); }} />
-            <Slider label={L("Halvings")} min={3} max={12} step={1} value={levels} format={(v) => String(Math.round(v))} onChange={(v) => { setLevels(Math.round(v)); reset(); }} />
+            <Slider label={L("Full turns in one run")} min={1} max={8} step={1} value={turns} format={(v) => String(Math.round(v))} onChange={(v) => { setTurns(Math.round(v)); reset(); }} />
+            <Slider label={L("Steps per turn at the start")} min={8} max={64} step={4} value={coarsest} format={(v) => L("{{n}} per turn", { n: Math.round(v) })} onChange={(v) => { setCoarsest(Math.round(v)); reset(); }} />
+            <Slider label={L("Number of step lengths to try")} min={3} max={12} step={1} value={levels} format={(v) => String(Math.round(v))} onChange={(v) => { setLevels(Math.round(v)); reset(); }} />
             <Text kind="note" as="p">
-              {L("The run always ends exactly on a whole turn. Ending a fraction of a step past it adds an error of its own that swamps the method and makes Runge-Kutta look first order.")}
+              {L("Each run stops exactly at the end of a full turn. If it stopped a little before or after, that gap would add an error of its own. This extra error would hide the error of the method.")}
             </Text>
             <PaletteBar />
           </div>
@@ -130,7 +131,7 @@ function SolversPage() {
               if (!runner.running && shown >= levels) reset();
               runner.toggle();
             }}
-            onStep={(many) => setDone((v) => Math.min(levels, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -163,7 +164,7 @@ function SolversPage() {
 
                 }}
               />
-            </div><Caption>{shown > 0 ? (turns > 1 ? L("{{steps}} steps a turn: where each method ends up after {{turns}} turns", { steps: row("euler").steps / turns, turns }) : L("{{steps}} steps a turn: where each method ends up after {{turns}} turn", { steps: row("euler").steps / turns, turns })) : L("The true orbit is the circle; the state should come back to the white dot")}</Caption></div>
+            </div><Caption>{shown > 0 ? (turns > 1 ? L("Across: position of the weight. Up: its speed. Circle: the exact path. The other lines: the path of each method with {{steps}} steps per turn, over {{turns}} turns. The thickest of them is Euler's method. Dots: where each method stopped", { steps: row("euler").steps / turns, turns }) : L("Across: position of the weight. Up: its speed. Circle: the exact path. The other lines: the path of each method with {{steps}} steps per turn, over {{turns}} turn. The thickest of them is Euler's method. Dots: where each method stopped", { steps: row("euler").steps / turns, turns })) : L("Across: position of the weight. Up: its speed. Circle: the exact path. It comes back to the dot on the right after each turn")}</Caption></div>
             <div><div data-slot="plot" className="h-[min(400px,calc(100vh-24rem))] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -180,7 +181,7 @@ function SolversPage() {
                     pen.text(`h=1e${g}`, g + 0.03, bounds.y0 + 0.12, "#4a525e");
                   }
                   pen.line([[bounds.x0, Math.log10(2.2e-16)], [bounds.x1, Math.log10(2.2e-16)]], "#4a3a3a", 1);
-                  pen.text(L("Double precision floor"), bounds.x0 + 0.05, Math.log10(2.2e-16) + 0.1, "#7a5a5a");
+                  pen.text(L("Rounding limit"), bounds.x0 + 0.05, Math.log10(2.2e-16) + 0.1, "#7a5a5a");
                   table.forEach((t, i) => {
                     const colour = colourOf(i);
                     const pts: [number, number][] = t.rows.slice(0, shown).map((r) => [Math.log10(r.dt), Math.log10(Math.max(r.error, 1e-16))]);
@@ -188,34 +189,34 @@ function SolversPage() {
                     for (const [x, y] of pts) pen.dot(x, y, 3, colour);
                     if (pts.length) {
                       const last = pts[pts.length - 1];
-                      pen.text(`  ${t.how}`, last[0], last[1], colour);
+                      pen.text(`  ${NAME[t.how]}`, last[0], last[1], colour);
                     }
                   });
                 }}
               />
-            </div><Caption>{L("Error after the run against step size, both on powers of ten. Steeper is a higher order.")}</Caption></div>
+            </div><Caption>{L("Each line is one method, named at its end. Across: the step length h. Up: the error at the end of the run. Both axes count in powers of ten: 1e-3 means 0.001. The steeper a line, the faster its error falls as the step gets shorter. The flat line marked as the rounding limit is the smallest error a computer can reach, about 2e-16.")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict>
               {shown === 0
-                ? L("{{coarsest}} steps a turn to begin with, then the step halved {{halvings}} times. Press run: each step size is tried by all three methods and its error lands on the chart.", { coarsest, halvings: levels - 1 })
+                ? L("The first try uses {{coarsest}} steps per turn. Then the step is halved {{halvings}} times. Press run: each step length is tried with all three methods, and each error becomes a point on the error chart.", { coarsest, halvings: levels - 1 })
                 : shown === 1
-                  ? L("{{steps}} steps a turn. Euler ends {{euler}} from where it started and its orbit spirals outward: each straight step leaves the circle a little, and the gain is never given back. Midpoint misses by {{midpoint}}, Runge-Kutta by {{rk4}}.", { steps: row("euler").steps / turns, euler: row("euler").error.toFixed(3), midpoint: row("midpoint").error.toExponential(1), rk4: row("rk4").error.toExponential(1) })
-                  : L("{{steps}} steps a turn, half the last size. Euler's error fell by {{euler}}x, midpoint's by {{midpoint}}x and Runge-Kutta's by {{rk4}}: halving the step buys two, four and sixteen. That is what order one, two and four mean.", { steps: row("euler").steps / turns, euler: Math.pow(2, table[0].gains[level - 1]).toFixed(1), midpoint: Math.pow(2, table[1].gains[level - 1]).toFixed(1), rk4: table[2].rows[level].error > 1e-13 ? `${Math.pow(2, table[2].gains[level - 1]).toFixed(1)}x` : L("down to the rounding floor") })}
+                  ? L("{{steps}} steps per turn. Euler's method ends {{euler}} away from the starting point, and its path spirals outward. Each straight step leaves the circle a little, and that is never given back. The midpoint method misses by {{midpoint}}, the Runge-Kutta method by {{rk4}}.", { steps: row("euler").steps / turns, euler: row("euler").error.toFixed(3), midpoint: row("midpoint").error.toExponential(1), rk4: row("rk4").error.toExponential(1) })
+                  : L("{{steps}} steps per turn, so each step is half as long as before. The error of Euler's method became {{euler}} times smaller, that of the midpoint method {{midpoint}} times smaller. The Runge-Kutta method: {{rk4}}. So halving the step makes the errors about 2, 4 and 16 times smaller. This is what a method of order 1, 2 or 4 means: halving the step divides its error by 2 multiplied by itself that many times.", { steps: row("euler").steps / turns, euler: Math.pow(2, table[0].gains[level - 1]).toFixed(1), midpoint: Math.pow(2, table[1].gains[level - 1]).toFixed(1), rk4: table[2].rows[level].error > 1e-13 ? L("error {{n}} times smaller", { n: Math.pow(2, table[2].gains[level - 1]).toFixed(1) }) : L("its error has reached the rounding limit of the computer and cannot fall further") })}
             </Verdict>
             <Readout
               rows={[
-                [L("Turns run"), String(turns)],
+                [L("Full turns in one run"), String(turns)],
                 [L("Step sizes tried"), L("{{n}} of {{total}}", { n: shown, total: levels })],
-                ...table.map((t) => [L("{{how}}: fitted order", { how: t.how }), L("{{slope}}  (exactly {{order}})", { slope: Number.isNaN(t.slope) ? "-" : t.slope.toFixed(3), order: ORDER[t.how] })] as [string, string]),
-                ...(shown > 0 ? table.map((t) => [L("{{how}}: error at this step", { how: t.how }), t.rows[level].error.toExponential(2)] as [string, string]) : []),
-                [L("Energy at the end, exactly 0.5"), shown > 0 ? table.map((t) => `${t.how} ${t.rows[level].energy.toFixed(4)}`).join(", ") : "-"],
+                ...table.map((t) => [L("{{how}}: order, the slope of its line on the chart", { how: NAME[t.how] }), L("{{slope}} (in theory {{order}})", { slope: Number.isNaN(t.slope) ? "-" : t.slope.toFixed(3), order: ORDER[t.how] })] as [string, string]),
+                ...(shown > 0 ? table.map((t) => [L("{{how}}: error at the current step length", { how: NAME[t.how] }), t.rows[level].error.toExponential(2)] as [string, string]) : []),
+                [L("Energy at the end: (position² + speed²) / 2, exact value 0.5"), shown > 0 ? table.map((t) => `${NAME[t.how]} ${t.rows[level].energy.toFixed(4)}`).join(", ") : "-"],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              {L("Euler's outward spiral is not a rounding error: a straight step from a point on a circle always lands outside it. The higher methods look inside the step before moving. Runge-Kutta stops reporting sixteen once its error reaches the rounding floor of double precision, and those rows are left out of the fitted slope.")}
+              {L("The outward spiral of Euler's method is not caused by rounding. A straight step from a point on a circle always lands outside the circle, so the energy grows with every step. The other two methods look inside the step before moving. A computer keeps about 16 digits of each number, so no error can fall below about 2e-16. Once the Runge-Kutta error comes near that limit, it stops falling 16 times, and those step lengths are left out when its order is measured.")}
             </Text>
           </div>
         }

@@ -24,7 +24,7 @@ export const Route = createFileRoute("/topics/complex/play/line")({
 const MOVES = [
   { id: "add", label: L("Add a number") },
   { id: "times", label: L("Multiply by a number") },
-  { id: "square", label: L("Square: the question") },
+  { id: "square", label: L("Square a number") },
 ];
 const TRIES = 120;
 const LINE: Box = { x0: -4.5, x1: 4.5, y0: -1, y1: 1 };
@@ -57,7 +57,7 @@ function LinePage() {
     <>
       <TaskPage
         title={system?.name ?? L("Numbers on a line, and the one question they cannot answer")}
-        job={L("Every ordinary number is a place on a line: zero in the middle, more to the right, less to the left. Adding slides the whole line along. Multiplying stretches it, and multiplying by a negative number flips it round through zero. The job is to watch those three, then to try every number on the line against one question: which number, times itself, gives minus one?")}
+        job={L("Is there a number that gives minus one when it is multiplied by itself? Every ordinary number can be drawn as a point on a line: zero in the middle, positive numbers to the right, negative numbers to the left. Three buttons choose what happens to the line. 'Add a number' moves every point the same distance. 'Multiply by a number' stretches every distance from zero; a negative number also flips the line over, so that the right side goes to the left. 'Square a number' multiplies a number by itself: the square of 3 is 9, and the square of minus 3 is also 9. With this last button chosen, pressing run tries the numbers from minus three to three one by one and draws the square of each. The question to watch: does any square reach minus one?")}
         input={
           <div className="space-y-3">
             <Choices options={MOVES} value={move} onPick={(id) => { setMove(id); reset(); }} />
@@ -66,10 +66,10 @@ function LinePage() {
             ) : null}
             <Text kind="note" as="p">
               {move === "add"
-                ? L("Every mark on the line moves the same distance the same way. Nothing changes shape.")
+                ? L("Every point of the line moves the same distance in the same direction. The gaps between the marks stay the same.")
                 : move === "times"
-                  ? L("Every distance from zero is multiplied. A negative number sends the right side to the left: the line turns over through zero.")
-                  : L("A number is tried, from minus three to three, and its square is drawn above it. The question is whether the square ever reaches minus one.")}
+                  ? L("Every distance from zero is multiplied by the chosen number. A negative number also sends the right side of the line to the left and the left side to the right: the line flips over, and zero stays in place.")
+                  : L("The numbers from minus three to three are tried one after another, from left to right. The square of each one, the number multiplied by itself, is marked on the lower line and on the graph below. The question is whether a square ever reaches minus one.")}
             </Text>
           </div>
         }
@@ -78,12 +78,12 @@ function LinePage() {
             running={runner.running}
             count={at}
             limit={TRIES}
-            what={move === "square" ? L("numbers tried") : L("of the move")}
+            what={move === "square" ? L("numbers tried") : L("steps of the move")}
             onToggle={() => {
               if (!runner.running && at >= TRIES) reset();
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(TRIES, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -114,9 +114,9 @@ function LinePage() {
                     }
                     if (move === "square") {
                       pen.dot(x, 0.35, 5, ONE);
-                      pen.text(L("{{x}}, squared: {{sq}}", { x: x.toFixed(2), sq: (x * x).toFixed(2) }), x, 0.75, ONE, "center");
+                      pen.text(L("{{x}} times itself is {{sq}}", { x: x.toFixed(2), sq: (x * x).toFixed(2) }), x, 0.75, ONE, "center");
                       pen.dot(-1, -0.45, 5, TWO);
-                      pen.text(L("Minus one is here, on the lower line"), -1, -0.85, TWO, "center");
+                      pen.text(L("Minus one: the square looked for"), -1, -0.85, TWO, "center");
                       pen.dot(x * x, -0.45, 4, ONE);
                     }
                   }}
@@ -124,8 +124,8 @@ function LinePage() {
               </div>
               <Caption>
                 {move === "square"
-                  ? L("The line, twice: a number tried on top, and its square on the line below. The square is looked for at minus one.")
-                  : L("The line before the move on top, and where every mark lands after it below.")}
+                  ? L("Two copies of the number line. Upper line: the number being tried. Lower line: its square, the number multiplied by itself, and the point minus one, which the square would have to reach.")
+                  : L("Upper line: the marks before the move. Lower line: where each mark lands after the move. A thin line joins each mark to the place where it lands.")}
               </Caption>
             </div>
             {move === "square" ? (
@@ -144,7 +144,7 @@ function LinePage() {
                     }}
                   />
                 </div>
-                <Caption>{L("Along the bottom: the number tried. Up: its square. The rose line is minus one. The green curve is every square so far; it touches zero and never goes below it.")}</Caption>
+                <Caption>{L("A graph of the squares. Across: the number tried, from minus three to three. Up: its square. The thin horizontal line below the axis is at height minus one. The thick curve joins all the squares found so far. It touches zero once, at zero, and never goes below zero.")}</Caption>
               </div>
             ) : null}
           </section>
@@ -154,31 +154,31 @@ function LinePage() {
             <Verdict good={move === "square" && at >= TRIES ? false : undefined}>
               {move === "add"
                 ? k >= 0
-                  ? L("Adding {{k}} slides every mark {{d}} to the right. Zero goes to {{k}}; the spacing between marks is untouched.", { k: k.toFixed(1), d: Math.abs(k).toFixed(1) })
-                  : L("Adding {{k}} slides every mark {{d}} to the left. Zero goes to {{k}}; the spacing between marks is untouched.", { k: k.toFixed(1), d: Math.abs(k).toFixed(1) })
+                  ? L("Adding {{k}} moves every mark {{d}} to the right. Zero lands on {{k}}. The gaps between the marks do not change.", { k: k.toFixed(1), d: Math.abs(k).toFixed(1) })
+                  : L("Adding {{k}} moves every mark {{d}} to the left. Zero lands on {{k}}. The gaps between the marks do not change.", { k: k.toFixed(1), d: Math.abs(k).toFixed(1) })
                 : move === "times"
                   ? L("Multiplying by {{k}} sends 1 to {{k}} and 2 to {{k2}}. {{more}}", {
                       k: k.toFixed(1),
                       k2: (2 * k).toFixed(1),
-                      more: k < 0 ? L("The right side has gone left and the left side right: the line has flipped through zero. Multiplying by minus one is exactly a flip, and nothing else.") : k === 0 ? L("Everything lands on zero.") : L("Every distance from zero is stretched by the same factor; nothing crosses over."),
+                      more: k < 0 ? L("The right side has moved to the left and the left side to the right: the line has flipped over, and zero has stayed in place. Multiplying by minus one does exactly this flip and nothing more: every number keeps its distance from zero and moves to the other side.") : k === 0 ? L("Every mark lands on zero.") : L("Every distance from zero is multiplied by the same number. No mark crosses to the other side of zero."),
                     })
                   : !started
-                    ? L("Press run. Every number from minus three to three is tried, and its square drawn above it.")
+                    ? L("Press run. The numbers from minus three to three are tried one by one, and the square of each is drawn.")
                     : at < TRIES
-                      ? L("{{x}} squared is {{sq}}. The closest any square has come to minus one so far is {{low}}, at {{at}}.", { x: x.toFixed(2), sq: (x * x).toFixed(2), low: (closest * closest).toFixed(2), at: closest.toFixed(2) })
-                      : L("Every number was tried and no square dipped below zero: the lowest any square got was {{low}}, at {{at}}, and minus one is a whole unit further down. A number times itself is a stretch applied twice, and two stretches never make a flip. The question has no answer on the line. It does have one a step off it, on the next page.", { low: (closest * closest).toFixed(2), at: closest.toFixed(2) })}
+                      ? L("{{x}} times itself is {{sq}}. So far the square closest to minus one is {{low}}, the square of {{at}}.", { x: x.toFixed(2), sq: (x * x).toFixed(2), low: (closest * closest).toFixed(2), at: closest.toFixed(2) })
+                      : L("Every number from minus three to three was tried, and no square went below zero. The smallest square was {{low}}, the square of {{at}}. Minus one lies at least one whole unit lower. The reason holds for every number: a positive number times a positive number is positive, and a negative number times a negative number is positive too. So no number on the line answers the question. An answer exists off the line, in a second direction: the page 'What 𝑖 is', in the same topic, shows it.", { low: (closest * closest).toFixed(2), at: closest.toFixed(2) })}
             </Verdict>
             <Readout
               rows={[
-                [L("The move"), move === "add" ? L("x becomes x + {{k}}", { k: k.toFixed(1) }) : move === "times" ? L("x becomes {{k}} times x", { k: k.toFixed(1) }) : L("x becomes x times x")],
-                [L("Where 1 lands"), image(1).toFixed(2)],
-                [L("Where minus 1 lands"), image(-1).toFixed(2)],
-                [L("Where 0 lands"), image(0).toFixed(2)],
-                [L("Numbers tried"), move === "square" ? L("{{n}} of {{total}}", { n: at, total: TRIES }) : "-"],
+                [L("The chosen move"), move === "add" ? L("each number x becomes x + {{k}}", { k: k.toFixed(1) }) : move === "times" ? L("each number x becomes {{k}} times x", { k: k.toFixed(1) }) : L("each number x becomes x times x")],
+                [L("Where the number 1 lands"), image(1).toFixed(2)],
+                [L("Where the number minus 1 lands"), image(-1).toFixed(2)],
+                [L("Where the number 0 lands"), image(0).toFixed(2)],
+                [L("Numbers tried so far"), move === "square" ? L("{{n}} of {{total}}", { n: at, total: TRIES }) : "-"],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              {L("Times minus one is a flip: the whole line turned round through zero. The question asks for a number that, applied twice, is a flip. Half a flip is not a stretch and not a slide, so nothing on the line can be it. It is a turn, and a turn needs room.")}
+              {L("Multiplying by minus one flips the whole line over, with zero staying in place. The question asks for a number that gives this flip when it is used twice as a multiplier. On the line, multiplying can only stretch, squeeze or flip, so no number can do half of a flip. In a flat plane the same flip can be made as a half turn around zero. Half of that, a quarter turn, points off the line. This is where the new number 𝑖 comes from.")}
             </Text>
           </div>
         }

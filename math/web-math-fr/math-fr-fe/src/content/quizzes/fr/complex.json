@@ -1,0 +1,266 @@
+{
+  "slug": "complex",
+  "title": "Test : Nombres imaginaires",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Sur la droite numérique, que fait la multiplication de chaque nombre par -1 ?",
+      "options": [
+        {
+          "text": "Elle décale chaque nombre d'un pas vers la gauche, 3 passe sur 2",
+          "correct": false,
+          "why": "Décaler, c'est ce que fait l'addition. Ajouter -1 envoie 3 sur 2 ; multiplier par -1 envoie 3 sur -3."
+        },
+        {
+          "text": "Elle retourne la droite autour de zéro, de droite à gauche",
+          "correct": true,
+          "why": "Multiplier par -1 conserve chaque distance à zéro et envoie chaque nombre du côté opposé. C'est un retournement et rien d'autre."
+        },
+        {
+          "text": "Elle réduit chaque distance à zéro à néant",
+          "correct": false,
+          "why": "C'est la multiplication par 0, qui envoie tout sur zéro. Multiplier par -1 conserve toutes les distances."
+        },
+        {
+          "text": "Elle déplace les nombres positifs et laisse les négatifs en place",
+          "correct": false,
+          "why": "La règle s'applique à tous les nombres à la fois : -2 va sur 2 comme 2 va sur -2."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Que fait à une flèche la multiplication par i ?",
+      "options": [
+        {
+          "text": "Elle tourne la flèche d'un demi-tour, qui pointe alors dans le sens opposé",
+          "correct": false,
+          "why": "Un demi-tour correspond à la multiplication par -1. Il faut pour cela deux multiplications par i, puisque i × i = -1."
+        },
+        {
+          "text": "Elle déplace la flèche d'une unité vers le haut sur le second axe",
+          "correct": false,
+          "why": "Monter d'une unité, c'est ajouter i. L'addition décale ; la multiplication tourne et étire."
+        },
+        {
+          "text": "Elle tourne la flèche d'un quart de tour et double sa longueur",
+          "correct": false,
+          "why": "La longueur de i vaut 1, donc la longueur de la flèche est multipliée par 1. Le cercle gris de la page montre que la longueur ne change jamais."
+        },
+        {
+          "text": "Elle tourne la flèche d'un quart de tour sans changer sa longueur",
+          "correct": true,
+          "why": "Le nombre i a pour longueur 1 et pointe à un quart de tour. Multiplier par lui ajoute un quart de tour autour de zéro et étire d'un facteur 1, c'est-à-dire pas du tout."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Quelle est la règle pour multiplier deux nombres complexes dessinés comme des flèches ?",
+      "options": [
+        {
+          "text": "Les longueurs se multiplient et les angles s'additionnent",
+          "correct": true,
+          "why": "C'est l'image « tourner et étirer » : la première flèche est tournée de l'angle de la seconde, puis étirée de sa longueur."
+        },
+        {
+          "text": "Les longueurs s'additionnent et les angles se multiplient",
+          "correct": false,
+          "why": "Additionner les longueurs et multiplier les angles confond les deux opérations. Un produit de longueurs 2 et 3 mesure 6, pas 5."
+        },
+        {
+          "text": "Les parties horizontales se multiplient entre elles, et les parties verticales entre elles, séparément",
+          "correct": false,
+          "why": "Travailler partie par partie, c'est le comportement de l'addition. Multiplier deux parenthèses donne quatre termes, et les termes croisés mélangent les parties."
+        },
+        {
+          "text": "La seconde flèche est posée au bout de la première",
+          "correct": false,
+          "why": "Les flèches bout à bout sont l'image de l'addition. La multiplication ne fait jamais avancer une flèche le long d'une autre."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Quel nombre vaut i × (3 + 2i) ?",
+      "options": [
+        {
+          "text": "2 + 3i",
+          "correct": false,
+          "why": "Ici 2i × i est pris pour +2. Le terme i × i vaut -1, donc cette partie vaut -2."
+        },
+        {
+          "text": "2 - 3i",
+          "correct": false,
+          "why": "Ici la flèche tourne d'un quart de tour dans l'autre sens, ce qui revient à multiplier par -i."
+        },
+        {
+          "text": "-2 + 3i",
+          "correct": true,
+          "why": "En développant, i × 3 = 3i et i × 2i = 2i² = -2, donc le résultat est -2 + 3i. C'est 3 + 2i tourné d'un quart de tour."
+        },
+        {
+          "text": "-3 - 2i",
+          "correct": false,
+          "why": "C'est un demi-tour, le résultat de deux multiplications par i. Une seule multiplication ne tourne que d'un quart."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "On additionne les flèches 3 et 4i. Quelle est la longueur de la somme 3 + 4i ?",
+      "options": [
+        {
+          "text": "5",
+          "correct": true,
+          "why": "Les parties sont 3 en horizontal et 4 en vertical, donc d'après Pythagore la longueur vaut √(3² + 4²) = √25 = 5."
+        },
+        {
+          "text": "7",
+          "correct": false,
+          "why": "Les longueurs ne s'additionnent que si les deux flèches pointent dans le même sens. Celles-ci forment un angle droit, donc la somme est plus courte que 3 + 4."
+        },
+        {
+          "text": "25",
+          "correct": false,
+          "why": "25 vaut 3² + 4². La longueur est la racine carrée de ce nombre."
+        },
+        {
+          "text": "1",
+          "correct": false,
+          "why": "4 - 3 ne serait la longueur que si les deux flèches pointaient dans des sens opposés."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Quel nombre vaut (1 + 2i)(3 + i) ?",
+      "options": [
+        {
+          "text": "5 + 7i",
+          "correct": false,
+          "why": "Ici 2i² est compté comme +2. Le signe moins dans ac - bd vient de ce que i × i vaut -1."
+        },
+        {
+          "text": "3 + 2i",
+          "correct": false,
+          "why": "Ici les parties horizontales sont multipliées entre elles, et les parties verticales entre elles. Les termes croisés, i et 6i, sont oubliés."
+        },
+        {
+          "text": "4 + 3i",
+          "correct": false,
+          "why": "C'est la somme des deux nombres. L'addition fonctionne partie par partie ; la multiplication, non."
+        },
+        {
+          "text": "1 + 7i",
+          "correct": true,
+          "why": "Les quatre termes sont 3, i, 6i et 2i². Avec i² = -1 le dernier vaut -2, donc le résultat est (3 - 2) + (1 + 6)i = 1 + 7i."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "En partant de z0 = 0 avec c = i, la règle z → z² + c donne z1 = i et z2 = -1 + i. Que vaut z3, et c = i appartient-il à l'ensemble de Mandelbrot ?",
+      "options": [
+        {
+          "text": "z3 = 2 + 3i, au-delà de la longueur 2, donc i est hors de l'ensemble",
+          "correct": false,
+          "why": "Ici i × i est pris pour +1 à chaque élévation au carré. Avec i² = -1, le chemin reste près de zéro."
+        },
+        {
+          "text": "z3 = -i ; le chemin se répète, donc i appartient à l'ensemble",
+          "correct": true,
+          "why": "(-1 + i)² = 1 - 2i + i² = -2i, et en ajoutant i on obtient -i. Le carré de -i vaut -1, en ajoutant i on retrouve -1 + i, donc le chemin répète -1 + i, -i indéfiniment et ne dépasse jamais la longueur 2."
+        },
+        {
+          "text": "z3 = -2i, exactement sur le cercle de longueur 2, donc i est sur le bord",
+          "correct": false,
+          "why": "-2i est le carré de -1 + i avant l'ajout de c. Chaque pas élève au carré puis ajoute c, ce qui donne -i."
+        },
+        {
+          "text": "z3 = i, donc le chemin revient sur c tous les deux pas",
+          "correct": false,
+          "why": "Ici les deux parties sont élevées au carré séparément : (-1)² + i² = 0. Le carré d'une somme donne aussi un terme croisé, -2i, qu'il faut garder."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "Pourquoi la page peut-elle cesser de suivre un chemin dès que sa longueur dépasse 2 ?",
+      "options": [
+        {
+          "text": "Parce que l'image ne montre que les points à moins de 2 de zéro",
+          "correct": false,
+          "why": "Le seuil n'a rien à voir avec la taille de l'image. Il vient de l'arithmétique de l'élévation au carré et vaudrait sur n'importe quel écran."
+        },
+        {
+          "text": "Parce qu'un chemin qui dépasse 2 revient toujours plus tard",
+          "correct": false,
+          "why": "C'est le contraire : aucun chemin qui dépasse 2 ne revient. C'est pourquoi un seul franchissement donne un verdict définitif."
+        },
+        {
+          "text": "Au-delà de 2, le carré ajoute plus que c ne peut retirer",
+          "correct": true,
+          "why": "Élever au carré une longueur supérieure à 2 la fait plus que doubler, et c ne peut pas la ramener, donc le chemin grandit indéfiniment. Un franchissement est définitif, et c'est ce qui rend l'image calculable."
+        },
+        {
+          "text": "Parce que l'élévation au carré divise l'angle par deux, et qu'au-delà de 2 le chemin cesse de tourner",
+          "correct": false,
+          "why": "L'élévation au carré double l'angle, et l'angle ne joue aucun rôle dans l'échappement. L'échappement est décidé par la longueur."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "La formule d'Euler donne à l'exponentielle un taux imaginaire. Pourquoi e^(iθ) fait-il le tour du cercle unité au lieu de croître ?",
+      "options": [
+        {
+          "text": "Le taux imaginaire est négatif, donc croissance et décroissance s'annulent",
+          "correct": false,
+          "why": "Le nombre i n'est pas négatif ; c'est un quart de tour. Rien ne s'annule : le mouvement est perpendiculaire à la position."
+        },
+        {
+          "text": "Le cosinus et le sinus ont pour somme 1 à tout angle, ce qui fixe la longueur",
+          "correct": false,
+          "why": "La somme cos θ + sin θ ne vaut pas toujours 1 ; pour θ = π/4 elle vaut environ 1.41. Ce qui reste égal à 1, c'est cos²θ + sin²θ, le carré de la longueur."
+        },
+        {
+          "text": "Le point est ramené sur le cercle de longueur 1 après chaque pas",
+          "correct": false,
+          "why": "Aucune correction n'est appliquée. Un mouvement toujours latéral garde de lui-même la même distance au centre."
+        },
+        {
+          "text": "Son taux de variation est sa position tournée d'un quart de tour",
+          "correct": true,
+          "why": "La dérivée de e^(iθ) est i × e^(iθ). Multiplier par i tourne la position d'un quart de tour, donc le mouvement est toujours latéral, jamais vers l'extérieur, et la longueur reste égale à 1."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Deux rotations dans l'espace autour d'axes différents aboutissent à des résultats différents selon leur ordre, mais deux multiplications dans le plan jamais. D'où vient la différence ?",
+      "options": [
+        {
+          "text": "Pour les quaternions, ij = k mais ji = -k ; dans le plan, multiplier additionne des angles",
+          "correct": true,
+          "why": "La règle de Hamilton fait changer le signe quand on échange deux unités, donc l'ordre d'un produit de quaternions compte. Le plan n'a qu'une seule unité, sans rien à échanger, et l'addition des angles ne dépend pas de l'ordre, donc la multiplication complexe est commutative."
+        },
+        {
+          "text": "Les quaternions utilisent la moitié de l'angle, et diviser par deux change l'ordre",
+          "correct": false,
+          "why": "Le demi-angle explique pourquoi un tour complet donne -1. Il n'explique pas pourquoi l'ordre compte ; c'est la différence entre ij et ji qui l'explique."
+        },
+        {
+          "text": "Les rotations dans l'espace sont plus grandes que les rotations dans le plan",
+          "correct": false,
+          "why": "Deux petites rotations autour d'axes différents ne commutent pas non plus. Ce sont les axes qui comptent, pas la taille."
+        },
+        {
+          "text": "Les rotations dans l'espace additionnent leurs angles, et additionner dans un autre ordre donne un autre total",
+          "correct": false,
+          "why": "L'addition de nombres ne dépend jamais de l'ordre. Les rotations dans l'espace ne se réduisent pas à une addition d'angles, et c'est pour cela que l'ordre y compte."
+        }
+      ]
+    }
+  ]
+}

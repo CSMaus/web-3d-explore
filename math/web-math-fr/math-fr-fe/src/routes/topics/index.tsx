@@ -40,7 +40,7 @@ function TopicsPage() {
 
       {!topics ? (
         <div className="pb-24">
-          <Offline what={L("The list of topics is served by the backend. The first topic is at /topics/fractals either way.")} />
+          <Offline what={L("The list of topics comes from the site's server. Topic 1, on fractals, still opens at /topics/fractals.")} />
         </div>
       ) : (
         <>
@@ -72,10 +72,10 @@ function Scene({ topic, flip }: { topic: Card; flip: boolean }) {
   const shape = SHAPES[topic.slug];
 
   const what = ready
-    ? L("{{parts}} parts, {{beats}} beats, about {{minutes}} minutes, {{systems}} things to move", { parts: topic.parts, beats: topic.beats, minutes, systems: topic.systems })
+    ? L("Video series: {{parts}} parts, {{beats}} scenes, about {{minutes}} minutes. Interactive pages: {{systems}}.", { parts: topic.parts, beats: topic.beats, minutes, systems: topic.systems })
     : built
-      ? L("{{systems}} things to move, and every equation. No clip filmed yet", { systems: topic.systems })
-      : L("The plan is written; nothing is built yet");
+      ? L("Interactive pages: {{systems}}, with every formula behind them. No video filmed yet.", { systems: topic.systems })
+      : L("Only the plan is written. No pages are made yet.");
 
   return (
     <li data-topic={topic.number}>

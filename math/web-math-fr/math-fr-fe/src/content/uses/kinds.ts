@@ -15,7 +15,7 @@ export type Section = {
 
 export type Piece = {
   id: string;
-  topic: "fractals" | "chaos" | "complex" | "networks" | "tokens";
+  topic: "fractals" | "chaos" | "complex" | "networks" | "tokens" | "series" | "probability";
   question: string;
   /** one line under the question */
   lede: string;

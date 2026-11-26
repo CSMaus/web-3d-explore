@@ -14,26 +14,27 @@ import { TOPIC } from "@/lib/systems";
 import { useGrower } from "@/lib/grower";
 import { useLook } from "@/lib/store";
 import { boxDim } from "@/systems/ifs";
+import { PlayColumns } from "@/components/TaskPage";
 
 export const Route = createFileRoute("/topics/fractals/play/lichtenberg")({
   loader: () => api.system(TOPIC, "lichtenberg"),
   component: LichtenbergPage,
 });
 
-const WHERE = ["Point source", "Plate gap"] as const;
+const WHERE = ["From one point", "Between two plates"] as const;
 
 function LichtenbergPage() {
   const system = Route.useLoaderData();
   const palette = useLook((s) => s.palette);
   const stage = useRef<HTMLElement | null>(null);
-  const [where, setWhere] = useState<string>(WHERE[0]);
+  const [where, setWhere] = useState<string>(WHERE[1]);
   const [cols, setCols] = useState(121);
   const [eta, setEta] = useState(1);
   const [sites, setSites] = useState(400);
   const [seed, setSeed] = useState(9);
   const [warm, setWarm] = useState(12);
 
-  const mode = where === "point source" ? "point" : "gap";
+  const mode = where === WHERE[0] ? "point" : "gap";
   const rows = mode === "point" ? Math.round(cols * 1.04) : Math.max(40, Math.round(cols * 0.58));
 
   const job = useMemo(
@@ -112,60 +113,69 @@ function LichtenbergPage() {
   return (
     <div>
       <Heading level={1} className="mt-4">{system?.name ?? L("Dielectric breakdown")}</Heading>
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
-        <div data-slot="task-in" className="min-w-0 space-y-4">
+      <PlayColumns
+        input={<>
           <section data-slot="panel">
-            <Label>{L("SOURCE")}</Label>
+            <Label>{L("WHERE THE SPARK STARTS")}</Label>
             <div className="mt-3">
               <Chips items={WHERE.map((w) => L(w))} active={L(where)} onPick={(item) => setWhere(WHERE.find((w) => L(w) === item) ?? item)} />
             </div>
             <Text kind="note" as="p" className="mt-3">
-              {L("From a point is the Lichtenberg figure: charge injected at one spot in an insulator, branching out in every direction, the burn left in glass or wood. Across a gap is the same model with two plates, which is a bolt crossing the gap.")}
+              {L("How does an electric spark choose its path through glass or wood? The picture is a block of such a material, which does not conduct electricity, cut into small square cells. The spark burns one cell at a time and leaves a branching mark. From one point: the spark starts at the centre of the block and spreads in every direction. A burn mark of this kind is called a Lichtenberg figure. Between two plates: the spark starts at the upper plate and grows down towards the lower plate, like a lightning bolt crossing a gap. The two plates are the thick bars along the top and bottom of the picture.")}
             </Text>
           </section>
 
           <section data-slot="panel">
-            <Label>{L("MODEL")}</Label>
+            <Label>{L("GROWTH RULE")}</Label>
             <div className="mt-3 space-y-2">
-              <Slider label={L("Roughness")} min={0} max={3} step={0.05} value={eta} format={(v) => v.toFixed(2)} onChange={setEta} />
-              <Slider label={L("Grid width")} min={61} max={161} step={10} value={cols} format={(v) => String(Math.round(v))} onChange={(v) => setCols(Math.round(v))} />
-              <Slider label={L("Sites")} min={40} max={900} step={20} value={sites} format={(v) => String(Math.round(v))} onChange={(v) => setSites(Math.round(v))} />
-              <Slider label={L("Sweeps per site")} min={4} max={40} step={1} value={warm} format={(v) => String(Math.round(v))} onChange={(v) => setWarm(Math.round(v))} />
-              <Slider label={L("Seed")} min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
+              <Slider label={L("Field power η")} min={0} max={3} step={0.05} value={eta} format={(v) => v.toFixed(2)} onChange={setEta} />
+              <Slider label={L("Block width in cells")} min={61} max={161} step={10} value={cols} format={(v) => String(Math.round(v))} onChange={(v) => setCols(Math.round(v))} />
+              <Slider label={L("Cells to burn")} min={40} max={900} step={20} value={sites} format={(v) => String(Math.round(v))} onChange={(v) => setSites(Math.round(v))} />
+              <Slider label={L("Averaging rounds per new cell")} min={4} max={40} step={1} value={warm} format={(v) => String(Math.round(v))} onChange={(v) => setWarm(Math.round(v))} />
+              <Slider label={L("Random seed")} min={1} max={200} step={1} value={seed} format={(v) => String(Math.round(v))} onChange={(v) => setSeed(Math.round(v))} />
               <PaletteBar />
             </div>
             <Text kind="note" as="p" className="mt-3">
-              {L("At roughness 0 every edge site is equally likely; raise it and the tips take over.")}
+              {L("The burn has voltage 0. The outer edge of the block, or the lower plate, has voltage 1. The electric field at a cell is how sharply the voltage changes there. It is strongest at the tips of the burn, because they come closest to voltage 1. The faint shading in the picture shows the field: the more solid the shading, the stronger the field.")}
+            </Text>
+            <Text kind="note" as="p" className="mt-3">
+              {L("Field power η (the Greek letter eta): each cell touching the burn gets a weight, equal to the field at that cell raised to this power. A cell with twice the weight is twice as likely to burn next. At 0 every weight is 1, so the field does not matter. Every cell touching the burn is equally likely, and the burn grows into a dense bush. The higher the power, the more often the cells with the strongest field win. These cells sit at the tips, so the burn turns into a few thin bolts.")}
+            </Text>
+            <Text kind="note" as="p" className="mt-3">
+              {L("Block width: how many cells across the block is. Between two plates, a wider block also has a wider gap: 61 cells across gives 40 rows from top to bottom. Cells to burn: the growth stops after this many cells. Averaging rounds: after each new cell, the program works out the voltage again. In one round every cell takes the average of its four neighbours. More rounds give a more exact field and a slower run. Random seed: a number that fixes the chain of random choices, so the same seed always gives the same burn.")}
             </Text>
           </section>
 
           <Equations system={system} />
-        </div>
+        </>}
 
-        <div data-slot="task-out" className="min-w-0 space-y-3 lg:sticky lg:top-24 lg:self-start">
+        output={<>
           <section ref={stage} data-slot="plot" className="h-[min(620px,calc(100vh-12rem))] overflow-hidden" style={{ background: palette.back }}>
             <Frame draw={draw} className="block h-full w-full" />
           </section>
           <SaveImage stage={stage} name="lichtenberg" />
           <Readout
             rows={[
-              [L("Sites lit"), tick ? L("{{lit}} of {{sites}}", { lit: tick.order.length.toLocaleString(), sites }) : L("starting")],
-              [L("grid"), L("{{cols}} by {{rows}}", { cols, rows })],
-              [L("Measured box dimension"), dimension ? dimension.toFixed(3) : "-"],
+              [L("Cells burned"), tick ? L("{{lit}} of {{sites}}", { lit: tick.order.length.toLocaleString(), sites }) : L("Starting")],
+              [L("Block size in cells"), L("{{cols}} wide, {{rows}} high", { cols, rows })],
+              [L("Dimension, measured by counting boxes"), dimension ? dimension.toFixed(3) : "-"],
               [
-                L("state"),
+                L("Status"),
                 tick?.done
                   ? mode === "point"
-                    ? L("A branch reached the edge of the block")
-                    : L("The tree reached the far plate")
+                    ? L("Stopped: a branch reached the edge of the block")
+                    : L("Stopped: the burn reached the lower plate")
                   : tick?.finished
-                    ? L("finished")
-                    : L("growing"),
+                    ? L("Stopped: all the cells set on the slider have burned")
+                    : L("Growing"),
               ],
             ]}
           />
-        </div>
-      </div>
+          <Text kind="note" as="p" className="mt-3">
+            {L("Dimension: a number that says how fully a shape fills a flat picture. A line has dimension 1, a filled square has dimension 2, and a branching burn lies between. It is measured by covering the picture with square boxes, counting the boxes the burn touches, and repeating with smaller boxes. How fast the count grows as the boxes shrink gives the dimension. A dash means fewer than 120 cells have burned, too few to measure.")}
+          </Text>
+        </>}
+      />
     </div>
   );
 }

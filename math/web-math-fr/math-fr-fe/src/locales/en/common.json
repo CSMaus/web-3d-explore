@@ -27,8 +27,8 @@
     "eyebrow": "A closer look at math",
     "title1": "See the idea,",
     "title2": "understand why",
-    "lede": "Explore beautiful concepts through interactive experiments, visual stories, and notes that keep only what matters.",
-    "start": "Start with fractals",
+    "lede": "Interactive explanations of the mathematics behind imaginary numbers, fractals, chaos, series, neural networks and language models: move the idea by hand, read the equations, and watch a short clip where one is made.",
+    "start": "Start here",
     "browse": "Browse all topics",
     "tag1": "No prerequisites",
     "tag2": "At any pace",
@@ -51,7 +51,18 @@
       "fractals": "Shapes whose dimension falls between the whole numbers, and how to measure it.",
       "chaos": "Exact rules whose future still cannot be predicted.",
       "networks": "From the slope of a curve to a network that learns.",
-      "tokens": "How text becomes numbers, and numbers become the next word."
+      "tokens": "How text becomes numbers, and numbers become the next word.",
+      "series": "Functions built from simple pieces: a calculator's sine, a wave drawn by circles, a photograph kept as a few waves.",
+      "probability": "How often things happen by chance, counted exactly: two dice, a medical test, a wait for a taxi and a gambler's bets."
+    },
+    "steps": {
+      "heading": "How each topic works",
+      "watch": "Watch",
+      "watchText": "Where a clip is made, it shows the idea in motion; the parts page gives the order either way.",
+      "try": "Try",
+      "tryText": "Every system has a page to move by hand, and the picture changes with every value.",
+      "read": "Read",
+      "readText": "The equations behind it, step by step, with the numbers the page has just shown."
     }
   },
   "learn": {

@@ -26,24 +26,40 @@ import { Route as TopicsComplexRouteRouteImport } from './routes/topics/complex/
 import { Route as TopicsFractalsRouteRouteImport } from './routes/topics/fractals/route'
 import { Route as TopicsNetworksRouteRouteImport } from './routes/topics/networks/route'
 import { Route as TopicsPrimesRouteRouteImport } from './routes/topics/primes/route'
+import { Route as TopicsProbabilityRouteRouteImport } from './routes/topics/probability/route'
+import { Route as TopicsSeriesRouteRouteImport } from './routes/topics/series/route'
 import { Route as TopicsTokensRouteRouteImport } from './routes/topics/tokens/route'
 import { Route as TopicsChaosIndexRouteImport } from './routes/topics/chaos/index'
 import { Route as TopicsChaosPartsRouteImport } from './routes/topics/chaos/parts'
+import { Route as TopicsChaosTestRouteImport } from './routes/topics/chaos/test'
 import { Route as TopicsChaosTheoryRouteImport } from './routes/topics/chaos/theory'
 import { Route as TopicsComplexIndexRouteImport } from './routes/topics/complex/index'
 import { Route as TopicsComplexPartsRouteImport } from './routes/topics/complex/parts'
+import { Route as TopicsComplexTestRouteImport } from './routes/topics/complex/test'
 import { Route as TopicsComplexTheoryRouteImport } from './routes/topics/complex/theory'
 import { Route as TopicsFractalsIndexRouteImport } from './routes/topics/fractals/index'
 import { Route as TopicsFractalsPartsRouteImport } from './routes/topics/fractals/parts'
+import { Route as TopicsFractalsTestRouteImport } from './routes/topics/fractals/test'
 import { Route as TopicsFractalsTheoryRouteImport } from './routes/topics/fractals/theory'
 import { Route as TopicsNetworksIndexRouteImport } from './routes/topics/networks/index'
 import { Route as TopicsNetworksPartsRouteImport } from './routes/topics/networks/parts'
+import { Route as TopicsNetworksTestRouteImport } from './routes/topics/networks/test'
 import { Route as TopicsNetworksTheoryRouteImport } from './routes/topics/networks/theory'
 import { Route as TopicsPrimesIndexRouteImport } from './routes/topics/primes/index'
 import { Route as TopicsPrimesPartsRouteImport } from './routes/topics/primes/parts'
+import { Route as TopicsPrimesTestRouteImport } from './routes/topics/primes/test'
 import { Route as TopicsPrimesTheoryRouteImport } from './routes/topics/primes/theory'
+import { Route as TopicsProbabilityIndexRouteImport } from './routes/topics/probability/index'
+import { Route as TopicsProbabilityPartsRouteImport } from './routes/topics/probability/parts'
+import { Route as TopicsProbabilityTestRouteImport } from './routes/topics/probability/test'
+import { Route as TopicsProbabilityTheoryRouteImport } from './routes/topics/probability/theory'
+import { Route as TopicsSeriesIndexRouteImport } from './routes/topics/series/index'
+import { Route as TopicsSeriesPartsRouteImport } from './routes/topics/series/parts'
+import { Route as TopicsSeriesTestRouteImport } from './routes/topics/series/test'
+import { Route as TopicsSeriesTheoryRouteImport } from './routes/topics/series/theory'
 import { Route as TopicsTokensIndexRouteImport } from './routes/topics/tokens/index'
 import { Route as TopicsTokensPartsRouteImport } from './routes/topics/tokens/parts'
+import { Route as TopicsTokensTestRouteImport } from './routes/topics/tokens/test'
 import { Route as TopicsTokensTheoryRouteImport } from './routes/topics/tokens/theory'
 import { Route as TopicsChaosPlayIndexRouteImport } from './routes/topics/chaos/play/index'
 import { Route as TopicsChaosPlayBifurcationRouteImport } from './routes/topics/chaos/play/bifurcation'
@@ -118,6 +134,29 @@ import { Route as TopicsNetworksUsesIndexRouteImport } from './routes/topics/net
 import { Route as TopicsNetworksUsesPieceRouteImport } from './routes/topics/networks/uses/$piece'
 import { Route as TopicsPrimesPlayIndexRouteImport } from './routes/topics/primes/play/index'
 import { Route as TopicsPrimesPlayGapsRouteImport } from './routes/topics/primes/play/gaps'
+import { Route as TopicsProbabilityPlayIndexRouteImport } from './routes/topics/probability/play/index'
+import { Route as TopicsProbabilityPlayBinsRouteImport } from './routes/topics/probability/play/bins'
+import { Route as TopicsProbabilityPlayBirthdaysRouteImport } from './routes/topics/probability/play/birthdays'
+import { Route as TopicsProbabilityPlayDiceRouteImport } from './routes/topics/probability/play/dice'
+import { Route as TopicsProbabilityPlayDoorsRouteImport } from './routes/topics/probability/play/doors'
+import { Route as TopicsProbabilityPlayGaltonRouteImport } from './routes/topics/probability/play/galton'
+import { Route as TopicsProbabilityPlayGameRouteImport } from './routes/topics/probability/play/game'
+import { Route as TopicsProbabilityPlayHatsRouteImport } from './routes/topics/probability/play/hats'
+import { Route as TopicsProbabilityPlayMemoryRouteImport } from './routes/topics/probability/play/memory'
+import { Route as TopicsProbabilityPlayPoissonRouteImport } from './routes/topics/probability/play/poisson'
+import { Route as TopicsProbabilityPlayRuinRouteImport } from './routes/topics/probability/play/ruin'
+import { Route as TopicsProbabilityPlayTestRouteImport } from './routes/topics/probability/play/test'
+import { Route as TopicsProbabilityPlayWalksRouteImport } from './routes/topics/probability/play/walks'
+import { Route as TopicsProbabilityUsesIndexRouteImport } from './routes/topics/probability/uses/index'
+import { Route as TopicsProbabilityUsesPieceRouteImport } from './routes/topics/probability/uses/$piece'
+import { Route as TopicsSeriesPlayIndexRouteImport } from './routes/topics/series/play/index'
+import { Route as TopicsSeriesPlayDrawRouteImport } from './routes/topics/series/play/draw'
+import { Route as TopicsSeriesPlayFourierRouteImport } from './routes/topics/series/play/fourier'
+import { Route as TopicsSeriesPlayFrequenciesRouteImport } from './routes/topics/series/play/frequencies'
+import { Route as TopicsSeriesPlayRadiusRouteImport } from './routes/topics/series/play/radius'
+import { Route as TopicsSeriesPlayTaylorRouteImport } from './routes/topics/series/play/taylor'
+import { Route as TopicsSeriesUsesIndexRouteImport } from './routes/topics/series/uses/index'
+import { Route as TopicsSeriesUsesPieceRouteImport } from './routes/topics/series/uses/$piece'
 import { Route as TopicsTokensPlayIndexRouteImport } from './routes/topics/tokens/play/index'
 import { Route as TopicsTokensPlayArtefactsRouteImport } from './routes/topics/tokens/play/artefacts'
 import { Route as TopicsTokensPlayAttendRouteImport } from './routes/topics/tokens/play/attend'
@@ -221,6 +260,16 @@ const TopicsPrimesRouteRoute = TopicsPrimesRouteRouteImport.update({
   path: '/topics/primes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TopicsProbabilityRouteRoute = TopicsProbabilityRouteRouteImport.update({
+  id: '/topics/probability',
+  path: '/topics/probability',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopicsSeriesRouteRoute = TopicsSeriesRouteRouteImport.update({
+  id: '/topics/series',
+  path: '/topics/series',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TopicsTokensRouteRoute = TopicsTokensRouteRouteImport.update({
   id: '/topics/tokens',
   path: '/topics/tokens',
@@ -234,6 +283,11 @@ const TopicsChaosIndexRoute = TopicsChaosIndexRouteImport.update({
 const TopicsChaosPartsRoute = TopicsChaosPartsRouteImport.update({
   id: '/parts',
   path: '/parts',
+  getParentRoute: () => TopicsChaosRouteRoute,
+} as any)
+const TopicsChaosTestRoute = TopicsChaosTestRouteImport.update({
+  id: '/test',
+  path: '/test',
   getParentRoute: () => TopicsChaosRouteRoute,
 } as any)
 const TopicsChaosTheoryRoute = TopicsChaosTheoryRouteImport.update({
@@ -251,6 +305,11 @@ const TopicsComplexPartsRoute = TopicsComplexPartsRouteImport.update({
   path: '/parts',
   getParentRoute: () => TopicsComplexRouteRoute,
 } as any)
+const TopicsComplexTestRoute = TopicsComplexTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => TopicsComplexRouteRoute,
+} as any)
 const TopicsComplexTheoryRoute = TopicsComplexTheoryRouteImport.update({
   id: '/theory',
   path: '/theory',
@@ -264,6 +323,11 @@ const TopicsFractalsIndexRoute = TopicsFractalsIndexRouteImport.update({
 const TopicsFractalsPartsRoute = TopicsFractalsPartsRouteImport.update({
   id: '/parts',
   path: '/parts',
+  getParentRoute: () => TopicsFractalsRouteRoute,
+} as any)
+const TopicsFractalsTestRoute = TopicsFractalsTestRouteImport.update({
+  id: '/test',
+  path: '/test',
   getParentRoute: () => TopicsFractalsRouteRoute,
 } as any)
 const TopicsFractalsTheoryRoute = TopicsFractalsTheoryRouteImport.update({
@@ -281,6 +345,11 @@ const TopicsNetworksPartsRoute = TopicsNetworksPartsRouteImport.update({
   path: '/parts',
   getParentRoute: () => TopicsNetworksRouteRoute,
 } as any)
+const TopicsNetworksTestRoute = TopicsNetworksTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => TopicsNetworksRouteRoute,
+} as any)
 const TopicsNetworksTheoryRoute = TopicsNetworksTheoryRouteImport.update({
   id: '/theory',
   path: '/theory',
@@ -296,10 +365,55 @@ const TopicsPrimesPartsRoute = TopicsPrimesPartsRouteImport.update({
   path: '/parts',
   getParentRoute: () => TopicsPrimesRouteRoute,
 } as any)
+const TopicsPrimesTestRoute = TopicsPrimesTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => TopicsPrimesRouteRoute,
+} as any)
 const TopicsPrimesTheoryRoute = TopicsPrimesTheoryRouteImport.update({
   id: '/theory',
   path: '/theory',
   getParentRoute: () => TopicsPrimesRouteRoute,
+} as any)
+const TopicsProbabilityIndexRoute = TopicsProbabilityIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TopicsProbabilityRouteRoute,
+} as any)
+const TopicsProbabilityPartsRoute = TopicsProbabilityPartsRouteImport.update({
+  id: '/parts',
+  path: '/parts',
+  getParentRoute: () => TopicsProbabilityRouteRoute,
+} as any)
+const TopicsProbabilityTestRoute = TopicsProbabilityTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => TopicsProbabilityRouteRoute,
+} as any)
+const TopicsProbabilityTheoryRoute = TopicsProbabilityTheoryRouteImport.update({
+  id: '/theory',
+  path: '/theory',
+  getParentRoute: () => TopicsProbabilityRouteRoute,
+} as any)
+const TopicsSeriesIndexRoute = TopicsSeriesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TopicsSeriesRouteRoute,
+} as any)
+const TopicsSeriesPartsRoute = TopicsSeriesPartsRouteImport.update({
+  id: '/parts',
+  path: '/parts',
+  getParentRoute: () => TopicsSeriesRouteRoute,
+} as any)
+const TopicsSeriesTestRoute = TopicsSeriesTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => TopicsSeriesRouteRoute,
+} as any)
+const TopicsSeriesTheoryRoute = TopicsSeriesTheoryRouteImport.update({
+  id: '/theory',
+  path: '/theory',
+  getParentRoute: () => TopicsSeriesRouteRoute,
 } as any)
 const TopicsTokensIndexRoute = TopicsTokensIndexRouteImport.update({
   id: '/',
@@ -309,6 +423,11 @@ const TopicsTokensIndexRoute = TopicsTokensIndexRouteImport.update({
 const TopicsTokensPartsRoute = TopicsTokensPartsRouteImport.update({
   id: '/parts',
   path: '/parts',
+  getParentRoute: () => TopicsTokensRouteRoute,
+} as any)
+const TopicsTokensTestRoute = TopicsTokensTestRouteImport.update({
+  id: '/test',
+  path: '/test',
   getParentRoute: () => TopicsTokensRouteRoute,
 } as any)
 const TopicsTokensTheoryRoute = TopicsTokensTheoryRouteImport.update({
@@ -705,6 +824,137 @@ const TopicsPrimesPlayGapsRoute = TopicsPrimesPlayGapsRouteImport.update({
   path: '/play/gaps',
   getParentRoute: () => TopicsPrimesRouteRoute,
 } as any)
+const TopicsProbabilityPlayIndexRoute =
+  TopicsProbabilityPlayIndexRouteImport.update({
+    id: '/play/',
+    path: '/play/',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayBinsRoute =
+  TopicsProbabilityPlayBinsRouteImport.update({
+    id: '/play/bins',
+    path: '/play/bins',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayBirthdaysRoute =
+  TopicsProbabilityPlayBirthdaysRouteImport.update({
+    id: '/play/birthdays',
+    path: '/play/birthdays',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayDiceRoute =
+  TopicsProbabilityPlayDiceRouteImport.update({
+    id: '/play/dice',
+    path: '/play/dice',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayDoorsRoute =
+  TopicsProbabilityPlayDoorsRouteImport.update({
+    id: '/play/doors',
+    path: '/play/doors',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayGaltonRoute =
+  TopicsProbabilityPlayGaltonRouteImport.update({
+    id: '/play/galton',
+    path: '/play/galton',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayGameRoute =
+  TopicsProbabilityPlayGameRouteImport.update({
+    id: '/play/game',
+    path: '/play/game',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayHatsRoute =
+  TopicsProbabilityPlayHatsRouteImport.update({
+    id: '/play/hats',
+    path: '/play/hats',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayMemoryRoute =
+  TopicsProbabilityPlayMemoryRouteImport.update({
+    id: '/play/memory',
+    path: '/play/memory',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayPoissonRoute =
+  TopicsProbabilityPlayPoissonRouteImport.update({
+    id: '/play/poisson',
+    path: '/play/poisson',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayRuinRoute =
+  TopicsProbabilityPlayRuinRouteImport.update({
+    id: '/play/ruin',
+    path: '/play/ruin',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayTestRoute =
+  TopicsProbabilityPlayTestRouteImport.update({
+    id: '/play/test',
+    path: '/play/test',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityPlayWalksRoute =
+  TopicsProbabilityPlayWalksRouteImport.update({
+    id: '/play/walks',
+    path: '/play/walks',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityUsesIndexRoute =
+  TopicsProbabilityUsesIndexRouteImport.update({
+    id: '/uses/',
+    path: '/uses/',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsProbabilityUsesPieceRoute =
+  TopicsProbabilityUsesPieceRouteImport.update({
+    id: '/uses/$piece',
+    path: '/uses/$piece',
+    getParentRoute: () => TopicsProbabilityRouteRoute,
+  } as any)
+const TopicsSeriesPlayIndexRoute = TopicsSeriesPlayIndexRouteImport.update({
+  id: '/play/',
+  path: '/play/',
+  getParentRoute: () => TopicsSeriesRouteRoute,
+} as any)
+const TopicsSeriesPlayDrawRoute = TopicsSeriesPlayDrawRouteImport.update({
+  id: '/play/draw',
+  path: '/play/draw',
+  getParentRoute: () => TopicsSeriesRouteRoute,
+} as any)
+const TopicsSeriesPlayFourierRoute = TopicsSeriesPlayFourierRouteImport.update({
+  id: '/play/fourier',
+  path: '/play/fourier',
+  getParentRoute: () => TopicsSeriesRouteRoute,
+} as any)
+const TopicsSeriesPlayFrequenciesRoute =
+  TopicsSeriesPlayFrequenciesRouteImport.update({
+    id: '/play/frequencies',
+    path: '/play/frequencies',
+    getParentRoute: () => TopicsSeriesRouteRoute,
+  } as any)
+const TopicsSeriesPlayRadiusRoute = TopicsSeriesPlayRadiusRouteImport.update({
+  id: '/play/radius',
+  path: '/play/radius',
+  getParentRoute: () => TopicsSeriesRouteRoute,
+} as any)
+const TopicsSeriesPlayTaylorRoute = TopicsSeriesPlayTaylorRouteImport.update({
+  id: '/play/taylor',
+  path: '/play/taylor',
+  getParentRoute: () => TopicsSeriesRouteRoute,
+} as any)
+const TopicsSeriesUsesIndexRoute = TopicsSeriesUsesIndexRouteImport.update({
+  id: '/uses/',
+  path: '/uses/',
+  getParentRoute: () => TopicsSeriesRouteRoute,
+} as any)
+const TopicsSeriesUsesPieceRoute = TopicsSeriesUsesPieceRouteImport.update({
+  id: '/uses/$piece',
+  path: '/uses/$piece',
+  getParentRoute: () => TopicsSeriesRouteRoute,
+} as any)
 const TopicsTokensPlayIndexRoute = TopicsTokensPlayIndexRouteImport.update({
   id: '/play/',
   path: '/play/',
@@ -808,27 +1058,43 @@ export interface FileRoutesByFullPath {
   '/topics/fractals': typeof TopicsFractalsRouteRouteWithChildren
   '/topics/networks': typeof TopicsNetworksRouteRouteWithChildren
   '/topics/primes': typeof TopicsPrimesRouteRouteWithChildren
+  '/topics/probability': typeof TopicsProbabilityRouteRouteWithChildren
+  '/topics/series': typeof TopicsSeriesRouteRouteWithChildren
   '/topics/tokens': typeof TopicsTokensRouteRouteWithChildren
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects/': typeof ProjectsIndexRoute
   '/topics/': typeof TopicsIndexRoute
   '/topics/chaos/parts': typeof TopicsChaosPartsRoute
+  '/topics/chaos/test': typeof TopicsChaosTestRoute
   '/topics/chaos/theory': typeof TopicsChaosTheoryRoute
   '/topics/complex/parts': typeof TopicsComplexPartsRoute
+  '/topics/complex/test': typeof TopicsComplexTestRoute
   '/topics/complex/theory': typeof TopicsComplexTheoryRoute
   '/topics/fractals/parts': typeof TopicsFractalsPartsRoute
+  '/topics/fractals/test': typeof TopicsFractalsTestRoute
   '/topics/fractals/theory': typeof TopicsFractalsTheoryRoute
   '/topics/networks/parts': typeof TopicsNetworksPartsRoute
+  '/topics/networks/test': typeof TopicsNetworksTestRoute
   '/topics/networks/theory': typeof TopicsNetworksTheoryRoute
   '/topics/primes/parts': typeof TopicsPrimesPartsRoute
+  '/topics/primes/test': typeof TopicsPrimesTestRoute
   '/topics/primes/theory': typeof TopicsPrimesTheoryRoute
+  '/topics/probability/parts': typeof TopicsProbabilityPartsRoute
+  '/topics/probability/test': typeof TopicsProbabilityTestRoute
+  '/topics/probability/theory': typeof TopicsProbabilityTheoryRoute
+  '/topics/series/parts': typeof TopicsSeriesPartsRoute
+  '/topics/series/test': typeof TopicsSeriesTestRoute
+  '/topics/series/theory': typeof TopicsSeriesTheoryRoute
   '/topics/tokens/parts': typeof TopicsTokensPartsRoute
+  '/topics/tokens/test': typeof TopicsTokensTestRoute
   '/topics/tokens/theory': typeof TopicsTokensTheoryRoute
   '/topics/chaos/': typeof TopicsChaosIndexRoute
   '/topics/complex/': typeof TopicsComplexIndexRoute
   '/topics/fractals/': typeof TopicsFractalsIndexRoute
   '/topics/networks/': typeof TopicsNetworksIndexRoute
   '/topics/primes/': typeof TopicsPrimesIndexRoute
+  '/topics/probability/': typeof TopicsProbabilityIndexRoute
+  '/topics/series/': typeof TopicsSeriesIndexRoute
   '/topics/tokens/': typeof TopicsTokensIndexRoute
   '/topics/chaos/play/bifurcation': typeof TopicsChaosPlayBifurcationRoute
   '/topics/chaos/play/control': typeof TopicsChaosPlayControlRoute
@@ -894,6 +1160,25 @@ export interface FileRoutesByFullPath {
   '/topics/networks/play/words': typeof TopicsNetworksPlayWordsRoute
   '/topics/networks/uses/$piece': typeof TopicsNetworksUsesPieceRoute
   '/topics/primes/play/gaps': typeof TopicsPrimesPlayGapsRoute
+  '/topics/probability/play/bins': typeof TopicsProbabilityPlayBinsRoute
+  '/topics/probability/play/birthdays': typeof TopicsProbabilityPlayBirthdaysRoute
+  '/topics/probability/play/dice': typeof TopicsProbabilityPlayDiceRoute
+  '/topics/probability/play/doors': typeof TopicsProbabilityPlayDoorsRoute
+  '/topics/probability/play/galton': typeof TopicsProbabilityPlayGaltonRoute
+  '/topics/probability/play/game': typeof TopicsProbabilityPlayGameRoute
+  '/topics/probability/play/hats': typeof TopicsProbabilityPlayHatsRoute
+  '/topics/probability/play/memory': typeof TopicsProbabilityPlayMemoryRoute
+  '/topics/probability/play/poisson': typeof TopicsProbabilityPlayPoissonRoute
+  '/topics/probability/play/ruin': typeof TopicsProbabilityPlayRuinRoute
+  '/topics/probability/play/test': typeof TopicsProbabilityPlayTestRoute
+  '/topics/probability/play/walks': typeof TopicsProbabilityPlayWalksRoute
+  '/topics/probability/uses/$piece': typeof TopicsProbabilityUsesPieceRoute
+  '/topics/series/play/draw': typeof TopicsSeriesPlayDrawRoute
+  '/topics/series/play/fourier': typeof TopicsSeriesPlayFourierRoute
+  '/topics/series/play/frequencies': typeof TopicsSeriesPlayFrequenciesRoute
+  '/topics/series/play/radius': typeof TopicsSeriesPlayRadiusRoute
+  '/topics/series/play/taylor': typeof TopicsSeriesPlayTaylorRoute
+  '/topics/series/uses/$piece': typeof TopicsSeriesUsesPieceRoute
   '/topics/tokens/play/artefacts': typeof TopicsTokensPlayArtefactsRoute
   '/topics/tokens/play/attend': typeof TopicsTokensPlayAttendRoute
   '/topics/tokens/play/bytes': typeof TopicsTokensPlayBytesRoute
@@ -918,6 +1203,10 @@ export interface FileRoutesByFullPath {
   '/topics/networks/play/': typeof TopicsNetworksPlayIndexRoute
   '/topics/networks/uses/': typeof TopicsNetworksUsesIndexRoute
   '/topics/primes/play/': typeof TopicsPrimesPlayIndexRoute
+  '/topics/probability/play/': typeof TopicsProbabilityPlayIndexRoute
+  '/topics/probability/uses/': typeof TopicsProbabilityUsesIndexRoute
+  '/topics/series/play/': typeof TopicsSeriesPlayIndexRoute
+  '/topics/series/uses/': typeof TopicsSeriesUsesIndexRoute
   '/topics/tokens/play/': typeof TopicsTokensPlayIndexRoute
   '/topics/tokens/uses/': typeof TopicsTokensUsesIndexRoute
 }
@@ -935,22 +1224,36 @@ export interface FileRoutesByTo {
   '/projects': typeof ProjectsIndexRoute
   '/topics': typeof TopicsIndexRoute
   '/topics/chaos/parts': typeof TopicsChaosPartsRoute
+  '/topics/chaos/test': typeof TopicsChaosTestRoute
   '/topics/chaos/theory': typeof TopicsChaosTheoryRoute
   '/topics/complex/parts': typeof TopicsComplexPartsRoute
+  '/topics/complex/test': typeof TopicsComplexTestRoute
   '/topics/complex/theory': typeof TopicsComplexTheoryRoute
   '/topics/fractals/parts': typeof TopicsFractalsPartsRoute
+  '/topics/fractals/test': typeof TopicsFractalsTestRoute
   '/topics/fractals/theory': typeof TopicsFractalsTheoryRoute
   '/topics/networks/parts': typeof TopicsNetworksPartsRoute
+  '/topics/networks/test': typeof TopicsNetworksTestRoute
   '/topics/networks/theory': typeof TopicsNetworksTheoryRoute
   '/topics/primes/parts': typeof TopicsPrimesPartsRoute
+  '/topics/primes/test': typeof TopicsPrimesTestRoute
   '/topics/primes/theory': typeof TopicsPrimesTheoryRoute
+  '/topics/probability/parts': typeof TopicsProbabilityPartsRoute
+  '/topics/probability/test': typeof TopicsProbabilityTestRoute
+  '/topics/probability/theory': typeof TopicsProbabilityTheoryRoute
+  '/topics/series/parts': typeof TopicsSeriesPartsRoute
+  '/topics/series/test': typeof TopicsSeriesTestRoute
+  '/topics/series/theory': typeof TopicsSeriesTheoryRoute
   '/topics/tokens/parts': typeof TopicsTokensPartsRoute
+  '/topics/tokens/test': typeof TopicsTokensTestRoute
   '/topics/tokens/theory': typeof TopicsTokensTheoryRoute
   '/topics/chaos': typeof TopicsChaosIndexRoute
   '/topics/complex': typeof TopicsComplexIndexRoute
   '/topics/fractals': typeof TopicsFractalsIndexRoute
   '/topics/networks': typeof TopicsNetworksIndexRoute
   '/topics/primes': typeof TopicsPrimesIndexRoute
+  '/topics/probability': typeof TopicsProbabilityIndexRoute
+  '/topics/series': typeof TopicsSeriesIndexRoute
   '/topics/tokens': typeof TopicsTokensIndexRoute
   '/topics/chaos/play/bifurcation': typeof TopicsChaosPlayBifurcationRoute
   '/topics/chaos/play/control': typeof TopicsChaosPlayControlRoute
@@ -1016,6 +1319,25 @@ export interface FileRoutesByTo {
   '/topics/networks/play/words': typeof TopicsNetworksPlayWordsRoute
   '/topics/networks/uses/$piece': typeof TopicsNetworksUsesPieceRoute
   '/topics/primes/play/gaps': typeof TopicsPrimesPlayGapsRoute
+  '/topics/probability/play/bins': typeof TopicsProbabilityPlayBinsRoute
+  '/topics/probability/play/birthdays': typeof TopicsProbabilityPlayBirthdaysRoute
+  '/topics/probability/play/dice': typeof TopicsProbabilityPlayDiceRoute
+  '/topics/probability/play/doors': typeof TopicsProbabilityPlayDoorsRoute
+  '/topics/probability/play/galton': typeof TopicsProbabilityPlayGaltonRoute
+  '/topics/probability/play/game': typeof TopicsProbabilityPlayGameRoute
+  '/topics/probability/play/hats': typeof TopicsProbabilityPlayHatsRoute
+  '/topics/probability/play/memory': typeof TopicsProbabilityPlayMemoryRoute
+  '/topics/probability/play/poisson': typeof TopicsProbabilityPlayPoissonRoute
+  '/topics/probability/play/ruin': typeof TopicsProbabilityPlayRuinRoute
+  '/topics/probability/play/test': typeof TopicsProbabilityPlayTestRoute
+  '/topics/probability/play/walks': typeof TopicsProbabilityPlayWalksRoute
+  '/topics/probability/uses/$piece': typeof TopicsProbabilityUsesPieceRoute
+  '/topics/series/play/draw': typeof TopicsSeriesPlayDrawRoute
+  '/topics/series/play/fourier': typeof TopicsSeriesPlayFourierRoute
+  '/topics/series/play/frequencies': typeof TopicsSeriesPlayFrequenciesRoute
+  '/topics/series/play/radius': typeof TopicsSeriesPlayRadiusRoute
+  '/topics/series/play/taylor': typeof TopicsSeriesPlayTaylorRoute
+  '/topics/series/uses/$piece': typeof TopicsSeriesUsesPieceRoute
   '/topics/tokens/play/artefacts': typeof TopicsTokensPlayArtefactsRoute
   '/topics/tokens/play/attend': typeof TopicsTokensPlayAttendRoute
   '/topics/tokens/play/bytes': typeof TopicsTokensPlayBytesRoute
@@ -1040,6 +1362,10 @@ export interface FileRoutesByTo {
   '/topics/networks/play': typeof TopicsNetworksPlayIndexRoute
   '/topics/networks/uses': typeof TopicsNetworksUsesIndexRoute
   '/topics/primes/play': typeof TopicsPrimesPlayIndexRoute
+  '/topics/probability/play': typeof TopicsProbabilityPlayIndexRoute
+  '/topics/probability/uses': typeof TopicsProbabilityUsesIndexRoute
+  '/topics/series/play': typeof TopicsSeriesPlayIndexRoute
+  '/topics/series/uses': typeof TopicsSeriesUsesIndexRoute
   '/topics/tokens/play': typeof TopicsTokensPlayIndexRoute
   '/topics/tokens/uses': typeof TopicsTokensUsesIndexRoute
 }
@@ -1059,27 +1385,43 @@ export interface FileRoutesById {
   '/topics/fractals': typeof TopicsFractalsRouteRouteWithChildren
   '/topics/networks': typeof TopicsNetworksRouteRouteWithChildren
   '/topics/primes': typeof TopicsPrimesRouteRouteWithChildren
+  '/topics/probability': typeof TopicsProbabilityRouteRouteWithChildren
+  '/topics/series': typeof TopicsSeriesRouteRouteWithChildren
   '/topics/tokens': typeof TopicsTokensRouteRouteWithChildren
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects/': typeof ProjectsIndexRoute
   '/topics/': typeof TopicsIndexRoute
   '/topics/chaos/parts': typeof TopicsChaosPartsRoute
+  '/topics/chaos/test': typeof TopicsChaosTestRoute
   '/topics/chaos/theory': typeof TopicsChaosTheoryRoute
   '/topics/complex/parts': typeof TopicsComplexPartsRoute
+  '/topics/complex/test': typeof TopicsComplexTestRoute
   '/topics/complex/theory': typeof TopicsComplexTheoryRoute
   '/topics/fractals/parts': typeof TopicsFractalsPartsRoute
+  '/topics/fractals/test': typeof TopicsFractalsTestRoute
   '/topics/fractals/theory': typeof TopicsFractalsTheoryRoute
   '/topics/networks/parts': typeof TopicsNetworksPartsRoute
+  '/topics/networks/test': typeof TopicsNetworksTestRoute
   '/topics/networks/theory': typeof TopicsNetworksTheoryRoute
   '/topics/primes/parts': typeof TopicsPrimesPartsRoute
+  '/topics/primes/test': typeof TopicsPrimesTestRoute
   '/topics/primes/theory': typeof TopicsPrimesTheoryRoute
+  '/topics/probability/parts': typeof TopicsProbabilityPartsRoute
+  '/topics/probability/test': typeof TopicsProbabilityTestRoute
+  '/topics/probability/theory': typeof TopicsProbabilityTheoryRoute
+  '/topics/series/parts': typeof TopicsSeriesPartsRoute
+  '/topics/series/test': typeof TopicsSeriesTestRoute
+  '/topics/series/theory': typeof TopicsSeriesTheoryRoute
   '/topics/tokens/parts': typeof TopicsTokensPartsRoute
+  '/topics/tokens/test': typeof TopicsTokensTestRoute
   '/topics/tokens/theory': typeof TopicsTokensTheoryRoute
   '/topics/chaos/': typeof TopicsChaosIndexRoute
   '/topics/complex/': typeof TopicsComplexIndexRoute
   '/topics/fractals/': typeof TopicsFractalsIndexRoute
   '/topics/networks/': typeof TopicsNetworksIndexRoute
   '/topics/primes/': typeof TopicsPrimesIndexRoute
+  '/topics/probability/': typeof TopicsProbabilityIndexRoute
+  '/topics/series/': typeof TopicsSeriesIndexRoute
   '/topics/tokens/': typeof TopicsTokensIndexRoute
   '/topics/chaos/play/bifurcation': typeof TopicsChaosPlayBifurcationRoute
   '/topics/chaos/play/control': typeof TopicsChaosPlayControlRoute
@@ -1145,6 +1487,25 @@ export interface FileRoutesById {
   '/topics/networks/play/words': typeof TopicsNetworksPlayWordsRoute
   '/topics/networks/uses/$piece': typeof TopicsNetworksUsesPieceRoute
   '/topics/primes/play/gaps': typeof TopicsPrimesPlayGapsRoute
+  '/topics/probability/play/bins': typeof TopicsProbabilityPlayBinsRoute
+  '/topics/probability/play/birthdays': typeof TopicsProbabilityPlayBirthdaysRoute
+  '/topics/probability/play/dice': typeof TopicsProbabilityPlayDiceRoute
+  '/topics/probability/play/doors': typeof TopicsProbabilityPlayDoorsRoute
+  '/topics/probability/play/galton': typeof TopicsProbabilityPlayGaltonRoute
+  '/topics/probability/play/game': typeof TopicsProbabilityPlayGameRoute
+  '/topics/probability/play/hats': typeof TopicsProbabilityPlayHatsRoute
+  '/topics/probability/play/memory': typeof TopicsProbabilityPlayMemoryRoute
+  '/topics/probability/play/poisson': typeof TopicsProbabilityPlayPoissonRoute
+  '/topics/probability/play/ruin': typeof TopicsProbabilityPlayRuinRoute
+  '/topics/probability/play/test': typeof TopicsProbabilityPlayTestRoute
+  '/topics/probability/play/walks': typeof TopicsProbabilityPlayWalksRoute
+  '/topics/probability/uses/$piece': typeof TopicsProbabilityUsesPieceRoute
+  '/topics/series/play/draw': typeof TopicsSeriesPlayDrawRoute
+  '/topics/series/play/fourier': typeof TopicsSeriesPlayFourierRoute
+  '/topics/series/play/frequencies': typeof TopicsSeriesPlayFrequenciesRoute
+  '/topics/series/play/radius': typeof TopicsSeriesPlayRadiusRoute
+  '/topics/series/play/taylor': typeof TopicsSeriesPlayTaylorRoute
+  '/topics/series/uses/$piece': typeof TopicsSeriesUsesPieceRoute
   '/topics/tokens/play/artefacts': typeof TopicsTokensPlayArtefactsRoute
   '/topics/tokens/play/attend': typeof TopicsTokensPlayAttendRoute
   '/topics/tokens/play/bytes': typeof TopicsTokensPlayBytesRoute
@@ -1169,6 +1530,10 @@ export interface FileRoutesById {
   '/topics/networks/play/': typeof TopicsNetworksPlayIndexRoute
   '/topics/networks/uses/': typeof TopicsNetworksUsesIndexRoute
   '/topics/primes/play/': typeof TopicsPrimesPlayIndexRoute
+  '/topics/probability/play/': typeof TopicsProbabilityPlayIndexRoute
+  '/topics/probability/uses/': typeof TopicsProbabilityUsesIndexRoute
+  '/topics/series/play/': typeof TopicsSeriesPlayIndexRoute
+  '/topics/series/uses/': typeof TopicsSeriesUsesIndexRoute
   '/topics/tokens/play/': typeof TopicsTokensPlayIndexRoute
   '/topics/tokens/uses/': typeof TopicsTokensUsesIndexRoute
 }
@@ -1189,27 +1554,43 @@ export interface FileRouteTypes {
     | '/topics/fractals'
     | '/topics/networks'
     | '/topics/primes'
+    | '/topics/probability'
+    | '/topics/series'
     | '/topics/tokens'
     | '/projects/$slug'
     | '/projects/'
     | '/topics/'
     | '/topics/chaos/parts'
+    | '/topics/chaos/test'
     | '/topics/chaos/theory'
     | '/topics/complex/parts'
+    | '/topics/complex/test'
     | '/topics/complex/theory'
     | '/topics/fractals/parts'
+    | '/topics/fractals/test'
     | '/topics/fractals/theory'
     | '/topics/networks/parts'
+    | '/topics/networks/test'
     | '/topics/networks/theory'
     | '/topics/primes/parts'
+    | '/topics/primes/test'
     | '/topics/primes/theory'
+    | '/topics/probability/parts'
+    | '/topics/probability/test'
+    | '/topics/probability/theory'
+    | '/topics/series/parts'
+    | '/topics/series/test'
+    | '/topics/series/theory'
     | '/topics/tokens/parts'
+    | '/topics/tokens/test'
     | '/topics/tokens/theory'
     | '/topics/chaos/'
     | '/topics/complex/'
     | '/topics/fractals/'
     | '/topics/networks/'
     | '/topics/primes/'
+    | '/topics/probability/'
+    | '/topics/series/'
     | '/topics/tokens/'
     | '/topics/chaos/play/bifurcation'
     | '/topics/chaos/play/control'
@@ -1275,6 +1656,25 @@ export interface FileRouteTypes {
     | '/topics/networks/play/words'
     | '/topics/networks/uses/$piece'
     | '/topics/primes/play/gaps'
+    | '/topics/probability/play/bins'
+    | '/topics/probability/play/birthdays'
+    | '/topics/probability/play/dice'
+    | '/topics/probability/play/doors'
+    | '/topics/probability/play/galton'
+    | '/topics/probability/play/game'
+    | '/topics/probability/play/hats'
+    | '/topics/probability/play/memory'
+    | '/topics/probability/play/poisson'
+    | '/topics/probability/play/ruin'
+    | '/topics/probability/play/test'
+    | '/topics/probability/play/walks'
+    | '/topics/probability/uses/$piece'
+    | '/topics/series/play/draw'
+    | '/topics/series/play/fourier'
+    | '/topics/series/play/frequencies'
+    | '/topics/series/play/radius'
+    | '/topics/series/play/taylor'
+    | '/topics/series/uses/$piece'
     | '/topics/tokens/play/artefacts'
     | '/topics/tokens/play/attend'
     | '/topics/tokens/play/bytes'
@@ -1299,6 +1699,10 @@ export interface FileRouteTypes {
     | '/topics/networks/play/'
     | '/topics/networks/uses/'
     | '/topics/primes/play/'
+    | '/topics/probability/play/'
+    | '/topics/probability/uses/'
+    | '/topics/series/play/'
+    | '/topics/series/uses/'
     | '/topics/tokens/play/'
     | '/topics/tokens/uses/'
   fileRoutesByTo: FileRoutesByTo
@@ -1316,22 +1720,36 @@ export interface FileRouteTypes {
     | '/projects'
     | '/topics'
     | '/topics/chaos/parts'
+    | '/topics/chaos/test'
     | '/topics/chaos/theory'
     | '/topics/complex/parts'
+    | '/topics/complex/test'
     | '/topics/complex/theory'
     | '/topics/fractals/parts'
+    | '/topics/fractals/test'
     | '/topics/fractals/theory'
     | '/topics/networks/parts'
+    | '/topics/networks/test'
     | '/topics/networks/theory'
     | '/topics/primes/parts'
+    | '/topics/primes/test'
     | '/topics/primes/theory'
+    | '/topics/probability/parts'
+    | '/topics/probability/test'
+    | '/topics/probability/theory'
+    | '/topics/series/parts'
+    | '/topics/series/test'
+    | '/topics/series/theory'
     | '/topics/tokens/parts'
+    | '/topics/tokens/test'
     | '/topics/tokens/theory'
     | '/topics/chaos'
     | '/topics/complex'
     | '/topics/fractals'
     | '/topics/networks'
     | '/topics/primes'
+    | '/topics/probability'
+    | '/topics/series'
     | '/topics/tokens'
     | '/topics/chaos/play/bifurcation'
     | '/topics/chaos/play/control'
@@ -1397,6 +1815,25 @@ export interface FileRouteTypes {
     | '/topics/networks/play/words'
     | '/topics/networks/uses/$piece'
     | '/topics/primes/play/gaps'
+    | '/topics/probability/play/bins'
+    | '/topics/probability/play/birthdays'
+    | '/topics/probability/play/dice'
+    | '/topics/probability/play/doors'
+    | '/topics/probability/play/galton'
+    | '/topics/probability/play/game'
+    | '/topics/probability/play/hats'
+    | '/topics/probability/play/memory'
+    | '/topics/probability/play/poisson'
+    | '/topics/probability/play/ruin'
+    | '/topics/probability/play/test'
+    | '/topics/probability/play/walks'
+    | '/topics/probability/uses/$piece'
+    | '/topics/series/play/draw'
+    | '/topics/series/play/fourier'
+    | '/topics/series/play/frequencies'
+    | '/topics/series/play/radius'
+    | '/topics/series/play/taylor'
+    | '/topics/series/uses/$piece'
     | '/topics/tokens/play/artefacts'
     | '/topics/tokens/play/attend'
     | '/topics/tokens/play/bytes'
@@ -1421,6 +1858,10 @@ export interface FileRouteTypes {
     | '/topics/networks/play'
     | '/topics/networks/uses'
     | '/topics/primes/play'
+    | '/topics/probability/play'
+    | '/topics/probability/uses'
+    | '/topics/series/play'
+    | '/topics/series/uses'
     | '/topics/tokens/play'
     | '/topics/tokens/uses'
   id:
@@ -1439,27 +1880,43 @@ export interface FileRouteTypes {
     | '/topics/fractals'
     | '/topics/networks'
     | '/topics/primes'
+    | '/topics/probability'
+    | '/topics/series'
     | '/topics/tokens'
     | '/projects/$slug'
     | '/projects/'
     | '/topics/'
     | '/topics/chaos/parts'
+    | '/topics/chaos/test'
     | '/topics/chaos/theory'
     | '/topics/complex/parts'
+    | '/topics/complex/test'
     | '/topics/complex/theory'
     | '/topics/fractals/parts'
+    | '/topics/fractals/test'
     | '/topics/fractals/theory'
     | '/topics/networks/parts'
+    | '/topics/networks/test'
     | '/topics/networks/theory'
     | '/topics/primes/parts'
+    | '/topics/primes/test'
     | '/topics/primes/theory'
+    | '/topics/probability/parts'
+    | '/topics/probability/test'
+    | '/topics/probability/theory'
+    | '/topics/series/parts'
+    | '/topics/series/test'
+    | '/topics/series/theory'
     | '/topics/tokens/parts'
+    | '/topics/tokens/test'
     | '/topics/tokens/theory'
     | '/topics/chaos/'
     | '/topics/complex/'
     | '/topics/fractals/'
     | '/topics/networks/'
     | '/topics/primes/'
+    | '/topics/probability/'
+    | '/topics/series/'
     | '/topics/tokens/'
     | '/topics/chaos/play/bifurcation'
     | '/topics/chaos/play/control'
@@ -1525,6 +1982,25 @@ export interface FileRouteTypes {
     | '/topics/networks/play/words'
     | '/topics/networks/uses/$piece'
     | '/topics/primes/play/gaps'
+    | '/topics/probability/play/bins'
+    | '/topics/probability/play/birthdays'
+    | '/topics/probability/play/dice'
+    | '/topics/probability/play/doors'
+    | '/topics/probability/play/galton'
+    | '/topics/probability/play/game'
+    | '/topics/probability/play/hats'
+    | '/topics/probability/play/memory'
+    | '/topics/probability/play/poisson'
+    | '/topics/probability/play/ruin'
+    | '/topics/probability/play/test'
+    | '/topics/probability/play/walks'
+    | '/topics/probability/uses/$piece'
+    | '/topics/series/play/draw'
+    | '/topics/series/play/fourier'
+    | '/topics/series/play/frequencies'
+    | '/topics/series/play/radius'
+    | '/topics/series/play/taylor'
+    | '/topics/series/uses/$piece'
     | '/topics/tokens/play/artefacts'
     | '/topics/tokens/play/attend'
     | '/topics/tokens/play/bytes'
@@ -1549,6 +2025,10 @@ export interface FileRouteTypes {
     | '/topics/networks/play/'
     | '/topics/networks/uses/'
     | '/topics/primes/play/'
+    | '/topics/probability/play/'
+    | '/topics/probability/uses/'
+    | '/topics/series/play/'
+    | '/topics/series/uses/'
     | '/topics/tokens/play/'
     | '/topics/tokens/uses/'
   fileRoutesById: FileRoutesById
@@ -1568,6 +2048,8 @@ export interface RootRouteChildren {
   TopicsFractalsRouteRoute: typeof TopicsFractalsRouteRouteWithChildren
   TopicsNetworksRouteRoute: typeof TopicsNetworksRouteRouteWithChildren
   TopicsPrimesRouteRoute: typeof TopicsPrimesRouteRouteWithChildren
+  TopicsProbabilityRouteRoute: typeof TopicsProbabilityRouteRouteWithChildren
+  TopicsSeriesRouteRoute: typeof TopicsSeriesRouteRouteWithChildren
   TopicsTokensRouteRoute: typeof TopicsTokensRouteRouteWithChildren
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
@@ -1695,6 +2177,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsPrimesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/topics/probability': {
+      id: '/topics/probability'
+      path: '/topics/probability'
+      fullPath: '/topics/probability'
+      preLoaderRoute: typeof TopicsProbabilityRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topics/series': {
+      id: '/topics/series'
+      path: '/topics/series'
+      fullPath: '/topics/series'
+      preLoaderRoute: typeof TopicsSeriesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/topics/tokens': {
       id: '/topics/tokens'
       path: '/topics/tokens'
@@ -1714,6 +2210,13 @@ declare module '@tanstack/react-router' {
       path: '/parts'
       fullPath: '/topics/chaos/parts'
       preLoaderRoute: typeof TopicsChaosPartsRouteImport
+      parentRoute: typeof TopicsChaosRouteRoute
+    }
+    '/topics/chaos/test': {
+      id: '/topics/chaos/test'
+      path: '/test'
+      fullPath: '/topics/chaos/test'
+      preLoaderRoute: typeof TopicsChaosTestRouteImport
       parentRoute: typeof TopicsChaosRouteRoute
     }
     '/topics/chaos/theory': {
@@ -1737,6 +2240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsComplexPartsRouteImport
       parentRoute: typeof TopicsComplexRouteRoute
     }
+    '/topics/complex/test': {
+      id: '/topics/complex/test'
+      path: '/test'
+      fullPath: '/topics/complex/test'
+      preLoaderRoute: typeof TopicsComplexTestRouteImport
+      parentRoute: typeof TopicsComplexRouteRoute
+    }
     '/topics/complex/theory': {
       id: '/topics/complex/theory'
       path: '/theory'
@@ -1756,6 +2266,13 @@ declare module '@tanstack/react-router' {
       path: '/parts'
       fullPath: '/topics/fractals/parts'
       preLoaderRoute: typeof TopicsFractalsPartsRouteImport
+      parentRoute: typeof TopicsFractalsRouteRoute
+    }
+    '/topics/fractals/test': {
+      id: '/topics/fractals/test'
+      path: '/test'
+      fullPath: '/topics/fractals/test'
+      preLoaderRoute: typeof TopicsFractalsTestRouteImport
       parentRoute: typeof TopicsFractalsRouteRoute
     }
     '/topics/fractals/theory': {
@@ -1779,6 +2296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsNetworksPartsRouteImport
       parentRoute: typeof TopicsNetworksRouteRoute
     }
+    '/topics/networks/test': {
+      id: '/topics/networks/test'
+      path: '/test'
+      fullPath: '/topics/networks/test'
+      preLoaderRoute: typeof TopicsNetworksTestRouteImport
+      parentRoute: typeof TopicsNetworksRouteRoute
+    }
     '/topics/networks/theory': {
       id: '/topics/networks/theory'
       path: '/theory'
@@ -1800,12 +2324,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsPrimesPartsRouteImport
       parentRoute: typeof TopicsPrimesRouteRoute
     }
+    '/topics/primes/test': {
+      id: '/topics/primes/test'
+      path: '/test'
+      fullPath: '/topics/primes/test'
+      preLoaderRoute: typeof TopicsPrimesTestRouteImport
+      parentRoute: typeof TopicsPrimesRouteRoute
+    }
     '/topics/primes/theory': {
       id: '/topics/primes/theory'
       path: '/theory'
       fullPath: '/topics/primes/theory'
       preLoaderRoute: typeof TopicsPrimesTheoryRouteImport
       parentRoute: typeof TopicsPrimesRouteRoute
+    }
+    '/topics/probability/': {
+      id: '/topics/probability/'
+      path: '/'
+      fullPath: '/topics/probability/'
+      preLoaderRoute: typeof TopicsProbabilityIndexRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/parts': {
+      id: '/topics/probability/parts'
+      path: '/parts'
+      fullPath: '/topics/probability/parts'
+      preLoaderRoute: typeof TopicsProbabilityPartsRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/test': {
+      id: '/topics/probability/test'
+      path: '/test'
+      fullPath: '/topics/probability/test'
+      preLoaderRoute: typeof TopicsProbabilityTestRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/theory': {
+      id: '/topics/probability/theory'
+      path: '/theory'
+      fullPath: '/topics/probability/theory'
+      preLoaderRoute: typeof TopicsProbabilityTheoryRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/series/': {
+      id: '/topics/series/'
+      path: '/'
+      fullPath: '/topics/series/'
+      preLoaderRoute: typeof TopicsSeriesIndexRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
+    '/topics/series/parts': {
+      id: '/topics/series/parts'
+      path: '/parts'
+      fullPath: '/topics/series/parts'
+      preLoaderRoute: typeof TopicsSeriesPartsRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
+    '/topics/series/test': {
+      id: '/topics/series/test'
+      path: '/test'
+      fullPath: '/topics/series/test'
+      preLoaderRoute: typeof TopicsSeriesTestRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
+    '/topics/series/theory': {
+      id: '/topics/series/theory'
+      path: '/theory'
+      fullPath: '/topics/series/theory'
+      preLoaderRoute: typeof TopicsSeriesTheoryRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
     }
     '/topics/tokens/': {
       id: '/topics/tokens/'
@@ -1819,6 +2406,13 @@ declare module '@tanstack/react-router' {
       path: '/parts'
       fullPath: '/topics/tokens/parts'
       preLoaderRoute: typeof TopicsTokensPartsRouteImport
+      parentRoute: typeof TopicsTokensRouteRoute
+    }
+    '/topics/tokens/test': {
+      id: '/topics/tokens/test'
+      path: '/test'
+      fullPath: '/topics/tokens/test'
+      preLoaderRoute: typeof TopicsTokensTestRouteImport
       parentRoute: typeof TopicsTokensRouteRoute
     }
     '/topics/tokens/theory': {
@@ -2339,6 +2933,167 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsPrimesPlayGapsRouteImport
       parentRoute: typeof TopicsPrimesRouteRoute
     }
+    '/topics/probability/play/': {
+      id: '/topics/probability/play/'
+      path: '/play'
+      fullPath: '/topics/probability/play/'
+      preLoaderRoute: typeof TopicsProbabilityPlayIndexRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/bins': {
+      id: '/topics/probability/play/bins'
+      path: '/play/bins'
+      fullPath: '/topics/probability/play/bins'
+      preLoaderRoute: typeof TopicsProbabilityPlayBinsRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/birthdays': {
+      id: '/topics/probability/play/birthdays'
+      path: '/play/birthdays'
+      fullPath: '/topics/probability/play/birthdays'
+      preLoaderRoute: typeof TopicsProbabilityPlayBirthdaysRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/dice': {
+      id: '/topics/probability/play/dice'
+      path: '/play/dice'
+      fullPath: '/topics/probability/play/dice'
+      preLoaderRoute: typeof TopicsProbabilityPlayDiceRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/doors': {
+      id: '/topics/probability/play/doors'
+      path: '/play/doors'
+      fullPath: '/topics/probability/play/doors'
+      preLoaderRoute: typeof TopicsProbabilityPlayDoorsRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/galton': {
+      id: '/topics/probability/play/galton'
+      path: '/play/galton'
+      fullPath: '/topics/probability/play/galton'
+      preLoaderRoute: typeof TopicsProbabilityPlayGaltonRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/game': {
+      id: '/topics/probability/play/game'
+      path: '/play/game'
+      fullPath: '/topics/probability/play/game'
+      preLoaderRoute: typeof TopicsProbabilityPlayGameRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/hats': {
+      id: '/topics/probability/play/hats'
+      path: '/play/hats'
+      fullPath: '/topics/probability/play/hats'
+      preLoaderRoute: typeof TopicsProbabilityPlayHatsRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/memory': {
+      id: '/topics/probability/play/memory'
+      path: '/play/memory'
+      fullPath: '/topics/probability/play/memory'
+      preLoaderRoute: typeof TopicsProbabilityPlayMemoryRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/poisson': {
+      id: '/topics/probability/play/poisson'
+      path: '/play/poisson'
+      fullPath: '/topics/probability/play/poisson'
+      preLoaderRoute: typeof TopicsProbabilityPlayPoissonRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/ruin': {
+      id: '/topics/probability/play/ruin'
+      path: '/play/ruin'
+      fullPath: '/topics/probability/play/ruin'
+      preLoaderRoute: typeof TopicsProbabilityPlayRuinRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/test': {
+      id: '/topics/probability/play/test'
+      path: '/play/test'
+      fullPath: '/topics/probability/play/test'
+      preLoaderRoute: typeof TopicsProbabilityPlayTestRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/play/walks': {
+      id: '/topics/probability/play/walks'
+      path: '/play/walks'
+      fullPath: '/topics/probability/play/walks'
+      preLoaderRoute: typeof TopicsProbabilityPlayWalksRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/uses/': {
+      id: '/topics/probability/uses/'
+      path: '/uses'
+      fullPath: '/topics/probability/uses/'
+      preLoaderRoute: typeof TopicsProbabilityUsesIndexRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/probability/uses/$piece': {
+      id: '/topics/probability/uses/$piece'
+      path: '/uses/$piece'
+      fullPath: '/topics/probability/uses/$piece'
+      preLoaderRoute: typeof TopicsProbabilityUsesPieceRouteImport
+      parentRoute: typeof TopicsProbabilityRouteRoute
+    }
+    '/topics/series/play/': {
+      id: '/topics/series/play/'
+      path: '/play'
+      fullPath: '/topics/series/play/'
+      preLoaderRoute: typeof TopicsSeriesPlayIndexRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
+    '/topics/series/play/draw': {
+      id: '/topics/series/play/draw'
+      path: '/play/draw'
+      fullPath: '/topics/series/play/draw'
+      preLoaderRoute: typeof TopicsSeriesPlayDrawRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
+    '/topics/series/play/fourier': {
+      id: '/topics/series/play/fourier'
+      path: '/play/fourier'
+      fullPath: '/topics/series/play/fourier'
+      preLoaderRoute: typeof TopicsSeriesPlayFourierRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
+    '/topics/series/play/frequencies': {
+      id: '/topics/series/play/frequencies'
+      path: '/play/frequencies'
+      fullPath: '/topics/series/play/frequencies'
+      preLoaderRoute: typeof TopicsSeriesPlayFrequenciesRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
+    '/topics/series/play/radius': {
+      id: '/topics/series/play/radius'
+      path: '/play/radius'
+      fullPath: '/topics/series/play/radius'
+      preLoaderRoute: typeof TopicsSeriesPlayRadiusRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
+    '/topics/series/play/taylor': {
+      id: '/topics/series/play/taylor'
+      path: '/play/taylor'
+      fullPath: '/topics/series/play/taylor'
+      preLoaderRoute: typeof TopicsSeriesPlayTaylorRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
+    '/topics/series/uses/': {
+      id: '/topics/series/uses/'
+      path: '/uses'
+      fullPath: '/topics/series/uses/'
+      preLoaderRoute: typeof TopicsSeriesUsesIndexRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
+    '/topics/series/uses/$piece': {
+      id: '/topics/series/uses/$piece'
+      path: '/uses/$piece'
+      fullPath: '/topics/series/uses/$piece'
+      preLoaderRoute: typeof TopicsSeriesUsesPieceRouteImport
+      parentRoute: typeof TopicsSeriesRouteRoute
+    }
     '/topics/tokens/play/': {
       id: '/topics/tokens/play/'
       path: '/play'
@@ -2463,6 +3218,7 @@ declare module '@tanstack/react-router' {
 
 interface TopicsChaosRouteRouteChildren {
   TopicsChaosPartsRoute: typeof TopicsChaosPartsRoute
+  TopicsChaosTestRoute: typeof TopicsChaosTestRoute
   TopicsChaosTheoryRoute: typeof TopicsChaosTheoryRoute
   TopicsChaosIndexRoute: typeof TopicsChaosIndexRoute
   TopicsChaosPlayBifurcationRoute: typeof TopicsChaosPlayBifurcationRoute
@@ -2481,6 +3237,7 @@ interface TopicsChaosRouteRouteChildren {
 
 const TopicsChaosRouteRouteChildren: TopicsChaosRouteRouteChildren = {
   TopicsChaosPartsRoute: TopicsChaosPartsRoute,
+  TopicsChaosTestRoute: TopicsChaosTestRoute,
   TopicsChaosTheoryRoute: TopicsChaosTheoryRoute,
   TopicsChaosIndexRoute: TopicsChaosIndexRoute,
   TopicsChaosPlayBifurcationRoute: TopicsChaosPlayBifurcationRoute,
@@ -2502,6 +3259,7 @@ const TopicsChaosRouteRouteWithChildren =
 
 interface TopicsComplexRouteRouteChildren {
   TopicsComplexPartsRoute: typeof TopicsComplexPartsRoute
+  TopicsComplexTestRoute: typeof TopicsComplexTestRoute
   TopicsComplexTheoryRoute: typeof TopicsComplexTheoryRoute
   TopicsComplexIndexRoute: typeof TopicsComplexIndexRoute
   TopicsComplexPlayAddRoute: typeof TopicsComplexPlayAddRoute
@@ -2519,6 +3277,7 @@ interface TopicsComplexRouteRouteChildren {
 
 const TopicsComplexRouteRouteChildren: TopicsComplexRouteRouteChildren = {
   TopicsComplexPartsRoute: TopicsComplexPartsRoute,
+  TopicsComplexTestRoute: TopicsComplexTestRoute,
   TopicsComplexTheoryRoute: TopicsComplexTheoryRoute,
   TopicsComplexIndexRoute: TopicsComplexIndexRoute,
   TopicsComplexPlayAddRoute: TopicsComplexPlayAddRoute,
@@ -2539,6 +3298,7 @@ const TopicsComplexRouteRouteWithChildren =
 
 interface TopicsFractalsRouteRouteChildren {
   TopicsFractalsPartsRoute: typeof TopicsFractalsPartsRoute
+  TopicsFractalsTestRoute: typeof TopicsFractalsTestRoute
   TopicsFractalsTheoryRoute: typeof TopicsFractalsTheoryRoute
   TopicsFractalsIndexRoute: typeof TopicsFractalsIndexRoute
   TopicsFractalsPlaySystemRoute: typeof TopicsFractalsPlaySystemRoute
@@ -2562,6 +3322,7 @@ interface TopicsFractalsRouteRouteChildren {
 
 const TopicsFractalsRouteRouteChildren: TopicsFractalsRouteRouteChildren = {
   TopicsFractalsPartsRoute: TopicsFractalsPartsRoute,
+  TopicsFractalsTestRoute: TopicsFractalsTestRoute,
   TopicsFractalsTheoryRoute: TopicsFractalsTheoryRoute,
   TopicsFractalsIndexRoute: TopicsFractalsIndexRoute,
   TopicsFractalsPlaySystemRoute: TopicsFractalsPlaySystemRoute,
@@ -2588,6 +3349,7 @@ const TopicsFractalsRouteRouteWithChildren =
 
 interface TopicsNetworksRouteRouteChildren {
   TopicsNetworksPartsRoute: typeof TopicsNetworksPartsRoute
+  TopicsNetworksTestRoute: typeof TopicsNetworksTestRoute
   TopicsNetworksTheoryRoute: typeof TopicsNetworksTheoryRoute
   TopicsNetworksIndexRoute: typeof TopicsNetworksIndexRoute
   TopicsNetworksPlayAccumulateRoute: typeof TopicsNetworksPlayAccumulateRoute
@@ -2625,6 +3387,7 @@ interface TopicsNetworksRouteRouteChildren {
 
 const TopicsNetworksRouteRouteChildren: TopicsNetworksRouteRouteChildren = {
   TopicsNetworksPartsRoute: TopicsNetworksPartsRoute,
+  TopicsNetworksTestRoute: TopicsNetworksTestRoute,
   TopicsNetworksTheoryRoute: TopicsNetworksTheoryRoute,
   TopicsNetworksIndexRoute: TopicsNetworksIndexRoute,
   TopicsNetworksPlayAccumulateRoute: TopicsNetworksPlayAccumulateRoute,
@@ -2665,6 +3428,7 @@ const TopicsNetworksRouteRouteWithChildren =
 
 interface TopicsPrimesRouteRouteChildren {
   TopicsPrimesPartsRoute: typeof TopicsPrimesPartsRoute
+  TopicsPrimesTestRoute: typeof TopicsPrimesTestRoute
   TopicsPrimesTheoryRoute: typeof TopicsPrimesTheoryRoute
   TopicsPrimesIndexRoute: typeof TopicsPrimesIndexRoute
   TopicsPrimesPlayGapsRoute: typeof TopicsPrimesPlayGapsRoute
@@ -2673,6 +3437,7 @@ interface TopicsPrimesRouteRouteChildren {
 
 const TopicsPrimesRouteRouteChildren: TopicsPrimesRouteRouteChildren = {
   TopicsPrimesPartsRoute: TopicsPrimesPartsRoute,
+  TopicsPrimesTestRoute: TopicsPrimesTestRoute,
   TopicsPrimesTheoryRoute: TopicsPrimesTheoryRoute,
   TopicsPrimesIndexRoute: TopicsPrimesIndexRoute,
   TopicsPrimesPlayGapsRoute: TopicsPrimesPlayGapsRoute,
@@ -2682,8 +3447,92 @@ const TopicsPrimesRouteRouteChildren: TopicsPrimesRouteRouteChildren = {
 const TopicsPrimesRouteRouteWithChildren =
   TopicsPrimesRouteRoute._addFileChildren(TopicsPrimesRouteRouteChildren)
 
+interface TopicsProbabilityRouteRouteChildren {
+  TopicsProbabilityPartsRoute: typeof TopicsProbabilityPartsRoute
+  TopicsProbabilityTestRoute: typeof TopicsProbabilityTestRoute
+  TopicsProbabilityTheoryRoute: typeof TopicsProbabilityTheoryRoute
+  TopicsProbabilityIndexRoute: typeof TopicsProbabilityIndexRoute
+  TopicsProbabilityPlayBinsRoute: typeof TopicsProbabilityPlayBinsRoute
+  TopicsProbabilityPlayBirthdaysRoute: typeof TopicsProbabilityPlayBirthdaysRoute
+  TopicsProbabilityPlayDiceRoute: typeof TopicsProbabilityPlayDiceRoute
+  TopicsProbabilityPlayDoorsRoute: typeof TopicsProbabilityPlayDoorsRoute
+  TopicsProbabilityPlayGaltonRoute: typeof TopicsProbabilityPlayGaltonRoute
+  TopicsProbabilityPlayGameRoute: typeof TopicsProbabilityPlayGameRoute
+  TopicsProbabilityPlayHatsRoute: typeof TopicsProbabilityPlayHatsRoute
+  TopicsProbabilityPlayMemoryRoute: typeof TopicsProbabilityPlayMemoryRoute
+  TopicsProbabilityPlayPoissonRoute: typeof TopicsProbabilityPlayPoissonRoute
+  TopicsProbabilityPlayRuinRoute: typeof TopicsProbabilityPlayRuinRoute
+  TopicsProbabilityPlayTestRoute: typeof TopicsProbabilityPlayTestRoute
+  TopicsProbabilityPlayWalksRoute: typeof TopicsProbabilityPlayWalksRoute
+  TopicsProbabilityUsesPieceRoute: typeof TopicsProbabilityUsesPieceRoute
+  TopicsProbabilityPlayIndexRoute: typeof TopicsProbabilityPlayIndexRoute
+  TopicsProbabilityUsesIndexRoute: typeof TopicsProbabilityUsesIndexRoute
+}
+
+const TopicsProbabilityRouteRouteChildren: TopicsProbabilityRouteRouteChildren =
+  {
+    TopicsProbabilityPartsRoute: TopicsProbabilityPartsRoute,
+    TopicsProbabilityTestRoute: TopicsProbabilityTestRoute,
+    TopicsProbabilityTheoryRoute: TopicsProbabilityTheoryRoute,
+    TopicsProbabilityIndexRoute: TopicsProbabilityIndexRoute,
+    TopicsProbabilityPlayBinsRoute: TopicsProbabilityPlayBinsRoute,
+    TopicsProbabilityPlayBirthdaysRoute: TopicsProbabilityPlayBirthdaysRoute,
+    TopicsProbabilityPlayDiceRoute: TopicsProbabilityPlayDiceRoute,
+    TopicsProbabilityPlayDoorsRoute: TopicsProbabilityPlayDoorsRoute,
+    TopicsProbabilityPlayGaltonRoute: TopicsProbabilityPlayGaltonRoute,
+    TopicsProbabilityPlayGameRoute: TopicsProbabilityPlayGameRoute,
+    TopicsProbabilityPlayHatsRoute: TopicsProbabilityPlayHatsRoute,
+    TopicsProbabilityPlayMemoryRoute: TopicsProbabilityPlayMemoryRoute,
+    TopicsProbabilityPlayPoissonRoute: TopicsProbabilityPlayPoissonRoute,
+    TopicsProbabilityPlayRuinRoute: TopicsProbabilityPlayRuinRoute,
+    TopicsProbabilityPlayTestRoute: TopicsProbabilityPlayTestRoute,
+    TopicsProbabilityPlayWalksRoute: TopicsProbabilityPlayWalksRoute,
+    TopicsProbabilityUsesPieceRoute: TopicsProbabilityUsesPieceRoute,
+    TopicsProbabilityPlayIndexRoute: TopicsProbabilityPlayIndexRoute,
+    TopicsProbabilityUsesIndexRoute: TopicsProbabilityUsesIndexRoute,
+  }
+
+const TopicsProbabilityRouteRouteWithChildren =
+  TopicsProbabilityRouteRoute._addFileChildren(
+    TopicsProbabilityRouteRouteChildren,
+  )
+
+interface TopicsSeriesRouteRouteChildren {
+  TopicsSeriesPartsRoute: typeof TopicsSeriesPartsRoute
+  TopicsSeriesTestRoute: typeof TopicsSeriesTestRoute
+  TopicsSeriesTheoryRoute: typeof TopicsSeriesTheoryRoute
+  TopicsSeriesIndexRoute: typeof TopicsSeriesIndexRoute
+  TopicsSeriesPlayDrawRoute: typeof TopicsSeriesPlayDrawRoute
+  TopicsSeriesPlayFourierRoute: typeof TopicsSeriesPlayFourierRoute
+  TopicsSeriesPlayFrequenciesRoute: typeof TopicsSeriesPlayFrequenciesRoute
+  TopicsSeriesPlayRadiusRoute: typeof TopicsSeriesPlayRadiusRoute
+  TopicsSeriesPlayTaylorRoute: typeof TopicsSeriesPlayTaylorRoute
+  TopicsSeriesUsesPieceRoute: typeof TopicsSeriesUsesPieceRoute
+  TopicsSeriesPlayIndexRoute: typeof TopicsSeriesPlayIndexRoute
+  TopicsSeriesUsesIndexRoute: typeof TopicsSeriesUsesIndexRoute
+}
+
+const TopicsSeriesRouteRouteChildren: TopicsSeriesRouteRouteChildren = {
+  TopicsSeriesPartsRoute: TopicsSeriesPartsRoute,
+  TopicsSeriesTestRoute: TopicsSeriesTestRoute,
+  TopicsSeriesTheoryRoute: TopicsSeriesTheoryRoute,
+  TopicsSeriesIndexRoute: TopicsSeriesIndexRoute,
+  TopicsSeriesPlayDrawRoute: TopicsSeriesPlayDrawRoute,
+  TopicsSeriesPlayFourierRoute: TopicsSeriesPlayFourierRoute,
+  TopicsSeriesPlayFrequenciesRoute: TopicsSeriesPlayFrequenciesRoute,
+  TopicsSeriesPlayRadiusRoute: TopicsSeriesPlayRadiusRoute,
+  TopicsSeriesPlayTaylorRoute: TopicsSeriesPlayTaylorRoute,
+  TopicsSeriesUsesPieceRoute: TopicsSeriesUsesPieceRoute,
+  TopicsSeriesPlayIndexRoute: TopicsSeriesPlayIndexRoute,
+  TopicsSeriesUsesIndexRoute: TopicsSeriesUsesIndexRoute,
+}
+
+const TopicsSeriesRouteRouteWithChildren =
+  TopicsSeriesRouteRoute._addFileChildren(TopicsSeriesRouteRouteChildren)
+
 interface TopicsTokensRouteRouteChildren {
   TopicsTokensPartsRoute: typeof TopicsTokensPartsRoute
+  TopicsTokensTestRoute: typeof TopicsTokensTestRoute
   TopicsTokensTheoryRoute: typeof TopicsTokensTheoryRoute
   TopicsTokensIndexRoute: typeof TopicsTokensIndexRoute
   TopicsTokensPlayArtefactsRoute: typeof TopicsTokensPlayArtefactsRoute
@@ -2707,6 +3556,7 @@ interface TopicsTokensRouteRouteChildren {
 
 const TopicsTokensRouteRouteChildren: TopicsTokensRouteRouteChildren = {
   TopicsTokensPartsRoute: TopicsTokensPartsRoute,
+  TopicsTokensTestRoute: TopicsTokensTestRoute,
   TopicsTokensTheoryRoute: TopicsTokensTheoryRoute,
   TopicsTokensIndexRoute: TopicsTokensIndexRoute,
   TopicsTokensPlayArtefactsRoute: TopicsTokensPlayArtefactsRoute,
@@ -2746,6 +3596,8 @@ const rootRouteChildren: RootRouteChildren = {
   TopicsFractalsRouteRoute: TopicsFractalsRouteRouteWithChildren,
   TopicsNetworksRouteRoute: TopicsNetworksRouteRouteWithChildren,
   TopicsPrimesRouteRoute: TopicsPrimesRouteRouteWithChildren,
+  TopicsProbabilityRouteRoute: TopicsProbabilityRouteRouteWithChildren,
+  TopicsSeriesRouteRoute: TopicsSeriesRouteRouteWithChildren,
   TopicsTokensRouteRoute: TopicsTokensRouteRouteWithChildren,
   ProjectsSlugRoute: ProjectsSlugRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,

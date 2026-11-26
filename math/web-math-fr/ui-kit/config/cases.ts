@@ -7,7 +7,8 @@ import { theme as base } from "./base/index.ts";
 import { theme as edge_light } from "./edge_light/index.ts";
 import { theme as old_code } from "./old_code/index.ts";
 import { theme as pixel_art_cute } from "./pixel_art_cute/index.ts";
+import { theme as webpaut } from "./webpaut/index.ts";
 
-export const cases = { base, edge_light, pixel_art_cute, old_code };
+export const cases = { base, edge_light, pixel_art_cute, old_code, webpaut };
 
 export type CaseName = keyof typeof cases;

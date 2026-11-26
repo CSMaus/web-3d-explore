@@ -3,6 +3,8 @@ import { SYSTEMS as CHAOS_PAGES } from "@/lib/chaos";
 import { SYSTEMS as COMPLEX_PAGES } from "@/lib/complex";
 import { GROUPS as NET_GROUPS, SYSTEMS as NET_PAGES } from "@/lib/networks";
 import { SYSTEMS as PRIMES_PAGES } from "@/lib/primes";
+import { GROUPS as PROBABILITY_GROUPS, SYSTEMS as PROBABILITY_PAGES } from "@/lib/probability";
+import { SYSTEMS as SERIES_PAGES } from "@/lib/series";
 import { SYSTEMS as FRACTAL_PAGES } from "@/lib/systems";
 import { GROUPS as TOKEN_GROUPS, SYSTEMS as TOKEN_PAGES } from "@/lib/tokens";
 import type { BuiltTopic } from "@/lib/topic";
@@ -37,6 +39,8 @@ const PLAY: Record<string, RailGroup[]> = {
   networks: grouped(NET_PAGES, NET_GROUPS),
   tokens: grouped(TOKEN_PAGES, TOKEN_GROUPS),
   primes: flat(PRIMES_PAGES),
+  series: flat(SERIES_PAGES),
+  probability: grouped(PROBABILITY_PAGES, PROBABILITY_GROUPS),
 };
 
 /** the pages under one section of a topic; none for the sections that are one page */

@@ -13,6 +13,7 @@ import { api } from "@/lib/api";
 import { TOPIC } from "@/lib/systems";
 import { useDeep } from "@/lib/deep";
 import { useLook } from "@/lib/store";
+import { PlayColumns } from "@/components/TaskPage";
 
 export const Route = createFileRoute("/topics/fractals/play/mandelbrot")({
   loader: () => api.system(TOPIC, "mandelbrot"),
@@ -75,28 +76,28 @@ function MandelbrotPage() {
   return (
     <div>
       <Heading level={1} className="mt-4">{system?.name ?? L("The Mandelbrot set")}</Heading>
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
-        <div data-slot="task-in" className="min-w-0 space-y-4">
+      <PlayColumns
+        input={<>
           <section data-slot="panel">
             <Label>{L("VIEW")}</Label>
             <div className="mt-3 space-y-2">
               <Slider label={L("Zoom")} min={0} max={22} step={0.05} value={zoom} format={(v) => `x${Math.pow(2, v).toExponential(1)}`} onChange={change(setZoom)} />
-              <Slider label={L("Centre x")} min={-2.5} max={1.5} step={0.0005} value={centre[0]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([v, centre[1]]))} />
-              <Slider label={L("Centre y")} min={-1.6} max={1.6} step={0.0005} value={centre[1]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([centre[0], v]))} />
-              <Slider label={L("Max steps")} min={40} max={900} step={20} value={iters} format={(v) => String(Math.round(v))} onChange={change((v: number) => setIters(Math.round(v)))} />
-              <Slider label={L("Colour offset")} min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={change(setShift)} />
+              <Slider label={L("Centre, across (real part of c)")} min={-2.5} max={1.5} step={0.0005} value={centre[0]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([v, centre[1]]))} />
+              <Slider label={L("Centre, up (imaginary part of c)")} min={-1.6} max={1.6} step={0.0005} value={centre[1]} format={(v) => v.toFixed(5)} onChange={change((v: number) => setCentre([centre[0], v]))} />
+              <Slider label={L("Most steps per point")} min={40} max={900} step={20} value={iters} format={(v) => String(Math.round(v))} onChange={change((v: number) => setIters(Math.round(v)))} />
+              <Slider label={L("Colour shift")} min={0} max={1} step={0.01} value={shift} format={(v) => v.toFixed(2)} onChange={change(setShift)} />
               <PaletteBar />
             </div>
             <Text kind="note" as="p" className="mt-3">
-              {L("Click the picture to centre on that point, then wind the zoom up.")}
+              {L("Each point of the picture is one value of c. A click moves that point to the centre of the view. The zoom slider then magnifies around it. The number on the slider is how many times larger the picture is than at the start.")}
             </Text>
           </section>
 
           <section data-slot="panel">
-            <Label>{L("RESOLUTION")}</Label>
+            <Label>{L("SHARPNESS")}</Label>
             <div className="mt-3 space-y-2">
               <Slider
-                label={L("Supersample")}
+                label={L("Extra detail, times the screen")}
                 min={1}
                 max={4}
                 step={0.5}
@@ -114,21 +115,21 @@ function MandelbrotPage() {
                   setStale(false);
                 }}
               >
-                {stale ? L("Recalculate") : L("Up to date")}
+                {stale ? L("Redraw sharper") : L("Sharp picture drawn")}
               </Button>
             </div>
             <Text kind="note" as="p" className="mt-3">
-              {L("The sharper pass redraws the same view at more pixels than the screen has and lets the screen shrink it back down, which is what removes the stair edges. It reuses the one drawing surface rather than keeping a second copy, so nothing accumulates, and the detail is stepped down until it fits both the hardware limit and a pixel budget.")}
+              {L("The sharp redraw computes the same view with more pixels than the screen has, then shrinks it to the size of the screen. This smooths the stair-step edges. The extra-detail slider sets how many times more pixels are computed along each side. If the device cannot handle that many, the detail is lowered until it fits.")}
             </Text>
           </section>
 
           {deep ? (
             <section className="rounded border border-destructive/40 p-4">
               <Heading level={2} data-tone="destructive">
-                {L("SERVER RENDER")}
+                {L("DRAWING ON THE SERVER")}
               </Heading>
               <Text kind="note" as="p" className="mt-2">
-                {L("Past about a hundred thousand times, single precision on the graphics card runs out of digits and the picture goes blocky. This view is deeper than that, so it is rendered on the server in double precision and streamed back one pass at a time, each four times finer than the last.")}
+                {L("Past a zoom of about a hundred thousand times, the graphics card of this device runs out of digits. Neighbouring pixels get the same number, and the picture turns into blocks. This view is deeper than that. So it is drawn on the server, which keeps more than twice as many digits for each number. The picture arrives in four passes, each four times finer than the one before.")}
               </Text>
               <div className="mt-3 flex flex-wrap gap-2">
                 <Button variant="outline" size="sm"
@@ -137,8 +138,8 @@ function MandelbrotPage() {
                   disabled={shot.kind === "working" || shot.kind === "opening"}
                 >
                   {shot.kind === "working" || shot.kind === "opening"
-                    ? L("Rendering")
-                    : L("Render on the server")}
+                    ? L("Drawing")
+                    : L("Draw on the server")}
                 </Button>
                 <Button variant="outline" size="sm"
                   type="button"
@@ -149,31 +150,31 @@ function MandelbrotPage() {
                 </Button>
               </div>
               <div data-text="caption" className="mt-3">
-                {shot.kind === "working" ? L("Pass {{done}} of 4", { done: shot.done }) : null}
-                {shot.kind === "done" ? L("Finished, full resolution") : null}
+                {shot.kind === "working" ? L("Pass {{done}} of 4 received", { done: shot.done }) : null}
+                {shot.kind === "done" ? L("Finished, at full detail") : null}
                 {shot.kind === "idle" ? L("Not started") : null}
-                {shot.kind === "opening" ? L("Opening the connection") : null}
+                {shot.kind === "opening" ? L("Connecting to the server") : null}
                 {shot.kind === "refused" || shot.kind === "busy" || shot.kind === "lost" ? (
                   <span className="text-destructive">{shot.reason}</span>
                 ) : null}
               </div>
               {showing ? (
                 <Text kind="note" as="p" className="mt-2">
-                  {L("The connection is closed as soon as a view finishes, because the server holds capacity for as long as a socket is open whether or not it is computing.")}
+                  {L("The connection to the server is closed as soon as the view is finished. An open connection keeps part of the server reserved, even while it computes nothing.")}
                 </Text>
               ) : null}
               {drifted && tile ? (
                 <Text kind="warning" as="p" className="mt-2">
-                  {L("The view moved, so the server picture was dropped. Render again.")}
+                  {L("The view moved after the server drew it, so that picture is hidden. Pressing 'Draw on the server' draws the new view.")}
                 </Text>
               ) : null}
             </section>
           ) : null}
 
           <Equations system={system} />
-        </div>
+        </>}
 
-        <div data-slot="task-out" className="min-w-0 space-y-3 lg:sticky lg:top-24 lg:self-start">
+        output={<>
           <section
             ref={stage}
             data-slot="plot"
@@ -211,25 +212,25 @@ function MandelbrotPage() {
           <SaveImage stage={stage} name="mandelbrot" />
           <Readout
             rows={[
-              [L("Half width"), span.toExponential(3)],
-              [L("centre"), `${centre[0].toFixed(8)}, ${centre[1].toFixed(8)}`],
-              [L("Steps tried"), showing && tile ? String(tile.iters) : String(iters)],
+              [L("Half the width of the view"), span.toExponential(3)],
+              [L("Centre of the view"), `${centre[0].toFixed(8)}, ${centre[1].toFixed(8)}`],
+              [L("Most steps per point"), showing && tile ? String(tile.iters) : String(iters)],
               [
-                L("Drawn at"),
+                L("Pixels computed"),
                 detail
-                  ? L("{{w}} by {{h}}, {{mp}}M pixels", { w: detail.width, h: detail.height, mp: (detail.pixels / 1e6).toFixed(1) })
+                  ? L("{{w}} by {{h}}, {{mp}} million in all", { w: detail.width, h: detail.height, mp: (detail.pixels / 1e6).toFixed(1) })
                   : "-",
               ],
-              [L("Detail in the picture"), detail ? L("{{f}} x screen", { f: detail.factor.toFixed(1) }) : "-"],
-              [L("Drawn by"), showing ? L("The server, double precision") : L("The graphics card")],
+              [L("Detail compared with the screen"), detail ? L("{{f}} times the screen", { f: detail.factor.toFixed(1) }) : "-"],
+              [L("Computed by"), showing ? L("The server, with extra digits") : L("The graphics card of this device")],
               [
-                L("Server pass"),
-                showing && tile ? L("{{w}} by {{h}}, step {{step}}", { w: tile.width, h: tile.height, step: tile.step }) : "-",
+                L("Last pass from the server"),
+                showing && tile ? L("{{w}} by {{h}} points, each covering {{step}} by {{step}} pixels", { w: tile.width, h: tile.height, step: tile.step }) : "-",
               ],
             ]}
           />
-        </div>
-      </div>
+        </>}
+      />
     </div>
   );
 }

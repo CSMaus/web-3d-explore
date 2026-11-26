@@ -3,6 +3,8 @@
 @import "./registry.css";
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
+/* the pixel case's titles and labels: DotGothic16 with its Latin letters only, so Cyrillic falls to the next face of the stack, narrower */
+@import "@fontsource/dotgothic16/latin-400.css";
 
 @custom-variant dark (&:is(.dark *));
 

@@ -4,7 +4,7 @@
       "number": 1,
       "title": "Dimension of ordinary shapes",
       "video": "",
-      "caption": "Dimension as the number of directions a shape needs, and as the power that doubling raises its content by. A shape built from three half-size copies of itself lands between the whole numbers, at 1.585.",
+      "caption": "A line runs in one direction, a square in two, a cube in three. That count is the dimension. A square with its side doubled holds 4 copies of itself, 2 × 2. A cube holds 8, 2 × 2 × 2. Some shapes fall between: one that holds 3 copies of itself when doubled has dimension about 1.585.",
       "question": "What does the dimension of a shape count?",
       "text": [],
       "beats": [
@@ -44,9 +44,9 @@
     },
     {
       "number": 2,
-      "title": "The coastline paradox",
+      "title": "The length of a coast",
       "video": "",
-      "caption": "Measuring the coast of Britain with a shorter and shorter step gives a longer and longer total, while a smooth curve settles. How fast the total grows is a number, the coast's dimension: 1.232.",
+      "caption": "Dividers, two legs set a fixed distance apart, are walked along the coast of Britain. Each time the step is halved, the measured length grows: a shorter step follows smaller bays. A smooth curve's length would settle. How fast it grows is the coast's dimension: 1.232, between 1 for a smooth line and 2 for a filled area.",
       "beats": [
         {
           "slug": "02-coastline",
@@ -62,9 +62,9 @@
     },
     {
       "number": 3,
-      "title": "Box-counting dimension",
+      "title": "Counting boxes",
       "video": "",
-      "caption": "A grid laid over the coast, with the boxes it passes through counted as the boxes shrink. The count grows at the rate the dividers found, about 1.23, by a method that works on any shape.",
+      "caption": "A grid of square boxes is laid over a map of the coast, and the boxes it passes through are counted. For a straight line, halving the boxes would double the count. For the coast it grows faster: 30, then 73, then 173. That growth gives the dimension, about 1.23. This method, box counting, works on any shape.",
       "beats": [
         {
           "slug": "03-box-counting",
@@ -75,14 +75,14 @@
           "say": "Forget walking along it. Drop a grid over the whole coast and ask one question of each box: does any coast run through it? Thirty boxes at this size. Halve the box - seventy-three. Halve again - a hundred and seventy-three. Each halving more than doubles the count, and if this were a plain line it would exactly double. Sizes against counts, both logarithmic, and the slope is one point two three - the same answer the divider walk gave, by a method that shares nothing with it. Before trusting it further, try it where the answer is known. A line four across needs four boxes. A square four across needs sixteen. A cube, sixty-four. The slopes come out one, two and three exactly. And when the rule is known, no counting is needed at all: four copies, each a third of the size, and the logarithm reads the dimension straight off."
         }
       ],
-      "question": "How is something measured when it is not a line?",
+      "question": "How can the roughness of any shape be measured?",
       "text": []
     },
     {
       "number": 4,
-      "title": "The Koch curve as an idealised coastline",
+      "title": "The Koch curve: a coast made by one rule",
       "video": "",
-      "caption": "One rule, repeated without end, builds the Koch curve: four copies of itself at a third of the size. That pair of numbers gives its dimension exactly, log 4 over log 3, about 1.262.",
+      "caption": "The middle third of a segment is lifted into a point, making four pieces, each a third as long. Repeated without end, this gives the Koch curve: 4 copies of itself at a third of the size. Its dimension, the power that turns 3 into 4, is log 4 / log 3, about 1.262. Its length has no limit.",
       "beats": [
         {
           "slug": "04a-rule",
@@ -132,7 +132,7 @@
       "number": 5,
       "title": "The Barnsley fern",
       "video": "",
-      "caption": "Four simple moves, applied at random to one point thousands of times, draw a fern that does not depend on where the point started. Each move draws one part of it.",
+      "caption": "A move shrinks, turns and shifts a point, and six numbers set it. One point is moved 90,000 times, each time by one of four moves picked at random, and every landing place is marked. The marks form a fern wherever the point started, because every move brings any two points closer together. Each move draws one part.",
       "beats": [
         {
           "slug": "05a-ifs",
@@ -180,9 +180,9 @@
     },
     {
       "number": 6,
-      "title": "The wider geometric family",
+      "title": "Many shapes on one scale",
       "video": "",
-      "caption": "The Cantor set, the Sierpinski triangle and carpet, the dragon, a grown plant, the flowsnake and the Menger sponge, each placed on one scale of dimension by the same two numbers: how many copies, at what size.",
+      "caption": "Many shapes repeat one rule without end: the Cantor set, the Sierpinski triangle and carpet, the dragon curve, a drawn plant, the flowsnake and the Menger sponge. Each is made of smaller copies of itself. Copy count and size give its dimension, a measure of roughness, from about 0.63, less than a line, to 2.73, nearly a solid.",
       "beats": [
         {
           "slug": "06a-cantor",
@@ -257,14 +257,14 @@
           "say": "The dragon is not built by folding, in the end - it is what two moves settle onto. Apply the first to the whole curve and it lands exactly on the left half. Apply the second and it lands on the right. Two copies, each shrunk by nought point seven one and turned, and together they are the original. Same machinery as the fern, which needed four. Start from a square somewhere else entirely and put it through the two moves over and over - the widest piece shrinks by seven-tenths every pass, and it settles on the dragon. Now, this looks like a Julia set, and there is a real reason. A Julia set is a two-move attractor too: its moves are the two square roots of z minus c. But the dragon's moves keep straight lines straight, so it tiles the plane, while the square root bends them, so the edge curls. The dragon is not a Julia set, and no Julia set is a dragon curve."
         }
       ],
-      "question": "How many shapes does one idea cover?",
+      "question": "Can very different shapes be compared by one number?",
       "text": []
     },
     {
       "number": 7,
-      "title": "Random fractals, lightning and crystal growth",
+      "title": "Shapes grown by chance: lightning and crystals",
       "video": "",
-      "caption": "A spark across a gap and particles that wander and stick both grow branching trees by chance. No two runs match, and one setting in the rule moves the dimension.",
+      "caption": "A spark across a gap forks, and its forks fork again. A computer grows such a tree by chance, adding points most often near the tips. Particles that wander at random and stick where they touch grow a similar tree. No two runs match. One number in the rule thins the branches and lowers the dimension, a measure of roughness.",
       "beats": [
         {
           "slug": "07a-discharge",
@@ -315,14 +315,14 @@
           "say": "A plant grown by a fixed rule, and a discharge grown by a random one - and they look like relatives. But run the fern again and it is the same fern; run the discharge again and it is never the same bolt. The randomness is the shape, not a flaw in it. And it has a setting: turn one number, and the branching thins from a bush to a channel, with the dimension following it down."
         }
       ],
-      "question": "Can randomness make a fractal?",
+      "question": "Can pure chance grow a shape with branches inside branches?",
       "text": []
     },
     {
       "number": 8,
       "title": "Complex numbers",
       "video": "",
-      "caption": "A number that squares to minus one needs a direction of its own, which turns the number line into a plane. Adding and multiplying in that plane, and why squaring is the step the Mandelbrot set is built on.",
+      "caption": "No ordinary number times itself is negative. So a new number i is invented, with i × i = -1, and placed one step above zero, off the number line. Every point of the plane becomes a number, called a complex number. Adding shifts a point. Multiplying turns and stretches: squaring doubles the angle and squares the distance from zero.",
       "beats": [
         {
           "slug": "08a-point-on-plane",
@@ -373,14 +373,14 @@
           "say": "Take squaring on its own and apply it over and over. Start inside this circle and the point falls to zero. Start on it and it stays. Start outside and it runs away. Three outcomes, and the border between them is exactly the circle - perfectly smooth, dimension one, nothing to say about it. So add one thing: after every squaring, shift by a fixed number c. Watch a single step done twice over - square, which doubles the angle and squares the length, then slide by c. Again. The point wanders and never escapes. Now run that test on every starting point at once and keep the ones that stay bounded - and the border is no longer a circle. Look closer and it stays rough at every magnification. And notice what went into it: a turn and stretch, and a slide. Both from earlier in this topic. Nothing else."
         }
       ],
-      "question": "Where does the Mandelbrot set come from, and why does it need a number that squares to minus one?",
+      "question": "Is there a number that gives minus one when multiplied by itself?",
       "text": []
     },
     {
       "number": 9,
-      "title": "Escape-time dynamics",
+      "title": "Which points stay and which escape",
       "video": "",
-      "caption": "Square, add a fixed number, repeat: some starting points stay near and others escape. The points that stay form a Julia set; the fixed numbers whose walk from zero stays form the Mandelbrot set.",
+      "caption": "Points of the plane are treated as numbers, called complex numbers. The rule: square the point, add a fixed point c, repeat. Some starting points stay near zero. Others run away, as any result over 2 from zero does. For one c, those that stay form its Julia set. The c whose walk from zero stays form the Mandelbrot set.",
       "beats": [
         {
           "slug": "09a-orbit",
@@ -439,14 +439,14 @@
           "say": "Nothing so far depended on squaring and adding. Here is Newton's method looking for the cube roots of one - colour each starting point by which root it ends up at, and the borders between the three are fractal. And here is the burning ship: exactly the earlier rule, except that the two parts of z are made positive before squaring. One absolute value, and this is what comes out. Wherever two outcomes meet, the boundary between them is fractal."
         }
       ],
-      "question": "Which points stay?",
+      "question": "Square a number, add a fixed number, repeat: does the result stay small?",
       "text": []
     },
     {
       "number": 10,
-      "title": "Going deeper",
+      "title": "The edge of the Mandelbrot set",
       "video": "",
-      "caption": "Julia sets in one piece or in dust, decided by where c lies; the endless detail on the Mandelbrot set's edge; the dimension measured along it; and the period-doubling road into chaos along its axis.",
+      "caption": "The Mandelbrot set holds the values c for which 'square, add c, repeat', started at zero, stays within 2. For c inside, the starting points that stay, the Julia set of c, form one piece. With c outside, they are dust. The set's edge stays rough at every magnification, with dimension, a measure of roughness, proved to be 2.",
       "beats": [
         {
           "slug": "10a-connectedness",
@@ -489,14 +489,14 @@
           "say": "Restrict the same rule to the real line and plot where it settles. The picture underneath lines up with the one above: every neck between the bulbs sits exactly on a splitting point. Each bulb is one doubling of the period - the route to chaos, sitting inside this picture."
         }
       ],
-      "question": "How deep does the edge go?",
+      "question": "Does the edge of the Mandelbrot set ever become smooth?",
       "text": []
     },
     {
       "number": 11,
-      "title": "The optional deeper layer",
+      "title": "For readers who want the reasons",
       "video": "",
-      "caption": "The reasons behind the series, for a reader who wants them: why a logarithm gives the dimension, why box counting needs a range of sizes, the Hausdorff measure, Laplace's equation for the discharge, the escape bound of two, and the two big theorems.",
+      "caption": "This part is optional. It explains why the main results about fractals, shapes rough at every magnification, are true: why a logarithm gives the dimension, and why counting boxes needs many box sizes. It defines the Hausdorff dimension, the strictest form. It gives Laplace's equation for the field around a spark, and two proved facts about the Mandelbrot set.",
       "beats": [
         {
           "slug": "11a-optional-strand",
@@ -563,7 +563,7 @@
           "say": "Two results, stated plainly. The set is connected - the argument maps its outside smoothly onto the outside of a disk. And its edge has dimension two, as rough as a curve is capable of being. Both proofs are beyond this series. What they mean is not."
         }
       ],
-      "question": "For a reader who wants the reasons",
+      "question": "Why are the formulas for dimension true?",
       "text": []
     }
   ]

@@ -7,6 +7,8 @@ export const SHAPES: Record<string, SolidKind> = {
   chaos: "lorenz",
   networks: "network",
   tokens: "attention",
+  series: "series",
+  probability: "dice",
 };
 
 /** "Start here" for topic 0, "Topic n" for the others */

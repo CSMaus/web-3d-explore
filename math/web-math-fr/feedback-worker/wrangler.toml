@@ -1,0 +1,16 @@
+# the feedback relay: a page's form posts here, and the message goes on to the owner's Telegram.
+# the token, the chat id and the Turnstile secret are never in this file or in git: they are set with
+#   npx wrangler secret put TG_TOKEN
+#   npx wrangler secret put TG_CHAT_ID
+#   npx wrangler secret put TURNSTILE_SECRET
+# (docs/telegram-bot.md has the steps)
+name = "mathfr-feedback"
+main = "src/index.ts"
+compatibility_date = "2025-10-01"
+
+[vars]
+# the only site allowed to send
+ALLOWED_ORIGIN = "https://csmaus.github.io"
+
+[observability]
+enabled = false

@@ -41,10 +41,10 @@ const DARK = {
 } as const;
 
 // the light of each topic, by topic number (0 complex numbers, 1 fractals, 2 chaos, 3 networks,
-// 4 tokens, 5 the primes aside): its name and its turning figure glow in it. warm hues only:
-// amber, orange, copper, deep orange, peach, caramel.
-const TOPICS_LIGHT: Hues["chart"] = ["#a8661a", "#c0551f", "#9c4a1c", "#b35a12", "#b0623a", "#8f6224"];
-const TOPICS_DARK: Hues["chart"] = ["#f2b35e", "#ff8a5c", "#e0763f", "#f59a4a", "#f5a97f", "#d9a066"];
+// 4 tokens, 5 series, 6 the primes aside, 7 probability): its name and its turning figure glow in
+// it. warm hues only: amber, orange, copper, deep orange, peach, caramel, rust, honey.
+const TOPICS_LIGHT: Hues["chart"] = ["#a8661a", "#c0551f", "#9c4a1c", "#b35a12", "#b0623a", "#8f6224", "#a9542e", "#9a6a12"];
+const TOPICS_DARK: Hues["chart"] = ["#f2b35e", "#ff8a5c", "#e0763f", "#f59a4a", "#f5a97f", "#d9a066", "#f0925f", "#f2c46a"];
 
 // one palette: its lights for the light page and for the dark page; "dark" is the mode a visitor starts in
 const palette = (light: Hues, dark: Hues): Colours =>
@@ -62,6 +62,8 @@ export const PALETTES: Record<string, Colours> = {
       chart: ["#E98D5C", "#FF7E61", "#7a7f88", "#B36F50", "#c93b3b"],
       // errors, warnings, the destructive button
       destructive: "#c93b3b",
+      // the colour of a right answer (a test's right option); a green that reads on both grounds
+      success: "#3f9f62",
       // what is current or chosen (active tab, page title): the second light, so it differs from the primary
       selected: "#BA5B41",
       // the light: the glow of buttons, the glow under the active link in the bar, the figures' travelling light
@@ -79,6 +81,8 @@ export const PALETTES: Record<string, Colours> = {
       chart: ["#E98D5C", "#D1735E", "#7a7f88", "#F7A883", "#AB5C44"],
       // errors, warnings, the destructive button
       destructive: "#D64322",
+      // the colour of a right answer (a test's right option); a green that reads on both grounds
+      success: "#3f9f62",
       // what is current or chosen (active tab, page title): the second light, so it differs from the primary
       selected: "#FFB3A3",
       // the light: the glow of buttons, the glow under the active link in the bar, the figures' travelling light

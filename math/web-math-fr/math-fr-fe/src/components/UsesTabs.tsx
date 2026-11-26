@@ -3,7 +3,7 @@ import { usesOf, type PieceRoute, type UsesIndexRoute } from "@/lib/uses";
 import { L } from "@/lib/lang";
 
 /** the sub-tabs of a topic's applications: all, then one a built application. */
-export function UsesTabs({ topic }: { topic: "fractals" | "chaos" | "complex" | "networks" | "tokens" }) {
+export function UsesTabs({ topic }: { topic: "fractals" | "chaos" | "complex" | "networks" | "tokens" | "series" | "probability" }) {
   const index = `/topics/${topic}/uses` as UsesIndexRoute;
   const piece = `/topics/${topic}/uses/$piece` as PieceRoute;
   return (

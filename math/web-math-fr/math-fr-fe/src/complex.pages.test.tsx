@@ -1,5 +1,5 @@
 import { RouterProvider, createMemoryHistory, createRouter } from "@tanstack/react-router";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { routeTree } from "@/routeTree.gen";
 import { SYSTEMS } from "@/lib/complex";
@@ -11,6 +11,9 @@ async function siteAt(path: string) {
   await router.load();
   return render(<RouterProvider router={router as never} />);
 }
+
+// the count the run bar shows, read from its caption
+const counted = () => Number(screen.getByRole("button", { name: "Reset" }).parentElement!.querySelector('[data-text="caption"]')!.textContent!.split(" / ")[0].replace(/,/g, ""));
 
 const near = (a: C, b: C, eps = 1e-9) => Math.hypot(a[0] - b[0], a[1] - b[1]) < eps;
 
@@ -102,7 +105,7 @@ describe("the opening topic's pages", () => {
 
   it("the page of which points stay says whether c stays, and sends c round the loop", async () => {
     await siteAt("/topics/complex/play/square");
-    await waitFor(() => expect(screen.getByRole("heading", { name: "Which points stay?" })).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Which points stay near zero? The Mandelbrot set" })).toBeTruthy());
     expect(screen.getByText(/^c = .*(in the Mandelbrot set|outside the set)\.$/, { selector: '[data-slot="verdict"]' })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Pause" })).toBeTruthy();
   });
@@ -121,12 +124,13 @@ describe("the opening topic's pages", () => {
     await siteAt("/topics/complex/play/turn");
     await waitFor(() => expect(screen.getByRole("heading", { name: "What 𝑖 is" })).toBeTruthy());
     for (let i = 0; i < 40; i++) fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
-    await waitFor(() => expect(screen.getByText(/i times i is minus one|times i four times is times one|round again/i)).toBeTruthy());
+    // the equations' summary says the same thing, so the verdict is asked for by its slot
+    await waitFor(() => expect(screen.getByText(/i times i is minus one|times i four times is times one|round again/i, { selector: '[data-slot="verdict"]' })).toBeTruthy());
   });
 
   it("the exponential page pauses on minus one at pi", async () => {
     await siteAt("/topics/complex/play/round");
-    await waitFor(() => expect(screen.getByRole("heading", { name: "Euler's formula" })).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Euler's formula: a point that goes round a circle" })).toBeTruthy());
     for (let i = 0; i < 12; i++) fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
     await waitFor(() => expect(screen.getByText(/e to the 𝑖 pi equals minus one/i)).toBeTruthy());
   });
@@ -138,7 +142,25 @@ describe("the opening topic's pages", () => {
     expect(new Set(pages.map((a) => a.getAttribute("href"))).size).toBe(7);
     view.unmount();
     view = await siteAt("/topics/complex/parts");
-    await waitFor(() => expect(screen.getByRole("heading", { name: "The series, in order" })).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "The planned videos, in order" })).toBeTruthy());
     view.unmount();
+  });
+
+  it("run after a few steps carries on from them", async () => {
+    // frames are handed out one at a time, so the first frames of the run can be looked at
+    const queue: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => queue.push(cb));
+    vi.stubGlobal("cancelAnimationFrame", (id: number) => {
+      queue[id - 1] = () => {};
+    });
+    await siteAt("/topics/complex/play/line");
+    await waitFor(() => expect(screen.getByRole("button", { name: "One step" })).toBeTruthy());
+    for (let i = 0; i < 3; i++) fireEvent.click(screen.getByRole("button", { name: "One step" }));
+    await waitFor(() => expect(counted()).toBe(3));
+    fireEvent.click(screen.getByRole("button", { name: "Run" }));
+    // the run carries on from the third step rather than from the runner's own count
+    for (let i = 0; i < 60 && counted() === 3; i++) act(() => queue.splice(0).forEach((cb) => cb(0)));
+    expect(counted()).toBeGreaterThan(3);
+    fireEvent.click(screen.getByRole("button", { name: "Pause" }));
   });
 });

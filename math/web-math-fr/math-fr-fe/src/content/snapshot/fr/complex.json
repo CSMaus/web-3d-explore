@@ -2,7 +2,7 @@
  "slug": "complex",
  "number": 0,
  "title": "Nombres imaginaires",
- "summary": "L'entrée en matière, pour un lecteur qui n'a jamais rencontré i : la droite des nombres et la seule question à laquelle elle ne peut pas répondre, un quart de tour, l'addition comme des flèches, la multiplication comme rotation et étirement, l'élévation au carré répétée jusqu'à l'apparition d'un ensemble de Julia, et l'exponentielle qui tourne en rond",
+ "summary": "Quel nombre, multiplié par lui-même, donne -1 ? Aucun nombre de la droite des nombres ordinaire. Ce thème est le point de départ, et il ne demande que l'arithmétique de l'école. Il ajoute un nouveau nombre, noté i, avec i × i = -1, et montre que multiplier par i fait tourner un point d'un quart de tour autour de zéro. Un nombre fait d'une partie ordinaire et d'une partie comptée en i s'appelle un nombre complexe. Les pages additionnent ces nombres comme des flèches mises bout à bout et les multiplient en tournant et en étirant. Ensuite un nombre est élevé au carré et un nombre fixe c lui est ajouté, encore et encore, pour voir quels points de départ restent près de zéro. Ensemble, ces points dessinent une forme appelée l'ensemble de Mandelbrot. La dernière page montre comment le nombre e, environ 2,718, élevé à une puissance qui contient i, tourne sur un cercle au lieu de grandir.",
  "state": "writing",
  "parts": 0,
  "beats": 0,

@@ -3,13 +3,14 @@ import { L } from "@/lib/lang";
 export const NETWORKS = {
   slug: "networks",
   number: 3,
-  title: L("Calculus into a first neural network"),
+  title: L("From calculus to a first neural network"),
   landing: "/topics/networks/play",
   sections: [
     { to: "/topics/networks/parts", label: L("Parts") },
     { to: "/topics/networks/play", label: L("Play") },
     { to: "/topics/networks/theory", label: L("Mathematics") },
     { to: "/topics/networks/uses", label: L("Applications") },
+    { to: "/topics/networks/test", label: L("Test") },
   ],
 } as const;
 
@@ -24,26 +25,26 @@ export const TOPIC = "networks";
  * places: what goes in, run, what came out.
  */
 export const SYSTEMS = [
-  { id: "rate", to: "/topics/networks/play/rate", label: L("How fast"), group: L("The calculus") },
-  { id: "rate2", to: "/topics/networks/play/rate2", label: L("Speeding up"), group: L("The calculus") },
-  { id: "accumulate", to: "/topics/networks/play/accumulate", label: L("Adding it back"), group: L("The calculus") },
-  { id: "growth", to: "/topics/networks/play/growth", label: L("Growth"), group: L("The calculus") },
-  { id: "slope", to: "/topics/networks/play/slope", label: L("A hill"), group: L("The calculus") },
-  { id: "line", to: "/topics/networks/play/line", label: L("Draw the line"), group: L("One job") },
-  { id: "nudge", to: "/topics/networks/play/nudge", label: L("A small change"), group: L("One job") },
-  { id: "unit", to: "/topics/networks/play/unit", label: L("Inside one unit"), group: L("One job") },
-  { id: "layers", to: "/topics/networks/play/layers", label: L("Many units"), group: L("One job") },
-  { id: "any", to: "/topics/networks/play/any", label: L("Any curve"), group: L("One job") },
-  { id: "learn", to: "/topics/networks/play/learn", label: L("How it learns"), group: L("One job") },
-  { id: "blame", to: "/topics/networks/play/blame", label: L("The correction"), group: L("One job") },
-  { id: "slow", to: "/topics/networks/play/slow", label: L("A bad start"), group: L("Where it stalls") },
-  { id: "fade", to: "/topics/networks/play/fade", label: L("The first layer"), group: L("Where it stalls") },
-  { id: "pictures", to: "/topics/networks/play/pictures", label: L("On pictures"), group: L("The same job on") },
-  { id: "sequence", to: "/topics/networks/play/sequence", label: L("On a sequence"), group: L("The same job on") },
-  { id: "words", to: "/topics/networks/play/words", label: L("On words"), group: L("The same job on") },
+  { id: "rate", to: "/topics/networks/play/rate", label: L("Speed from position"), group: L("Change and totals") },
+  { id: "rate2", to: "/topics/networks/play/rate2", label: L("Speeding up or slowing down"), group: L("Change and totals") },
+  { id: "accumulate", to: "/topics/networks/play/accumulate", label: L("Distance from speed"), group: L("Change and totals") },
+  { id: "growth", to: "/topics/networks/play/growth", label: L("Growth in proportion"), group: L("Change and totals") },
+  { id: "slope", to: "/topics/networks/play/slope", label: L("Which way is down"), group: L("Change and totals") },
+  { id: "line", to: "/topics/networks/play/line", label: L("Dividing dots by a line"), group: L("Teaching a network to sort dots") },
+  { id: "nudge", to: "/topics/networks/play/nudge", label: L("Small change, small effect"), group: L("Teaching a network to sort dots") },
+  { id: "unit", to: "/topics/networks/play/unit", label: L("One artificial neuron"), group: L("Teaching a network to sort dots") },
+  { id: "layers", to: "/topics/networks/play/layers", label: L("Several neurons together"), group: L("Teaching a network to sort dots") },
+  { id: "any", to: "/topics/networks/play/any", label: L("Drawing any curve"), group: L("Teaching a network to sort dots") },
+  { id: "learn", to: "/topics/networks/play/learn", label: L("Speed of learning"), group: L("Teaching a network to sort dots") },
+  { id: "blame", to: "/topics/networks/play/blame", label: L("The error passed back"), group: L("Teaching a network to sort dots") },
+  { id: "slow", to: "/topics/networks/play/slow", label: L("Sure and wrong"), group: L("When learning stalls") },
+  { id: "fade", to: "/topics/networks/play/fade", label: L("The first layer learns last"), group: L("When learning stalls") },
+  { id: "pictures", to: "/topics/networks/play/pictures", label: L("Finding a shape in a picture"), group: L("Pictures, sequences, words") },
+  { id: "sequence", to: "/topics/networks/play/sequence", label: L("Remembering a number"), group: L("Pictures, sequences, words") },
+  { id: "words", to: "/topics/networks/play/words", label: L("Which word to look at"), group: L("Pictures, sequences, words") },
 ] as const;
 
-export const GROUPS = [L("The calculus"), L("One job"), L("Where it stalls"), L("The same job on")] as const;
+export const GROUPS = [L("Change and totals"), L("Teaching a network to sort dots"), L("When learning stalls"), L("Pictures, sequences, words")] as const;
 
 export type NetRoute = (typeof SYSTEMS)[number]["to"];
 

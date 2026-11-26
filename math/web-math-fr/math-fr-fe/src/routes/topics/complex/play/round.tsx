@@ -46,13 +46,13 @@ function RoundPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? L("Euler's formula")}
-        job={L("Topic 3 had a curve that grows by a fixed fraction of itself: the exponential. Give it an imaginary rate and it cannot grow, because its rate of change is its position turned a quarter, always sideways and never outward. So it goes round the unit circle at a steady pace. The job is to run the angle and watch the point go round, with its two shadows drawn as waves beside it.")}
+        title={system?.name ?? L("Euler's formula: a point that goes round a circle")}
+        job={L("What happens to a quantity that grows at an imaginary rate? Ordinary growth by a fixed fraction of itself, like money at compound interest, is called exponential growth. There the rate of change points the same way as the quantity, so the quantity keeps getting bigger. Multiplying the rate by 𝑖 turns it a quarter turn: it now points sideways, at right angles to the line from zero to the point. A point that is always pushed sideways moves neither away from zero nor towards it. It goes round a circle of radius one at a steady pace. This motion is written e to the 𝑖 theta: e is the number about 2.718 that describes growth, and theta is the angle turned so far. Pressing run increases the angle and moves the point round the circle; its two shadows on the axes are drawn beside it as waves. The thing to look for: where the point is after half a turn.")}
         input={
           <div className="space-y-3">
-            <Slider label={L("Turns")} min={0.5} max={3} step={0.5} value={turnsTotal} format={(v) => (v === 1 ? L("{{v}} turn", { v }) : L("{{v}} turns", { v }))} onChange={(v) => { setTurnsTotal(v); reset(); }} />
+            <Slider label={L("Number of turns")} min={0.5} max={3} step={0.5} value={turnsTotal} format={(v) => (v === 1 ? L("{{v}} turn", { v }) : L("{{v}} turns", { v }))} onChange={(v) => { setTurnsTotal(v); reset(); }} />
             <Text kind="note" as="p">
-              {L("The angle is in radians: a full turn is two pi, about 6.28. Half a turn, pi, lands on minus one, and the page pauses to say so.")}
+              {L("The angle is measured in radians. One radian is the angle at which the arc of a circle is as long as the circle's radius. A full turn is 2 times pi radians, about 6.28, where pi is about 3.14. Half a turn is pi radians.")}
             </Text>
           </div>
         }
@@ -66,7 +66,7 @@ function RoundPage() {
               if (!runner.running && at >= TICKS) reset();
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(TICKS, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -98,7 +98,7 @@ function RoundPage() {
                   }}
                 />
               </div>
-              <Caption>{L("The unit circle. White: e to the 𝑖 theta at the angle so far. Sky: its shadow on the along axis, the cosine. Rose: its shadow on the up axis, the sine.")}</Caption>
+              <Caption>{L("The circle of radius one around zero. The thick arc is the path of the point so far, and the arrow from zero points to the point itself, e to the 𝑖 theta at the current angle. Two thin lines run from the point to the axes. The dot on the horizontal axis is the point's shadow there, called the cosine of the angle. The dot on the vertical axis is its shadow there, called the sine.")}</Caption>
             </div>
             <div>
               <div data-slot="plot" className="h-[320px] overflow-hidden">
@@ -124,7 +124,7 @@ function RoundPage() {
                   }}
                 />
               </div>
-              <Caption>{L("The two shadows against the angle, in units of pi. Sky: the cosine. Rose: the sine. The faint line is at pi, half a turn.")}</Caption>
+              <Caption>{L("The two shadows plotted against the angle, which runs along the bottom in multiples of pi. The curve that starts at height one is the cosine. The curve that starts at zero is the sine. The thin vertical line marks pi, half a turn.")}</Caption>
             </div>
           </section>
         }
@@ -132,23 +132,23 @@ function RoundPage() {
           <div className="space-y-2">
             <Verdict good={nearPi ? true : undefined}>
               {at === 0
-                ? L("The angle is zero and the point is at 1. Press run and the angle grows at a steady rate.")
+                ? L("The angle is zero and the point is at 1, on the horizontal axis. Press run: the angle grows at a steady rate.")
                 : nearPi
-                  ? L("The angle is pi, half a turn, and the point is at {{z}}: minus one. That is the famous line, e to the 𝑖 pi equals minus one, and it says nothing more than that half a turn lands opposite where it started.", { z: show(z) })
-                  : L("At angle {{a}} the point is at {{z}}: cosine {{c}} along, sine {{s}} up, length exactly one. The rate of change points sideways, so the point neither grows nor shrinks; it goes round.", { a: theta.toFixed(2), z: show(z), c: z[0].toFixed(3), s: z[1].toFixed(3) })}
+                  ? L("The angle is pi, half a turn, and the point is at {{z}}: minus one. This is the well-known formula e to the 𝑖 pi equals minus one. It says that half a turn round the circle ends opposite the starting point.", { z: show(z) })
+                  : L("At angle {{a}} radians the point is at {{z}}: {{c}} across, which is the cosine, and {{s}} up, which is the sine. Its distance from zero is exactly one. The point is always pushed sideways, so it moves neither away from zero nor towards it: it goes round.", { a: theta.toFixed(2), z: show(z), c: z[0].toFixed(3), s: z[1].toFixed(3) })}
             </Verdict>
             <Readout
               rows={[
-                [L("Angle, radians"), theta.toFixed(4)],
-                [L("Angle, turns"), (theta / (2 * Math.PI)).toFixed(4)],
-                [L("e to the 𝑖 theta"), show(z, 4)],
-                [L("Cosine, the along shadow"), z[0].toFixed(4)],
-                [L("Sine, the up shadow"), z[1].toFixed(4)],
-                [L("Length, always"), Math.hypot(z[0], z[1]).toFixed(6)],
+                [L("Angle so far, in radians"), theta.toFixed(4)],
+                [L("Angle so far, in whole turns"), (theta / (2 * Math.PI)).toFixed(4)],
+                [L("The point, e to the 𝑖 theta"), show(z, 4)],
+                [L("Cosine: the shadow on the horizontal axis"), z[0].toFixed(4)],
+                [L("Sine: the shadow on the vertical axis"), z[1].toFixed(4)],
+                [L("Distance from zero, always one"), Math.hypot(z[0], z[1]).toFixed(6)],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              {L("Multiplying by e to the 𝑖 theta is a turn by theta with no stretch: the last two pages, written as one formula. The position vectors of topic 4 are this at many speeds at once, and the swing on topic 2's phase plane is the along shadow of exactly this motion.")}
+              {L("Euler's formula says in one line what the picture shows: e to the 𝑖 theta equals cos theta plus 𝑖 times sin theta. The number e to the 𝑖 theta has length one, so multiplying any complex number by it turns that number's arrow by the angle theta and does not stretch it. This is why the formula appears wherever something turns or swings back and forth: in waves, in alternating current, in a swinging pendulum.")}
             </Text>
           </div>
         }

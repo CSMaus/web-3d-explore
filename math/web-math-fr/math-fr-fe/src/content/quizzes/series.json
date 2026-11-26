@@ -1,0 +1,266 @@
+{
+  "slug": "series",
+  "title": "Test: Series",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "A Taylor series builds a function as a sum of powers of (x - a), where a is a chosen point called the centre. What does the sum copy at the centre?",
+      "options": [
+        {
+          "text": "Only the height of the curve there, while the later terms fix the curve elsewhere",
+          "correct": false,
+          "why": "The first term alone copies only the height, and its graph is a flat line. Each further term copies one more property at the same centre."
+        },
+        {
+          "text": "The height, the slope, the bend and every further derivative there",
+          "correct": true,
+          "why": "A derivative measures how fast a function changes: the first is the slope, the second the bend. The term with (x - a)^n carries f^(n)(a)/n!, so adding it makes the n-th derivative of the sum agree with that of the function at a."
+        },
+        {
+          "text": "The heights of the curve at evenly spaced points around the centre",
+          "correct": false,
+          "why": "A Taylor series uses one point only, the centre. Measuring the curve at many points is a different method."
+        },
+        {
+          "text": "The sizes of circles turning at whole-number speeds",
+          "correct": false,
+          "why": "That describes a Fourier series, which builds a repeating wave from sine waves. A Taylor series is built from powers of x at one point."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "In a Fourier series a wave is built from sine waves. How is a single sine wave drawn with circles?",
+      "options": [
+        {
+          "text": "As a straight line that tilts back and forth",
+          "correct": false,
+          "why": "A tilting line has no fixed size and no speed. Each sine wave is drawn as a circle with a radius and a whole-number speed."
+        },
+        {
+          "text": "As a circle whose radius grows a little on every turn",
+          "correct": false,
+          "why": "The circle of one sine wave keeps its size. Its radius is the size of that sine wave, and a growing circle would make the wave grow."
+        },
+        {
+          "text": "As a block of 8 by 8 pixels, the small squares of a picture",
+          "correct": false,
+          "why": "Blocks of 8 by 8 pixels belong to picture compression, where a photograph is cut up. A sine wave is drawn over one turn of a circle."
+        },
+        {
+          "text": "As the height of a point turning steadily on a circle",
+          "correct": true,
+          "why": "sin(nx) is the height of a point going round a circle n times while x makes one turn. Adding sine waves puts circles on the edges of circles."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "JPEG-style compression cuts a grey picture into blocks of 8 by 8 pixels, each pixel one number. How is one block written?",
+      "options": [
+        {
+          "text": "Its 64 numbers are written exactly as a sum of 64 waves",
+          "correct": true,
+          "why": "8 times 8 is 64 values, and the cosine transform turns them into 64 wave strengths with nothing lost. Keeping all 64 waves brings the block back exactly."
+        },
+        {
+          "text": "Its 64 numbers are written as a sum of 8 waves, one per row",
+          "correct": false,
+          "why": "Eight waves cannot hold 64 independent numbers. The waves change across the block and down it, and there are 64 of them."
+        },
+        {
+          "text": "Its 16 numbers are written as a sum of 16 waves",
+          "correct": false,
+          "why": "8 plus 8 is 16, but a block has 8 times 8 pixels, which is 64 numbers."
+        },
+        {
+          "text": "Its 64 numbers need endlessly many waves, so it is never exact",
+          "correct": false,
+          "why": "A finite list of numbers needs only as many waves as it has numbers. With all 64 waves kept, the picture comes back exactly."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "The series of sin x is x - x^3/3! + x^5/5! - ..., where 3! = 1 × 2 × 3 = 6 and 5! = 120. What do these three terms add up to at x = 0.5?",
+      "options": [
+        {
+          "text": "0.5",
+          "correct": false,
+          "why": "0.5 is the first term alone. The next two terms take away 0.0208333 and add back 0.0002604."
+        },
+        {
+          "text": "0.4791667",
+          "correct": false,
+          "why": "That is two terms: 0.5 - 0.125/6. The third term, 0.03125/120 = 0.0002604, is still missing."
+        },
+        {
+          "text": "0.4794271",
+          "correct": true,
+          "why": "0.5 - 0.0208333 + 0.0002604 = 0.4794271. This is already within 0.0000016 of the true value of sin(0.5)."
+        },
+        {
+          "text": "0.4794255, exactly sin(0.5)",
+          "correct": false,
+          "why": "0.4794255 is the true value. Three terms come very close but give 0.4794271. The next term, -x^7/7!, would close most of the gap."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "A square wave jumps between -1 and 1. It is built from circles whose radii are 4/(pi k) for the odd speeds k = 1, 3, 5 and so on. What is the radius of the circle with speed 3?",
+      "options": [
+        {
+          "text": "About 1.273, as big as the first circle",
+          "correct": false,
+          "why": "1.273 is 4/pi, the radius of the first circle, with k = 1. The circle of speed 3 is a third of that."
+        },
+        {
+          "text": "About 0.424",
+          "correct": true,
+          "why": "k = 3 gives 4/(3 pi) = 0.4244: a third of the first circle."
+        },
+        {
+          "text": "About 0.333",
+          "correct": false,
+          "why": "1/3 leaves out the factor 4/pi. Every radius of the square wave carries it, so the circle of speed 3 is (4/pi)/3."
+        },
+        {
+          "text": "About 0.141",
+          "correct": false,
+          "why": "0.141 is 4/(9 pi), smaller by the square of the speed. That is how a wave with no jump, the triangle wave, shrinks. The square wave has a jump and shrinks only by the speed."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "The function 1/(1 + x^2) is not defined at the complex numbers i and -i, where i is the number whose square is -1. Its series about the centre a = 3 works up to the distance from 3 to i. Does it settle on the true value at x = 0?",
+      "options": [
+        {
+          "text": "Yes: 0 is 3 away from the centre, and the series reaches about 3.162",
+          "correct": true,
+          "why": "The distance from a to i is sqrt(1 + a^2) = sqrt(10) = 3.162. Since 3 is less than that, x = 0 is inside the circle where the series works."
+        },
+        {
+          "text": "No: every series of this function stops working beyond 1 and -1",
+          "correct": false,
+          "why": "The limit 1 belongs to the centre 0. Moving the centre away from 0 moves it away from i and -i, and the series reaches further."
+        },
+        {
+          "text": "Neither: it reaches exactly 3, so 0 sits on the edge of the circle",
+          "correct": false,
+          "why": "3 is the distance from the centre to 0, not to i. The point i lies off the ordinary number line, and the distance from 3 to i is sqrt(9 + 1)."
+        },
+        {
+          "text": "Yes, and at every x, since the curve is smooth everywhere",
+          "correct": false,
+          "why": "A smooth curve is not enough. The points i and -i still limit this series to sqrt(10) around the centre 3, so a point such as x = -1 is out of reach."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "A square wave that jumps between -1 and 1 is built from 100 circles. About how high does the sum rise next to a jump?",
+      "options": [
+        {
+          "text": "To 1: with 100 circles the overshoot is gone",
+          "correct": false,
+          "why": "More circles make the spike narrower but not lower. This error never goes away, however many circles are added."
+        },
+        {
+          "text": "To about 1.09, 9 per cent above the top",
+          "correct": false,
+          "why": "The 9 per cent is of the jump, not of the top. The jump from -1 to 1 is 2, and 9 per cent of 2 is about 0.18."
+        },
+        {
+          "text": "To about 2, the size of the jump",
+          "correct": false,
+          "why": "The sum rises by a fraction of the jump, not by the whole jump. It peaks well below 2 for any number of circles."
+        },
+        {
+          "text": "To about 1.179",
+          "correct": true,
+          "why": "The overshoot tends to about 9 per cent of the jump of 2, so the peak is near 1.179 for 100 circles as for 10. This is called the Gibbs phenomenon."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "An outline is drawn by turning circles, with the largest kept. The circles left out have radii 2, 1 and 0.5, and every other circle has radius 0. The error of the drawing is measured as the average squared distance from the outline. What is it?",
+      "options": [
+        {
+          "text": "3.5",
+          "correct": false,
+          "why": "3.5 adds the radii themselves. The error adds their squares."
+        },
+        {
+          "text": "12.25",
+          "correct": false,
+          "why": "12.25 is (2 + 1 + 0.5) squared. Squaring the sum counts cross terms that do not belong there, because circles of different speeds do not overlap."
+        },
+        {
+          "text": "5.25",
+          "correct": true,
+          "why": "The error is the sum of the squared radii left out: 4 + 1 + 0.25 = 5.25. This rule is called Parseval's theorem."
+        },
+        {
+          "text": "4",
+          "correct": false,
+          "why": "4 counts only the largest circle left out. Every circle left out adds its own squared radius to the error."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "The series of ln(1 + x), the natural logarithm, about a centre a works only up to the distance 1 + a. The series of sin x works at every x. Why?",
+      "options": [
+        {
+          "text": "ln(1 + x) is not defined at x = -1, and the terms of sin carry a factorial",
+          "correct": true,
+          "why": "In the series of sin, a power x^n is divided by n! = 1 × 2 × ... × n, which grows faster than any power, so the terms go to 0 for every x. In the series of ln(1 + x), the terms are like (x - a)^n/(n (1 + a)^n). They grow once the distance from a passes 1 + a, the distance to x = -1."
+        },
+        {
+          "text": "ln(1 + x) grows too slowly for powers of x to follow it far away",
+          "correct": false,
+          "why": "How fast a function grows does not set the reach. sin x does not grow at all, and its series works everywhere. The limit comes from the point where ln(1 + x) is not defined."
+        },
+        {
+          "text": "Neither stops: with enough terms ln(1 + x) is reached at every x",
+          "correct": false,
+          "why": "Beyond the reach the terms grow instead of shrinking, so each new term makes the sum worse. No number of terms helps there."
+        },
+        {
+          "text": "sin x repeats, so its series only has to be right on one turn",
+          "correct": false,
+          "why": "A series of powers knows nothing of repeats. It works far from the centre because x^n/n! goes to 0. e^x does not repeat, and its series also works at every x."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "In JPEG-style compression, keeping only the few strongest of the 64 waves in each block hardly changes a photograph. A page of text, on the other hand, gets ripples and square blocks. Why?",
+      "options": [
+        {
+          "text": "The transform loses energy on sharp pictures, so text comes back weaker",
+          "correct": false,
+          "why": "The transform keeps the total energy of every block, sharp or soft. What differs is how that energy is spread over the 64 waves."
+        },
+        {
+          "text": "In a photograph most weight sits in a few slow waves, while letters need many fast ones",
+          "correct": true,
+          "why": "Dropping weak waves costs little when they hold little. The edge of a letter needs many fast waves, so with few kept it gets ripples and blocks, the marks of a strongly compressed JPEG."
+        },
+        {
+          "text": "A block of text holds fewer numbers than a block of a photograph",
+          "correct": false,
+          "why": "Every block is 8 by 8 pixels, 64 numbers, whatever it shows. Black and white pixels are still 64 grey levels."
+        },
+        {
+          "text": "The eye cannot see slow waves, so dropping them is hidden in a photograph",
+          "correct": false,
+          "why": "It is the other way round. The slow waves carry most of what is seen, and they are the ones kept. The weak, fast waves are dropped."
+        }
+      ]
+    }
+  ]
+}

@@ -8,6 +8,11 @@ export const text = defineText({
   styles: {
     ...from.styles,
     display: { ...from.styles.display, font: "heading", size: 44, weight: 400, leading: 1.15, tracking: 0, case: "sentence" },
+    personName: { ...from.styles.personName, size: 36, weight: 400 },
+    statValue: { ...from.styles.statValue, weight: 400 },
+    partTitle: { ...from.styles.partTitle, weight: 400 },
+    projectTitle: { ...from.styles.projectTitle, weight: 400 },
+    factValue: { ...from.styles.factValue, weight: 400 },
     lede: { ...from.styles.lede, font: "body", size: 20, leading: 1.5, tracking: 0 },
     body: { ...from.styles.body, font: "body", size: 17, leading: 1.6, tracking: 0 },
     heading1: { ...from.styles.heading1, font: "heading", size: 30, weight: 400, leading: 1.25, tracking: 0, case: "sentence" },

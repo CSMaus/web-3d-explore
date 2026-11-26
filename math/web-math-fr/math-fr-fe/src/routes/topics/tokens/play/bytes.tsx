@@ -55,31 +55,31 @@ function BytesPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? L("One string, three ways")}
-        job={L("A line of text, as it is read. The job is to count it. There are three honest answers, because there are three things it is made of: the characters seen, the code points that name them, and the bytes that store them. They agree in English and part company everywhere else.")}
+        title={system?.name ?? L("Three ways to count text")}
+        job={L("How long is a line of text? The answer depends on what is counted. A reader counts characters: the letters, signs and spaces seen on the screen. Computers number every character in one shared table, called Unicode, and the number of a character is called its code point. Some characters on the screen are built from two or more code points, for example a letter and an accent stored separately. In memory, each code point takes from one to four bytes. A byte is a whole number from 0 to 255, and it is the smallest piece of data a computer stores. For the English line 'the cat sleeps on the warm mat by the window' all three counts are 44. For the same sentence in Russian they are 35 characters, 35 code points and 64 bytes. A sample line can be picked, or any line typed. Run reads the line one character at a time and shows the code points and the bytes of each character under it. The thing to watch is where the three counts stop agreeing.")}
         input={
           <div className="space-y-3">
             <Choices options={PICKS} value={pick} onPick={(id) => { setPick(id); setText(SAMPLES.find((s) => s.id === id)!.text); reset(); }} />
             <label className="block">
-              <span data-text="note">{L("Or type another")}</span>
+              <span data-text="note">{L("Or type any line")}</span>
               <Input value={text} onChange={(e) => { setText(e.target.value); setPick(""); reset(); }} className="mt-1" />
             </label>
             <Button variant="outline" size="sm" type="button" onClick={() => setSpelling((v) => !v)}>
-              {spelling ? L("Hide the two spellings") : L("One letter, two spellings")}
+              {spelling ? L("Hide the two ways of storing it") : L("Show one letter stored in two ways")}
             </Button>
             {spelling ? (
               <div data-text="caption" className="space-y-1 rounded border border-border p-3">
                 <div>
-                  <span className="text-foreground">{composed}</span> {L("Is {{chars}} characters, {{points}} code points, {{bytes}} bytes", { chars: chars(composed).length, points: Array.from(composed).length, bytes: encodeBytes(composed).length })}
+                  <span className="text-foreground">{composed}</span> {L("has {{chars}} characters, {{points}} code points and {{bytes}} bytes", { chars: chars(composed).length, points: Array.from(composed).length, bytes: encodeBytes(composed).length })}
                 </div>
                 <div>
-                  <span className="text-foreground">{decomposed}</span> {L("Is {{chars}} characters, {{points}} code points, {{bytes}} bytes", { chars: chars(decomposed).length, points: Array.from(decomposed).length, bytes: encodeBytes(decomposed).length })}
+                  <span className="text-foreground">{decomposed}</span> {L("has {{chars}} characters, {{points}} code points and {{bytes}} bytes", { chars: chars(decomposed).length, points: Array.from(decomposed).length, bytes: encodeBytes(decomposed).length })}
                 </div>
                 <div>
-                  {L("Equal as strings:")} <span className="text-destructive">{String(composed === decomposed)}</span>. {L("After normalising both the same way:")}{" "}
-                  <span className="text-selected">{String(normalise(composed, "NFC") === normalise(decomposed, "NFC"))}</span>
+                  {L("Are the two the same text for a program?")} <span className="text-destructive">{composed === decomposed ? L("Yes, the same text") : L("No, two different texts")}</span>. {L("And after both are rewritten in one standard form?")}{" "}
+                  <span className="text-selected">{normalise(composed, "NFC") === normalise(decomposed, "NFC") ? L("Yes, the same text") : L("No, two different texts")}</span>
                 </div>
-                <div>{L("The second spells the accent as its own code point after the e. A person cannot see the difference; a program only sees it.")}</div>
+                <div>{L("In the first word, é is a single code point. In the second word, it is the letter e followed by a separate accent, the code point U+0301. On the screen the two words look the same. A program compares code points, so for it they are two different texts. They become equal only after both are rewritten in one standard form. This rewriting is called normalisation.")}</div>
               </div>
             ) : null}
           </div>
@@ -94,7 +94,7 @@ function BytesPage() {
               if (!runner.running && shown >= list.length) reset();
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(list.length, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -104,7 +104,7 @@ function BytesPage() {
         picture={
           <section ref={stage} data-slot="panel" className="min-h-[420px]">
             <div data-text="caption" className="grid grid-cols-[110px_1fr] gap-x-3 gap-y-4">
-              <div className="pt-1 text-muted-foreground">{L("What is read")}</div>
+              <div className="pt-1 text-muted-foreground">{L("Characters")}</div>
               <div className="flex flex-wrap gap-1">
                 {list.map((c, i) => (
                   <span key={i} className={`min-w-[22px] rounded border px-1.5 py-1 text-center text-[15px] ${i < shown ? "border-border text-foreground" : "border-transparent text-border"}`}>
@@ -131,7 +131,7 @@ function BytesPage() {
                         key={j}
                         data-text="note" className={`rounded px-1 py-0.5 ${i < shown ? "text-foreground" : ""}`}
                         style={i < shown ? { background: tint(BYTE_HUES[utf8Length(b) === 1 ? "one" : utf8Length(b) === 0 ? "rest" : "lead"], mode === "light") } : undefined}
-                        title={utf8Length(b) === 1 ? L("One byte, one character") : utf8Length(b) === 0 ? L("Continuation byte") : L("Leading byte of a {{n}}-byte character", { n: utf8Length(b) })}
+                        title={utf8Length(b) === 1 ? L("This byte is a whole character on its own") : utf8Length(b) === 0 ? L("A continuation byte: it carries the rest of a character that began in an earlier byte") : L("The first byte of a character stored in {{n}} bytes", { n: utf8Length(b) })}
                       >
                         {hex(b)}
                       </span>
@@ -140,10 +140,11 @@ function BytesPage() {
                 ))}
               </div>
             </div>
-            <div data-text="caption" className="mt-6 flex flex-wrap gap-4">
+            <div data-text="caption" className="mt-6">{L("Top row: the characters, as a reader sees them. Middle row: the code point of each character, written as U+ and its number in base 16. Bottom row: the bytes that store each character, each byte written as two base-16 digits, from 00 to ff. Base 16 counts with the digits 0 to 9 and then the letters a to f, so ff is 255. The shade of a byte shows its role.")}</div>
+            <div data-text="caption" className="mt-3 flex flex-wrap gap-4">
               <span><span className="rounded px-1.5 py-0.5 text-foreground" style={{ background: tint(BYTE_HUES.one, mode === "light") }}>Xx</span> {L("A byte that is a whole character")}</span>
-              <span><span className="rounded px-1.5 py-0.5 text-foreground" style={{ background: tint(BYTE_HUES.lead, mode === "light") }}>Xx</span> {L("The first byte of a longer character")}</span>
-              <span><span className="rounded px-1.5 py-0.5 text-foreground" style={{ background: tint(BYTE_HUES.rest, mode === "light") }}>Xx</span> {L("A continuation byte")}</span>
+              <span><span className="rounded px-1.5 py-0.5 text-foreground" style={{ background: tint(BYTE_HUES.lead, mode === "light") }}>Xx</span> {L("The first byte of a character that takes several bytes")}</span>
+              <span><span className="rounded px-1.5 py-0.5 text-foreground" style={{ background: tint(BYTE_HUES.rest, mode === "light") }}>Xx</span> {L("A continuation byte: one of the bytes after the first")}</span>
             </div>
           </section>
         }
@@ -151,27 +152,27 @@ function BytesPage() {
           <div className="space-y-2">
             <Verdict>
               {shown === 0
-                ? L("Press run and the text is read one character at a time, with its code points and its bytes appearing under it.")
+                ? L("Nothing is read yet. Run reads the line one character at a time, and the code points and bytes of each character appear under it.")
                 : shown < list.length
-                  ? L("{{shown}} characters read so far: {{points}} code points, {{bytes}} bytes.", { shown, points: seenPoints, bytes: seenBytes })
+                  ? L("Read so far: {{shown}} characters, made of {{points}} code points and stored in {{bytes}} bytes.", { shown, points: seenPoints, bytes: seenBytes })
                   : bytes === list.length && points === list.length
-                    ? L("{{chars}} characters, {{points}} code points, {{bytes}} bytes: all three counts agree, because every character here fits in one byte. That is true of plain English and of almost nothing else.", { chars: list.length, points, bytes })
-                    : `${L("{{chars}} characters, {{points}} code points, {{bytes}} bytes.", { chars: list.length, points, bytes })} ${multi > 0 ? L("{{multi}} characters need more than one byte, so the byte count is {{ratio}} times the character count.", { multi, ratio: (bytes / list.length).toFixed(2) }) : ""} ${marks > 0 ? L("{{marks}} characters are made of more than one code point: a base letter with a mark on it.", { marks }) : ""}`}
+                    ? L("{{chars}} characters, {{points}} code points, {{bytes}} bytes. All three counts agree, because every character here is stored in a single byte. That holds for English letters, digits and common signs, and for almost no other alphabet.", { chars: list.length, points, bytes })
+                    : `${L("{{chars}} characters, {{points}} code points, {{bytes}} bytes.", { chars: list.length, points, bytes })} ${multi > 0 ? L("{{multi}} characters take more than one byte each, so there are {{ratio}} times as many bytes as characters.", { multi, ratio: (bytes / list.length).toFixed(2) }) : ""} ${marks > 0 ? L("{{marks}} characters are made of more than one code point, for example a letter and a separate sign attached to it.", { marks }) : ""}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("Characters, as read")}</dt>
+              <dt>{L("Characters, as a reader counts them")}</dt>
               <dd className="text-right text-foreground/80">{list.length}</dd>
               <dt>{L("Code points")}</dt>
               <dd className="text-right text-foreground/80">{points}</dd>
-              <dt>{L("Bytes, in UTF-8")}</dt>
+              <dt>{L("Bytes, in UTF-8, the usual way to store Unicode text")}</dt>
               <dd className="text-right text-foreground/80">{bytes}</dd>
-              <dt>{L("Bytes a character")}</dt>
+              <dt>{L("Bytes per character, on average")}</dt>
               <dd className="text-right text-foreground/80">{list.length ? (bytes / list.length).toFixed(2) : "-"}</dd>
-              <dt>{L("Spaces, which are characters like any other")}</dt>
-              <dd className="text-right text-foreground/80">{list.filter((c) => c.shown === " ").length}, {L("Byte 20")}</dd>
+              <dt>{L("Spaces, which count as characters too")}</dt>
+              <dd className="text-right text-foreground/80">{list.filter((c) => c.shown === " ").length}, {L("each stored as the byte 20 in base 16")}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("Neither of these is the unit a model works in. Bytes make a sentence hundreds long and give every word to be reassembled from scratch; characters give a vocabulary too small to carry anything. The unit is chosen, between the two, and the next page chooses it.")}
+              {L("A language model, the kind of program that reads and writes text, works neither with characters nor with bytes. In bytes, one sentence is dozens or hundreds of units long, and every word has to be rebuilt from its pieces. Characters are too small a set of units: one letter alone carries almost no meaning. So models use units in between, called tokens: whole words, parts of words and single bytes. A page of the same topic, 'Building a vocabulary', shows how the tokens are chosen.")}
             </Text>
           </div>
         }

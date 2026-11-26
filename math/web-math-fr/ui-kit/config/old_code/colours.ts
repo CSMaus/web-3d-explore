@@ -47,10 +47,10 @@ const DAY_WHITE = {
 type Greys = Record<"background" | "card" | "foreground" | "muted-foreground" | "border", `#${string}`>;
 
 // the light of each topic, by topic number (0 complex numbers, 1 fractals, 2 chaos, 3 networks,
-// 4 tokens, 5 the primes aside): its name and its turning figure glow in it. every topic keeps the
+// 4 tokens, 5 series, 6 the primes aside, 7 probability): its name and its turning figure glow in it. every topic keeps the
 // palette's own light (its glow, else its primary), a very little lighter or darker, so the
 // topics are told apart without leaving the phosphor's colour.
-const SHADES = [0, 0.1, -0.08, 0.18, -0.15, 0.05];
+const SHADES = [0, 0.1, -0.08, 0.18, -0.15, 0.05, -0.04, 0.13];
 
 /** a colour moved a little towards white (above zero) or black (below zero), its hue kept */
 function shade(hex: Hex, k: number): Hex {
@@ -74,12 +74,16 @@ export const PALETTES: Record<string, Colours> = {
       glow: "#12b04a",
       chart: ["#0f8a3a", "#0a6b2c", "#5f6b5c", "#2f9452", "#a8352a"],
       destructive: "#a8352a",
+      // the colour of a right answer (a test's right option); a green that reads on both grounds
+      success: "#2fbf5a",
     },
     {
       primary: "#33ff66",
       secondary: "#00c853",
       chart: ["#33ff66", "#00c853", "#7f8f7a", "#b4ffc8", "#ff5f56"],
       destructive: "#ff5f56",
+      // the colour of a right answer (a test's right option); a green that reads on both grounds
+      success: "#2fbf5a",
     },
     DAY_GREEN,
   ),
@@ -89,12 +93,16 @@ export const PALETTES: Record<string, Colours> = {
       secondary: "#a63f05",
       chart: ["#8a5c00", "#a63f05", "#6f6a5c", "#b58a1a", "#a8352a"],
       destructive: "#a8352a",
+      // the colour of a right answer (a test's right option); a green that reads on both grounds
+      success: "#2fbf5a",
     },
     {
       primary: "#ffb000",
       secondary: "#ff6a00",
       chart: ["#ffb000", "#ff6a00", "#8f8a7a", "#ffd870", "#ff5f56"],
       destructive: "#ff5f56",
+      // the colour of a right answer (a test's right option); a green that reads on both grounds
+      success: "#2fbf5a",
     },
   ),
   T_WH: palette(
@@ -103,12 +111,16 @@ export const PALETTES: Record<string, Colours> = {
       secondary: "#4b6f99",
       chart: ["#2f4a6b", "#4b6f99", "#6f7a84", "#8aa0b8", "#a8352a"],
       destructive: "#a8352a",
+      // the colour of a right answer (a test's right option); a green that reads on both grounds
+      success: "#2fbf5a",
     },
     {
       primary: "#e8f4ff",
       secondary: "#9ecbff",
       chart: ["#e8f4ff", "#9ecbff", "#7f8a94", "#c7d6e2", "#ff5f56"],
       destructive: "#ff5f56",
+      // the colour of a right answer (a test's right option); a green that reads on both grounds
+      success: "#2fbf5a",
     },
     DAY_WHITE,
   ),

@@ -1,0 +1,266 @@
+{
+  "slug": "complex",
+  "title": "Test: Imaginary numbers",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "On the number line, what does multiplying every number by -1 do?",
+      "options": [
+        {
+          "text": "It slides every number one step to the left, so 3 lands on 2",
+          "correct": false,
+          "why": "Sliding is what adding does. Adding -1 moves 3 to 2; multiplying by -1 moves 3 to -3."
+        },
+        {
+          "text": "It flips the line round through zero, right side to left",
+          "correct": true,
+          "why": "Times -1 keeps every distance from zero and sends each number to the opposite side. That is a flip and nothing else."
+        },
+        {
+          "text": "It shrinks every distance from zero to nothing",
+          "correct": false,
+          "why": "That is multiplying by 0, which sends everything to zero. Multiplying by -1 keeps every distance the same."
+        },
+        {
+          "text": "It moves the positive numbers and leaves the negative ones where they are",
+          "correct": false,
+          "why": "The rule applies to every number at once: -2 goes to 2 and 2 goes to -2."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What does multiplying an arrow by i do to it?",
+      "options": [
+        {
+          "text": "It turns the arrow a half turn, so it points the opposite way",
+          "correct": false,
+          "why": "A half turn is multiplying by -1. That takes two multiplications by i, since i × i = -1."
+        },
+        {
+          "text": "It moves the arrow one unit up the second axis",
+          "correct": false,
+          "why": "Moving one unit up is adding i. Adding slides; multiplying turns and stretches."
+        },
+        {
+          "text": "It turns the arrow a quarter turn and doubles its length",
+          "correct": false,
+          "why": "The length of i is 1, so the arrow's length is multiplied by 1. The grey circle on the page shows the length never changes."
+        },
+        {
+          "text": "It turns the arrow a quarter turn and keeps its length",
+          "correct": true,
+          "why": "The number i has length 1 and points a quarter turn round. Multiplying by it adds a quarter turn about zero and stretches by 1, which is no stretch."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is the rule for multiplying two complex numbers drawn as arrows?",
+      "options": [
+        {
+          "text": "The lengths multiply and the angles add",
+          "correct": true,
+          "why": "This is the turn-and-stretch picture: the first arrow is turned by the second one's angle, then stretched by its length."
+        },
+        {
+          "text": "The lengths add and the angles multiply",
+          "correct": false,
+          "why": "Adding lengths and multiplying angles mixes up the two operations. A product of lengths 2 and 3 is 6 long, not 5."
+        },
+        {
+          "text": "The along parts multiply and the up parts multiply, separately",
+          "correct": false,
+          "why": "Working part by part is how adding behaves. Multiplying two brackets gives four terms, and the cross terms mix the parts."
+        },
+        {
+          "text": "The second arrow is laid at the tip of the first",
+          "correct": false,
+          "why": "Tip-to-tail is the picture for adding. Multiplying never walks one arrow along another."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Which number is i × (3 + 2i)?",
+      "options": [
+        {
+          "text": "2 + 3i",
+          "correct": false,
+          "why": "This takes 2i × i as +2. The term i × i is -1, so that part is -2."
+        },
+        {
+          "text": "2 - 3i",
+          "correct": false,
+          "why": "This turns the arrow a quarter turn the other way, which is multiplying by -i."
+        },
+        {
+          "text": "-2 + 3i",
+          "correct": true,
+          "why": "Multiplying out, i × 3 = 3i and i × 2i = 2i² = -2, so the result is -2 + 3i. It is 3 + 2i turned a quarter turn round."
+        },
+        {
+          "text": "-3 - 2i",
+          "correct": false,
+          "why": "This is a half turn, the result of multiplying by i twice. One multiplication turns only a quarter."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "The arrows 3 and 4i are added. How long is the sum, 3 + 4i?",
+      "options": [
+        {
+          "text": "5",
+          "correct": true,
+          "why": "The parts are 3 along and 4 up, so by Pythagoras the length is √(3² + 4²) = √25 = 5."
+        },
+        {
+          "text": "7",
+          "correct": false,
+          "why": "Lengths add only when the two arrows point the same way. These two are at right angles, so the sum is shorter than 3 + 4."
+        },
+        {
+          "text": "25",
+          "correct": false,
+          "why": "25 is 3² + 4². The length is the square root of that."
+        },
+        {
+          "text": "1",
+          "correct": false,
+          "why": "4 - 3 would be the length only if the two arrows pointed in opposite directions."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Which number is (1 + 2i)(3 + i)?",
+      "options": [
+        {
+          "text": "5 + 7i",
+          "correct": false,
+          "why": "This counts 2i² as +2. The minus in ac - bd comes from i × i being -1."
+        },
+        {
+          "text": "3 + 2i",
+          "correct": false,
+          "why": "This multiplies the along parts together and the up parts together. The cross terms, i and 6i, are left out."
+        },
+        {
+          "text": "4 + 3i",
+          "correct": false,
+          "why": "This is the sum of the two numbers. Adding works part by part; multiplying does not."
+        },
+        {
+          "text": "1 + 7i",
+          "correct": true,
+          "why": "The four terms are 3, i, 6i and 2i². With i² = -1 the last one is -2, so the result is (3 - 2) + (1 + 6)i = 1 + 7i."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "Starting at z0 = 0 with c = i, the rule z → z² + c gives z1 = i and z2 = -1 + i. What is z3, and is c = i in the Mandelbrot set?",
+      "options": [
+        {
+          "text": "z3 = 2 + 3i, past length 2, so i is outside the set",
+          "correct": false,
+          "why": "This takes i × i as +1 at each squaring. With i² = -1 the path stays close to zero."
+        },
+        {
+          "text": "z3 = -i, and the path repeats, so i is in the set",
+          "correct": true,
+          "why": "(-1 + i)² = 1 - 2i + i² = -2i, and adding i gives -i. Squaring -i gives -1, adding i gives -1 + i again, so the path repeats -1 + i, -i for ever and never passes length 2."
+        },
+        {
+          "text": "z3 = -2i, exactly on the circle of length 2, so i is on the edge",
+          "correct": false,
+          "why": "-2i is the square of -1 + i before c is added. Every step squares and then adds c, which gives -i."
+        },
+        {
+          "text": "z3 = i, so the path returns to c every two steps",
+          "correct": false,
+          "why": "This squares the two parts separately: (-1)² + i² = 0. Squaring a sum also gives a cross term, -2i, which must be kept."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "Why can the page stop following a path as soon as its length passes 2?",
+      "options": [
+        {
+          "text": "Because the picture only shows points within length 2 of zero",
+          "correct": false,
+          "why": "The cut-off is not about the size of the picture. It comes from the arithmetic of squaring and would hold on any screen."
+        },
+        {
+          "text": "Because a path that passes 2 always comes back later",
+          "correct": false,
+          "why": "The opposite is true: no path that passes 2 ever comes back. That is why one crossing is a final verdict."
+        },
+        {
+          "text": "Past length 2, squaring adds more than c can take away",
+          "correct": true,
+          "why": "Squaring a length above 2 more than doubles it, and c cannot pull it back, so the path keeps growing for ever. One crossing is final, which is what makes the picture computable."
+        },
+        {
+          "text": "Because squaring halves the angle, so past length 2 the path stops turning",
+          "correct": false,
+          "why": "Squaring doubles the angle, and the angle has nothing to do with escaping. Escape is decided by the length."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Euler's formula gives the exponential an imaginary rate. Why does e^(iθ) go round the unit circle instead of growing?",
+      "options": [
+        {
+          "text": "The imaginary rate is negative, so growth and decay cancel each other out",
+          "correct": false,
+          "why": "The number i is not negative; it is a quarter turn. Nothing cancels: the motion is at right angles to the position."
+        },
+        {
+          "text": "The cosine and the sine add up to 1 at every angle, which keeps the length at 1",
+          "correct": false,
+          "why": "The sum cos θ + sin θ is not always 1; at θ = π/4 it is about 1.41. What stays 1 is cos²θ + sin²θ, the length squared."
+        },
+        {
+          "text": "The point is pulled back onto the circle of length 1 after every step",
+          "correct": false,
+          "why": "No correction is applied. A motion that is always sideways keeps the same distance from the centre by itself."
+        },
+        {
+          "text": "Its rate of change is its position turned a quarter, so it moves sideways",
+          "correct": true,
+          "why": "The derivative of e^(iθ) is i × e^(iθ). Multiplying by i turns the position a quarter, so the motion is always sideways and never outward, and the length stays 1."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Two turns in space about different axes land differently depending on their order, but two multiplications in the plane never do. What makes the difference?",
+      "options": [
+        {
+          "text": "With quaternions, ij = k but ji = -k; in the plane, multiplying only adds angles",
+          "correct": true,
+          "why": "Hamilton's rule makes swapping two units flip a sign, so the order of a quaternion product matters. The plane has a single unit with nothing to swap, and adding angles does not depend on order, so complex multiplication commutes."
+        },
+        {
+          "text": "Quaternions use half the angle, and halving changes the order",
+          "correct": false,
+          "why": "The half angle explains why a full turn gives -1. It does not explain why order matters; ij and ji differing does."
+        },
+        {
+          "text": "Turns in space are larger than turns in the plane",
+          "correct": false,
+          "why": "Two small turns about different axes still fail to commute. The axes matter, not the size."
+        },
+        {
+          "text": "Turns in space add their angles, and adding in a different order gives a different total",
+          "correct": false,
+          "why": "Adding numbers never depends on order. Turns in space do not reduce to adding their angles, which is why order matters there."
+        }
+      ]
+    }
+  ]
+}

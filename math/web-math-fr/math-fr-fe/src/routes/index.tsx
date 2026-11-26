@@ -33,6 +33,20 @@ function Front() {
     <Page className={scene ? "pt-24" : "pt-32"}>
       {scene ? <FrontScene /> : <FrontHero />}
 
+      {/* what every topic offers, in the order a reader meets it */}
+      <section className="mt-16" aria-labelledby="steps-heading">
+        <Heading level={2} id="steps-heading">{t("front.steps.heading")}</Heading>
+        <ol className="mt-6 grid gap-6 md:grid-cols-3">
+          {(["watch", "try", "read"] as const).map((k, i) => (
+            <li key={k} className="min-w-0">
+              <span data-text="label" className="tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+              <div data-text="itemTitle" className="mt-1">{t(`front.steps.${k}`)}</div>
+              <Text kind="note" as="p" className="mt-1">{t(`front.steps.${k}Text`)}</Text>
+            </li>
+          ))}
+        </ol>
+      </section>
+
       <section className={scene ? "mt-16 pb-16" : "mt-24 pb-16"}>
         <Heading level={2}>{t("front.topicsHeading")}</Heading>
         <Text kind="intro" as="p" className="mt-3 max-w-2xl">{t("front.topicsLede")}</Text>

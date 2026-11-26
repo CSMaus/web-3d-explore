@@ -13,6 +13,8 @@ const PLACES = [
   "md:col-start-9 md:col-end-12 md:row-start-1 md:mt-8",
   "md:col-start-2 md:col-end-5 md:row-start-2 md:mt-10",
   "md:col-start-7 md:col-end-10 md:row-start-2 md:mt-36",
+  "md:col-start-1 md:col-end-4 md:row-start-3 md:mt-12",
+  "md:col-start-5 md:col-end-8 md:row-start-3 md:mt-40",
 ];
 
 /** seconds the light takes to run one link; it runs the links one after another, in reading order */
@@ -31,7 +33,7 @@ function port(r: DOMRect, base: DOMRect, to: Pt): Pt {
 }
 
 /**
- * the topics as a graph: five cards in reading order on a zigzag, each with a turning
+ * the topics as a graph: the cards in reading order on a zigzag, each with a turning
  * figure, joined one to the next by curves that leave and meet the cards at small
  * ports. one light runs the reading order, link after link, and each card glows as it
  * arrives. a card under the pointer or the keyboard turns its figure faster and lifts,

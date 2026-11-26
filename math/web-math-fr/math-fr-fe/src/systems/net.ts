@@ -94,19 +94,19 @@ export const INITS: Record<Init, { label: string; tex: string; note: string }> =
     note: "The same symmetry as all zero: the units in a layer never come apart",
   },
   uniform: {
-    label: "Small uniform",
+    label: "Small random numbers",
     tex: String.raw`w_{ij} \sim U(-0.5,\ 0.5)`,
-    note: "Breaks the symmetry, but the spread of the signal is not controlled with depth",
+    note: "Every weight is drawn at random between -0.5 and 0.5. The neurons start out different, but nothing keeps the signal the same size from layer to layer",
   },
   xavier: {
-    label: "Xavier",
+    label: "Xavier's rule",
     tex: String.raw`\operatorname{Var}(w) = \frac{2}{n_{\mathrm{in}} + n_{\mathrm{out}}}`,
-    note: "Sized to hold the variance steady through a sigmoid-family activation",
+    note: "Random weights whose spread is set by the number of connections into and out of each layer. With an S-shaped squashing function such as the sigmoid or tanh, the signal then keeps about the same size from layer to layer",
   },
   he: {
-    label: "He",
+    label: "He's rule",
     tex: String.raw`\operatorname{Var}(w) = \frac{2}{n_{\mathrm{in}}}`,
-    note: "Twice Xavier's variance, because a rectifier discards half of what reaches it",
+    note: "Random weights spread twice as widely as by Xavier's rule, because the function 'Negatives become zero' drops about half of what reaches it",
   },
 };
 
@@ -499,32 +499,32 @@ export const OPTS: Record<OptKind, { label: string; tex: string; fixes: string }
   sgd: {
     label: "Gradient descent",
     tex: String.raw`p \leftarrow p - \eta\,\nabla L`,
-    fixes: "The baseline: one fixed step down the slope",
+    fixes: "The basic method. Every number moves downhill by the step size times its slope",
   },
   momentum: {
     label: "Momentum",
     tex: String.raw`v \leftarrow \beta v + \nabla L,\qquad p \leftarrow p - \eta\,v`,
-    fixes: "Oscillation across a narrow valley, by carrying speed along it",
+    fixes: "Each move also keeps part of the previous move, as a rolling ball keeps its speed. This stops the zigzag across a narrow valley and speeds the run along it",
   },
   nesterov: {
     label: "Nesterov",
     tex: String.raw`v \leftarrow \beta v + \nabla L,\qquad p \leftarrow p - \eta\,(\nabla L + \beta v)`,
-    fixes: "Momentum overshooting, by reading the slope where it is about to be",
+    fixes: "Like momentum, but the slope is read at the place the move is about to reach, which keeps it from overshooting",
   },
   adagrad: {
     label: "Adagrad",
     tex: String.raw`s \leftarrow s + (\nabla L)^2,\qquad p \leftarrow p - \frac{\eta}{\sqrt{s} + \epsilon}\nabla L`,
-    fixes: "One rate for every parameter, by shrinking the rate where the slope has been steep",
+    fixes: "Each number gets its own step size, which shrinks the more that number's slope has been steep so far",
   },
   rmsprop: {
     label: "RMSProp",
     tex: String.raw`s \leftarrow \rho s + (1-\rho)(\nabla L)^2,\qquad p \leftarrow p - \frac{\eta}{\sqrt{s} + \epsilon}\nabla L`,
-    fixes: "Adagrad's rate decaying to nothing, by forgetting the distant past",
+    fixes: "Like Adagrad, but old slopes are gradually forgotten, so the step size does not shrink to nothing",
   },
   adam: {
     label: "Adam",
     tex: String.raw`p \leftarrow p - \eta\,\frac{\hat{v}}{\sqrt{\hat{s}} + \epsilon},\qquad \hat{v} = \frac{v}{1-\beta_1^{t}},\ \ \hat{s} = \frac{s}{1-\beta_2^{t}}`,
-    fixes: "Both at once, with the two averages corrected for starting at zero",
+    fixes: "Momentum and a separate step size for each number at once, with a correction for the first steps, when both running averages start at zero",
   },
 };
 

@@ -13,20 +13,20 @@ export const Route = createFileRoute("/topics/tokens/play/")({
 
 /** the same names and summaries the backend serves, so the page stands alone. */
 export const LOCAL: { id: string; name: string; summary: string }[] = [
-  { id: "bytes", name: L("One string, three ways"), summary: L("What is read, the code points, the bytes: three counts that differ, and two spellings of one letter that look the same and are not") },
-  { id: "merge", name: L("Building a vocabulary"), summary: L("Byte-pair encoding on a small text, one merge a step: count the pairs, join the commonest, repeat. The merge list is the whole result") },
-  { id: "segment", name: L("Cutting a sentence"), summary: L("The merges replayed on new text. The same sentence under three vocabularies, the space inside the token, and the exact way back") },
+  { id: "bytes", name: L("Three ways to count text"), summary: L("What is read, the code points, the bytes: three counts that differ, and two spellings of one letter that look the same and are not") },
+  { id: "merge", name: L("Building a vocabulary of pieces"), summary: L("Byte-pair encoding on a small text, one merge a step: count the pairs, join the commonest, repeat. The merge list is the whole result") },
+  { id: "segment", name: L("Cutting a sentence into tokens"), summary: L("The merges replayed on new text. The same sentence under three vocabularies, the space inside the token, and the exact way back") },
   { id: "cost", name: L("What a token costs"), summary: L("One sentence in eleven scripts under one vocabulary: tokens against characters, and why the ratio is what is billed and what fills the window") },
-  { id: "table", name: L("From a number to a vector"), summary: L("A token id as a one-hot row, a matrix that picks one row, and the table that makes the picking cheap. The width is fixed; the count grows") },
-  { id: "meaning", name: L("Where the meaning comes from"), summary: L("Vectors trained by predicting neighbours, watched forming a map. Which rows moved often and which almost never") },
-  { id: "space", name: L("Measuring the space"), summary: L("Cosine against distance, a flat picture that keeps only part of the spread, direction as the carrier of relation, and the narrow cone") },
-  { id: "order", name: L("Order has to be supplied"), summary: L("A sentence and its shuffle give one and the same answer until a position is added to every vector") },
-  { id: "attend", name: L("Attention, with the numbers"), summary: L("Query, key and value from the stream, the score matrix, the mask, the weights and the mix written back, on a real prompt through a trained model") },
-  { id: "predict", name: L("The next token"), summary: L("The last vector scored against every row of the table, softmaxed into a ranked list. Watch it sharpen as the model trains") },
-  { id: "generate", name: L("One token at a time"), summary: L("Choose one, append it, run again. The appended token goes in like any other, the window fills, the oldest falls out") },
-  { id: "sample", name: L("Choosing from the distribution"), summary: L("Greedy repeats itself; temperature, top-k and nucleus reshape the same distribution, and the choice changes the text as much as the model does") },
-  { id: "pool", name: L("One vector for a whole passage"), summary: L("The per-position vectors collapsed into one, on purpose, and what that vector cannot tell apart") },
-  { id: "artefacts", name: L("What the first pages explain"), summary: L("Counting letters, long numbers, a stray space, a rare word: four failures, each traced to a page before any model appeared") },
+  { id: "table", name: L("From a number to a list of numbers"), summary: L("A token id as a one-hot row, a matrix that picks one row, and the table that makes the picking cheap. The width is fixed; the count grows") },
+  { id: "meaning", name: L("Where meaning comes from"), summary: L("Vectors trained by predicting neighbours, watched forming a map. Which rows moved often and which almost never") },
+  { id: "space", name: L("Measuring how close two tokens are"), summary: L("Cosine against distance, a flat picture that keeps only part of the spread, direction as the carrier of relation, and the narrow cone") },
+  { id: "order", name: L("Word order has to be added"), summary: L("The same words in another order give the same result, until each token's list of numbers also carries its position") },
+  { id: "attend", name: L("Attention: which earlier words count"), summary: L("Each token's list of numbers is rebuilt as a weighted average of the lists before it, computed stage by stage on a real sentence with a small trained model") },
+  { id: "predict", name: L("Guessing the next token"), summary: L("The model's last list of numbers becomes a probability for every possible next token, and the guess improves as the model trains") },
+  { id: "generate", name: L("Writing one token at a time"), summary: L("Text is written by guessing one token, adding it to the text and guessing again. The model sees only the latest tokens, and nothing written can be changed") },
+  { id: "sample", name: L("Choosing the next token"), summary: L("Always taking the likeliest next token makes text repeat itself. Other rules draw at random, and the rule changes the text as much as the model does") },
+  { id: "pool", name: L("One list of numbers for a whole passage"), summary: L("A passage's lists of numbers averaged into one, and why two passages with opposite meanings can still come out almost the same") },
+  { id: "artefacts", name: L("Four mistakes explained by cutting text"), summary: L("Counting letters, long numbers, a stray space, a rare word: four common failures of language models, each caused by how text is cut into tokens") },
 ];
 
 function TokenIndex() {
@@ -35,13 +35,13 @@ function TokenIndex() {
 
   return (
     <div>
-      <Heading level={1} className="mt-4">{L("Fourteen pages, one text")}</Heading>
+      <Heading level={1} className="mt-4">{L("Fourteen pages on how a language model reads and writes")}</Heading>
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-        {L("One short text about a cat, a dog and a man runs through every page. A vocabulary is built from it, two small models are trained on it in the browser as the run goes, and the last pages generate from it. Every page has the same three parts in the same places: what goes in, run, what came out. Nothing is a stated result: every number is computed here from that text.")}
+        {L("A language model is a program that reads text and guesses what comes next; chat assistants and translation programs are built on such models. These fourteen pages take one apart, step by step: how text is cut into tokens (pieces such as words), how each token becomes a list of numbers, how the words of a sentence take each other in, and how text is written one token at a time. One short text about a cat, a dog and a man runs through every page, and two small models learn from it in the browser. Every page has three parts in the same places: what goes in, the run, and what came out. Every number shown is computed on the page from that text.")}
       </Text>
       {!theory ? (
         <Text kind="note" as="p" className="mt-3">
-          {L("The descriptions come from the backend, which is not answering; this page needs nothing from it and neither does any of the mathematics.")}
+          {L("The page descriptions come from the site's server, which is not answering. The descriptions below are the built-in ones, and the pages themselves work without the server.")}
         </Text>
       ) : null}
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

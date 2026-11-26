@@ -44,7 +44,7 @@ function Project() {
       </TextLink>
       {/* the opening: the name large and alone in the middle, one line under it */}
       <div className="mx-auto mt-12 max-w-3xl text-center">
-        <h1 data-text="display" className="m-0" style={{ fontSize: "clamp(2rem, 5vw, 3.6rem)", lineHeight: 1.08 }}>{project.title}</h1>
+        <h1 data-text="projectTitle" className="m-0">{project.title}</h1>
         <Text kind="intro" as="p" className="mx-auto mt-5 max-w-2xl">{project.summary}</Text>
       </div>
 
@@ -52,12 +52,28 @@ function Project() {
       {project.facts?.length ? (
       <dl className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4">
         {project.facts.map((f) => (
-          <div key={f.label} className="min-w-0 border-l pl-4" style={{ borderColor: "var(--c-border)" }}>
-            <dd data-text="display" className="m-0 tabular-nums" style={{ fontSize: "clamp(1.6rem, 3vw, 2.4rem)", lineHeight: 1.1, color: "var(--c-value)" }}>{f.value}</dd>
+          <div key={f.label} data-slot="fact" className="min-w-0 pl-4">
+            <dd data-text="factValue" className="m-0 tabular-nums">{f.value}</dd>
             <dt data-text="note" className="mt-1">{f.label}</dt>
           </div>
         ))}
       </dl>
+      ) : null}
+
+      {project.market ? <Text kind="intro" as="p" className="mx-auto mt-8 max-w-3xl text-center">{project.market}</Text> : null}
+
+      {project.shots?.length ? (
+        <section className="mt-12">
+          <Label>{L("The product")}</Label>
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            {project.shots.map((shot, i, all) => (
+              <figure key={shot.file} className={`m-0 min-w-0 ${i === all.length - 1 && all.length % 2 === 1 ? "md:col-span-2" : ""}`}>
+                <img data-slot="shot" src={`${import.meta.env.BASE_URL}projects/${project.slug}/${shot.file}`} alt={shot.alt} loading="lazy" className="block w-full" />
+                <Text kind="note" as="figcaption" className="mt-2">{shot.caption}</Text>
+              </figure>
+            ))}
+          </div>
+        </section>
       ) : null}
 
       {Hero ? (

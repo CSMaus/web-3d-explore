@@ -11,6 +11,9 @@ export const text = defineText({
   styles: {
     ...from.styles,
     display: { ...from.styles.display, font: "label", size: 72, weight: 600, leading: 1.02, tracking: -0.045 },
+    personName: { ...from.styles.personName, font: "label", weight: 600 },
+    partTitle: { ...from.styles.partTitle, font: "label", weight: 600 },
+    projectTitle: { ...from.styles.projectTitle, font: "label", weight: 600 },
     heading1: { ...from.styles.heading1, font: "label", weight: 600, tracking: -0.01 },
     heading2: { ...from.styles.heading2, font: "label", weight: 600 },
     heading3: { ...from.styles.heading3, font: "label", weight: 600 },

@@ -28,10 +28,12 @@ export const colours = defineColours({
     // colours of lines in a plot, in order (first = line 1, second = line 2, ...)
     chart: ["#7ff0d8", "#9b8cf5", "#e5c76b", "#f08fb7", "#ff6b6b"],
     // the light of each topic, by topic number (0 complex numbers, 1 fractals, 2 chaos, 3 networks,
-    // 4 tokens, 5 the primes aside): its name and its turning figure glow in it
-    topics: ["#8fd3e8", "#7aa2ff", "#b79cff", "#5eead4", "#93c5fd", "#a5b4fc"],
+    // 4 tokens, 5 series, 6 the primes aside, 7 probability): its name and its turning figure glow in it
+    topics: ["#8fd3e8", "#7aa2ff", "#b79cff", "#5eead4", "#93c5fd", "#a5b4fc", "#7dd3c0", "#f0b6d0"],
     // errors, warnings, "the run blew up", the destructive button
     destructive: "#ff6b6b",
+    // the colour of a right answer (a test's right option); a green that reads on both grounds
+    success: "#3fbf7f",
   },
 
   light: {
@@ -43,7 +45,9 @@ export const colours = defineColours({
     primary: "#0f8f74",
     secondary: "#6a5bd6",
     chart: ["#0f8f74", "#6a5bd6", "#b8901f", "#c9528a", "#d6453f"],
-    topics: ["#1f7f9c", "#2f5bd6", "#6b46d9", "#0f8f7e", "#2563eb", "#4f46e5"],
+    topics: ["#1f7f9c", "#2f5bd6", "#6b46d9", "#0f8f7e", "#2563eb", "#4f46e5", "#0e7f74", "#b03a78"],
     destructive: "#d6453f",
+    // the colour of a right answer (a test's right option); a green that reads on both grounds
+    success: "#3fbf7f",
   },
 });

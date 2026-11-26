@@ -27,16 +27,16 @@ export const Route = createFileRoute("/topics/tokens/play/attend")({
 });
 
 const STAGES = [
-  L("The stream: each token's row plus its position"),
-  L("Three projections of every row: a query, a key and a value"),
-  L("Scores: each query against each key, divided by the square root of the width"),
-  L("The mask: every score against a later position becomes minus infinity"),
-  L("Softmax along each row: weights that are positive and add to one"),
-  L("The weights applied to the values, and the result added back into the stream"),
+  L("The input: each token's list of 16 numbers, with its position added."),
+  L("Three new lists from each row, made with three tables of learned weights: a query (what the token looks for), a key (what it offers) and a value (what it passes on)."),
+  L("Scores: each query is multiplied with each key, number by number, the products are summed, and the sum is divided by 4, the square root of 16."),
+  L("The mask: every score of a token for a later token is set to minus infinity, so that it will count for nothing."),
+  L("Softmax along each row: each score s becomes e to the power s (e is about 2.718), and each result is divided by the row's total. The results are weights: positive, and adding up to 100 %."),
+  L("The values are averaged with these weights, and the result is added to the input."),
 ];
 const MASKS = [
-  { id: "causal", label: L("May only look back") },
-  { id: "both", label: L("May look both ways") },
+  { id: "causal", label: L("Each token sees only earlier tokens") },
+  { id: "both", label: L("Each token sees all tokens") },
 ];
 
 function signed(v: number, scale = 1) {
@@ -74,33 +74,33 @@ function AttendPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? L("Attention, with the numbers")}
-        job={L("Every position gets a new vector that is a weighted average of the vectors at all positions. That is the whole mechanism; everything else is how the weights are computed. The job is to compute them, on a real prompt, through the small model this topic trains, in six moments.")}
+        title={system?.name ?? L("Attention: which earlier words count")}
+        job={L("When a model reads \"the cat sleeps on the warm\", how does the last word take in the words before it? A model works on tokens: pieces of text such as words. Each token is held as a list of 16 numbers, called a vector. Attention gives each token a new list: a weighted average of the lists of the tokens before it and of its own, with larger weights for the ones that matter more. The rest is how those weights are found. This page computes them for a real sentence, with a small model trained in the browser on a short text about a cat, a dog and a man. Run goes through the computation in six stages. The question: which earlier word does the last word take in most?")}
         input={
           <div className="space-y-3">
             <label className="block">
-              <span data-text="note">{L("The prompt")}</span>
+              <span data-text="note">{L("The sentence (up to 12 tokens are read)")}</span>
               <Input value={text} onChange={(e) => { setText(e.target.value); reset(); }} className="mt-1" />
             </label>
             <Choices options={MASKS} value={mask} onPick={(id) => { setMask(id); reset(); }} />
-            <Slider label={L("A sequence of")} min={10} max={8000} step={10} value={length} format={(v) => L("{{n}} tokens", { n: Math.round(v) })} onChange={(v) => setLength(Math.round(v))} />
+            <Slider label={L("A longer text of")} min={10} max={8000} step={10} value={length} format={(v) => L("{{n}} tokens", { n: Math.round(v) })} onChange={(v) => setLength(Math.round(v))} />
             <Text kind="note" as="p">
-              {L("The slider does not change the picture. It is for the cost line in the result: the score matrix has one entry per pair of positions, so its size is the length squared.")}
+              {L("This slider does not change the picture. It only sets the length used in a cost count under the results. The table of scores has one entry for each pair of tokens, so its size is the length times itself.")}
             </Text>
-            {!trained ? <Text kind="warning" as="p">{L("The model is still training in the background ({{done}} of {{total}} steps); the weights below settle as it finishes.", { done: store.model.steps, total: MODEL_STEPS })}</Text> : null}
+            {!trained ? <Text kind="warning" as="p">{L("The model is still learning in the background ({{done}} of {{total}} training steps). The weights below change a little until it finishes.", { done: store.model.steps, total: MODEL_STEPS })}</Text> : null}
           </div>
         }
         run={
           <RunBar
             running={runner.running}
             count={at}
-            what={L("moments")}
+            what={L("stages")}
             limit={STAGES.length}
             onToggle={() => {
               if (!runner.running && at >= STAGES.length) reset();
               runner.toggle();
             }}
-            onStep={(many) => setDone((v) => Math.min(STAGES.length, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -145,7 +145,7 @@ function AttendPage() {
                   const rh = 14;
                   const col = W * 0.25;
                   // row 1: x, q, k, v
-                  grid(pass.x, 60, 26, cw, rh, 1.5, L("The stream x"), at >= 1, true);
+                  grid(pass.x, 60, 26, cw, rh, 1.5, L("Input x: one row per token"), at >= 1, true);
                   grid(pass.q, col + 40, 26, cw, rh, 1.5, L("Queries  q = x Wq"), at >= 2);
                   grid(pass.k, col * 2 + 40, 26, cw, rh, 1.5, L("Keys  k = x Wk"), at >= 2);
                   grid(pass.v, col * 3 + 40, 26, cw, rh, 1.5, L("Values  v = x Wv"), at >= 2);
@@ -154,7 +154,7 @@ function AttendPage() {
                   const sc = Math.min(30, (pen.height - y2 - 70) / n, (W * 0.45 - 60) / n);
                   const scoresShown = at >= 4 ? pass.scores : pass.scores.map((r, i) => r.map((v, j) => (mask === "causal" && j > i ? (at >= 4 ? -Infinity : pass.q[i].reduce((s, qq, d) => s + qq * pass.k[j][d], 0) / Math.sqrt(WIDTH)) : v)));
                   if (at >= 5) grid(pass.weights, 60, y2, sc, sc, 1, L("Weights: softmax of each row"), true, true);
-                  else grid(scoresShown, 60, y2, sc, sc, 3, at >= 4 ? L("Scores, masked: nothing may look ahead") : L("Scores  q_i . k_j / sqrt(width)"), at >= 3, true);
+                  else grid(scoresShown, 60, y2, sc, sc, 3, at >= 4 ? L("Scores, masked: no token sees a later one") : L("Scores  q_i . k_j / 4"), at >= 3, true);
                   if (at >= 5) {
                     ctx.fillStyle = INK;
                     pass.weights[last].forEach((v, j) => {
@@ -168,38 +168,38 @@ function AttendPage() {
                   const rx = Math.max(60 + n * sc + 50, W * 0.42);
                   const cw2 = Math.min(cw, (W - rx - 60) / (2 * WIDTH));
                   grid(pass.mixed, rx, y2, cw2, rh, 1.5, L("The mix: weights x values"), at >= 6);
-                  grid(pass.h, rx + WIDTH * cw2 + 40, y2, cw2, rh, 1.5, L("The stream after: x + mix"), at >= 6);
+                  grid(pass.h, rx + WIDTH * cw2 + 40, y2, cw2, rh, 1.5, L("Output: x + mix"), at >= 6);
                   ctx.fillStyle = at > 0 ? INK : MUTED;
                 }}
               />
-            </div><Caption>{L("The last row, as percentages.")} {at === 0 ? L("Six moments, in order. Press run.") : L("Moment {{at}} of 6: {{stage}}", { at, stage: STAGES[at - 1] })}</Caption></div>
+            </div><Caption>{L("Each grid is a table of numbers, one cell per number; the two colours mark positive and negative. Top: the input and its three new lists, one row per token. Bottom left: the scores, later the weights, with one row and one column per token; the percentages under it are the last token's weights. Bottom right: the mix and the output.")} {at === 0 ? L("Stage 0 of 6: nothing is computed yet.") : L("Stage {{at}} of 6: {{stage}}", { at, stage: STAGES[at - 1] })}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict>
               {at === 0
-                ? L("{{n}} tokens. The last one, {{token}}, will end up with a new vector built from all {{n}}. Press run.", { n, token: visible(tokens[last].text) })
+                ? L("The sentence has {{n}} tokens. The last one, {{token}}, will get a new list of numbers made from all {{n}}. Run computes it in six stages.", { n, token: visible(tokens[last].text) })
                 : at < 5
-                  ? STAGES[at - 1] + (at === 3 ? ` ${L("There are {{n}} by {{n}} = {{nn}} scores, one per pair of positions.", { n, nn: n * n })}` : at === 4 ? (mask === "causal" ? ` ${L("{{gone}} of the {{nn}} entries are gone: the future.", { gone: (n * (n - 1)) / 2, nn: n * n })}` : ` ${L("The mask is off, so every position sees every other, which a model that writes text one token at a time cannot do.")}`) : "")
-                  : `${L("{{token}} listens {{pct}} % to {{other}} at position {{pos}}", { token: visible(tokens[last].text), pct: (row[top] * 100).toFixed(0), other: visible(tokens[top].text), pos: top + 1 })}${row.filter((v) => v > 0.1).length > 1 ? ` ${L("And {{list}}", { list: row.map((v, j) => [v, j] as [number, number]).filter(([v, j]) => v > 0.1 && j !== top).map(([v, j]) => L("{{pct}} % to {{token}}", { pct: (v * 100).toFixed(0), token: visible(tokens[j].text) })).join(", ") })}` : ""}. ${at === 6 ? L("Its new vector is those weights applied to the values, added to what it had. That is the only way earlier tokens reach later ones, and it is recomputed at every position.") : L("The row adds to one.")}`}
+                  ? STAGES[at - 1] + (at === 3 ? ` ${L("There are {{n}} by {{n}} = {{nn}} scores, one for each pair of tokens.", { n, nn: n * n })}` : at === 4 ? (mask === "causal" ? ` ${L("{{gone}} of the {{nn}} scores are removed: those where a token would look at a later one.", { gone: (n * (n - 1)) / 2, nn: n * n })}` : ` ${L("The mask is off, so every token sees every other, later ones included. A model that writes text one token at a time cannot do this, because the later tokens do not exist yet.")}`) : "")
+                  : `${L("{{token}} gives {{pct}} % of its attention to {{other}} at position {{pos}}", { token: visible(tokens[last].text), pct: (row[top] * 100).toFixed(0), other: visible(tokens[top].text), pos: top + 1 })}${row.filter((v) => v > 0.1).length > 1 ? ` ${L("and {{list}}", { list: row.map((v, j) => [v, j] as [number, number]).filter(([v, j]) => v > 0.1 && j !== top).map(([v, j]) => L("{{pct}} % to {{token}}", { pct: (v * 100).toFixed(0), token: visible(tokens[j].text) })).join(", ") })}` : ""}. ${at === 6 ? L("Its new list is the values averaged with these weights, added to the list it had. This is the only way earlier tokens affect later ones, and it is done again at every position.") : L("The weights in the row add up to 100 %.")}`}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("Positions, so rows in every grid")}</dt>
+              <dt>{L("Tokens in the sentence, so rows in each grid")}</dt>
               <dd className="text-right text-foreground/80">{n}</dd>
-              <dt>{L("Scores for this prompt")}</dt>
+              <dt>{L("Scores for this sentence")}</dt>
               <dd className="text-right text-foreground/80">{n} x {n} = {n * n}</dd>
-              <dt>{L("Scores for a sequence of {{n}}", { n: length.toLocaleString("en") })}</dt>
+              <dt>{L("Scores for a text of {{n}} tokens", { n: length.toLocaleString("en") })}</dt>
               <dd className="text-right text-foreground/80">{(length * length).toLocaleString("en")}</dd>
-              <dt>{L("The last row adds to")}</dt>
+              <dt>{L("Sum of the last token's weights")}</dt>
               <dd className="text-right text-foreground/80">{row.reduce((a, b) => a + b, 0).toFixed(6)}</dd>
-              <dt>{L("Numbers in the three projections")}</dt>
+              <dt>{L("Numbers in the three tables of weights (query, key, value)")}</dt>
               <dd className="text-right text-foreground/80">3 x {WIDTH} x {WIDTH} = {count.attention}</dd>
-              <dt>{L("Numbers in the whole model")}</dt>
-              <dd className="text-right text-foreground/80">{count.total.toLocaleString("en")} {L("(Table {{table}}, Positions {{positions}}, Attention {{attention}})", { table: count.table.toLocaleString("en"), positions: count.positions, attention: count.attention })}</dd>
+              <dt>{L("Numbers the model learned, in total")}</dt>
+              <dd className="text-right text-foreground/80">{count.total.toLocaleString("en")} {L("(token table {{table}}, position lists {{positions}}, attention {{attention}})", { table: count.table.toLocaleString("en"), positions: count.positions, attention: count.attention })}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("A full model has many heads doing this at once on slices of the width, a small network after each one, and the pair stacked many times deep; this one has one head and one layer. The division by the square root of the width keeps the scores from growing with the width, which would drive every row to a single one and zeros. The mask is why training on whole texts matches writing one token at a time.")}
+              {L("Large models run many such attention units side by side, each on part of the numbers, follow them with a small network, and stack dozens of these layers. This model has one attention unit and one layer. The division by the square root of the list length keeps the scores from growing when lists get longer. Very large scores would give one weight close to 100 % and all the others close to 0. The mask matters for training: the model learns from whole texts at once, yet each guess may use only earlier tokens, exactly as when it writes text one token at a time.")}
             </Text>
           </div>
         }

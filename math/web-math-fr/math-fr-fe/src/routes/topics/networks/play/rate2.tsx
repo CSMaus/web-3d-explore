@@ -75,20 +75,20 @@ function Rate2Page() {
     pen.line(pts.filter((p) => p[0] >= t), dark, 1);
   };
 
-  const trend = Math.abs(exactAccel) < 0.05 ? L("Holding steady") : exactAccel > 0 ? L("Getting faster") : L("Getting slower");
+  const trend = Math.abs(exactAccel) < 0.05 ? L("keeping a steady speed") : exactAccel > 0 ? L("speeding up") : L("slowing down");
 
   return (
     <div>
       <TaskPage
         title={system?.name ?? L("Is it speeding up or slowing down")}
-        job={L("The same car. Last page the job was its speed. This time the job is whether the speed itself is rising or falling, and by how much a second: the acceleration. It comes from the speed exactly the way the speed came from the position.")}
+        job={L("Is the car speeding up or slowing down, and by how much? A car drives along a road for 12 seconds, and only its position is known at each moment. Speed is the distance covered divided by the time it took. Acceleration is how much the speed changes in one second, measured in metres per second each second. Here it is found in two stages. First two speeds are worked out, one a little before the moment and one a little after, each from two positions. Then their difference is divided by the time between them. The buttons choose how the car moves, and the slider sets the time between the readings. Press run and compare the result with the true acceleration.")}
         input={
           <div className="space-y-3">
             <Choices options={OPTIONS} value={motion} onPick={(id) => { setMotion(id); reset(); }} />
             <Text kind="note" as="p">{L(m.what)}</Text>
-            <Slider label={L("The gap")} min={0.05} max={3} step={0.05} value={gap} format={(v) => `${v.toFixed(2)} s`} onChange={setGap} />
+            <Slider label={L("Time between the two readings")} min={0.05} max={3} step={0.05} value={gap} format={(v) => `${v.toFixed(2)} s`} onChange={setGap} />
             <Text kind="note" as="p">
-              {L("The acceleration is read from two speeds this far apart, and each of those speeds is read from two positions this far apart. So it is a change of a change. A wide gap blurs it twice over; pinch it down and the ring settles on the dot.")}
+              {L("The acceleration is found from two speeds read this far apart in time. Each of those speeds is itself found from two positions this far apart. So the result is a change of a change. A long time between the readings blurs the result twice. A short time brings the ring in the bottom picture onto the dot.")}
             </Text>
           </div>
         }
@@ -102,7 +102,7 @@ function Rate2Page() {
               if (!runner.running && tick >= TICKS) reset();
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(TICKS, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -128,13 +128,13 @@ function Rate2Page() {
                   pen.dot(position, 0, 9, ONE);
                 }}
               />
-            </div><Caption>{started ? L("Speed {{v}} m/s", { v: speed.toFixed(1) }) : L("Green arrow: the speed")}. {started ? L("Acceleration {{a}} m/s each second", { a: exactAccel.toFixed(2) }) : L("Rose arrow: how the speed is changing")}</Caption></div>
+            </div><Caption>{L("Top picture: the car on the road. The lower arrow is its speed. The upper arrow is its acceleration: it points forward while the car speeds up and backward while it slows down.")}{started ? " " + L("Speed {{v}} m/s, acceleration {{a}} m/s each second.", { v: speed.toFixed(1), a: exactAccel.toFixed(2) }) : ""}</Caption></div>
             <div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot className="h-full w-full" box={posBox} deps={[posTrace, t, posBox]} draw={(pen) => {
                 ticks(pen);
                 curve(pen, posTrace, ONE, "#243a2c");
                 pen.dot(t, position, 5, INK);
-                plate(pen, L("Where the car is"), posBox.x0 + 0.3, posBox.y1 - (posBox.y1 - posBox.y0) * 0.1, MUTED);
+                plate(pen, L("Distance from the start, against time"), posBox.x0 + 0.3, posBox.y1 - (posBox.y1 - posBox.y0) * 0.1, MUTED);
               }} />
             </div>
             <div><div data-slot="plot" className="h-[150px] overflow-hidden">
@@ -149,7 +149,7 @@ function Rate2Page() {
                 pen.dot(b[0], b[1], 4, TWO);
                 pen.dot(t, speed, 5, INK);
               }} />
-            </div><Caption>{L("The speed. Its steepness is the acceleration.")}</Caption></div>
+            </div><Caption>{L("Third picture: the speed against time. The short straight line joins the two speeds the acceleration is worked out from. Its steepness is the acceleration.")}</Caption></div>
             <div><div data-slot="plot" className="h-[150px] overflow-hidden">
               <Plot className="h-full w-full" box={accBox} deps={[accTrace, t, accel, accBox]} draw={(pen) => {
                 ticks(pen);
@@ -157,36 +157,36 @@ function Rate2Page() {
                 pen.dot(t, exactAccel, 4.5, TWO);
                 pen.ring(t, accel, 6, INK, 2);
               }} />
-            </div><Caption>{L("The acceleration. Above zero: speeding up. Below: slowing down. Ring: from the gap set above.  Dot: exact.")}</Caption></div>
+            </div><Caption>{L("Bottom picture: the acceleration against time. Above zero the car speeds up, below zero it slows down. The dot is the true acceleration. The ring is the acceleration worked out from the readings.")}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={started ? Math.abs(accel - exactAccel) < 0.08 * Math.max(0.5, Math.abs(exactAccel)) : undefined}>
               {!started
-                ? L("Press run. The green arrow will be the speed and the rose arrow the change in it. Watch the rose arrow point backwards whenever the green one is shrinking.")
-                : L("At {{t}} s the car is {{trend}}: its speed is {{v}} m/s and changing by {{a}} m/s every second. From two speeds {{gap}} s apart the change comes out as {{est}}, {{judge}}.", {
+                ? L("Press run and the car sets off. Watch the upper arrow: whenever the speed is falling, it points backwards, even while the car still moves forward.")
+                : L("At {{t}} s the car is {{trend}}. Its speed is {{v}} m/s and changes by {{a}} m/s every second. From two speeds {{gap}} s apart, the change comes out as {{est}} m/s each second, {{judge}}.", {
                     t: t.toFixed(1),
                     trend,
                     v: speed.toFixed(2),
                     a: exactAccel.toFixed(2),
                     gap: gap.toFixed(2),
                     est: accel.toFixed(2),
-                    judge: Math.abs(accel - exactAccel) < 0.08 * Math.max(0.5, Math.abs(exactAccel)) ? L("which is right") : L("which is off: the gap is too wide for a speed that swings this fast"),
+                    judge: Math.abs(accel - exactAccel) < 0.08 * Math.max(0.5, Math.abs(exactAccel)) ? L("which matches the true acceleration") : L("which is off: the readings are too far apart for a speed that swings this fast"),
                   })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("Speed a little before")}</dt>
-              <dd className="text-right text-foreground/80">{slopeBetween(m.at, t - gap / 2, gap).toFixed(3)} M/s</dd>
-              <dt>{L("Speed a little after")}</dt>
-              <dd className="text-right text-foreground/80">{slopeBetween(m.at, t + gap / 2, gap).toFixed(3)} M/s</dd>
-              <dt>{L("The difference, divided by the gap")}</dt>
-              <dd className="text-right text-foreground/80">{L("{{a}} M/s each second", { a: accel.toFixed(3) })}</dd>
-              <dt>{L("Exact")}</dt>
-              <dd className="text-right text-foreground/80">{exactAccel.toFixed(3)}</dd>
+              <dt>{L("Speed read shortly before this moment")}</dt>
+              <dd className="text-right text-foreground/80">{slopeBetween(m.at, t - gap / 2, gap).toFixed(3)} m/s</dd>
+              <dt>{L("Speed read shortly after this moment")}</dt>
+              <dd className="text-right text-foreground/80">{slopeBetween(m.at, t + gap / 2, gap).toFixed(3)} m/s</dd>
+              <dt>{L("Acceleration from the readings: their difference divided by the time between them")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{a}} m/s each second", { a: accel.toFixed(3) })}</dd>
+              <dt>{L("True acceleration")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{a}} m/s each second", { a: exactAccel.toFixed(3) })}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("Position, speed, acceleration: each is the steepness of the one before. The same ratio, applied twice. A network's training uses exactly this ratio, once, on a different kind of curve: how wrong it is, against each of its own numbers.")}
+              {L("Position, speed, acceleration: each one says how fast the one before it changes. The same division, a small change over a short time, is used twice. A neural network, a program that learns from examples, uses this division while it learns: it measures how its error changes when one of its own numbers changes a little.")}
             </Text>
           </div>
         }

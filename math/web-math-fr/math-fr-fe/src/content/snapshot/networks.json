@@ -2,7 +2,7 @@
  "slug": "networks",
  "number": 3,
  "title": "Calculus into a first neural network",
- "summary": "The perceptron, the neuron it became, a network written out as a system of equations, and every method that trains one, ending on the derivative and the integral as the two objects all of it was built from",
+ "summary": "How a program learns from examples. The topic starts from the perceptron, one of the first machines that learned: it multiplies each input by a weight, adds the results and answers yes or no. That unit became the neuron of today's neural networks. A network of many such units is written out as a set of equations. The topic shows each method that trains it, that is, adjusts its weights until its answers match the examples. It ends on the two ideas all of this is built from: the derivative, which measures how fast a quantity changes, and the integral, which adds up a quantity that keeps changing.",
  "state": "writing",
  "parts": 0,
  "beats": 0,

@@ -123,6 +123,8 @@ export type TextStyle = {
   font: "body" | "heading" | "label" | (string & {});
   /** in px */
   size: number;
+  /** on a narrow screen the size never passes this share of the screen's width, in vw; leave out to keep the size fixed */
+  fluid?: number;
   /** 100 to 900 */
   weight: number;
   /** line height as a multiple of the size */

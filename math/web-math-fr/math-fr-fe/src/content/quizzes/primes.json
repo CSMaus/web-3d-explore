@@ -1,0 +1,266 @@
+{
+  "slug": "primes",
+  "title": "Test: Prime numbers",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "A return map is a picture made from a sequence of numbers. What does each dot of it show?",
+      "options": [
+        {
+          "text": "A value of the sequence against its position in the list",
+          "correct": false,
+          "why": "That picture shows the values in time order. A return map leaves out the position and pairs each value with the next one."
+        },
+        {
+          "text": "A value of the sequence against the value right after it",
+          "correct": true,
+          "why": "Each pair of neighbouring values, x_n and x_(n+1), gives one dot. If a rule fixes the next value, the dots lie on the graph of that rule."
+        },
+        {
+          "text": "How many times each value occurs in the sequence",
+          "correct": false,
+          "why": "That is a histogram, a bar chart of counts. It says nothing about which value follows which."
+        },
+        {
+          "text": "A prime number against the gap that comes after it",
+          "correct": false,
+          "why": "For the primes, the return map pairs a gap with the next gap, not a prime with its gap."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "The logistic map with r = 4 is the rule x_(n+1) = 4x_n(1 - x_n). It takes a number between 0 and 1 and gives the next one. Its values jump around with no visible order, yet on a return map (each value against the next) its dots fall on one curve. Why?",
+      "options": [
+        {
+          "text": "The rule is not chaotic at r = 4, so its values repeat in a cycle",
+          "correct": false,
+          "why": "It is chaotic there: two nearly equal starting values move apart, on average by a factor of 2 per step. Chaos and a curve on the return map go together."
+        },
+        {
+          "text": "Only a few dots are drawn, too few to fill a cloud",
+          "correct": false,
+          "why": "The comparison runs for as many steps as there are prime gaps. More dots fill out the same curve, not a cloud."
+        },
+        {
+          "text": "Its values are always even numbers, like the prime gaps",
+          "correct": false,
+          "why": "The values of the logistic map are numbers between 0 and 1, and most are not whole. Even numbers belong to the prime gaps."
+        },
+        {
+          "text": "The rule fixes each next value from the current one",
+          "correct": true,
+          "why": "The rule is chaotic, but it is a rule. The next value is a function of the current one, so every dot lies on the graph of 4x(1 - x), a parabola, and the return map draws it."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "A sequence made by a rule and a sequence with no rule can both look random. What makes a sequence chaotic?",
+      "options": [
+        {
+          "text": "A fixed rule makes it, and the rule pulls nearby starts apart",
+          "correct": true,
+          "why": "Chaotic means that a rule gives each next value, and two starting values a tiny distance apart soon give completely different sequences. Looking random is not enough. The rule has to be there."
+        },
+        {
+          "text": "It never repeats a value, however long it runs",
+          "correct": false,
+          "why": "Many sequences never repeat, including ones with no rule at all. Not repeating does not decide chaos."
+        },
+        {
+          "text": "It has larger jumps between values than a random sequence",
+          "correct": false,
+          "why": "The size of the jumps is not the test. The test is whether a rule gives the next value from the current one."
+        },
+        {
+          "text": "It passes every statistical test for randomness",
+          "correct": false,
+          "why": "On a return map, each value against the next, a chaotic rule draws a curve. So it fails a test that the prime gaps pass."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "A prime number is a whole number above 1 that divides evenly only by 1 and by itself. Every gap between neighbouring primes, except the first, is an even number. Why?",
+      "options": [
+        {
+          "text": "Primes come in pairs two apart, so each gap is a sum of twos",
+          "correct": false,
+          "why": "Pairs two apart exist, such as 11 and 13, but most gaps are larger: from 23 to 29 the gap is 6. Being even holds for every gap."
+        },
+        {
+          "text": "Primes are found by crossing out odd numbers, leaving even steps",
+          "correct": false,
+          "why": "The usual method, the sieve of Eratosthenes, crosses out the multiples of each prime. That removes the even numbers above 2, not the odd ones."
+        },
+        {
+          "text": "Every prime after 2 is odd, and odd minus odd is even",
+          "correct": true,
+          "why": "The first gap, 3 - 2 = 1, is the only odd one. After it, both ends of every gap are odd numbers."
+        },
+        {
+          "text": "The gaps are rounded to even numbers for the picture",
+          "correct": false,
+          "why": "Nothing is rounded. The gaps are exact differences, and they come out even on their own."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "The gap between two neighbouring primes is their difference. A return map draws each gap against the next gap as a point. Which points do the primes 23, 29, 31, 37, 41, 43, 47 give?",
+      "options": [
+        {
+          "text": "(23, 29), (29, 31), (31, 37), (37, 41), (41, 43), (43, 47)",
+          "correct": false,
+          "why": "These pair primes, not gaps. The return map draws each gap against the gap that follows it."
+        },
+        {
+          "text": "(1, 6), (2, 2), (3, 6), (4, 4), (5, 2), (6, 4)",
+          "correct": false,
+          "why": "This pairs each gap with its position in the list. The return map pairs each gap with the next gap."
+        },
+        {
+          "text": "(6, 2), (2, 6), (6, 4), (4, 2), (2, 4), (4, 6)",
+          "correct": false,
+          "why": "The last gap, 4, has no next gap in this list. Six gaps make only five pairs."
+        },
+        {
+          "text": "(6, 2), (2, 6), (6, 4), (4, 2), (2, 4)",
+          "correct": true,
+          "why": "The gaps are 6, 2, 6, 4, 2, 4. Pairing each gap with the next gives five points."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "The sieve of Eratosthenes finds primes by crossing out the multiples of 2, then of 3, then of 5, and so on. To find every prime up to 400, the multiples of which primes need to be crossed out?",
+      "options": [
+        {
+          "text": "Every prime up to √400 = 20",
+          "correct": true,
+          "why": "These are 2, 3, 5, 7, 11, 13, 17 and 19. A number up to 400 that is not prime has a factor no larger than 20. Larger primes have no multiples left to cross out."
+        },
+        {
+          "text": "Only 2, 3, 5 and 7, the primes below 10",
+          "correct": false,
+          "why": "Those are enough up to 100. Up to 400, numbers such as 121 = 11 × 11 and 361 = 19 × 19 would be left over."
+        },
+        {
+          "text": "Every prime up to 200, half of the limit",
+          "correct": false,
+          "why": "That is far more than needed. Any multiple of a prime above 20 that is below 400 has a smaller factor, so it is already crossed out."
+        },
+        {
+          "text": "Every number up to 400, prime or not",
+          "correct": false,
+          "why": "Multiples of a number that is not prime are already multiples of its prime factors. Crossing them out again changes nothing."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "About how large is the average gap between neighbouring primes near one million?",
+      "options": [
+        {
+          "text": "About 6, the logarithm in base ten",
+          "correct": false,
+          "why": "The rule uses the natural logarithm, ln, whose base is the number e ≈ 2.718. The base-ten logarithm of a million is 6. The natural one is about 2.3 times larger."
+        },
+        {
+          "text": "About 14, the natural logarithm",
+          "correct": true,
+          "why": "ln(1,000,000) ≈ 13.8. The prime number theorem says that near a large number p about one number in ln p is prime, so neighbouring primes there are about ln p apart."
+        },
+        {
+          "text": "About 1000, the square root",
+          "correct": false,
+          "why": "The square root of a million, 1000, tells how far the sieve of Eratosthenes has to go. It does not tell how far apart the primes are."
+        },
+        {
+          "text": "About 0.07, one over the logarithm",
+          "correct": false,
+          "why": "1 / ln p ≈ 0.07 is roughly the share of numbers near p that are prime. The average gap is one over that share."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "Over many prime gaps, the spread of the next gap (its standard deviation: how far it typically lies from its average) is 5.0 when nothing is known. It is 4.8 on average once the current gap is known. The measure divides the second spread by the first. What does it give, and what does it mean?",
+      "options": [
+        {
+          "text": "0.96, which is close to a rule that fixes the next gap",
+          "correct": false,
+          "why": "The scale runs the other way. A rule that fixes the next value gives 0. Close to 1 means almost no help."
+        },
+        {
+          "text": "0.04, so knowing a gap removes 96 per cent of the spread",
+          "correct": false,
+          "why": "0.04 is 1 - 0.96. The measure is the ratio itself, and it says that only 4 per cent of the spread is removed."
+        },
+        {
+          "text": "0.96, so knowing a gap barely narrows the spread",
+          "correct": true,
+          "why": "4.8 / 5.0 = 0.96. A value of 1 means that knowing the gap does not help, and 0 means that a rule fixes the next gap. 0.96 is about what the same gaps give in a random order."
+        },
+        {
+          "text": "1.04, so knowing a gap makes the next one harder to guess",
+          "correct": false,
+          "why": "This is the ratio upside down, 5.0 / 4.8. The spread with the gap known goes on top."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "The prime gaps are shuffled into a random order. On a return map (each gap against the next) they give the same cloud as the gaps in their real order, and knowing one gap helps no more than before. What does that show?",
+      "options": [
+        {
+          "text": "The order of the gaps tells this picture nothing about the next gap",
+          "correct": true,
+          "why": "Shuffling keeps every gap and destroys only their order. If the order held a rule, the real gaps would be easier to predict than the shuffled ones, and they are not."
+        },
+        {
+          "text": "The primes are random numbers, drawn without any rule",
+          "correct": false,
+          "why": "The primes are a fixed list, found by crossing out multiples. The test shows only that one gap does not give the next by a rule."
+        },
+        {
+          "text": "The shuffle failed, since a working shuffle would give a different cloud",
+          "correct": false,
+          "why": "A shuffle keeps the same set of gaps, so the count of each size stays the same. Only an effect of the order could change the picture."
+        },
+        {
+          "text": "The gaps follow a chaotic rule that a shuffle of their order cannot break",
+          "correct": false,
+          "why": "A rule would show as a curve, and knowing one gap would fix the next. Shuffling would destroy such a rule, but there was nothing to destroy."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "For a chaotic rule, the Lyapunov exponent measures how fast two almost equal starting values move apart. Why can it not be measured for the prime gaps?",
+      "options": [
+        {
+          "text": "The primes grow too fast for the exponent to be computed",
+          "correct": false,
+          "why": "Size is not the obstacle. The obstacle is the missing rule that takes one value to the next."
+        },
+        {
+          "text": "The exponent of the primes is exactly zero",
+          "correct": false,
+          "why": "Zero is a value that a rule can have. The primes have no exponent at all, not a zero one."
+        },
+        {
+          "text": "The gaps are whole numbers, and the exponent needs real numbers",
+          "correct": false,
+          "why": "Whole numbers are not the problem. The exponent needs a rule that takes a value to the next one."
+        },
+        {
+          "text": "There is no rule to run two nearby starts forward",
+          "correct": true,
+          "why": "The primes are a fixed list. There is no rule, and no starting value that could be changed a little. Without a rule there is nothing to measure."
+        }
+      ]
+    }
+  ]
+}

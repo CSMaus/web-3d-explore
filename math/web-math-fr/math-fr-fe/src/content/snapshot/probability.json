@@ -1,0 +1,13 @@
+{
+ "slug": "probability",
+ "number": 7,
+ "title": "Probability: counting chance",
+ "summary": "Probability is a number from 0 to 1 that says how often something happens when it is tried many times. The topic computes it in everyday cases. With two dice, why a total of 7 comes up six times as often as a total of 2. What a positive medical test is really worth. Where a game of chance leaves a player after a thousand rounds. How often a whole minute passes with no event, when events come at random, and how long a wait lasts. And how often a gambler reaches a target before losing all the money.",
+ "state": "writing",
+ "parts": 0,
+ "beats": 0,
+ "seconds": 0,
+ "systems": 12,
+ "aside": false,
+ "part_list": []
+}

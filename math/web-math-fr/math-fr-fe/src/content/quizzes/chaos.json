@@ -1,0 +1,266 @@
+{
+  "slug": "chaos",
+  "title": "Test: Differential equations, attractors and chaos",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "A differential equation is a rule for how fast a quantity changes. It is written dx/dt = f(x, t). Here x is the quantity (for example a temperature), t is time, dx/dt is how fast x changes, and f is the given rule. What is the unknown, the thing that has to be found?",
+      "options": [
+        {
+          "text": "A single number x that makes both sides equal",
+          "correct": false,
+          "why": "That is the unknown of an ordinary equation, such as 2x = 6. Here the answer is a whole curve: the value of x at every moment. It is checked by putting the curve into the equation."
+        },
+        {
+          "text": "The rule f, worked out from a curve already drawn",
+          "correct": false,
+          "why": "The rule f is given. It is the equation itself. The curve is what has to be found."
+        },
+        {
+          "text": "The moment t at which x reaches zero",
+          "correct": false,
+          "why": "Time is what the unknown curve depends on. A question like this can be asked only after the curve is known."
+        },
+        {
+          "text": "A curve x(t): the value of x at every moment",
+          "correct": true,
+          "why": "The unknown is the whole history of x over time. The rule f says how fast x changes for each value of x and at each moment. A solution is a curve whose slope agrees with that rule at every point."
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "The Lorenz system is three equations, written by Edward Lorenz in 1963, for air heated from below. Its rule contains no chance at all. Two runs are started from states so close that no instrument could tell them apart. What does the word chaos mean for such a system?",
+      "options": [
+        {
+          "text": "The rule has a random part, so two runs from one start differ",
+          "correct": false,
+          "why": "Every step of the Lorenz equations is fixed by the rule. Two runs from exactly the same start agree exactly. The two nearby runs part because of the rule, not because of chance."
+        },
+        {
+          "text": "The gap keeps doubling at a steady pace, with no chance involved",
+          "correct": true,
+          "why": "Every step is fixed by the rule, and still the far future cannot be predicted. In each unit of time the distance between the two runs is multiplied by the same factor. The rate of this growth is called the Lyapunov exponent. For this system it is about 0.904 per time unit. A positive rate of this kind is the working definition of chaos."
+        },
+        {
+          "text": "The path of the state traces a shape like a butterfly's wings",
+          "correct": false,
+          "why": "The butterfly shape is the set of states the system keeps visiting. It does not by itself make the system chaotic. Chaos is the growing gap between nearby runs."
+        },
+        {
+          "text": "The equations have no solution for some of the possible starting states",
+          "correct": false,
+          "why": "Every start has a solution, and step-by-step methods compute it. What is lost is the ability to predict far ahead from a start that is known only approximately."
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "The logistic map is a rule that turns a number x between 0 and 1 into the next number, r·x·(1 - x). Here r is a fixed number between 0 and 4, set by a knob. Applied again and again, the rule gives a sequence of numbers. A bifurcation diagram has r along the horizontal axis. What does it draw above each value of r?",
+      "options": [
+        {
+          "text": "The values still visited after the early steps are dropped",
+          "correct": true,
+          "why": "Each column is one full run. The rule is applied many times, the early steps are thrown away, and the values that remain are drawn. One dot means the sequence settles on one number. Two or four dots mean it repeats a cycle of two or four values. A smeared band means it never repeats."
+        },
+        {
+          "text": "Every value of the sequence, from its very first step onwards",
+          "correct": false,
+          "why": "In the early steps the sequence is still on its way to its long-run behaviour. Keeping them would blur every column. They are dropped so that only the long-run behaviour shows."
+        },
+        {
+          "text": "The average of the values left after the early steps are dropped",
+          "correct": false,
+          "why": "An average would hide a cycle: a cycle of two values would show as one dot between them. The diagram draws every value visited. That is how the splitting into two, four and more values becomes visible."
+        },
+        {
+          "text": "How fast two nearby sequences move apart at that value of r",
+          "correct": false,
+          "why": "That rate is called the Lyapunov exponent. It is one number for each r, and it is often drawn as a separate curve under the diagram. The diagram itself shows the values visited."
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "The equation dx/dt = -0.5x says that x falls at a rate of half its current value per unit of time. At time 0, x = 2. Euler's method moves forward in small steps. It takes the rate at the current point and assumes it stays the same for the whole step. What value does one Euler step of length h = 0.2 time units give?",
+      "options": [
+        {
+          "text": "2.2",
+          "correct": false,
+          "why": "This moves in the wrong direction. The rate is negative, so x is falling, not rising."
+        },
+        {
+          "text": "1.0",
+          "correct": false,
+          "why": "This adds the whole rate without multiplying it by the step length. The step is 0.2 of a time unit, not a whole unit."
+        },
+        {
+          "text": "1.8",
+          "correct": true,
+          "why": "The rate at the start is -0.5 × 2 = -1. Over a step of 0.2 the change is 0.2 × (-1) = -0.2. So x becomes 2 - 0.2 = 1.8."
+        },
+        {
+          "text": "1.8097",
+          "correct": false,
+          "why": "That is the exact value, 2e^(-0.1), where e ≈ 2.718. Euler's method keeps the starting rate for the whole step. The true curve bends while the step goes straight, so Euler lands at 1.8."
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "The logistic map turns a number x between 0 and 1 into r·x·(1 - x), here with r = 2.8. A fixed point is a number that the rule leaves unchanged. The slope of the rule at a point x tells by how much a small change in x is multiplied. It equals r(1 - 2x). Apart from 0, where is the fixed point, and does a sequence started near it settle on it?",
+      "options": [
+        {
+          "text": "At 1 - 1/r ≈ 0.643, where the slope is -0.8, so it settles",
+          "correct": true,
+          "why": "At x = 0.643 the slope is 2.8 × (1 - 2 × 0.643) = -0.8. A sequence settles on a fixed point when the slope there lies between -1 and 1. Then a small distance from the point is multiplied by 0.8 in size at each step, so it shrinks. -0.8 is in that range, so the sequence stays."
+        },
+        {
+          "text": "At 1/r ≈ 0.357, where the slope is 0.8, so it settles",
+          "correct": false,
+          "why": "Solving x = r·x·(1 - x) for x other than 0 gives x = 1 - 1/r, not 1/r. The rule does not leave 0.357 unchanged."
+        },
+        {
+          "text": "At 0.643, but the slope there is negative, so it does not settle",
+          "correct": false,
+          "why": "A negative slope only makes the sequence jump from one side of the point to the other. Whether it settles depends on the size of the slope, and 0.8 is less than 1."
+        },
+        {
+          "text": "Only at 0, where the slope is 2.8, so nothing settles",
+          "correct": false,
+          "why": "0 is a fixed point, and at this r the sequence moves away from it. But a second fixed point exists at 0.643, and sequences started near it settle on it."
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "A swing without friction is described by two numbers: its position and its speed. Drawn with position across and speed up, its exact motion is a circle, and its energy stays at 0.5. Euler's method computes the motion in straight steps. Over a hundred turns the computed path spirals outward, and the energy reaches 267.67. Why?",
+      "options": [
+        {
+          "text": "Rounding errors in the computer add up over the many steps",
+          "correct": false,
+          "why": "Runge-Kutta, a more careful step-by-step method, runs on the same computer and keeps the energy at 0.500000. So rounding is far too small to explain the drift."
+        },
+        {
+          "text": "A step of 0.01 is too small, so too many steps pile up errors",
+          "correct": false,
+          "why": "Smaller steps reduce Euler's error: halving the step halves the error. The drift comes from the direction of each step, not from the number of steps."
+        },
+        {
+          "text": "Friction in the model feeds energy into the swing",
+          "correct": false,
+          "why": "This model has no friction. Friction would take energy away, not add it. The gain comes from the method of calculation."
+        },
+        {
+          "text": "Each straight step leaves the circle and lands outside it",
+          "correct": true,
+          "why": "Euler's method moves in a straight line, in the direction the path has at the current point. A straight step that starts on a circle and follows its direction always ends outside the circle. So every step lands a little further out, and the drift adds up. The error is built into the method, not into rounding."
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "The Lorenz system is three equations for air heated from below, with no chance in them. In it, a small error in the starting state grows like e^(0.904t). This means the error is multiplied by e ≈ 2.718 every 1/0.904 ≈ 1.1 time units. If the starting state is measured 100 times more precisely, how much further ahead can the system be predicted?",
+      "options": [
+        {
+          "text": "About 2.5 more time units",
+          "correct": false,
+          "why": "2.5 time units is the gain from a measurement ten times more precise. A factor of 100 is two factors of ten, so the gain is twice as large."
+        },
+        {
+          "text": "About 5.1 more time units",
+          "correct": true,
+          "why": "The error now starts 100 times smaller, so it needs 100 times more growth to become as large as before. Growth by a factor of 100 takes the time t with e^(0.904t) = 100, so t = ln 100 / 0.904 ≈ 5.1. Here ln is the natural logarithm: ln 100 is the power to which e must be raised to give 100."
+        },
+        {
+          "text": "100 times longer, since the error starts 100 times smaller",
+          "correct": false,
+          "why": "The error grows exponentially, that is, by the same factor in every unit of time. So better precision buys time only through a logarithm. Each tenfold improvement adds the same 2.5 time units."
+        },
+        {
+          "text": "About 4.6 more time units, since ln(100) ≈ 4.6",
+          "correct": false,
+          "why": "4.6 is ln 100 alone, the natural logarithm of 100. It still has to be divided by the growth rate of the error, 0.904."
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "A flow is a system whose state changes smoothly in time by a fixed rule, such as a set of differential equations (rules for how fast each quantity changes). Chaos means that two nearby starts move apart quickly, though the rule has no chance in it. Why does a flow need at least three quantities to be chaotic?",
+      "options": [
+        {
+          "text": "Two equations cannot contain a term such as x times y",
+          "correct": false,
+          "why": "The van der Pol oscillator, a model of an electric circuit, has two equations and a term of this kind. Every path in it settles on one closed loop, called a limit cycle. That is a regular repeating motion, not chaos."
+        },
+        {
+          "text": "With two quantities there is no attractor, so every path runs off",
+          "correct": false,
+          "why": "An attractor is a set of states that the paths settle onto. The van der Pol oscillator has one in the plane: a closed loop that every start approaches. The plane allows attractors that are points and loops, but not chaos."
+        },
+        {
+          "text": "In the plane, a path that never escapes ends at a point or a loop",
+          "correct": true,
+          "why": "With two quantities, the state is a point in a plane, and its history is a path in that plane. Two paths cannot cross, and a path cannot cross itself. So a path that never escapes must end at a point of rest or on a closed loop. This is the Poincaré-Bendixson theorem. A third quantity lets a path pass over itself without crossing."
+        },
+        {
+          "text": "Step-by-step methods of solution fail with only two quantities",
+          "correct": false,
+          "why": "Step-by-step methods work with any number of quantities. The limit comes from the shape of the paths, not from the method of solution."
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "In the Lorenz system the state is a point in space with three coordinates. A small patch of nearby states moves by the rule. The volume of the patch shrinks at the same rate everywhere: in each unit of time it is multiplied by e^(-13.67). The number -13.67 is called the divergence of the system. It equals -(σ + 1 + β), where σ = 10 and β = 8/3 are two of the system's constants. What does this say about the attractor, the set of states the system settles onto?",
+      "options": [
+        {
+          "text": "Every state falls to the origin and stays there",
+          "correct": false,
+          "why": "The volume shrinks, but one direction still stretches: nearby states move apart along it at a rate of about 0.904 per time unit. So the states end up on a thin set and keep moving on it for ever, without stopping at one point."
+        },
+        {
+          "text": "The attractor takes up no volume at all",
+          "correct": true,
+          "why": "Volume is lost all the time, at a fixed rate. So whatever remains in the long run has zero volume. Its dimension comes out a little above 2: more than a surface (2), far less than a solid (3). A formula by Kaplan and Yorke uses the rates of stretching and shrinking: 2 + 0.904 / 14.57 ≈ 2.06. Here 0.904 is the rate of stretching and 14.57 the rate of the fastest shrinking."
+        },
+        {
+          "text": "Nearby states always come together, so there is no chaos",
+          "correct": false,
+          "why": "Shrinking volume does not mean shrinking in every direction. One direction stretches while another shrinks faster. The stretching is what makes the system chaotic."
+        },
+        {
+          "text": "The attractor fills a solid region of space",
+          "correct": false,
+          "why": "A solid region has volume, and the volume of any patch of states keeps shrinking. So the attractor is thinner than any solid."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "The logistic map turns a number x into r·x·(1 - x). As r is turned up, the long-run cycle doubles: 1 value, then 2, then 4, 8 and so on. At special values of r, called superstable, the cycle is as stable as it can be. Two such values in a row are 3.498562 and 3.554641, a gap of 0.056079. Each next gap is shorter than the one before by a factor of about 4.669, called Feigenbaum's constant δ. Where is the next such value?",
+      "options": [
+        {
+          "text": "About 3.8165, the gap multiplied by δ",
+          "correct": false,
+          "why": "This multiplies the gap by 4.669. The gaps get shorter, so the gap has to be divided."
+        },
+        {
+          "text": "About 3.6107, the same gap added again",
+          "correct": false,
+          "why": "This adds the same gap again. The doublings come closer and closer together, so each gap is shorter than the one before."
+        },
+        {
+          "text": "About 3.5699, where the doublings end",
+          "correct": false,
+          "why": "3.5699 is the point where the doublings pile up and chaos begins. Infinitely many doublings still come before it, closer and closer together."
+        },
+        {
+          "text": "About 3.5667, the gap divided by δ",
+          "correct": true,
+          "why": "The next gap is 0.056079 / 4.669 ≈ 0.0120. Added to 3.554641, it gives about 3.5667. A direct numerical search finds the value at 3.566667."
+        }
+      ]
+    }
+  ]
+}

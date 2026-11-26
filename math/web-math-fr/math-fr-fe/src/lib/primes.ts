@@ -2,19 +2,20 @@ import { L } from "@/lib/lang";
 
 export const PRIMES = {
   slug: "primes",
-  number: 5,
+  number: 6,
   title: L("Prime numbers"),
   landing: "/topics/primes/play/gaps",
   sections: [
     { to: "/topics/primes/parts", label: L("Parts") },
     { to: "/topics/primes/play", label: L("Play") },
     { to: "/topics/primes/theory", label: L("Mathematics") },
+    { to: "/topics/primes/test", label: L("Test") },
   ],
 } as const;
 
 export const TOPIC = "primes";
 
-export const SYSTEMS = [{ id: "gaps", to: "/topics/primes/play/gaps", label: L("The gaps") }] as const;
+export const SYSTEMS = [{ id: "gaps", to: "/topics/primes/play/gaps", label: L("Gaps between primes") }] as const;
 
 export type PrimesRoute = (typeof SYSTEMS)[number]["to"];
 

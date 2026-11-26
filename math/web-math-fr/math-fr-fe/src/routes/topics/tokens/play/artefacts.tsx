@@ -65,8 +65,8 @@ function ArtefactsPage() {
   return (
     <>
       <TaskPage
-        title={system?.name ?? L("What the first pages explain")}
-        job={L("The mechanism is complete, from a string to a paragraph, and the failures people actually meet have not been mentioned. Each one turns out to be a consequence of a decision on the first four pages, before any network appeared. The job is to see the four commonest ones happen, on this vocabulary, and to name the page that explains each.")}
+        title={system?.name ?? L("Four mistakes explained by cutting text")}
+        job={L("Why do language models miscount letters, slip on long numbers, change an answer over a stray space and know little about rare words? A language model reads text as tokens: pieces of text such as words, parts of words or single signs. Each token arrives as a number, its id. The list of all tokens, called the vocabulary, is built beforehand from how often pieces of text occur in a training text. Here that text is a short story about a cat, a dog and a man. This page takes four inputs and shows how each is cut into tokens. The question: in each case, what does the model actually receive?")}
         input={
           <div className="space-y-3">
             <label className="block">
@@ -78,7 +78,7 @@ function ArtefactsPage() {
               <Input value={number} onChange={(e) => setNumber(e.target.value.replace(/\D/g, ""))} className="mt-1" />
             </label>
             <label className="block">
-              <span data-text="note">{L("A phrase, for the spaces")}</span>
+              <span data-text="note">{L("A phrase, to move its spaces")}</span>
               <Input value={phrase} onChange={(e) => setPhrase(e.target.value)} className="mt-1" />
             </label>
             <label className="block">
@@ -91,13 +91,13 @@ function ArtefactsPage() {
           <RunBar
             running={runner.running}
             count={at}
-            what={L("cases opened")}
+            what={L("cases shown")}
             limit={CASES.length}
             onToggle={() => {
               if (!runner.running && at >= CASES.length) reset();
               runner.toggle();
             }}
-            onStep={(many) => setDone((v) => Math.min(CASES.length, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -106,15 +106,15 @@ function ArtefactsPage() {
         }
         picture={
           <section ref={stage} className="space-y-2">
-            {card(0, L("how many letters are in \"{{word}}\"?", { word }), (
+            {card(0, L("How many letters are in \"{{word}}\"?", { word }), (
               <>
                 <TokenRow tokens={wordTokens} ids size="sm" />
                 <Text kind="caption" as="p">
-                  {L(wordTokens.length === 1 ? "{{letters}} letters, but the model receives {{n}} id: {{ids}}. No id says how many letters it stands for; the letters inside a token were never separately represented. The same goes for spelling it backwards." : "{{letters}} letters, but the model receives {{n}} ids: {{ids}}. No id says how many letters it stands for; the letters inside a token were never separately represented. The same goes for spelling it backwards.", { letters, n: wordTokens.length, ids: wordTokens.map((t) => t.id).join(", ") })}
+                  {L(wordTokens.length === 1 ? "{{letters}} letters, but the model receives {{n}} id: {{ids}}. An id is only a number in a list. It does not say how many letters its token has, or which ones. So the model has to count the letters, or spell the word backwards, without seeing them." : "{{letters}} letters, but the model receives {{n}} ids: {{ids}}. An id is only a number in a list. It does not say how many letters its token has, or which ones. So the model has to count the letters, or spell the word backwards, without seeing them.", { letters, n: wordTokens.length, ids: wordTokens.map((t) => t.id).join(", ") })}
                 </Text>
               </>
             ))}
-            {card(1, L("arithmetic on {{number}}", { number }), (
+            {card(1, L("Arithmetic on {{number}}", { number }), (
               <>
                 <div data-text="caption" className="grid grid-cols-[120px_1fr] items-center gap-2">
                   <span>{L("As typed")}</span><TokenRow tokens={numberA} size="sm" />
@@ -122,7 +122,7 @@ function ArtefactsPage() {
                   <span>{L("After a space")}</span><TokenRow tokens={numberC} size="sm" />
                 </div>
                 <Text kind="caption" as="p">
-                  {L(splitDigits ? "The same number is {{a}}, {{b}} and {{c}} tokens in its three spellings, cut wherever the merges happened to fall, so a digit's place value depends on which piece it landed in. A model that has to add these is adding pieces, not digits." : "The same number is {{a}}, {{b}} and {{c}} tokens in its three spellings, cut wherever the merges happened to fall. A model that has to add these is adding pieces, not digits.", { a: numberA.length, b: numberB.length, c: numberC.length })}
+                  {L(splitDigits ? "The same number becomes {{a}}, {{b}} and {{c}} tokens in its three spellings. The cuts fall wherever the vocabulary happens to have pieces, so whether a digit stands for units, tens or thousands depends on the piece it landed in. A model that adds such numbers adds pieces, not digits." : "The same number becomes {{a}}, {{b}} and {{c}} tokens in its three spellings. The cuts fall wherever the vocabulary happens to have pieces. A model that adds such numbers adds pieces, not digits.", { a: numberA.length, b: numberB.length, c: numberC.length })}
                 </Text>
               </>
             ))}
@@ -134,7 +134,7 @@ function ArtefactsPage() {
                   <span>{L("Double spaces")}</span><TokenRow tokens={spaceC} ids size="sm" />
                 </div>
                 <Text kind="caption" as="p">
-                  {sameIds ? L("The ids happen to match here; try a phrase that begins with a word.") : L("The first token changes id ({{a}} against {{b}}), so a different row of the table goes in and everything after it is computed from different numbers.", { a: String(spaceA[0]?.id), b: String(spaceB[0]?.id) })} {L("A stray space in a prompt is a different prompt.")}
+                  {sameIds ? L("Here the ids happen to match. A phrase that begins with a word shows the difference.") : L("The first token gets another id ({{a}} as typed, {{b}} with a space in front). Each id picks its own list of numbers from a table, so the model starts from different numbers, and everything after is computed from them.", { a: String(spaceA[0]?.id), b: String(spaceB[0]?.id) })} {L("So one extra space makes a different input.")}
                 </Text>
               </>
             ))}
@@ -142,13 +142,13 @@ function ArtefactsPage() {
               <>
                 <TokenRow tokens={rareTokens} size="sm" />
                 <div data-text="caption" className="grid grid-cols-[1fr_auto_auto] gap-x-4 gap-y-0.5">
-                  <span>{L("Token")}</span><span className="text-right">{L("In the text")}</span><span className="text-right">{L("Row moved")}</span>
+                  <span>{L("Token")}</span><span className="text-right">{L("Times in the text")}</span><span className="text-right">{L("Times adjusted")}</span>
                   {rareTokens.map((t, i) => (
                     <Row key={i} t={visible(t.text)} n={countOf(t.id)} moved={touched[t.id] ?? 0} />
                   ))}
                 </div>
                 <Text kind="caption" as="p">
-                  {L("The pieces of a rare word have rows that were moved a handful of times or never, so they carry little; the common tokens beside them were moved thousands of times. The meaning page showed the mechanism.")}
+                  {L("Each token has its own list of numbers, trained from the text: every time the token appears, its list is adjusted a little toward the lists of its neighbours. \"Times adjusted\" counts those adjustments. The pieces of a rare word were adjusted a few times or never, so their lists carry little. The common tokens beside them were adjusted thousands of times. Counts under 10 are marked.")}
                 </Text>
               </>
             ))}
@@ -158,27 +158,27 @@ function ArtefactsPage() {
           <div className="space-y-2">
             <Verdict>
               {at === 0
-                ? L("Press run: the four cases open one at a time.")
+                ? L("Run shows the four cases one at a time.")
                 : at === 1
-                  ? L(wordTokens.length === 1 ? "Counting letters fails because the token is the unit: \"{{word}}\" arrives as {{n}} id and the letters inside are not anywhere in what the model receives. The cutting page." : "Counting letters fails because the token is the unit: \"{{word}}\" arrives as {{n}} ids and the letters inside are not anywhere in what the model receives. The cutting page.", { word, n: wordTokens.length })
+                  ? L(wordTokens.length === 1 ? "Counting letters fails because the model receives tokens, not letters. \"{{word}}\" arrives as {{n}} id, and its letters appear nowhere in what the model receives." : "Counting letters fails because the model receives tokens, not letters. \"{{word}}\" arrives as {{n}} ids, and its letters appear nowhere in what the model receives.", { word, n: wordTokens.length })
                   : at === 2
-                    ? L("Arithmetic on long numbers fails because place value is cut across tokens by merges that were decided by frequency in the training text, not by arithmetic, and the same number is cut differently in different spellings. Planted on the cost page, explained here.")
+                    ? L("Arithmetic on long numbers fails because the cuts ignore units, tens and thousands. The vocabulary was built from how often pieces occur in the training text, not from arithmetic. And the same number is cut differently in different spellings.")
                     : at === 3
-                      ? L("An answer changes with a stray space because the space travels inside the token: a different id goes in, so a different row of the table, so different numbers everywhere after. The cutting page.")
-                      : L("A rare or specialised word arrives in pieces whose rows were barely trained, so the model knows less about it than its frequency in the world would suggest. The meaning page. All four are consequences of the first four pages, made before any network appeared. None is a mystery about the model.")}
+                      ? L("An answer can change with a stray space because the space is part of the token. A different id goes in, so a different list of numbers, so different numbers everywhere after.")
+                      : L("A rare or specialised word arrives in pieces whose lists were barely trained, so the model knows little about it. All four failures come from how the text was cut into tokens, which was decided before the model learned anything. None of them is a mystery about the model.")}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>{L("Letters in the word, tokens the model gets")}</dt>
               <dd className="text-right text-foreground/80">{letters}, {wordTokens.length}</dd>
-              <dt>{L("The number, tokens in three spellings")}</dt>
+              <dt>{L("Tokens for the number in its three spellings")}</dt>
               <dd className="text-right text-foreground/80">{numberA.length}, {numberB.length}, {numberC.length}</dd>
-              <dt>{L("The phrase, first id with and without a leading space")}</dt>
+              <dt>{L("First id of the phrase, as typed and with a space in front")}</dt>
               <dd className="text-right text-foreground/80">{spaceA[0]?.id ?? "-"}, {spaceB[0]?.id ?? "-"}</dd>
-              <dt>{L("Rows in the rare sentence moved fewer than ten times")}</dt>
+              <dt>{L("Tokens of the rare-word sentence adjusted fewer than 10 times")}</dt>
               <dd className="text-right text-foreground/80">{L("{{a}} of {{b}}", { a: rareTokens.filter((t) => (touched[t.id] ?? 0) < 10).length, b: rareTokens.length })}</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("The byte page, the vocabulary page, the cutting page and the cost page decided all of this: what the unit is, how it is chosen, where the space goes, where a number is cut. The model is downstream of every one of those decisions and cannot see past them.")}
+              {L("All of this was settled before the model was trained: what counts as one piece, how the pieces are chosen, where the space goes, where a number is cut. The model works with what it receives and cannot see past those choices. The pages of this topic in the group \"Text cut into pieces\" show how the vocabulary is built and how text is cut.")}
             </Text>
           </div>
         }

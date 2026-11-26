@@ -26,9 +26,9 @@ export const Route = createFileRoute("/topics/complex/uses/quaternions")({
 
 const FRAMES = 100;
 const AXES: { id: string; label: string; axis: V3 }[] = [
-  { id: "i", label: L("About i, the along axis"), axis: [1, 0, 0] },
-  { id: "j", label: L("About j, the up axis"), axis: [0, 1, 0] },
-  { id: "k", label: L("About k, the out axis"), axis: [0, 0, 1] },
+  { id: "i", label: L("About i: the horizontal axis"), axis: [1, 0, 0] },
+  { id: "j", label: L("About j: the vertical axis"), axis: [0, 1, 0] },
+  { id: "k", label: L("About k: the axis out of the screen"), axis: [0, 0, 1] },
 ];
 const REACH = 1.7;
 
@@ -112,17 +112,17 @@ function QuaternionPage() {
     <div>
       <TaskPage
         title={system?.name ?? L("Quaternions")}
-        job={L("One imaginary unit gave every turn in the plane. In 1843 Hamilton found that turns in space need three, i, j and k, with i i = j j = k k = i j k = minus one, and cut the formula into a stone of a Dublin bridge. A number with those three parts and a real one is a quaternion, and a unit quaternion is a turn in space, exactly as a unit complex number is a turn in the plane. One thing is new: in the plane two turns in either order land in the same place, and in space they do not. The job is to give a house two turns, in both orders at once, and watch the two houses end up facing different ways. That is why i j is k but j i is minus k.")}
+        job={L("Why does the order of two turns matter in space, and how are such turns written as numbers? In a flat plane one extra number is enough: i, whose square is minus one. Multiplying by i turns an arrow a quarter turn, and every turn of the plane is a multiplication by a complex number of length one. In 1843 William Rowan Hamilton found that turns in space need three such units, i, j and k, with i i = j j = k k = i j k = minus one, and cut the formula into a stone of a Dublin bridge. A number made of an ordinary part and these three parts is called a quaternion. A quaternion of length one is a turn in space, exactly as a complex number of length one is a turn in the plane. One thing is new. In the plane two turns done in either order end in the same place; in space they do not. The page gives a house two turns, in both orders at once, and the two houses end up facing different ways. That is why i j is k but j i is minus k.")}
         input={
           <div className="space-y-3">
             <Text kind="note" as="p">{L("The first turn")}</Text>
             <Choices options={AXES} value={firstAxis} onPick={(id) => { setFirstAxis(id); reset(); }} />
-            <Slider label={L("Angle")} min={-180} max={180} step={5} value={firstAngle} format={(v) => L("{{n}} deg", { n: v })} onChange={(v) => { setFirstAngle(Math.round(v / 5) * 5); reset(); }} />
+            <Slider label={L("Angle of the turn")} min={-180} max={180} step={5} value={firstAngle} format={(v) => L("{{n}} deg", { n: v })} onChange={(v) => { setFirstAngle(Math.round(v / 5) * 5); reset(); }} />
             <Text kind="note" as="p">{L("The second turn")}</Text>
             <Choices options={AXES} value={secondAxis} onPick={(id) => { setSecondAxis(id); reset(); }} />
-            <Slider label={L("Angle")} min={-180} max={180} step={5} value={secondAngle} format={(v) => L("{{n}} deg", { n: v })} onChange={(v) => { setSecondAngle(Math.round(v / 5) * 5); reset(); }} />
+            <Slider label={L("Angle of the turn")} min={-180} max={180} step={5} value={secondAngle} format={(v) => L("{{n}} deg", { n: v })} onChange={(v) => { setSecondAngle(Math.round(v / 5) * 5); reset(); }} />
             <Text kind="note" as="p">
-              {L("The left house does the first turn then the second; the right house does them the other way round. Drag either picture to look from elsewhere; both follow. Half the angle goes into the number, which is the one trick: the turn by an angle about an axis is cos of half the angle plus sin of half the angle times the axis.")}
+              {L("The left house does the first turn and then the second. The right house does the same two turns in the opposite order. Dragging either picture changes the viewpoint of both. The quaternion of a turn uses half its angle: the turn by an angle about an axis is the cosine of half the angle, plus the sine of half the angle times the axis. The cosine and the sine of an angle say how far across and how far up a point lies when it is turned by that angle on a circle of radius one.")}
             </Text>
           </div>
         }
@@ -137,7 +137,7 @@ function QuaternionPage() {
               if (!runner.running && at >= FRAMES) reset();
               runner.toggle();
             }}
-            onStep={(many) => setTick((v) => Math.min(FRAMES, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -145,19 +145,19 @@ function QuaternionPage() {
         }
         more={
           <section data-slot="panel">
-            <Label>{L("WHERE THEY ARE USED")}</Label>
+            <Label>{L("WHERE QUATERNIONS ARE USED")}</Label>
             <ul data-text="note" className="mt-2 space-y-2">
               <li>
-                {L("Anything that turns in space and must never lose track of which way is up. Three angles, the older way, have a position where two of the axes line up and a direction is lost: gimbal lock, which is what the Apollo warning lights were about. Four numbers with one constraint have no such position, and a smooth path between two orientations is a single formula, Shoemake's slerp of 1985, which is what the run on this page is doing.")}
+                {L("In anything that turns in space and must never lose track of which way is up. The older way describes an orientation with three angles. It has positions where two of the axes line up and one direction of turning is lost. This is called gimbal lock, and it is what the Apollo warning lights were about. Four numbers with one condition, that their length is one, have no such position. A smooth path between two orientations is then a single formula, Shoemake's slerp of 1985, which is what the run on this page does.")}
               </li>
               <li>
-                {L("The Space Shuttle's autopilot was built around quaternion algebra, and satellites are steered by them today, as are aircraft simulators and robots: the standard robot operating system stores every orientation as one. A phone's rotation sensor reports one; the filter that fuses its gyroscope and compass, Madgwick's of 2011, works in them. Every game engine keeps its rotations as quaternions for the same two reasons. Molecules in a simulation turn by them, and the pulses of a magnetic resonance scanner are quaternion turns of the spins.")}
+                {L("The Space Shuttle's autopilot was built around quaternion algebra, and satellites are steered with quaternions today, as are aircraft simulators and robots: the standard robot operating system stores every orientation as one. A phone's rotation sensor reports one. The method that combines its gyroscope and its compass, Madgwick's filter of 2011, works with them. Every game engine keeps its rotations as quaternions for the same two reasons. Molecules in a simulation are turned with them, and the pulses of a magnetic resonance scanner turn the spins of atomic nuclei by quaternion turns.")}
               </li>
               <li>
-                {L("Metamaterials, materials whose behaviour comes from a repeated structure rather than from what they are made of: a lens flat as a sheet, a cloak that steers microwaves round an object, a surface that redirects a 6G radio beam, a panel that absorbs sound or a buried lattice that turns ground shaking aside. Quaternions appear in that work in a few places, and honesty requires saying they are a niche there, not the mainstream tool: as the rotation bookkeeping when the unit cell of a metal lattice is turned to make it stronger (Zhu and colleagues, 2025); as the labels on the way the bands of a photonic crystal braid, a non-commuting charge first seen in a metamaterial in 2020 (Yang and colleagues, after Wu, Soluyanov and Bzdusek in 2019); and as the numbers a quaternion neural network decodes from the polarisation a smart radio surface reflects (Buvarp and colleagues, 2025). The chiral media those materials imitate have a one-line quaternion form of Maxwell's equations (Kravchenko, 2003).")}
+                {L("Metamaterials are materials whose behaviour comes from a small repeated structure rather than from the substance they are made of. Examples are a lens as flat as a sheet, a cloak that steers microwaves round an object, a surface that redirects a 6G radio beam, a panel that absorbs sound, and a buried lattice that turns ground shaking aside. Quaternions appear in this work in a few places, and there they are a rare tool, not the usual one. They keep track of the rotations when the repeated cell of a metal lattice is turned to make it stronger (Zhu and colleagues, 2025). They label the way the bands of a photonic crystal, a material that guides light, braid around each other; this braiding is a charge whose order matters, first seen in a metamaterial in 2020 (Yang and colleagues, after Wu, Soluyanov and Bzdusek in 2019). They are also the numbers that a quaternion neural network reads from the polarisation of radio waves reflected by a smart radio surface (Buvarp and colleagues, 2025). The chiral media that those materials imitate, materials that differ from their own mirror image, have a one-line quaternion form of Maxwell's equations, the laws of electricity and magnetism (Kravchenko, 2003).")}
               </li>
               <li>
-                {L("Past the quaternions. Doubling once more gives the octonions, eight parts, which lose associativity as well; Frobenius proved in 1878 that the real numbers, the complex numbers and the quaternions are the only systems of this kind in which every non-zero number can be divided by. Three, and no more.")}
+                {L("Beyond the quaternions. Doubling once more gives the octonions, with eight parts, which also give up associativity: (a b) c is no longer always equal to a (b c). Frobenius proved in 1878 that the real numbers, the complex numbers and the quaternions are the only systems of this kind in which every non-zero number can be divided by. Three, and no more.")}
               </li>
             </ul>
           </section>
@@ -166,11 +166,11 @@ function QuaternionPage() {
           <section ref={stage} className="grid gap-2 lg:grid-cols-2">
             <div>
               <div data-slot="plot" className="h-[320px] overflow-hidden">{view(houseLeft)}</div>
-              <Caption>{L("First {{a1}} deg about {{x1}}, then {{a2}} deg about {{x2}}. Sky: the i axis, along. Green: j, up. Rose: k, out of the page. Drag to turn the view; the wheel brings it closer.", { a1: firstAngle, x1: firstAxis, a2: secondAngle, x2: secondAxis })}</Caption>
+              <Caption>{L("First {{a1}} deg about {{x1}}, then {{a2}} deg about {{x2}}. Three short lines from the centre are the axes: i points across, j up, k out of the screen. Dragging turns the view; the mouse wheel brings it closer.", { a1: firstAngle, x1: firstAxis, a2: secondAngle, x2: secondAxis })}</Caption>
             </div>
             <div>
               <div data-slot="plot" className="h-[320px] overflow-hidden">{view(houseRight)}</div>
-              <Caption>{L("The same two turns the other way round: first {{a2}} deg about {{x2}}, then {{a1}} deg about {{x1}}. The same house, the same axes, the same view.", { a1: firstAngle, x1: firstAxis, a2: secondAngle, x2: secondAxis })}</Caption>
+              <Caption>{L("The same two turns in the opposite order: first {{a2}} deg about {{x2}}, then {{a1}} deg about {{x1}}. The same house, the same axes and the same viewpoint as on the left.", { a1: firstAngle, x1: firstAxis, a2: secondAngle, x2: secondAxis })}</Caption>
             </div>
           </section>
         }
@@ -178,14 +178,14 @@ function QuaternionPage() {
           <div className="space-y-2">
             <Verdict good={at >= FRAMES ? (sameAxis ? undefined : apart > 1) : undefined}>
               {at === 0
-                ? L("Two houses, both facing the same way. Press run: the left one turns {{a1}} deg about {{x1}} and then {{a2}} deg about {{x2}}; the right one does the same turns the other way round.", { a1: firstAngle, x1: firstAxis, a2: secondAngle, x2: secondAxis })
+                ? L("Two houses, both facing the same way. Press run: the left one turns {{a1}} deg about {{x1}} and then {{a2}} deg about {{x2}}; the right one does the same turns in the opposite order.", { a1: firstAngle, x1: firstAxis, a2: secondAngle, x2: secondAxis })
                 : f <= 0.5
-                  ? L("The first turn is under way: the left house is turning about {{x1}}, the right about {{x2}}. {{p}} per cent of the first turn done.", { x1: firstAxis, x2: secondAxis, p: Math.round(f * 200) })
+                  ? L("The first turn is under way: the left house is turning about {{x1}}, the right one about {{x2}}. {{p}} per cent of the first turn is done.", { x1: firstAxis, x2: secondAxis, p: Math.round(f * 200) })
                   : f < 1
-                    ? L("The second turn is under way: {{p}} per cent done. The two houses are already facing differently.", { p: Math.round((f - 0.5) * 200) })
+                    ? L("The second turn is under way: {{p}} per cent done. The two houses already face different ways.", { p: Math.round((f - 0.5) * 200) })
                     : sameAxis
-                      ? L("Both turns were about the same axis, and the two houses end up facing the same way: turns about one axis commute, exactly as turns in the plane do. Pick two different axes to see the difference.")
-                      : L("The two houses end {{d}} deg apart. First {{x1}} then {{x2}} is one turn of {{a}} about the axis {{ax}}; the other order is a turn of {{b}} about {{bx}}. Same two turns, different result. So the numbers that stand for turns in space cannot commute either: i j is k and j i is minus k.", {
+                      ? L("Both turns were about the same axis, and the two houses end up facing the same way. Turns about one axis can be done in either order, exactly as turns in a flat plane. Two different axes show the difference.")
+                      : L("The two houses end {{d}} deg apart. First {{x1}} then {{x2}} is a single turn of {{a}} about the axis {{ax}}. The other order is a turn of {{b}} about {{bx}}. The same two turns give different results. So the numbers that stand for turns in space cannot be multiplied in either order with the same result: i j is k, and j i is minus k.", {
                           d: apart.toFixed(0),
                           x1: firstAxis,
                           x2: secondAxis,
@@ -198,17 +198,17 @@ function QuaternionPage() {
             <Readout
               rows={[
                 [L("The first turn as a quaternion"), show(qa)],
-                [L("The second turn"), show(qb)],
-                [L("Second after first: q2 · q1"), show(ab)],
-                [L("First after second: q1 · q2"), show(ba)],
-                [L("The two results, as one turn each"), L("{{a}} about {{ax}}; {{b}} about {{bx}}", { a: deg(toAxisAngle(ab).angle), ax: axisName(toAxisAngle(ab).axis), b: deg(toAxisAngle(ba).angle), bx: axisName(toAxisAngle(ba).axis) })],
-                [L("How far apart the two houses end"), L("{{n}} deg", { n: apart.toFixed(1) })],
-                [L("i j, and j i"), L("{{a}}, and {{b}}", { a: show(mul([0, 1, 0, 0], [0, 0, 1, 0])), b: show(mul([0, 0, 1, 0], [0, 1, 0, 0])) })],
+                [L("The second turn as a quaternion"), show(qb)],
+                [L("First turn, then second: q2 · q1"), show(ab)],
+                [L("Second turn, then first: q1 · q2"), show(ba)],
+                [L("Each result as a single turn"), L("{{a}} about {{ax}}; {{b}} about {{bx}}", { a: deg(toAxisAngle(ab).angle), ax: axisName(toAxisAngle(ab).axis), b: deg(toAxisAngle(ba).angle), bx: axisName(toAxisAngle(ba).axis) })],
+                [L("Angle between the two houses at the end"), L("{{n}} deg", { n: apart.toFixed(1) })],
+                [L("i times j, and j times i"), L("{{a}}, and {{b}}", { a: show(mul([0, 1, 0, 0], [0, 0, 1, 0])), b: show(mul([0, 0, 1, 0], [0, 1, 0, 0])) })],
                 [L("Length of every quaternion here"), L("1, so each is a pure turn with no stretch")],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              {L("A complex number turned the plane by doubling angles and squaring lengths; a quaternion turns space with half-angles and a sandwich, q v q inverse. The half is the price of having a formula with no special position in it, and the sandwich is why order matters. Everything on the six pages before this is the case of one imaginary unit, where the sandwich collapses to a single multiplication and the order never mattered.")}
+              {L("Compare the two kinds of numbers. A complex number of length one turns the plane: multiplying by it adds its angle to every arrow. A quaternion of length one turns space, with half angles and a sandwich: the point v is multiplied by q on the left and by the inverse of q on the right, q v q inverse. The half angle is the price of a formula with no special position where a direction is lost. The sandwich is the reason the order matters. With only one imaginary unit, as in a flat plane, the sandwich becomes a single multiplication, and the order never matters.")}
             </Text>
           </div>
         }

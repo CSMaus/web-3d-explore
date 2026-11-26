@@ -47,7 +47,7 @@ export function PrimesCard({ to }: { to: LinkProps["to"] }) {
   return (
     <Link to={to} data-topic={5} data-tile="" className="group max-w-md items-center gap-5" style={{ padding: 14 }}>
       <Live
-        label={L("The numbers on a square spiral, the primes lit")}
+        label={L("The whole numbers 1, 2, 3 and on, written along a square spiral, with the prime numbers lit. A prime number divides only by 1 and by itself.")}
         still={12}
         fps={12}
         className="aspect-square w-[120px] shrink-0"

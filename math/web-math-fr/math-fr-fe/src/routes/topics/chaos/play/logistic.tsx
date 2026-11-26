@@ -28,13 +28,13 @@ const UNIT: Box = { x0: -0.02, x1: 1.02, y0: -0.02, y1: 1.02 };
 const MOST = 120;
 const TWIN = 1e-6;
 const PRESETS = [
-  { id: "2.8", label: L("Settles") },
-  { id: "3.2", label: L("Two values") },
-  { id: "3.5", label: L("Four") },
-  { id: "3.56995", label: L("The edge") },
-  { id: "3.7", label: L("Chaos") },
-  { id: "3.83", label: L("A window") },
-  { id: "4", label: "r = 4" },
+  { id: "2.8", label: L("r = 2.8: settles on one value") },
+  { id: "3.2", label: L("r = 3.2: two values in turn") },
+  { id: "3.5", label: L("r = 3.5: four values in turn") },
+  { id: "3.56995", label: L("r = 3.56995: where the doubling ends") },
+  { id: "3.7", label: L("r = 3.7: chaos") },
+  { id: "3.83", label: L("r = 3.83: a cycle inside the chaos") },
+  { id: "4", label: L("r = 4: chaos across the whole range") },
 ];
 
 function LogisticPage() {
@@ -78,15 +78,15 @@ function LogisticPage() {
     <div>
       <TaskPage
         title={system?.name ?? L("The logistic map")}
-        job={L("The logistic map is the simplest model of a population that grows when small and is held back when crowded: next year's number is r times this year's, times the room left. It is the standard first example of a plain rule producing chaos, and every later idea in this topic can be seen in it. One number between zero and one, and one rule: multiply it by r and by one minus itself, and that is the next number. The job is to apply the rule again and again and say where the number ends up. On the left, iteration as a picture: up to the curve, across to the diagonal, repeat. On the right, the same numbers in order.")}
+        job={L("Where does a number end up if the same simple rule is applied to it again and again? The rule: take a number x between 0 and 1, multiply it by r and by 1 - x, and the result is the next number. As a formula: x becomes r x (1 - x). For example, with r = 2.8 and x = 0.2 the next number is 2.8 × 0.2 × 0.8 = 0.448. This rule is called the logistic map. It is the simplest model of a population of animals. x is the population as a share of the most the place can feed. r is how fast the population grows when there is plenty of room. 1 - x is the room that is left, so a crowded population grows less. Depending on r, the number settles on one value, or keeps jumping between a few values in a fixed order, or never settles at all. The left picture shows each step as a drawing: from the current number go up or down to the curve, then across to the diagonal line, and repeat. The right picture shows the same numbers in order, one per step.")}
         input={
           <div className="space-y-3">
             <Choices options={PRESETS} value={preset} onPick={(id) => { setR(Number(id)); reset(); }} />
-            <Slider label="r" min={0.5} max={4} step={0.001} value={r} format={(v) => v.toFixed(3)} onChange={(v) => { setR(v); reset(); }} />
-            <Slider label={L("Start x0")} min={0.01} max={0.99} step={0.005} value={x0} format={(v) => v.toFixed(3)} onChange={(v) => { setX0(v); reset(); }} />
-            <Slider label={L("Iterate")} min={1} max={8} step={1} value={iterate} format={(v) => L("f applied {{n}}x", { n: Math.round(v) })} onChange={(v) => { setIterate(Math.round(v)); reset(); }} />
+            <Slider label={L("r: how fast the population grows when there is room")} min={0.5} max={4} step={0.001} value={r} format={(v) => v.toFixed(3)} onChange={(v) => { setR(v); reset(); }} />
+            <Slider label={L("Start x0: the first number")} min={0.01} max={0.99} step={0.005} value={x0} format={(v) => v.toFixed(3)} onChange={(v) => { setX0(v); reset(); }} />
+            <Slider label={L("Times the rule is applied in one step (left picture)")} min={1} max={8} step={1} value={iterate} format={(v) => String(Math.round(v))} onChange={(v) => { setIterate(Math.round(v)); reset(); }} />
             <Text kind="note" as="p">
-              {L("Click on the left picture to choose the start. Iterate draws the rule composed with itself: a two-cycle of the rule is a fixed point of the rule applied twice, which is why doubling is mechanical. A second start, one millionth higher, runs as a dashed line beside the first on the right.")}
+              {L("A click on the left picture chooses the start x0. The slider for times per step redraws the left curve as the rule applied two or more times in a row. Two values that the rule swaps back and forth become, under the rule applied twice, two values that stay where they are: the curve crosses the diagonal there. On the right, a second start one millionth higher than the first is drawn as a dashed line next to the first.")}
             </Text>
             <PaletteBar />
           </div>
@@ -101,7 +101,7 @@ function LogisticPage() {
               if (!runner.running && n >= MOST) reset();
               runner.toggle();
             }}
-            onStep={(many) => setShown((v) => Math.min(MOST, v + many))}
+            onStep={(many) => runner.once(many)}
             onReset={reset}
             perFrame={perFrame}
             onSpeed={setPerFrame}
@@ -138,12 +138,12 @@ function LogisticPage() {
                   else pen.ring(x0, 0, 7, INK, 1.5);
                 }}
               />
-            </div><Caption>{iterate === 1 ? L("The rule f(x) = r x (1 - x), and the diagonal") : L("f applied {{n}} times, and the diagonal", { n: iterate })}{L(". Up to the curve, across to the diagonal: one step")}</Caption></div>
+            </div><Caption>{iterate === 1 ? L("Thick curve: the rule f(x) = r x (1 - x); its height above x is the number that comes after x. Thin straight line: the diagonal, where the height equals x") : L("Thick curve: the rule applied {{n}} times in a row. Thin straight line: the diagonal, where the height equals x", { n: iterate })}{L(". One step: from the number go up or down to the curve, then across to the diagonal, which makes the next number the new x")}</Caption></div>
             <div>
               {/* which line is which, above the picture where it is read first */}
               <Text kind="note" as="div" className="mb-2 flex flex-wrap gap-x-4 gap-y-1">
-                <span><Swatch colour={accent} />{L("The numbers from the start x0")}</span>
-                <span><Swatch colour={TWO} />{L("Dashed: a second start, one millionth higher")}</span>
+                <span><Swatch colour={accent} />{L("Solid line: the numbers, step by step, from the start x0")}</span>
+                <span><Swatch colour={TWO} />{L("Dashed line: the same rule from a start one millionth higher")}</span>
               </Text>
               <div data-slot="plot" className="h-[min(440px,calc(100vh-22rem))] overflow-hidden">
               <Plot
@@ -169,40 +169,40 @@ function LogisticPage() {
                   if (n > 0) pen.dot(n, series[n], 4.5, INK);
                 }}
               />
-            </div><Caption>{L("The numbers in order. The dashed line starts one millionth higher: while the number settles, the two lines lie on top of each other; in chaos they part.")} {L("Blue lines: the cycle it settles on, period {{period}}", { period: cycle })}</Caption></div>
+            </div><Caption>{L("Across: the step number. Up: the number after that many steps. The dashed line starts one millionth higher. While the number settles, the solid and dashed lines lie on top of each other. In chaos they part.")} {L("Thin horizontal lines: the values the number repeats once it has settled. How many values: {{period}} (0 means it never settles).", { period: cycle })}</Caption></div>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={n === 0 ? undefined : cycle && nearest !== null && Math.abs(nearest - xNow) < 1e-3 ? true : cycle === 0 && gapNow > 0.05 ? false : undefined}>
               {n === 0
-                ? L("Start at {{x0}} with r = {{r}}. Press run, or one step, and follow the number up to the curve and across to the diagonal.", { x0: x0.toFixed(3), r: r.toFixed(3) })
+                ? L("The start is x0 = {{x0}}, and r = {{r}}. Press run, or one step, and follow the number: up or down to the curve, then across to the diagonal.", { x0: x0.toFixed(3), r: r.toFixed(3) })
                 : cycle === 1
                   ? Math.abs(xNow - fixed) < 1e-3
-                    ? L("After {{n}} steps the number is {{x}}, sitting on the fixed point 1 - 1/r = {{fixed}}, where the curve crosses the diagonal. The slope there is {{slope}}, inside one, so the steps shrink and it stays.", { n, x: xNow.toFixed(4), fixed: fixed.toFixed(4), slope: (2 - r).toFixed(2) })
-                    : L("After {{n}} steps the number is {{x}}, closing on the fixed point 1 - 1/r = {{fixed}}, where the curve crosses the diagonal. The slope there is {{slope}}, inside one, so the steps shrink and it stays.", { n, x: xNow.toFixed(4), fixed: fixed.toFixed(4), slope: (2 - r).toFixed(2) })
+                    ? L("After {{n}} steps the number is {{x}}. It sits on the value 1 - 1/r = {{fixed}}, which the rule leaves unchanged: the curve crosses the diagonal there. Such a value is called a fixed point. The steepness of the curve at that point is {{slope}}. That is between -1 and 1, so each step lands closer to the point than the one before, and the number stays.", { n, x: xNow.toFixed(4), fixed: fixed.toFixed(4), slope: (2 - r).toFixed(2) })
+                    : L("After {{n}} steps the number is {{x}}. It is getting closer to the value 1 - 1/r = {{fixed}}, which the rule leaves unchanged: the curve crosses the diagonal there. Such a value is called a fixed point. The steepness of the curve at that point is {{slope}}. That is between -1 and 1, so each step lands closer to the point than the one before, and the number will stay there.", { n, x: xNow.toFixed(4), fixed: fixed.toFixed(4), slope: (2 - r).toFixed(2) })
                   : cycle > 1 && cycle <= 16
                     ? nearest !== null && Math.abs(nearest - xNow) < 1e-3
-                      ? L("After {{n}} steps the number is {{x}}. It has settled into a cycle of {{cycle}} values: {{values}}. The fixed point is still there at {{fixed}}, but the slope there is {{slope}}, past one, so the number is thrown off it.", { n, x: xNow.toFixed(4), cycle, values: levels.map((v) => v.toFixed(3)).join(", "), fixed: fixed.toFixed(3), slope: (2 - r).toFixed(2) })
-                      : L("After {{n}} steps the number is {{x}}. It is settling into a cycle of {{cycle}} values: {{values}}. The fixed point is still there at {{fixed}}, but the slope there is {{slope}}, past one, so the number is thrown off it.", { n, x: xNow.toFixed(4), cycle, values: levels.map((v) => v.toFixed(3)).join(", "), fixed: fixed.toFixed(3), slope: (2 - r).toFixed(2) })
+                      ? L("After {{n}} steps the number is {{x}}. It now repeats a cycle of {{cycle}} values: {{values}}. The value that the rule leaves unchanged, 1 - 1/r = {{fixed}}, still exists. But the steepness of the curve there is {{slope}}, outside the range from -1 to 1. So each step near that value lands further from it than the one before, and the number is pushed away.", { n, x: xNow.toFixed(4), cycle, values: levels.map((v) => v.toFixed(3)).join(", "), fixed: fixed.toFixed(3), slope: (2 - r).toFixed(2) })
+                      : L("After {{n}} steps the number is {{x}}. It is settling into a cycle of {{cycle}} values: {{values}}. The value that the rule leaves unchanged, 1 - 1/r = {{fixed}}, still exists. But the steepness of the curve there is {{slope}}, outside the range from -1 to 1. So each step near that value lands further from it than the one before, and the number is pushed away.", { n, x: xNow.toFixed(4), cycle, values: levels.map((v) => v.toFixed(3)).join(", "), fixed: fixed.toFixed(3), slope: (2 - r).toFixed(2) })
                     : gapNow > 0.05
-                      ? L("After {{n}} steps the number is {{x}} and it has settled on nothing. The second start, one millionth away, is now {{gap}} away: the two have parted completely, and no step of this rule was random. The exponent is {{lambda}}: positive, so neighbours separate.", { n, x: xNow.toFixed(4), gap: gapNow.toFixed(gapNow < 0.001 ? 6 : 3), lambda: lambda.toFixed(3) })
-                      : L("After {{n}} steps the number is {{x}} and it has settled on nothing. The second start, one millionth away, is now {{gap}} away, and the gap is growing. The exponent is {{lambda}}: positive, so neighbours separate.", { n, x: xNow.toFixed(4), gap: gapNow.toFixed(gapNow < 0.001 ? 6 : 3), lambda: lambda.toFixed(3) })}
+                      ? L("After {{n}} steps the number is {{x}}, and it has not settled on any value or cycle. The second start began one millionth higher and is now {{gap}} away: the two numbers have nothing in common any more. No step of the rule involved chance. The Lyapunov exponent, the average rate at which close starts move apart, is {{lambda}}. It is above zero, so close starts move apart.", { n, x: xNow.toFixed(4), gap: gapNow.toFixed(gapNow < 0.001 ? 6 : 3), lambda: lambda.toFixed(3) })
+                      : L("After {{n}} steps the number is {{x}}, and it has not settled on any value or cycle. The second start began one millionth higher and is now {{gap}} away, and the gap is growing. The Lyapunov exponent, the average rate at which close starts move apart, is {{lambda}}. It is above zero, so close starts move apart.", { n, x: xNow.toFixed(4), gap: gapNow.toFixed(gapNow < 0.001 ? 6 : 3), lambda: lambda.toFixed(3) })}
             </Verdict>
             <Readout
               rows={[
-                ["R", r.toFixed(4)],
-                [L("What it settles on"), cycle ? L("a cycle of period {{period}}", { period: cycle }) : L("Nothing periodic within 64")],
-                [L("Lyapunov exponent"), lambda.toFixed(4)],
-                [L("Which means"), lambda > 0.005 ? L("Neighbours separate: chaos") : lambda < -0.005 ? L("Neighbours converge: a stable cycle") : L("Neither: a bifurcation point")],
-                [L("Fixed point 1 - 1/r"), r > 1 ? fixed.toFixed(4) : L("Not in range")],
-                [L("Slope there"), r > 1 ? (2 - r).toFixed(4) : "-"],
-                [L("Stable while the slope is inside one"), r > 1 ? (Math.abs(2 - r) < 1 ? L("yes") : L("No, so it has doubled")) : "-"],
-                [L("Gap between the two starts now"), n > 0 ? gapNow.toExponential(2) : TWIN.toExponential(0)],
+                [L("r, the growth rate"), r.toFixed(4)],
+                [L("What the number settles on"), cycle ? L("A cycle of period {{period}}: the number repeats after this many steps", { period: cycle }) : L("Nothing: no repeat found with a period up to 64 steps")],
+                [L("Lyapunov exponent: average rate at which close starts move apart, per step"), lambda.toFixed(4)],
+                [L("What that number says"), lambda > 0.005 ? L("Above zero: close starts move apart, so the number is chaotic") : lambda < -0.005 ? L("Below zero: close starts come together, so the number settles") : L("Close to zero: at this r the behaviour is about to change")],
+                [L("Value that the rule leaves unchanged, 1 - 1/r"), r > 1 ? fixed.toFixed(4) : L("None between 0 and 1")],
+                [L("Steepness of the curve at that value, 2 - r"), r > 1 ? (2 - r).toFixed(4) : "-"],
+                [L("Does the number stay there? Only while the steepness is between -1 and 1"), r > 1 ? (Math.abs(2 - r) < 1 ? L("Yes") : L("No, so the number moves to a cycle of two or more values")) : "-"],
+                [L("Distance now between the two starts (solid and dashed lines)"), n > 0 ? gapNow.toExponential(2) : TWIN.toExponential(0)],
               ]}
             />
             <Text kind="note" as="p" className="pt-1">
-              {L("A stable fixed point pulls the steps in because the curve is shallower than the diagonal there. Steepen it past one and the point repels; a two-cycle takes over and is stable in turn, until it doubles. The next page turns r up slowly and records what the number settles on at every value.")}
+              {L("Why does the number settle or not? Near the value that the rule leaves unchanged, each step multiplies the distance to that value by the steepness of the curve there. If the steepness is between -1 and 1, the distance shrinks, and the number is pulled in. Past -1, the distance grows, and the number is pushed away. Then a cycle of two values takes over and holds for a while, until it too splits into four. Another page of this topic raises r slowly and draws, for every value of r, the values the number settles on.")}
             </Text>
           </div>
         }

@@ -21,7 +21,7 @@ export const KERNELS: Record<string, { label: string; k: Grid; what: string }> =
       [2, 0, -2],
       [1, 0, -1],
     ],
-    what: "Large where the left of a patch is brighter than its right, so it lights up on vertical edges",
+    what: "The left column of the pattern is positive and the right column negative. The sum is large where a patch is brighter on its left than on its right, that is, on a vertical edge",
   },
   edgeH: {
     label: "Horizontal edges",
@@ -30,7 +30,7 @@ export const KERNELS: Record<string, { label: string; k: Grid; what: string }> =
       [0, 0, 0],
       [-1, -2, -1],
     ],
-    what: "The same thing turned a quarter turn, so it lights up on horizontal edges",
+    what: "The same pattern turned by a quarter turn. The sum is large where a patch is brighter above than below, on a horizontal edge",
   },
   blur: {
     label: "Blur",
@@ -39,7 +39,7 @@ export const KERNELS: Record<string, { label: string; k: Grid; what: string }> =
       [1 / 9, 1 / 9, 1 / 9],
       [1 / 9, 1 / 9, 1 / 9],
     ],
-    what: "The plain average of a patch, which smooths everything and finds nothing",
+    what: "All nine numbers equal 1/9, so the sum is the average of the patch. It smooths everything and picks out nothing",
   },
   sharpen: {
     label: "Sharpen",
@@ -48,16 +48,16 @@ export const KERNELS: Record<string, { label: string; k: Grid; what: string }> =
       [-1, 5, -1],
       [0, -1, 0],
     ],
-    what: "The centre pixel with its neighbours subtracted, which exaggerates whatever changes",
+    what: "The centre square counts five times and each of its four neighbours counts minus one. The sum exaggerates any change",
   },
   spot: {
-    label: "A corner",
+    label: "A lone dot",
     k: [
       [-1, -1, -1],
       [-1, 8, -1],
       [-1, -1, -1],
     ],
-    what: "Large only where one pixel differs from all eight of its neighbours at once",
+    what: "The centre counts eight times and each of its eight neighbours minus one. The sum is large only where the centre differs from all eight neighbours at once",
   },
 };
 
@@ -414,9 +414,9 @@ export type Head = {
  */
 export const HEADS: Record<string, Head> = {
   previous: {
-    label: "The word just before",
+    label: "The word right before",
     what:
-      "The query is the position rotated back by one step, so it lines up with the key of the position one earlier. This is how a head can mean 'look behind me' with nothing but a dot product.",
+      "Each word's question is its position turned back by one step, so it matches best the key of the word one position earlier. In this way a head can mean 'look at the word behind me' using only multiplications and additions.",
     build: (width) => {
       const Wq = zeros(width, width);
       // a rotation by minus one step, applied to the two position entries
@@ -433,7 +433,7 @@ export const HEADS: Record<string, Head> = {
   first: {
     label: "The first word",
     what:
-      "The query reads only the constant entry, so every position asks exactly the same question. The key is the position, so the score is largest where the position angle is zero, which is the first word.",
+      "Every word asks exactly the same question, and the key of each word is its position. The match is largest at the first position, so every word looks at the first word.",
     build: (width) => {
       // the query is built from the constant entry alone, so it does not vary
       // with the token or the position: every row asks the same thing
@@ -448,7 +448,7 @@ export const HEADS: Record<string, Head> = {
   same: {
     label: "The same word again",
     what:
-      "The query and the key are both just the word part of the vector, so a token scores highest against itself and against any other copy of the same word. With 'the' twice in the sentence, watch the later one look back at the earlier one.",
+      "The question and the key both use only the numbers that say which word it is. So a word matches best with itself and with any other copy of the same word. With 'the' twice in the sentence, the later one looks back at the earlier one.",
     build: (width) => {
       const pick = zeros(width, width);
       for (let d = WORD; d < width; d++) pick[d][d] = 1;
@@ -456,9 +456,9 @@ export const HEADS: Record<string, Head> = {
     },
   },
   untrained: {
-    label: "Untrained",
+    label: "Untrained (random)",
     what:
-      "Two random projections, which is what a head looks like before any training at all: every position draws about equally from every earlier one, and the pattern says nothing.",
+      "Questions and keys made with random weights. This is what a head looks like before any training: every word looks about equally at every earlier word, and the pattern means nothing.",
     build: (width) => ({
       Wq: randomMatrix(width, width, 3),
       Wk: randomMatrix(width, width, 5),

@@ -29,7 +29,7 @@ export function UsePage({ topic, piece, figures = {} }: { topic: BuiltTopic; pie
           </section>
         ))}
         <section className="mt-12 max-w-2xl">
-          <Label>{L("What this does not say")}</Label>
+          <Label>{L("What this page does not claim")}</Label>
           <ul data-text="body" className="mt-3 list-disc space-y-2 pl-5">
             {piece.limits.map((l, i) => (
               <li key={i}>{l}</li>

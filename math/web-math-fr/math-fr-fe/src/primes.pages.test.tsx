@@ -36,19 +36,19 @@ describe("the aside's page", () => {
 
   it("draws, runs and says the primes are not chaotic", async () => {
     await siteAt("/topics/primes/play/gaps");
-    await waitFor(() => expect(screen.getByRole("heading", { name: "The gaps between primes, as a return map" })).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Can one gap between primes predict the next?" })).toBeTruthy());
     expect(document.querySelectorAll("main canvas").length).toBe(3);
-    expect(screen.getByText(/press run and the gaps are placed/i)).toBeTruthy();
+    expect(screen.getByText(/pressing run draws the gaps between them/i)).toBeTruthy();
     for (let i = 0; i < 30; i++) fireEvent.click(screen.getByRole("button", { name: "Ten steps" }));
     await waitFor(() => expect(screen.getByText(/the primes are not chaotic/i)).toBeTruthy());
   });
 
-  it("the bare address and the play index both land on the one page, and the parts page says no series", async () => {
+  it("the bare address and the play index both land on the one page, and the parts page says there is no video", async () => {
     let view = await siteAt("/topics/primes");
-    await waitFor(() => expect(screen.getByRole("heading", { name: "The gaps between primes, as a return map" })).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Can one gap between primes predict the next?" })).toBeTruthy());
     view.unmount();
     view = await siteAt("/topics/primes/parts");
-    await waitFor(() => expect(screen.getByText("No series")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("No video parts")).toBeTruthy());
     view.unmount();
   });
 });

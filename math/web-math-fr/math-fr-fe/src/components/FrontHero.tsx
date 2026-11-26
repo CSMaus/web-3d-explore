@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Choices, Hero, Plot, Tag, TextLink } from "@kit/index";
 import { paletteOf } from "@/lib/palettes";
 import { CONTOUR_LIGHT, FRONT_BULB_FRAMED, FRONT_LIGHT_SET, FRONT_PALETTE } from "@/lib/site";
+import { SEQUENCE } from "@/lib/sequence";
 
 const Bulb = lazy(() => import("@/components/Bulb").then((m) => ({ default: m.Bulb })));
 
@@ -37,7 +38,7 @@ export function FrontHero() {
       actions={
         <>
           <Button asChild>
-            <Link to="/topics/fractals/parts">{t("front.start")}</Link>
+            <Link to={SEQUENCE[0].to}>{t("front.start")}</Link>
           </Button>
           <Button variant="outline" asChild>
             <Link to="/topics">{t("front.browse")}</Link>

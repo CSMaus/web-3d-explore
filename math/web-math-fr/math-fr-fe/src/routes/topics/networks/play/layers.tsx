@@ -24,9 +24,9 @@ export const Route = createFileRoute("/topics/networks/play/layers")({
 
 const KINDS: { id: SetKind; label: string }[] = (["xor", "rings", "spiral", "split"] as SetKind[]).map((id) => ({ id, label: L(SETS[id].label) }));
 const SQUASHES: { id: Act; label: string }[] = [
-  { id: "tanh", label: L("Squash to -1..1") },
-  { id: "sigmoid", label: L("Squash to 0..1") },
-  { id: "relu", label: L("Cut below zero") },
+  { id: "tanh", label: L("Squash into -1 to 1 (tanh)") },
+  { id: "sigmoid", label: L("Squash into 0 to 1 (sigmoid)") },
+  { id: "relu", label: L("Negatives become zero (ReLU)") },
 ];
 const MOST = 6000;
 
@@ -96,18 +96,18 @@ function LayersPage() {
   return (
     <div>
       <TaskPage
-        title={system?.name ?? L("Many units, one answer")}
-        job={L("The dots one line cannot separate. Put several units side by side, each drawing its own line, and one more unit after them that weighs their answers. That is a network. The job is the same as before: every dot on its own colour. Watch what each unit alone sees, and what the last one makes of it.")}
+        title={system?.name ?? L("Several neurons, one answer")}
+        job={L("Can several straight lines together divide dots that no single line can divide? The plane holds dots of two kinds, drawn in two colours. In the set 'A ring inside a ring', 30 dots of one kind sit in the middle and 30 of the other kind lie in a ring around them, so no straight line puts each kind on its own side. A neuron here is a small calculation. It takes the two coordinates of a point, multiplies each by its own number called a weight, adds one more number called a bias, and passes the total through a squashing function. On one side of a straight line the result is high, on the other side low, so one neuron draws one line. This page puts several neurons side by side in a middle layer, each drawing its own line. One more neuron, the output, adds up their answers with weights of its own. Neurons connected this way form a neural network. Press Run and the network adjusts all its weights and biases, step by step. The aim: every dot inside the shaded area of its own colour.")}
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); restart(); }} />
             <Text kind="note" as="p">{L(SETS[kind].note)}</Text>
             <Choices options={SQUASHES} value={act} onPick={(id) => { setAct(id); restart(hidden, id); }} />
-            <Slider label={L("Units in the middle")} min={1} max={8} step={1} value={hidden} format={(v) => String(Math.round(v))} onChange={(v) => { setHidden(Math.round(v)); restart(Math.round(v)); }} />
+            <Slider label={L("Neurons in the middle layer")} min={1} max={8} step={1} value={hidden} format={(v) => String(Math.round(v))} onChange={(v) => { setHidden(Math.round(v)); restart(Math.round(v)); }} />
             <Slider label={L("Step size")} min={0.02} max={2} step={0.02} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
-            <Slider label={L("Starting numbers")} min={1} max={20} step={1} value={seed} format={(v) => L("set {{n}}", { n: Math.round(v) })} onChange={(v) => { setSeed(Math.round(v)); restart(hidden, act, Math.round(v)); }} />
+            <Slider label={L("Random starting numbers")} min={1} max={20} step={1} value={seed} format={(v) => L("draw {{n}}", { n: Math.round(v) })} onChange={(v) => { setSeed(Math.round(v)); restart(hidden, act, Math.round(v)); }} />
             <Text kind="note" as="p">
-              {L("The network starts from small random numbers. One unit in the middle is the last page again: a single line. Try one, then three, then eight. Click on the plane to send a point through the network and see every unit's answer to it.")}
+              {L("The three buttons above choose the squashing function of the middle neurons. Before training, every weight and bias is a small random number; the last slider picks another random draw. 'Step size' sets how far all the numbers move at each step of training. With one neuron in the middle layer the network can draw only one straight line. Compare one, three and eight. A click on the plane sends that point through the network, and the diagram of the network shows each neuron's answer to it.")}
             </Text>
           </div>
         }
@@ -152,7 +152,7 @@ function LayersPage() {
 
                   }}
                 />
-              </div><Caption>{L("The network's answer everywhere.  Ring: a dot it gets wrong")}</Caption></div>
+              </div><Caption>{L("Shading: the network's answer at every point of the plane, in the colour of the kind it picks there. A ring around a dot: the network puts that dot on the wrong side")}</Caption></div>
               <div><div data-slot="plot" className="h-[340px] overflow-hidden">
                 <Plot
                   className="h-full w-full"
@@ -163,7 +163,7 @@ function LayersPage() {
                     drawNet(pen.ctx, net, l, {
                       values: probeValues ?? undefined,
                       tint: probeValues ? probeValues.map((layer, L) => layer.map((v) => (L === 0 ? 0.5 : L === net.W.length ? v : (ACTS[net.act].f(0) === 0 ? (v + 1) / 2 : v)))) : undefined,
-                      labels: [L("in"), L("middle"), L("answer")],
+                      labels: [L("inputs"), L("middle"), L("output")],
                       radius: 14,
                     });
                     pen.ctx.fillStyle = MUTED;
@@ -171,7 +171,7 @@ function LayersPage() {
                     pen.ctx.font = "11px ui-monospace, SFMono-Regular, Menlo, monospace";
                   }}
                 />
-              </div><Caption>{probe ? L("Each circle: that unit's answer to the ringed point") : L("Click the plane to send a point through")}</Caption></div>
+              </div><Caption>{probe ? L("The network as circles: the two inputs, the middle layer, the output. Each circle is shaded by that neuron's answer to the ringed point") : L("The network as circles: the two inputs, the middle layer, the output. A click on the plane shows each neuron's answer to that point")}</Caption></div>
             </div>
             <div data-slot="plot" className="h-[130px] overflow-hidden">
               <Plot
@@ -200,11 +200,12 @@ function LayersPage() {
                     pen.ctx.fillStyle = MUTED;
                     pen.ctx.font = "10px ui-monospace, SFMono-Regular, Menlo, monospace";
                     pen.ctx.textAlign = "left";
-                    pen.ctx.fillText(L("{{n}}: weighs {{w}}", { n: u + 1, w: net.W[1][0][u].toFixed(2) }), x0, 12);
+                    pen.ctx.fillText(L("neuron {{n}}, weight {{w}}", { n: u + 1, w: net.W[1][0][u].toFixed(2) }), x0, 12);
                   }
                 }}
               />
             </div>
+            <Caption>{L("Each small square: what one middle neuron alone answers over the whole plane. Above it: its number and the weight the output neuron gives to its answer")}</Caption>
             <div data-slot="plot" className="h-[120px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -214,55 +215,56 @@ function LayersPage() {
                   ticks(pen);
                   pen.axes(FAINT);
                   pen.line(view.history, ONE, 1.8);
-                  plate(pen, L("How wrong, step by step"), histBox.x0 + 8, histBox.y1 - (histBox.y1 - histBox.y0) * 0.15, MUTED);
+                  plate(pen, L("Error score after each step"), histBox.x0 + 8, histBox.y1 - (histBox.y1 - histBox.y0) * 0.15, MUTED);
                 }}
               />
             </div>
+            <Caption>{L("The error score after each training step: for each dot, the network's answer minus the right answer, squared, then averaged over all dots. Training should make it fall")}</Caption>
           </section>
         }
         result={
           <div className="space-y-2">
             <Verdict good={wrong === 0 ? true : stuck ? false : undefined}>
               {view.steps === 0
-                ? L("Before any training the network gets {{wrong}} of {{total}} dots wrong. {{tiles}} Press run.", {
+                ? L("Before training, the network puts {{wrong}} of the {{total}} dots on the wrong side. {{tiles}} Press Run to start training.", {
                     wrong,
                     total: data.X.length,
-                    tiles: hidden > 1 ? L("The small tiles are the {{n}} middle units, each a line of its own.", { n: hidden }) : L("The small tiles are the {{n}} middle unit, each a line of its own.", { n: hidden }),
+                    tiles: hidden > 1 ? L("The {{n}} small squares are the {{n}} middle neurons, each with a line of its own.", { n: hidden }) : L("The single small square is the one middle neuron and its line.", { n: hidden }),
                   })
                 : wrong === 0
-                  ? L("After {{steps}} steps every one of the {{total}} dots is on its own colour. The boundary is no longer a line: it is built out of {{hidden}} lines, each drawn by one middle unit, weighed together by the last one.", { steps: view.steps, total: data.X.length, hidden })
+                  ? L("After {{steps}} steps of training, all {{total}} dots lie in the area of their own colour. The border between the two areas is no longer a straight line. It is built from {{hidden}} lines, one per middle neuron, added up with weights by the output neuron.", { steps: view.steps, total: data.X.length, hidden })
                   : stuck
                     ? hidden === 1
-                      ? L("After {{steps}} steps it still has {{wrong}} wrong and has stopped improving. One middle unit is one line, and the last unit can only turn a single line's answer up or down. It needs more lines.", { steps: view.steps, wrong })
-                      : L("After {{steps}} steps it still has {{wrong}} wrong and has stopped improving. It has settled in a dip that is not the bottom: with {{hidden}} units it is possible to be stuck. Try a different set of starting numbers, or more units.", { steps: view.steps, wrong, hidden })
-                    : L("After {{steps}} steps it has {{wrong}} of {{total}} wrong. How wrong: {{loss}}, {{trend}}.", {
+                      ? L("After {{steps}} steps, {{wrong}} dots are still on the wrong side and the error has stopped falling. One middle neuron draws one straight line. The output neuron can only make that line's answer stronger or weaker, it cannot bend the line. More middle neurons are needed.", { steps: view.steps, wrong })
+                      : L("After {{steps}} steps, {{wrong}} dots are still on the wrong side and the error has stopped falling. Training has settled at a low point of the error that is not the lowest one. With {{hidden}} neurons this can happen. Another draw of starting numbers, or more neurons, may get past it.", { steps: view.steps, wrong, hidden })
+                    : L("After {{steps}} steps, {{wrong}} of the {{total}} dots are on the wrong side. Error score: {{loss}}, {{trend}}.", {
                         steps: view.steps,
                         wrong,
                         total: data.X.length,
                         loss: total.toFixed(4),
-                        trend: view.history.length > 10 && total < view.history[view.history.length - 10][1] ? L("falling") : L("not falling right now"),
+                        trend: view.history.length > 10 && total < view.history[view.history.length - 10][1] ? L("falling") : L("not falling at the moment"),
                       })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
-              <dt>{L("Units: two in, {{hidden}} in the middle, one out", { hidden })}</dt>
-              <dd className="text-right text-foreground/80">{L("{{n}} numbers to learn", { n: count.total })}</dd>
-              <dt>{L("Of which weights")}</dt>
+              <dt>{L("Neurons: 2 inputs, {{hidden}} in the middle layer, 1 output", { hidden })}</dt>
+              <dd className="text-right text-foreground/80">{L("{{n}} numbers set by training", { n: count.total })}</dd>
+              <dt>{L("Of these, weights (multipliers on the connections)")}</dt>
               <dd className="text-right text-foreground/80">{count.weights}</dd>
-              <dt>{L("And biases")}</dt>
+              <dt>{L("And biases (one added number per neuron)")}</dt>
               <dd className="text-right text-foreground/80">{count.biases}</dd>
-              <dt>{L("How wrong (average squared miss)")}</dt>
+              <dt>{L("Error score: average of (answer minus right answer) squared")}</dt>
               <dd className="text-right text-foreground/80">{total.toFixed(5)}</dd>
               {probeValues ? (
                 <>
-                  <dt>{L("The ringed point, through the middle")}</dt>
+                  <dt>{L("Middle neurons' answers to the ringed point")}</dt>
                   <dd className="text-right text-foreground/80">{probeValues[1].map((v) => v.toFixed(2)).join(", ")}</dd>
-                  <dt>{L("And out")}</dt>
+                  <dt>{L("Output for the ringed point")}</dt>
                   <dd className="text-right text-foreground/80">{probeValues[2][0].toFixed(3)}</dd>
                 </>
               ) : null}
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("Each step is the hill page's ball, rolling on {{n}} numbers at once: for every number, how wrong changes when that number moves a hair, and a step the other way. The next page is about how those {{n}} slopes are found without nudging each number by hand.", { n: count.total })}
+              {L("What happens in one training step? For each of the {{n}} numbers, training finds how much the error score changes when that number moves by a tiny amount. That rate is called the slope of the error for that number. Then every number moves a little in the direction that lowers the error. Another page of this topic, 'The error passed back', shows how all {{n}} slopes are found in one pass, without moving each number separately.", { n: count.total })}
             </Text>
           </div>
         }

@@ -3,6 +3,8 @@ import { CURRENT, FREQUENCIES } from "./complex";
 import { ACTUARIAL, ANTENNAS, RESERVOIRS, TRAFFIC } from "./fractals";
 import type { Piece } from "./kinds";
 import { POSTCODES, PROTEINS, SKIN, SPEECH } from "./networks";
+import { SCREENING } from "./probability";
+import { CALCULATOR, PHOTO } from "./series";
 import { CODE, SEARCH, SPAM, TRANSLATION } from "./tokens";
 
 /** every application piece, by topic and id. */
@@ -24,6 +26,9 @@ export const PIECES: Piece[] = [
   CODE,
   SEARCH,
   SPAM,
+  PHOTO,
+  CALCULATOR,
+  SCREENING,
 ];
 
 export function pieceAt(topic: string, id: string): Piece | null {

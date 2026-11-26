@@ -2,6 +2,8 @@ import { CHAOS } from "@/lib/chaos";
 import { COMPLEX } from "@/lib/complex";
 import { NETWORKS } from "@/lib/networks";
 import { PRIMES } from "@/lib/primes";
+import { PROBABILITY } from "@/lib/probability";
+import { SERIES } from "@/lib/series";
 import { TOKENS } from "@/lib/tokens";
 import { L } from "@/lib/lang";
 
@@ -21,13 +23,14 @@ export const FRACTALS = {
     { to: "/topics/fractals/play", label: L("Play") },
     { to: "/topics/fractals/theory", label: L("Mathematics") },
     { to: "/topics/fractals/uses", label: L("Applications") },
+    { to: "/topics/fractals/test", label: L("Test") },
   ],
 } as const;
 
-export type BuiltTopic = typeof FRACTALS | typeof CHAOS | typeof NETWORKS | typeof TOKENS | typeof PRIMES | typeof COMPLEX;
+export type BuiltTopic = typeof FRACTALS | typeof CHAOS | typeof NETWORKS | typeof TOKENS | typeof PRIMES | typeof COMPLEX | typeof SERIES | typeof PROBABILITY;
 
 /** every topic that has pages, by slug. a planned topic is absent from here. */
-export const BUILT = { fractals: FRACTALS, chaos: CHAOS, networks: NETWORKS, tokens: TOKENS, primes: PRIMES, complex: COMPLEX } as const;
+export const BUILT = { fractals: FRACTALS, chaos: CHAOS, networks: NETWORKS, tokens: TOKENS, primes: PRIMES, complex: COMPLEX, series: SERIES, probability: PROBABILITY } as const;
 
 export function builtAt(slug: string): BuiltTopic | null {
   return slug in BUILT ? BUILT[slug as keyof typeof BUILT] : null;

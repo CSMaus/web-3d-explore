@@ -2,201 +2,201 @@
  "systems": [
   {
    "id": "line",
-   "name": "Les nombres sur une droite, et la seule question à laquelle ils ne peuvent pas répondre",
-   "summary": "Les nombres ordinaires comme des places sur une droite, l'addition comme un glissement et la multiplication comme un étirement ou un retournement, et la question à laquelle aucune place de la droite ne répond",
+   "name": "Les nombres sur une droite, et la seule question à laquelle ils ne répondent pas",
+   "summary": "Chaque nombre ordinaire est un point d'une droite. Ajouter un nombre fait glisser la droite, multiplier l'étire, et multiplier par moins un la retourne. Les nombres de moins trois à trois sont essayés un par un : aucun, multiplié par lui-même, ne donne moins un",
    "blocks": [
     {
-     "label": "Additionner fait glisser",
+     "label": "Ajouter fait glisser la droite",
      "tex": "x \\mapsto x + a",
-     "note": "Chaque nombre se déplace de la même distance dans le même sens"
+     "note": "Se lit : chaque nombre x est envoyé sur x plus a, où a est le nombre ajouté. Chaque point se déplace de la même distance dans le même sens. Avec a = 2, le nombre 1 va en 3"
     },
     {
-     "label": "Multiplier étire, et multiplier par un nombre négatif retourne",
+     "label": "Multiplier étire la droite, et un nombre négatif la retourne aussi",
      "tex": "x \\mapsto k\\,x, \\qquad x \\mapsto -x",
-     "note": "Multiplier par deux double chaque distance à zéro ; multiplier par moins un fait pivoter toute la droite autour de zéro"
+     "note": "Se lit : chaque nombre x est envoyé sur k fois x, où k est le multiplicateur. Avec k = 2, chaque distance à zéro double, et 3 va en 6. Avec k égal à moins un, chaque nombre passe de l'autre côté de zéro à la même distance, et 3 va en moins 3 : la droite est retournée"
     },
     {
      "label": "La question",
-     "tex": "x^{2} = -1 \\quad \\text{has no } x \\text{ on the line}",
-     "note": "Un nombre multiplié par lui-même n'est jamais en dessous de zéro : la page essaie chaque x et trace le carré, qui ne passe jamais sous l'axe"
+     "tex": "x^{2} = -1 \\quad \\text{n'a aucune solution } x \\text{ sur la droite}",
+     "note": "x au carré, écrit avec un petit 2, signifie x fois x. Le carré de tout nombre de la droite est nul ou positif : un positif fois un positif donne un positif, et un négatif fois un négatif donne aussi un positif. Aucun x de la droite n'a donc pour carré moins un. La page essaie les nombres de moins trois à trois et dessine leurs carrés, et aucun ne descend sous zéro"
     }
    ],
    "dimension": {
     "label": "Ce qui manque",
-    "tex": "\\text{a number that, applied twice, flips}",
-    "note": "Retourner, c'est ce que fait moins un. La question demande un demi-retournement, et la droite n'a pas de place pour lui"
+    "tex": "\\text{un nombre qui, appliqué deux fois, retourne}",
+    "note": "Multiplier par moins un retourne la droite. La question demande un nombre qui donne ce retournement quand il sert deux fois de multiplicateur : la moitié d'un retournement. Une droite n'a pas de place pour une moitié de retournement. Un plan en a : c'est un quart de tour"
    }
   },
   {
    "id": "turn",
    "name": "Ce qu'est 𝑖",
-   "summary": "Moins un est un demi-tour autour de zéro ; la moitié de cela est donc un quart de tour, et un nombre qui fait tourner d'un quart, c'est cela, i. Appliqué deux fois, il donne un demi-tour, c'est-à-dire moins un",
+   "summary": "Multiplier par moins un fait faire un demi-tour à toute flèche partant de zéro. Un nombre qui fait tourner une flèche d'un quart de tour seulement s'écrit i. Deux quarts de tour font un demi-tour, donc i fois i vaut moins un",
    "blocks": [
     {
      "label": "La définition",
      "tex": "i \\cdot i = -1",
-     "note": "Ni astuce ni mystère : un quart de tour suivi d'un quart de tour fait un demi-tour, et un demi-tour, c'est multiplier par moins un"
+     "note": "Se lit : i fois i égale moins un. Un quart de tour suivi d'un autre quart de tour fait un demi-tour, et un demi-tour autour de zéro est l'effet de la multiplication par moins un. Le nombre i, qui fait un quart de tour, a donc pour carré moins un"
     },
     {
      "label": "Faire le tour",
      "tex": "1,\\ i,\\ -1,\\ -i,\\ 1,\\ \\ldots",
-     "note": "La page multiplie par 𝑖 encore et encore, et la flèche tourne d'un quart à chaque fois, revenue à son point de départ au bout de quatre"
+     "note": "Partir de 1 et multiplier par 𝑖 encore et encore. À chaque fois, la flèche tourne d'un quart de tour dans le sens inverse des aiguilles d'une montre. Les résultats sont 1, i, moins 1, moins i, puis 1 de nouveau après quatre pas. La page dessine ces flèches"
     },
     {
-     "label": "Un second axe",
+     "label": "Un deuxième axe",
      "tex": "a + b\\,i",
-     "note": "Un nombre est maintenant une place dans un plan : a le long de l'ancienne droite, b le long de la nouvelle. Les anciens nombres sont ceux dont b vaut zéro"
+     "note": "Chaque point du plan est désormais un nombre : a indique le décalage horizontal depuis zéro, b le décalage vertical. Par exemple, 2 + 3i est à 2 vers la droite et 3 vers le haut. Ces nombres s'appellent les nombres complexes. Les nombres ordinaires sont ceux dont b vaut zéro"
     }
    ],
    "dimension": {
     "label": "Le nom",
-    "tex": "\\text{imaginary} = \\text{on the second axis}",
-    "note": "Un nom du dix-septième siècle, donné comme une insulte et gardé par habitude. Rien sur cet axe n'est moins réel qu'une longueur"
+    "tex": "\\text{imaginaire} = \\text{sur le deuxième axe}",
+    "note": "Les nombres de l'axe vertical, comme 3i, sont dits imaginaires. Le nom a été donné au dix-septième siècle par moquerie et gardé par habitude. Un tel nombre n'est pas moins réel qu'une longueur"
    }
   },
   {
    "id": "add",
    "name": "Nombres complexes : l'addition",
-   "summary": "Chaque nombre est une flèche partant de zéro ; pour en additionner deux, la queue de la seconde flèche se pose sur la pointe de la première. Les parties s'additionnent séparément et ne se mélangent jamais",
+   "summary": "Un nombre complexe est un point d'un plan : tant à l'horizontale, tant à la verticale. Dessinés comme des flèches partant de zéro, deux de ces nombres s'additionnent en plaçant une copie de la deuxième flèche à la pointe de la première. Les parties horizontales s'additionnent entre elles, les parties verticales entre elles",
    "blocks": [
     {
      "label": "L'addition",
      "tex": "(a + b\\,i) + (c + d\\,i) = (a + c) + (b + d)\\,i",
-     "note": "La partie horizontale et la partie verticale s'additionnent chacune de leur côté. La page fait partir la seconde flèche de la pointe de la première"
+     "note": "Ici a et c sont les parties horizontales des deux nombres, b et d leurs parties verticales. Les parties horizontales s'additionnent, les parties verticales aussi, chaque paire séparément. Par exemple, (2 + 1i) + (-1 + 2i) = 1 + 3i. La page trace la deuxième flèche à partir de la pointe de la première"
     },
     {
      "label": "La soustraction",
      "tex": "z - w = z + (-w)",
-     "note": "Le même trajet, avec la seconde flèche retournée"
+     "note": "z et w sont deux nombres complexes. Retirer w revient à ajouter moins w, c'est-à-dire la flèche w retournée d'un demi-tour. La page fait le même trajet avec cette flèche retournée"
     },
     {
      "label": "La longueur",
      "tex": "|a + b\\,i| = \\sqrt{a^{2} + b^{2}}",
-     "note": "Jusqu'où va la flèche : Pythagore appliqué à ses deux parties. Les longueurs de deux flèches ne s'additionnent que si elles pointent dans le même sens"
+     "note": "Les deux barres verticales désignent la longueur de la flèche : la distance de zéro au point. D'après le théorème de Pythagore, c'est la racine carrée de a au carré plus b au carré. Pour 3 + 4i, la longueur est la racine de 9 + 16, soit 5"
     }
    ],
    "dimension": {
     "label": "Ce que l'addition ne fait pas",
     "tex": "|z + w| \\le |z| + |w|",
-    "note": "L'addition ne fait jamais rien tourner. Toute la rotation est dans la multiplication, à la page suivante"
+    "note": "Se lit : la longueur de z plus w est au plus la longueur de z plus la longueur de w. Les deux longueurs s'additionnent exactement seulement si les flèches pointent dans le même sens. L'addition déplace les flèches sans jamais les faire tourner ; la rotation vient de la multiplication"
    }
   },
   {
    "id": "multiply",
    "name": "Nombres complexes : la multiplication",
-   "summary": "Pour multiplier deux flèches, additionnez leurs angles et multipliez leurs longueurs. La page fait tourner et étire une flèche jusqu'au produit, sous les yeux du lecteur",
+   "summary": "Toute flèche partant de zéro a une longueur et un angle. Multiplier deux nombres complexes multiplie leurs longueurs et additionne leurs angles. La page fait tourner et étire une flèche jusqu'à ce qu'elle devienne le produit",
    "blocks": [
     {
      "label": "Les quatre termes",
      "tex": "(a + b\\,i)(c + d\\,i) = (ac - bd) + (ad + bc)\\,i",
-     "note": "Développez comme pour deux parenthèses quelconques ; le seul terme contenant 𝑖 fois 𝑖 vaut moins un, et c'est de là que vient le moins de ac moins bd"
+     "note": "Développer les parenthèses donne quatre termes : a fois c, a fois di, bi fois c et bi fois di. Le dernier contient 𝑖 fois 𝑖, qui vaut moins un, et c'est de là que vient le signe moins dans ac moins bd. Par exemple, (2 + 1i)(1 + 1i) = 1 + 3i"
     },
     {
-     "label": "Ce que c'est, en image",
+     "label": "Ce que cela donne en image",
      "tex": "|z\\,w| = |z|\\,|w|, \\qquad \\angle(z\\,w) = \\angle z + \\angle w",
-     "note": "Les longueurs se multiplient, les angles s'additionnent. La page montre la flèche du produit obtenue en faisant tourner la première de l'angle de la seconde et en l'étirant de sa longueur"
+     "note": "Les barres désignent la longueur, et le signe d'angle l'angle de la flèche, mesuré dans le sens inverse des aiguilles d'une montre à partir de la moitié droite de l'axe horizontal. La longueur du produit est le produit des deux longueurs, et son angle la somme des deux angles. La page atteint le produit en faisant tourner la première flèche de l'angle de la deuxième et en l'étirant selon la longueur de la deuxième"
     },
     {
-     "label": "Multiplier par i, à nouveau",
-     "tex": "|i| = 1, \\qquad \\angle i = \\tfrac{1}{4} \\text{ turn}",
-     "note": "Multiplier par 𝑖 est donc un quart de tour sans étirement : la définition de la page précédente, lue à partir de la règle de celle-ci"
+     "label": "Multiplier par i",
+     "tex": "|i| = 1, \\qquad \\angle i = \\tfrac{1}{4} \\text{ de tour}",
+     "note": "Le nombre 𝑖 a pour longueur un et pointe droit vers le haut, à un quart de tour de l'axe horizontal. Multiplier par 𝑖 fait donc tourner une flèche d'un quart de tour sans l'étirer"
     }
    ],
    "dimension": {
-    "label": "La longueur et l'angle désignent le nombre aussi bien que les deux parties",
+    "label": "La longueur et l'angle décrivent un nombre aussi complètement que ses deux parties",
     "tex": "z = r(\\cos\\theta + i\\sin\\theta)",
-    "note": "Deux façons de dire où pointe une flèche ; la page montre les deux pour chaque flèche qu'elle trace"
+    "note": "Ici r est la longueur de la flèche z et thêta son angle. Le cosinus et le sinus d'un angle indiquent à quelle distance horizontale et à quelle hauteur se trouve un point d'un cercle de rayon un tourné de cet angle. La même flèche peut donc être donnée par ses deux parties ou par sa longueur et son angle ; la page montre les deux"
    }
   },
   {
    "id": "square",
-   "name": "Quels points restent ?",
-   "summary": "Partir de zéro, élever au carré et ajouter c, encore et encore. Pour certaines valeurs de c le chemin reste près de zéro pour toujours, pour d'autres il s'enfuit. Les valeurs de c qui restent forment l'ensemble de Mandelbrot",
+   "name": "Quels points restent près de zéro ? L'ensemble de Mandelbrot",
+   "summary": "Partir de zéro, multiplier le nombre par lui-même, ajouter un nombre complexe fixe c, et recommencer. Pour certaines valeurs de c, les résultats restent près de zéro pour toujours ; pour d'autres, ils s'enfuient. Les valeurs de c qui restent près forment une figure appelée l'ensemble de Mandelbrot",
    "blocks": [
     {
-     "label": "Une élévation au carré",
+     "label": "Une mise au carré",
      "tex": "|z^{2}| = |z|^{2}, \\qquad \\angle z^{2} = 2\\,\\angle z",
-     "note": "Multiplier un nombre par lui-même : l'angle s'ajoute à lui-même, la longueur se multiplie par elle-même"
+     "note": "Mettre z au carré, c'est le multiplier par lui-même. Sa longueur est multipliée par elle-même : une flèche de longueur 1,5 devient une flèche de longueur 2,25. Son angle s'ajoute à lui-même : un angle de 30 degrés devient 60 degrés"
     },
     {
-     "label": "Carré, puis ajouter c",
+     "label": "Mettre au carré et ajouter c",
      "tex": "z_{0} = 0, \\qquad z_{n+1} = z_n^{2} + c",
-     "note": "À chaque pas, élever au carré, puis décaler de c. La page dessine ces points comme le chemin depuis zéro"
+     "note": "Se lit : le premier point, z avec un petit 0, vaut zéro ; chaque point suivant est le carré du précédent, plus c. Le petit n compte les pas. Avec c = -1, les points sont 0, -1, 0, -1 et ainsi de suite. La page dessine ces points comme le chemin partant de zéro"
     },
     {
      "label": "L'ensemble de Mandelbrot",
-     "tex": "M = \\{\\, c : |z_n| \\le 2 \\text{ for every } n \\,\\}",
-     "note": "Tous les c dont le chemin ne dépasse jamais la longueur deux. La page les remplit"
+     "tex": "M = \\{\\, c : |z_n| \\le 2 \\text{ pour tout } n \\,\\}",
+     "note": "Se lit : M est l'ensemble de tous les c pour lesquels chaque point du chemin reste à moins de deux de zéro. Avec c = -1, le chemin ne visite que 0 et -1 : -1 fait donc partie de l'ensemble. Avec c = 1, le chemin est 0, 1, 2, 5, 26 et s'enfuit : 1 n'en fait pas partie. La page colorie les valeurs de c qui restent"
     }
    ],
    "dimension": {
-    "label": "Le test d'échappement",
+    "label": "Le test de fuite",
     "tex": "|z_n| > 2 \\implies |z_{n+k}| \\to \\infty",
-    "note": "Dès que la longueur dépasse deux, le carré distance c pour toujours ; c'est ainsi que la page décide qu'un chemin est parti"
+    "note": "Se lit : dès qu'un point du chemin est à plus de deux de zéro, les points suivants grandissent sans limite. Au-delà de cette distance, la mise au carré fait croître la longueur plus vite que l'ajout de c ne peut la ramener. C'est ainsi que la page décide qu'un chemin s'est enfui"
    }
   },
   {
    "id": "round",
-   "name": "La formule d'Euler",
-   "summary": "La courbe de croissance du thème 3, avec un taux imaginaire, ne croît pas : elle fait le tour du cercle unité à vitesse constante, et ses deux ombres sont le cosinus et le sinus",
+   "name": "La formule d'Euler : un point qui tourne sur un cercle",
+   "summary": "Un point toujours poussé à angle droit du segment qui le relie à zéro tourne sur un cercle. Écrit avec i, ce mouvement est la formule d'Euler. Ses ombres sur les deux axes sont les ondes du cosinus et du sinus, et un demi-tour mène à moins un",
    "blocks": [
     {
      "label": "La formule d'Euler",
      "tex": "e^{i\\theta} = \\cos\\theta + i\\,\\sin\\theta",
-     "note": "Le point du cercle unité à l'angle thêta. La page fait tourner thêta et trace à côté les deux ombres sous forme d'ondes"
+     "note": "Ici e est le nombre d'environ 2,718 qui décrit la croissance, et thêta un angle en radians : un tour complet vaut 2 pi, environ 6,28. La formule dit que e puissance i thêta est le point du cercle de rayon un à l'angle thêta : cos thêta à l'horizontale et sin thêta à la verticale. La page fait tourner thêta et dessine les deux ombres comme des ondes"
     },
     {
-     "label": "Pourquoi elle tourne",
+     "label": "Pourquoi le point tourne",
      "tex": "\\frac{d}{d\\theta} e^{i\\theta} = i\\,e^{i\\theta}",
-     "note": "Le taux de variation est la position tournée d'un quart : toujours de côté, jamais vers l'extérieur, ce qui est exactement se déplacer sur un cercle"
+     "note": "Le membre de gauche est la vitesse à laquelle le point se déplace quand thêta grandit ; elle s'appelle la dérivée. Le membre de droite est le point multiplié par i, c'est-à-dire tourné d'un quart de tour. Le point se déplace donc toujours à angle droit du segment venant de zéro, ni vers l'extérieur ni vers l'intérieur. C'est un mouvement sur un cercle"
     },
     {
      "label": "Le cas célèbre",
      "tex": "e^{i\\pi} + 1 = 0",
-     "note": "Un demi-tour arrive sur moins un. La page s'arrête là et le dit"
+     "note": "Pour thêta égal à pi, un demi-tour, le point est en moins un : e puissance i pi, plus un, égale donc zéro. La page montre ce point quand l'angle atteint pi"
     }
    ],
    "dimension": {
-    "label": "Où cela sert ensuite",
-    "tex": "\\text{positions in topic 4, oscillations in topic 2}",
-    "note": "Les vecteurs de position sinusoïdaux du thème 4 sont cette formule à de nombreuses vitesses, et l'oscillation du thème 2 en est l'ombre réelle"
+    "label": "Où cela sert",
+    "tex": "\\text{rotations, ondes, courant alternatif}",
+    "note": "Multiplier par e puissance i thêta fait tourner une flèche de l'angle thêta sans l'étirer. Tout ce qui tourne ou oscille à vitesse constante peut s'écrire ainsi : l'ombre d'un point qui tourne sur un cercle est une onde"
    }
   },
   {
    "id": "quaternions",
-   "name": "Quaternions",
-   "summary": "Les nombres de Hamilton à trois unités imaginaires, un quaternion unitaire étant une rotation dans l'espace ; deux rotations dans un ordre différent n'arrivent pas au même endroit, donc ces nombres ne commutent pas",
+   "name": "Les quaternions : les rotations dans l'espace",
+   "summary": "Une rotation dans l'espace à trois dimensions s'écrit avec quatre nombres, appelés un quaternion : l'un dit de combien tourner, les trois autres donnent l'axe. Un axe et un angle sont choisis, une maison tourne pas à pas, et les quatre nombres de la rotation s'affichent",
    "blocks": [
     {
      "label": "La règle de Hamilton, 1843",
      "tex": "i^{2} = j^{2} = k^{2} = ijk = -1, \\qquad ij = k,\\ ji = -k",
-     "note": "Trois unités imaginaires au lieu d'une. La seconde ligne découle de la première et constitue toute la différence avec le plan : l'ordre d'un produit compte"
+     "note": "Les quaternions ont trois unités imaginaires, i, j et k, au lieu d'une. Chacune a pour carré moins un, et le produit i j k aussi. La deuxième moitié découle de la première : i fois j vaut k, mais j fois i vaut moins k. L'ordre d'un produit compte, ce qui n'arrive jamais avec les nombres ordinaires ou complexes"
     },
     {
-     "label": "Une rotation comme quaternion",
+     "label": "Une rotation en quaternion",
      "tex": "q = \\cos\\tfrac{\\theta}{2} + \\sin\\tfrac{\\theta}{2}\\,(u_{x} i + u_{y} j + u_{z} k)",
-     "note": "La rotation d'angle thêta autour de l'axe unitaire u. C'est la moitié de l'angle qui intervient, d'où un tour complet égal à moins un et deux tours complets égaux à un"
+     "note": "La rotation d'angle thêta autour d'un axe u. L'axe est donné par trois nombres, u x, u y et u z, sa direction horizontale, verticale et sortante, avec une longueur de un. La moitié de l'angle entre dans la formule. C'est pourquoi un tour complet donne le quaternion moins un, et deux tours complets donnent un"
     },
     {
      "label": "Faire tourner un point",
      "tex": "v' = q\\, v\\, q^{-1}",
-     "note": "Le point, vu comme un quaternion sans partie réelle, pris en sandwich. Dans le plan, le sandwich se réduit à une seule multiplication, parce que l'ordre n'y comptait pas"
+     "note": "Le point v s'écrit comme un quaternion sans partie ordinaire, avec seulement les parties selon i, j et k. Il est multiplié par q à gauche et par l'inverse de q, le quaternion qui annule la rotation, à droite. Ce produit s'appelle le sandwich, et v prime est le point tourné. Dans un plan, le sandwich se réduit à une seule multiplication, car l'ordre n'y compte jamais"
     },
     {
      "label": "Deux rotations",
      "tex": "q_{2} q_{1} \\neq q_{1} q_{2}",
-     "note": "D'abord q1 puis q2 donne le produit q2 q1. La page trace les deux ordres à la fois, et les deux maisons finissent tournées dans des directions différentes"
+     "note": "Tourner d'abord par q1 puis par q2 correspond au produit q2 q1, écrit de droite à gauche. L'autre ordre est q1 q2, et en général c'est une autre rotation. La page dessine les deux ordres à la fois, et les deux maisons finissent orientées différemment"
     },
     {
      "label": "Le chemin entre deux orientations",
      "tex": "\\mathrm{slerp}(a, b, t) = \\frac{\\sin((1-t)\\Omega)}{\\sin\\Omega}\\, a + \\frac{\\sin(t\\Omega)}{\\sin\\Omega}\\, b",
-     "note": "Shoemake, 1985 : la rotation régulière la plus courte de a à b, utilisée par tous les moteurs de jeu et par l'animation de cette page"
+     "note": "Slerp, publié par Shoemake en 1985, donne la rotation régulière la plus courte de l'orientation a à l'orientation b. La fraction t va de 0 en a à 1 en b, et oméga est l'angle entre a et b. Tous les moteurs de jeu l'utilisent, ainsi que l'animation de cette page"
     }
    ],
    "dimension": {
     "label": "Seulement trois systèmes de ce genre",
     "tex": "\\mathbb{R},\\ \\mathbb{C},\\ \\mathbb{H}",
-    "note": "Frobenius, 1878 : les réels, les complexes et les quaternions sont les seuls systèmes finis sur les réels où la division par tout nombre non nul est possible. Les octonions suivent en perdant aussi l'associativité"
+    "note": "Frobenius a démontré en 1878 que les nombres réels, notés R, les nombres complexes, notés C, et les quaternions, notés H, sont les seuls systèmes finis construits sur les réels dans lesquels la division par tout nombre non nul est toujours possible. L'étape suivante, les octonions à huit parties, ne fonctionne qu'en renonçant aussi à l'associativité : (a b) c n'y est plus toujours égal à a (b c)"
    }
   }
  ],
@@ -205,19 +205,19 @@
    "id": "plane",
    "name": "Le plan complexe",
    "tex": "a + b\\,i \\longleftrightarrow (a, b)",
-   "note": "Chaque nombre est une place, ou une flèche de zéro vers cette place. L'ancienne droite des nombres est l'axe horizontal"
+   "note": "Chaque nombre complexe a + bi est un point d'un plan, a à l'horizontale et b à la verticale, ou une flèche de zéro jusqu'à ce point. La droite des nombres ordinaires est l'axe horizontal"
   },
   {
    "id": "modulus",
    "name": "Longueur et angle",
    "tex": "|z| = \\sqrt{a^{2} + b^{2}}, \\qquad \\angle z = \\operatorname{atan2}(b, a)",
-   "note": "Jusqu'où va la flèche et dans quelle direction elle pointe. La multiplication agit sur ces deux grandeurs ; l'addition agit sur les parties"
+   "note": "La longueur, écrite entre deux barres verticales, est la distance à laquelle la flèche arrive depuis zéro. L'angle, écrit avec le signe d'angle, est la direction de la flèche, mesurée dans le sens inverse des aiguilles d'une montre à partir de la moitié droite de l'axe horizontal ; atan2 est la fonction standard qui le calcule à partir de b et a. La multiplication agit sur les longueurs et les angles, l'addition sur les deux parties"
   },
   {
    "id": "conjugate",
    "name": "L'image miroir",
    "tex": "\\bar{z} = a - b\\,i, \\qquad z\\,\\bar{z} = |z|^{2}",
-   "note": "La même flèche réfléchie par rapport à l'axe horizontal ; un nombre multiplié par son image miroir donne le carré d'une longueur, sans partie imaginaire"
+   "note": "La barre au-dessus de z désigne son image miroir par rapport à l'axe horizontal : la même partie horizontale, et la partie verticale de signe opposé. Cette image s'appelle le conjugué. Un nombre fois son conjugué donne sa longueur au carré, un nombre ordinaire : (3 + 4i)(3 - 4i) = 25"
   }
  ]
 }

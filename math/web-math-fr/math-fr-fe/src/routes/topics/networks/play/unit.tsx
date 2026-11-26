@@ -109,7 +109,7 @@ function UnitPage() {
     <div>
       <TaskPage
         title={system?.name ?? L("Inside one unit")}
-        job={L("The same dots, the same line. This page opens the machine that draws it. One unit takes the two coordinates of a dot, multiplies each by a weight, adds a bias, and squashes the total to a number between zero and one. That number is its answer: green or rose. The three numbers are moved by hand first, and then handed over.")}
+        job={L("How does one artificial neuron decide which side of a line a dot belongs to? Each dot has two coordinates, x and y, and a right answer, 1 or 0, shown by its colour. An artificial neuron, called a unit here, is a small calculation. It multiplies x by one number and y by another: these two numbers are called weights. It adds a third number, called the bias, and gets a total. Then a curve called the squash turns the total into the answer, for example a number between 0 and 1. Above one half counts as 1, below as 0. The sliders set the three numbers by hand. Press run and the unit changes them itself, step by step, so that its answers come closer to the right ones.")}
         input={
           <div className="space-y-3">
             <Choices options={KINDS} value={kind} onPick={(id) => { setKind(id); restart(); }} />
@@ -119,7 +119,7 @@ function UnitPage() {
             <Slider label={L("Bias")} min={-4} max={4} step={0.05} value={b} format={(v) => v.toFixed(2)} onChange={(v) => setParam(2, v)} />
             <Slider label={L("Step size")} min={0.05} max={4} step={0.05} value={rate} format={(v) => v.toFixed(2)} onChange={setRate} />
             <Text kind="note" as="p">
-              {L("Move the three sliders and watch the colours on the plane move with them. Click a dot to see its own numbers go through the unit. Then press run: the unit takes over the sliders and moves them itself, downhill on how wrong it is.")}
+              {L("The first row of buttons chooses the dots. The second row chooses the squash: into the range 0 to 1, into the range -1 to 1, negative totals cut to zero, or no squash at all. Moving the three sliders moves the shading on the plane. A click on a dot shows its numbers going through the unit, in the right picture. Press run and the unit takes over the sliders: at each step it changes its three numbers a little in the direction that makes its error smaller. The step size sets how large that change is.")}
             </Text>
           </div>
         }
@@ -176,7 +176,7 @@ function UnitPage() {
 
                 }}
               />
-            </div><Caption>{L("The plane, coloured by the unit's answer White ring: wrong.  Sky ring: the dot shown at right")}</Caption></div>
+            </div><Caption>{L("Left picture: the plane, shaded by the unit's answer at each point. The dots are coloured by their right answer. Small rings mark the dots the unit gets wrong. The large ring marks the dot shown in the right picture.")}</Caption></div>
             <div><div data-slot="plot" className="h-[420px] overflow-hidden">
               <Plot
                 className="h-full w-full"
@@ -227,7 +227,7 @@ function UnitPage() {
                   ctx.textAlign = "center";
                   ctx.fillText("x", inX, y1 - 28);
                   ctx.fillText("y", inX, y2 + 28);
-                  ctx.fillText(L("+ Bias {{b}}", { b: b.toFixed(2) }), sumX, sumY + 30);
+                  ctx.fillText(L("+ bias {{b}}", { b: b.toFixed(2) }), sumX, sumY + 30);
                   ctx.fillText(L("Answer"), outX, sumY - 28);
                   // the squash itself, with the point this dot lands on
                   const gx0 = 30;
@@ -267,7 +267,7 @@ function UnitPage() {
                   ctx.textBaseline = "alphabetic";
                 }}
               />
-            </div><Caption>{L("The squash: total {{z}} in, {{a}} out", { z: z.toFixed(2), a: a.toFixed(2) })}</Caption></div>
+            </div><Caption>{L("Right picture: the unit drawn out for the ringed dot. At left, its two coordinates. Each wire multiplies by its weight, and a thicker wire means a larger weight. In the middle, the total. At right, the answer. Below, the squash curve, with this dot's point on it: total {{z}} in, answer {{a}} out.", { z: z.toFixed(2), a: a.toFixed(2) })}</Caption></div>
           </section>
         }
         result={
@@ -275,28 +275,28 @@ function UnitPage() {
             <Verdict good={wrong === 0}>
               {wrong === 0
                 ? steps > 0
-                  ? L("The unit answers every one of the {{all}} dots correctly, after {{steps}} steps of moving its own three numbers.", { all: data.X.length, steps })
-                  : L("The unit answers every one of the {{all}} dots correctly.", { all: data.X.length })
+                  ? L("The unit gives the right answer for all {{all}} dots, after {{steps}} steps of changing its own three numbers.", { all: data.X.length, steps })
+                  : L("The unit gives the right answer for all {{all}} dots.", { all: data.X.length })
                 : kind === "xor" && steps > 200
-                  ? L("After {{steps}} steps the unit still has {{wrong}} of 4 wrong, and the sliders have stopped moving. One unit is one line, and no line does exclusive or. The answer is more units, on the next page.", { steps, wrong })
+                  ? L("After {{steps}} steps the unit still gets {{wrong}} of the 4 dots wrong, and the sliders have stopped moving. One unit can only draw one straight line, and no straight line separates these four dots. Solving this takes several units working together.", { steps, wrong })
                   : kind === "rings" && steps > 200
-                    ? L("After {{steps}} steps the unit still has {{wrong}} of {{all}} wrong. Its boundary is a straight line and the shape it needs is a circle. More units, next page.", { steps, wrong, all: data.X.length })
+                    ? L("After {{steps}} steps the unit still gets {{wrong}} of {{all}} dots wrong. The border between its two answers is a straight line, and these dots need a circle. Solving this takes several units working together.", { steps, wrong, all: data.X.length })
                     : steps > 0
-                      ? L("The unit gets {{wrong}} of {{all}} dots wrong after {{steps}} steps. How wrong, as one number: {{total}}.", { wrong, all: data.X.length, steps, total: total.toFixed(4) })
-                      : L("The unit gets {{wrong}} of {{all}} dots wrong. How wrong, as one number: {{total}}.", { wrong, all: data.X.length, total: total.toFixed(4) })}
+                      ? L("The unit gets {{wrong}} of {{all}} dots wrong after {{steps}} steps. Its error, one number for all the dots, is {{total}}.", { wrong, all: data.X.length, steps, total: total.toFixed(4) })
+                      : L("The unit gets {{wrong}} of {{all}} dots wrong. Its error, one number for all the dots, is {{total}}.", { wrong, all: data.X.length, total: total.toFixed(4) })}
             </Verdict>
             <dl data-text="caption" className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1">
               <dt>{L("The ringed dot: {{x}} times {{w1}} plus {{y}} times {{w2}} plus {{b}}", { x: probe[0].toFixed(2), w1: w1.toFixed(2), y: probe[1].toFixed(2), w2: w2.toFixed(2), b: b.toFixed(2) })}</dt>
               <dd className="text-right text-foreground/80">{z.toFixed(3)}</dd>
-              <dt>{L("Squashed")}</dt>
-              <dd className="text-right text-foreground/80">{L("{{a}}, So {{colour}}", { a: a.toFixed(3), colour: toUnit(a) > 0.5 ? L("green") : L("rose") })}</dd>
-              <dt>{L("How wrong over all dots (average squared miss)")}</dt>
+              <dt>{L("After the squash")}</dt>
+              <dd className="text-right text-foreground/80">{L("{{a}}, so the answer is {{c}}", { a: a.toFixed(3), c: toUnit(a) > 0.5 ? 1 : 0 })}</dd>
+              <dt>{L("Error over all dots: half the average of (answer minus right answer) squared")}</dt>
               <dd className="text-right text-foreground/80">{total.toFixed(5)}</dd>
               <dt>{L("Numbers the unit can change")}</dt>
               <dd className="text-right text-foreground/80">3</dd>
             </dl>
             <Text kind="note" as="p" className="pt-1">
-              {L("The line from the last page is where the total is exactly zero, so the squash gives one half: neither colour. The squash is what the perceptron did not have. Its answer changes smoothly with the sliders, so how wrong it is has a slope, and the hill page's ball can roll down it. Each run step is one roll step, on three numbers.")}
+              {L("The unit draws its line where the total is exactly zero. With the squash into 0 to 1, a total of zero gives one half, halfway between the two answers. The squash is what makes learning possible. The answer changes smoothly as the sliders move, so the error changes smoothly too. The steepness of the error then shows which way to move each number. Each run step moves all three numbers a little downhill, the way a ball rolls down a slope.")}
             </Text>
           </div>
         }

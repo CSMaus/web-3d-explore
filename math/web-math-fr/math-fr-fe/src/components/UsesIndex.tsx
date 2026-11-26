@@ -10,14 +10,14 @@ import { L } from "@/lib/lang";
  * say what is coming.
  */
 export function UsesIndex({ topic }: { topic: BuiltTopic }) {
-  const slug = topic.slug as "fractals" | "chaos" | "complex" | "networks" | "tokens";
+  const slug = topic.slug as "fractals" | "chaos" | "complex" | "networks" | "tokens" | "series" | "probability";
   const uses = usesOf(slug);
   const pieceRoute = `/topics/${slug}/uses/$piece` as PieceRoute;
   return (
     <div>
       <Heading className="mt-6">{L("Applications")}</Heading>
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-        {L("Where the ideas of this topic are used. Each application is the thing in the world first, then the one part of it the mathematics enters, in detail and in plain words.")}
+        {L("Where the mathematics of this topic is used outside mathematics. Each page below starts from something in the real world and says what it is. Then it explains, in detail and in plain words, the one part of it where this mathematics is used.")}
       </Text>
       <ol className="mt-8 grid gap-4 md:grid-cols-2">
         {uses.map((u) => (

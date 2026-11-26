@@ -5,6 +5,7 @@ import { FractalBackground, Heading, KIT_CASE, Kitten, kitTheme, Page, SkipLink,
 import { BackToTop } from "@/components/BackToTop";
 import { Consent } from "@/components/Consent";
 import { Menu } from "@/components/Menu";
+import { Feedback } from "@/components/Feedback";
 import { Offline } from "@/components/Offline";
 import { SearchBox } from "@/components/Search";
 import { L } from "@/lib/lang";
@@ -77,6 +78,7 @@ function Shell() {
       <div id="content" tabIndex={-1} className="outline-none">
         <Outlet />
       </div>
+      <Feedback />
       <SearchBox />
       <BackToTop />
       <Consent />

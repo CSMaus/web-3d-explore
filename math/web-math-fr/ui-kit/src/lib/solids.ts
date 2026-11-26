@@ -8,7 +8,7 @@
  * at every separate piece and a light on every piece would light it all at once.
  */
 
-export type SolidKind = "helix" | "tetra" | "lorenz" | "network" | "attention";
+export type SolidKind = "helix" | "tetra" | "lorenz" | "network" | "attention" | "series" | "dice";
 
 export type P3 = [number, number, number];
 
@@ -179,7 +179,76 @@ function attention(): P3[][] {
   return normal(lines);
 }
 
-export const SOLIDS: Record<SolidKind, () => P3[][]> = { helix, tetra, lorenz, network, attention };
+/**
+ * a square wave built from sines: the sums of the first 1, 2, 3 and 4 odd sines, each a step further
+ * back, and in front the sum of eight, the walking line, nearly square
+ */
+function series(): P3[][] {
+  const sum = (terms: number): P3[] => {
+    const out: P3[] = [];
+    for (let i = 0; i <= 240; i += 1) {
+      const x = (i / 240) * 2 * Math.PI;
+      let y = 0;
+      for (let j = 0; j < terms; j += 1) y += Math.sin((2 * j + 1) * x) / (2 * j + 1);
+      out.push([x - Math.PI, (4 / Math.PI) * y, 0]);
+    }
+    return out;
+  };
+  const back = [1, 2, 3, 4].map((terms, k) => sum(terms).map(([x, y]) => [x, y, -0.9 + k * 0.3] as P3));
+  const front = sum(8).map(([x, y]) => [x, y, 0.45] as P3);
+  return normal([...back, front]);
+}
+
+/**
+ * two dice: two cubes, the second turned a little, each face carrying its pips (opposite faces add
+ * to 7). the walking line runs over every edge of the first cube, going back along three of them
+ */
+function dice(): P3[][] {
+  const lines: P3[][] = [];
+  const faces: { n: number; at: (u: number, v: number) => P3 }[] = [
+    { n: 1, at: (u, v) => [1, u, v] },
+    { n: 6, at: (u, v) => [-1, u, v] },
+    { n: 2, at: (u, v) => [u, 1, v] },
+    { n: 5, at: (u, v) => [u, -1, v] },
+    { n: 3, at: (u, v) => [u, v, 1] },
+    { n: 4, at: (u, v) => [u, v, -1] },
+  ];
+  const k = 0.5;
+  const pips: Record<number, [number, number][]> = {
+    1: [[0, 0]],
+    2: [[-k, -k], [k, k]],
+    3: [[-k, -k], [0, 0], [k, k]],
+    4: [[-k, -k], [-k, k], [k, -k], [k, k]],
+    5: [[-k, -k], [-k, k], [0, 0], [k, -k], [k, k]],
+    6: [[-k, -k], [-k, 0], [-k, k], [k, -k], [k, 0], [k, k]],
+  };
+  const cube = (place: (p: P3) => P3): P3[] => {
+    const c: P3[] = [[-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1], [-1, 1, -1], [1, 1, -1], [1, 1, 1], [-1, 1, 1]].map((p) => place(p as P3));
+    const [a, b, cc, d, e, f, g, h] = c;
+    for (const face of faces) {
+      for (const [u, v] of pips[face.n]) {
+        const ring: P3[] = [];
+        for (let i = 0; i <= 12; i += 1) {
+          const t = (i / 12) * Math.PI * 2;
+          ring.push(place(face.at(u + 0.16 * Math.cos(t), v + 0.16 * Math.sin(t))));
+        }
+        lines.push(ring);
+      }
+    }
+    lines.push([a, b, cc, d, a], [e, f, g, h, e], [a, e], [b, f], [cc, g], [d, h]);
+    return [a, b, cc, d, a, e, f, g, h, e, f, b, cc, g, h, d];
+  };
+  const turn = 0.5;
+  const walk = cube((p) => [p[0] * 0.5 - 0.62, p[1] * 0.5, p[2] * 0.5]);
+  cube((p) => {
+    const x = p[0] * 0.5;
+    const z = p[2] * 0.5;
+    return [x * Math.cos(turn) - z * Math.sin(turn) + 0.62, p[1] * 0.5 - 0.2, x * Math.sin(turn) + z * Math.cos(turn) + 0.25];
+  });
+  return normal([...lines, walk]);
+}
+
+export const SOLIDS: Record<SolidKind, () => P3[][]> = { helix, tetra, lorenz, network, attention, series, dice };
 
 /** the length of a shape's walking line, in the units of the unit sphere */
 export function walkLength(lines: P3[][]): number {
@@ -200,6 +269,8 @@ export const SOLID_NAMES: Record<SolidKind, string> = {
   lorenz: "Lorenz attractor",
   network: "A small network",
   attention: "Tokens and attention",
+  series: "A wave built from sines",
+  dice: "Two dice",
 };
 
 /**

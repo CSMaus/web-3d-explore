@@ -12,6 +12,7 @@ export const CHAOS = {
     { to: "/topics/chaos/play", label: L("Play") },
     { to: "/topics/chaos/theory", label: L("Mathematics") },
     { to: "/topics/chaos/uses", label: L("Applications") },
+    { to: "/topics/chaos/test", label: L("Test") },
   ],
 } as const;
 
@@ -19,8 +20,8 @@ export const TOPIC = "chaos";
 
 export const SYSTEMS = [
   { id: "field", to: "/topics/chaos/play/field", label: L("One equation") },
-  { id: "solvers", to: "/topics/chaos/play/solvers", label: L("Stepping") },
-  { id: "phase", to: "/topics/chaos/play/phase", label: L("Phase plane") },
+  { id: "solvers", to: "/topics/chaos/play/solvers", label: L("Solving by steps") },
+  { id: "phase", to: "/topics/chaos/play/phase", label: L("Two unknowns") },
   { id: "lorenz", to: "/topics/chaos/play/lorenz", label: L("Lorenz") },
   { id: "rossler", to: "/topics/chaos/play/rossler", label: L("Rossler") },
   { id: "logistic", to: "/topics/chaos/play/logistic", label: L("Logistic map") },

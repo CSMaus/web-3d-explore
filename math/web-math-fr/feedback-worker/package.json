@@ -1,0 +1,10 @@
+{
+  "name": "mathfr-feedback",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "test": "npx tsx test/check.mts"
+  }
+}

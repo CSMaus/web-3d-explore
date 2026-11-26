@@ -1,0 +1,3 @@
+These files hold one short test for each topic: complex, fractals, chaos, networks, tokens, primes, series and probability. Each test has ten multiple-choice questions on what that topic's pages teach, ordered from easier to harder. Recall questions come first, then questions that apply an idea to a new number, then questions that ask why.
+
+Each file is named after the topic slug and holds one JSON object with the fields slug, title and questions. Every question has an id (q1 to q10), the question text and four options. Each option has its text, a correct flag that is true for exactly one option, and a short explanation of why that option is right or wrong. Mathematics is written in plain text or Unicode, with no LaTeX.
