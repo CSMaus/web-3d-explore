@@ -16,13 +16,27 @@ function shown(value: unknown, where: string, key = ""): [string, string][] {
   return typeof value === "string" && SHOWN.has(key) && value.trim().split(/\s+/).length >= 3 ? [[where, value.trim()]] : [];
 }
 
-/** a text starts with a capital, or with a one-letter maths symbol; so does every sentence after a full stop */
+/** the maths names that are plain lowercase words and may open a sentence */
+const NAMED = new Set(["lim", "ln", "xor", "tanh"]);
+
+/** whether the text opens on a maths symbol: x_n, log2, sq(x), dA/dt, a letter with a raised index, a letter before a comma, or a named one */
+function symbol(rest: string): boolean {
+  const token = rest.split(/\s/)[0];
+  if (/[_\d(/⁰-ⁿ]/.test(token) || /^[a-z],$/.test(token)) return true;
+  return NAMED.has(token.replace(/[,.:;]+$/, ""));
+}
+
+/** a text starts with a capital, or with a maths symbol; so does every sentence after a full stop */
 function faults(text: string): string[] {
   const out: string[] = [];
   const first = text.match(/^([a-z])(\w*)/);
-  if (first && (first[1] + first[2]).length > 1) out.push(`starts lowercase: ${text.slice(0, 60)}`);
+  if (first && (first[1] + first[2]).length > 1 && !symbol(text)) out.push(`starts lowercase: ${text.slice(0, 60)}`);
   for (const m of text.matchAll(/[.?!]\s+([a-z])(\w*)/g)) {
     if ((m[1] + m[2]).length === 1 && m[1] !== "a") continue;
+    const at = m.index ?? 0;
+    if (symbol(text.slice(at + m[0].length - (m[1] + m[2]).length))) continue;
+    // a factorial sign after a one-letter symbol does not end a sentence
+    if (m[0][0] === "!" && /(^|\s)[a-z]$/.test(text.slice(0, at))) continue;
     if (/(e\.g|i\.e|etc|vs|cf)\.$/.test(text.slice(Math.max(0, (m.index ?? 0) - 5), (m.index ?? 0) + 1))) continue;
     out.push(`sentence starts lowercase: ...${text.slice(Math.max(0, (m.index ?? 0) - 25), (m.index ?? 0) + 25)}`);
   }

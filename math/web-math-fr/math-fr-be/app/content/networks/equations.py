@@ -276,7 +276,7 @@ SYSTEMS = [
     },
     {
         "id": "layers",
-        "name": "Many units, one answer",
+        "name": "Several neurons, one answer",
         "summary": (
             "Several units side by side, each drawing its own line, and one more that weighs "
             "their answers. What each unit alone sees, and the bent boundary made of them"
@@ -311,7 +311,7 @@ SYSTEMS = [
     },
     {
         "id": "any",
-        "name": "Any curve at all",
+        "name": "Can a network draw any curve?",
         "summary": (
             "One input, one row of squashing units and one output, with each unit set to be one "
             "step of a staircase that follows a chosen curve. More units, or steeper ones, and "
@@ -347,7 +347,7 @@ SYSTEMS = [
     },
     {
         "id": "learn",
-        "name": "How it learns, and how fast",
+        "name": "How fast a network learns",
         "summary": (
             "Step size, how many dots before each move, and the standard tricks, with finished "
             "runs kept on one chart. And the one-shot formula that works only when nothing bends"
@@ -387,7 +387,7 @@ SYSTEMS = [
     },
     {
         "id": "blame",
-        "name": "The correction, one dot at a time",
+        "name": "How the error is passed back, one dot at a time",
         "summary": (
             "One correction in six moments: the dot goes forward, the miss is measured, the blame "
             "flows back along the wires, every number moves. Backpropagation, checked by nudging"
@@ -458,7 +458,7 @@ SYSTEMS = [
     },
     {
         "id": "fade",
-        "name": "The first layer learns last",
+        "name": "Why the first layer learns last",
         "summary": (
             "Many layers stacked on the ring inside a ring, and the blame measured as it flows "
             "back through them. It fades at every squash, so the layer that sees the dots moves "
@@ -494,7 +494,7 @@ SYSTEMS = [
     },
     {
         "id": "pictures",
-        "name": "The same job on a picture",
+        "name": "Finding a shape in a picture",
         "summary": (
             "One small pattern slid over a drawing, the strongest fits kept, the nearest shape "
             "named. A convolution, pooling, and why the shape may move and still be found"
@@ -529,7 +529,7 @@ SYSTEMS = [
     },
     {
         "id": "sequence",
-        "name": "The same job on a sequence",
+        "name": "Remembering the first number of a sequence",
         "summary": (
             "Numbers arriving one a step; say the first one at the end. A gated memory cell "
             "beside a plain loop, with the gates set by hand so the mechanism is visible"
@@ -564,7 +564,7 @@ SYSTEMS = [
     },
     {
         "id": "words",
-        "name": "The same job on words",
+        "name": "Which earlier word each word looks at",
         "summary": (
             "Each word decides which words to listen to, and how much. One head of attention, "
             "wired by hand so the pattern can be read off"

@@ -54,7 +54,7 @@ describe("The shell", () => {
     expect(search("webpaut")[0].to).toBe("/projects/webpaut");
     expect(search("Barashok")[0].to).toBe("/about");
     expect(search("cobalt ferrite")[0].to).toBe("/about");
-    expect(search("draw the line").some((h) => h.to === "/topics/networks/play/line")).toBe(true);
+    expect(search("dividing dots").some((h) => h.to === "/topics/networks/play/line")).toBe(true);
     expect(search("")).toEqual([]);
     expect(search("zzzz")).toEqual([]);
   });
