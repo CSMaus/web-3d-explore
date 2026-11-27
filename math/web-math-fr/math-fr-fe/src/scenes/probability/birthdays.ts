@@ -46,7 +46,7 @@ const BAR_MOST = 1;
 const HALF = 0.5;
 const HALF_SIGN = "½";
 const HALF_X = 57.5;
-const HALF_SIZE = 2.6;
+const HALF_SIZE = 6;
 const DASH = [3, 4];
 const HALF_WEIGHT = 2;
 
