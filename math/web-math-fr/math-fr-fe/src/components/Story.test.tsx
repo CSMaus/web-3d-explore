@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Story } from "@/components/Story";
@@ -9,9 +9,10 @@ type Given = {
   tune?: ReactNode;
   act?: ReactNode;
   aside?: ReactNode;
+  stepId?: string;
 };
 
-function show({ step = 0, playing = true, tune, act, aside }: Given = {}) {
+function show({ step = 0, playing = true, tune, act, aside, stepId }: Given = {}) {
   const onStep = vi.fn();
   const onToggle = vi.fn();
   render(
@@ -28,6 +29,7 @@ function show({ step = 0, playing = true, tune, act, aside }: Given = {}) {
       end={<button type="button">Go to the experiment</button>}
       playing={playing}
       onToggle={onToggle}
+      stepId={stepId}
     />,
   );
   const story = document.querySelector('[data-slot="story"]') as HTMLElement;
@@ -171,5 +173,13 @@ describe("The story", () => {
     expect(screen.queryByRole("button", { name: "Stop the picture" })).toBeNull();
     fireEvent.click(button("Move the picture"));
     expect(still.onToggle).toHaveBeenCalledTimes(1);
+  });
+
+  it("carries the id of its step when one is given, and no such mark otherwise", () => {
+    const named = show({ stepId: "one-arrow" });
+    expect(named.story.getAttribute("data-step")).toBe("one-arrow");
+    cleanup();
+    const plain = show();
+    expect(plain.story.hasAttribute("data-step")).toBe(false);
   });
 });

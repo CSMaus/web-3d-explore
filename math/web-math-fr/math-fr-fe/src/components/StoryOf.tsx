@@ -117,6 +117,7 @@ export function StoryOf<F extends Fades, S extends Sets, T extends string, A ext
       playing={clock.playing}
       onToggle={clock.toggle}
       hostRef={host}
+      stepId={current.id}
     />
   );
 }

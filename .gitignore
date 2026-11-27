@@ -28,6 +28,9 @@ htmlcov/
 # node, everywhere in the repo
 node_modules/
 
+# the pictures of story steps taken by scripts/browser/story-shots.mjs
+math/web-math-fr/math-fr-fe/shots/
+
 # claude code state, all of it. the skill packs are third-party material with
 # their own licences and are not this project's code.
 .claude/

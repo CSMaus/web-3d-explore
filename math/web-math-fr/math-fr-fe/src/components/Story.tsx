@@ -16,6 +16,7 @@ type Props = {
   playing: boolean;
   onToggle: () => void;
   hostRef?: Ref<HTMLElement>;
+  stepId?: string;
 };
 
 /** the elements that use the arrow keys themselves, so the story leaves the keys to them */
@@ -40,6 +41,7 @@ export function Story({
   playing,
   onToggle,
   hostRef,
+  stepId,
 }: Props): JSX.Element {
   const last = step >= count - 1;
 
@@ -52,7 +54,13 @@ export function Story({
 
   return (
     <Panel>
-      <section data-slot="story" aria-label={L("The story of this page")} ref={hostRef} onKeyDown={onKeys}>
+      <section
+        data-slot="story"
+        data-step={stepId}
+        aria-label={L("The story of this page")}
+        ref={hostRef}
+        onKeyDown={onKeys}
+      >
         <Text kind="caption" as="div" data-slot="story-top" className="min-h-[1.75rem]">
           {top}
         </Text>

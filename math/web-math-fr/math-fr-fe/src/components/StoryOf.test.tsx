@@ -188,4 +188,11 @@ describe("The story of a scene", () => {
     expect(onRelease.mock.calls[0][0].step.id).toBe("two");
     proto.setPointerCapture = capture;
   });
+
+  it("marks the story with the id of the step it is on", () => {
+    const { story } = show();
+    expect(story.getAttribute("data-step")).toBe("one");
+    next();
+    expect(story.getAttribute("data-step")).toBe("two");
+  });
 });
