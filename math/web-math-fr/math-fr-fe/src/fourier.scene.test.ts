@@ -94,6 +94,21 @@ describe("The picture of the Fourier story", () => {
     expect(seen()).toBeLessThan(1);
   });
 
+  it("sets the number at once while the picture stands, on the same frame and on a new kind of picture", () => {
+    const drawn = vi.spyOn(wave, "drawWave").mockImplementation(() => {});
+    const { pen } = quietPen();
+    const data = build(DEFAULTS);
+    const seen = () => drawn.mock.calls[drawn.mock.calls.length - 1][2].shown;
+    const three: Set = { mode: "wave", wave: "square", count: 3 };
+
+    draw(pen, data, HIDDEN, three, 200, false);
+    expect(seen()).toBe(3);
+    draw(pen, data, HIDDEN, { ...three, count: 4 }, 200, false);
+    expect(seen()).toBe(4);
+    draw(pen, data, HIDDEN, { ...three, wave: "sawtooth", count: 12 }, 200, false);
+    expect(seen()).toBe(12);
+  });
+
   it("shows the reader's line while it is drawn, and the chain of its arrows after", () => {
     const drawn = vi.spyOn(chain, "drawChain").mockImplementation(() => {});
     const own: Set = { mode: "own", wave: "square", count: 50 };

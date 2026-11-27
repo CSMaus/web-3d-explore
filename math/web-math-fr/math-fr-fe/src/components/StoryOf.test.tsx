@@ -136,6 +136,14 @@ describe("The story of a scene", () => {
     expect(draw.mock.lastCall?.[2]).toEqual({ first: 1, second: 1 });
   });
 
+  it("tells the scene whether the picture moves or stands", () => {
+    vi.spyOn(window, "matchMedia").mockReturnValue({ matches: true } as MediaQueryList);
+    const { draw } = show();
+    expect(draw.mock.lastCall?.[5]).toBe(false);
+    fireEvent.click(button("Move the picture"));
+    expect(draw.mock.lastCall?.[5]).toBe(true);
+  });
+
   it("keeps the scene's line when the page's own line is undefined, and takes the page's otherwise", () => {
     const top = vi.fn((step: Step) => (step.id === "three" ? "Three dots" : undefined));
     const { slot } = show({ top });

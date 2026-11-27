@@ -16,7 +16,7 @@ type Sets = Record<string, number | string>;
 export type Scene<F extends Fades, S extends Sets, T extends string, A extends string, V, D> = {
   DEFAULTS: V;
   build: (values: V) => D;
-  draw: (pen: Pen, data: D, fade: F, set: S, t: number) => void;
+  draw: (pen: Pen, data: D, fade: F, set: S, t: number, playing?: boolean) => void;
   topLine: (top: T, data: D, set: S) => string;
   applyAct: (set: S, values: V, act: A | null) => S;
   onStep: (values: V) => V;
@@ -104,8 +104,8 @@ export function StoryOf<F extends Fades, S extends Sets, T extends string, A ext
         <Plot
           className="h-full w-full"
           box={UNIT}
-          deps={[clock.time, shown, set, data]}
-          draw={(pen) => scene.draw(pen, data, shown, set, clock.time)}
+          deps={[clock.time, clock.playing, shown, set, data]}
+          draw={(pen) => scene.draw(pen, data, shown, set, clock.time, clock.playing)}
           onDrag={pointer ? drag : undefined}
           onRelease={pointer ? () => pointer.onRelease(at) : undefined}
         />

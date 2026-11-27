@@ -83,11 +83,11 @@ export function topLine(top: Top, data: Data, set: Set): string {
   }
 }
 
-export function draw(pen: Pen, data: Data, fade: Fade, set: Set, t: number): void {
+export function draw(pen: Pen, data: Data, fade: Fade, set: Set, t: number, playing = true): void {
   const key = `${set.mode}/${set.wave}/${set.mode === "own" ? "own" : data.values.shape}`;
   if (key !== shown.key) shown.value = 0;
   const dt = t - shown.t;
-  shown.value = dt < 0 || dt > GAP_MOST ? set.count : grow(shown.value, set.count, Math.min(dt, STEP_MOST));
+  shown.value = !playing || dt < 0 || dt > GAP_MOST ? set.count : grow(shown.value, set.count, Math.min(dt, STEP_MOST));
   shown.t = t;
   shown.key = key;
 
