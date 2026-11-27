@@ -9,6 +9,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { MUTED, ONE, SKY, TWO } from "@/lib/draw";
@@ -16,6 +17,10 @@ import { L } from "@/lib/lang";
 import { UNIT, dot, frame, line, pane } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/birthdays";
+import type { Values } from "@/scenes/probability/birthdays";
+import { STEPS } from "@/storylines/probability/birthdays";
+import type { Act } from "@/storylines/probability/birthdays";
 import { choose, evenAt, rngFrom, roomShares, shared } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/birthdays")({
@@ -25,6 +30,19 @@ export const Route = createFileRoute("/topics/probability/play/birthdays")({
 
 const MOST = 70;
 const ROOMS = 500;
+const ROOM_LEAST = 2;
+const ROOM_MOST = 60;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "people":
+      return (
+        <div className="max-w-2xl">
+          <Slider label={L("Number of people")} min={ROOM_LEAST} max={ROOM_MOST} step={1} value={values.people} format={(v) => String(Math.round(v))} onChange={(v) => change({ people: Math.round(v) })} />
+        </div>
+      );
+  }
+}
 
 /**
  * people added to a room one at a time. the exact chance that two of them share a birthday is drawn
@@ -56,7 +74,8 @@ function BirthdaysPage() {
   return (
     <TaskPage
       title={system?.name ?? L("Shared birthdays")}
-      job={L("How many people must be in a room for an even chance that two of them share a birthday? A chance is a number from 0 to 1 that says how often something happens over many tries. An even chance is one half: it happens in half of all cases. Most people guess well over a hundred, since a year has 365 days. First set a guess with the slider. Then press run: people enter the room one at a time, and a curve shows the chance for each number of people. The chance is easier to find the other way round, as the chance that all birthdays are different. The second person misses the first person's birthday with chance 364/365. The third misses both with chance 363/365, and so on. Multiplying these fractions gives the chance that all birthdays differ, and 1 minus it is the chance of a shared birthday.")}
+      job={L("How many people does a room need for a likely shared birthday?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("A guess first")} note={L("Set the number of people at which the chance of a shared birthday reaches one half. The guess stays on the picture as a dashed upright line, so the curve can be compared with it.")}>
