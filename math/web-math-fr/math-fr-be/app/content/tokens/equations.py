@@ -341,7 +341,7 @@ SYSTEMS = [
             {
                 "label": "Greedy",
                 "tex": r"t_{n+1} = \arg\max_t p_t",
-                "note": "The next token t_{n+1} is always the token t with the largest probability p_t. The same start always gives the same text, and a small model soon falls into a loop and stays in it. The page shows greedy in the box \"Greedy, for comparison\"",
+                "note": 'The next token t_{n+1} is always the token t with the largest probability p_t. The same start always gives the same text, and a small model soon falls into a loop and stays in it. The page shows greedy in the box "Greedy, for comparison"',
             },
             {
                 "label": "Temperature",
@@ -410,7 +410,7 @@ SYSTEMS = [
             {
                 "label": "A stray space",
                 "tex": r"\text{id}(\text{``the''}) \neq \text{id}(\text{``\textvisiblespace the''})",
-                "note": "\"the\" and \"the\" with a space in front are different tokens with different ids. So a different list of numbers goes in, and everything after is computed from different numbers",
+                "note": '"the" and "the" with a space in front are different tokens with different ids. So a different list of numbers goes in, and everything after is computed from different numbers',
             },
             {
                 "label": "A rare word's lists",

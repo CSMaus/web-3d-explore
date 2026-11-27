@@ -44,8 +44,11 @@ allowed-confusables = ["𝑖"]
 "tests/**" = ["S101"]
 # the content modules hold LaTeX, which cannot be broken across lines without
 # making the formula unreadable in the source. the line limit applies everywhere
-# else, including the code that serves this content.
-"app/content/**" = ["E501"]
+# else, including the code that serves this content. the sentences of the content
+# name mathematical signs as they are written (the multiplication sign, greek
+# letters, the set minus), so the check for look-alike characters in strings is
+# off there too.
+"app/content/**" = ["E501", "RUF001"]
 
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = [

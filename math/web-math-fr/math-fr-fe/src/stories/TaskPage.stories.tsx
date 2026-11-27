@@ -1,17 +1,61 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import type { ReactNode } from "react";
 import { Caption } from "@/components/Caption";
 import { Choices } from "@/components/Choices";
 import { Plot } from "@/components/Plot";
 import { RunBar } from "@/components/RunBar";
 import { Slider } from "@/components/Slider";
-import { TaskPage, Verdict } from "@/components/TaskPage";
+import { Story } from "@/components/Story";
+import { TaskPage, ToLab, Verdict } from "@/components/TaskPage";
 import { FAINT, ONE, ticks } from "@/lib/draw";
+import { UNIT } from "@/lib/panes";
 
 const meta: Meta = { title: "Pages/TaskPage" };
 export default meta;
 
-function Demo() {
+const STEPS = [
+  { say: "How wrong starts high.", top: "Steps: 0", share: 0.02 },
+  { say: "Each step takes a little of it away.", top: "Steps: 100", share: 0.25 },
+  { say: "After many steps almost nothing is left.", top: null, share: 1 },
+];
+const POINTS = 200;
+
+function fall(share: number): [number, number][] {
+  const n = Math.max(1, Math.round(POINTS * share));
+  return Array.from({ length: n + 1 }, (_, i) => [i / POINTS, 0.1 + 0.8 * Math.exp((-4 * i) / POINTS)]);
+}
+
+function Tale() {
+  const [step, setStep] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const current = STEPS[step];
+  return (
+    <Story
+      count={STEPS.length}
+      step={step}
+      onStep={setStep}
+      say={current.say}
+      top={current.top}
+      picture={
+        <Plot
+          className="h-full w-full"
+          box={UNIT}
+          deps={[step]}
+          draw={(pen) => {
+            pen.axes(FAINT);
+            pen.line(fall(current.share), ONE, 2);
+          }}
+        />
+      }
+      end={<ToLab />}
+      playing={playing}
+      onToggle={() => setPlaying((v) => !v)}
+    />
+  );
+}
+
+function Demo({ story }: { story?: ReactNode }) {
   const [rate, setRate] = useState(0.3);
   const [kind, setKind] = useState("rings");
   const [count, setCount] = useState(0);
@@ -20,6 +64,7 @@ function Demo() {
     <main className="mx-auto max-w-6xl">
       <TaskPage
         title="How it learns, and how fast"
+        story={story}
         job="The same network on the same dots, with the learning itself as the thing to look at. Every step: measure how wrong, find which way is down for each number, move."
         input={
           <div className="space-y-3">
@@ -99,3 +144,4 @@ function Demo() {
 }
 
 export const WhatGoesInRunWhatCameOut: StoryObj = { render: () => <Demo /> };
+export const WithStory: StoryObj = { render: () => <Demo story={<Tale />} /> };
