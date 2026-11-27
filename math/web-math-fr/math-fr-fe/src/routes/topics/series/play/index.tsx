@@ -27,7 +27,7 @@ function SeriesIndex() {
     <>
       <Heading level={1} className="mt-4">{L("The pages, in order")}</Heading>
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-        {L("A series is a sum of many simple terms that together make up a complicated function. The five pages below build functions this way: first from powers of x, then from waves and turning circles. Every page has the same three panels in the same places: what goes in, a run button, and what came out.")}
+        {L("A series is a sum of many simple terms. Five pages build curves and drawings from such sums.")}
       </Text>
       {!theory ? (
         <Text kind="note" as="p" className="mt-3">{L("The descriptions below are stored copies, because the server that normally sends them is not answering. Nothing else on this page depends on the server.")}</Text>

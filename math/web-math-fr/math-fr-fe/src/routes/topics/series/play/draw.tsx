@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Button, Text } from "@kit/index";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { Button, Text, TextLink } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Choices } from "@/components/Choices";
@@ -89,9 +89,14 @@ function DrawPage() {
   return (
     <TaskPage
       title={system?.name ?? L("Any outline drawn by turning circles")}
-      job={L("Can any drawing be made by circles that only turn? One circle is fixed in place. A second circle sits on the edge of the first, a third on the edge of the second, and so on. Each circle turns at a steady pace: some faster, some slower, some the other way. A point on the edge of the last circle moves and leaves a trace. With the right sizes and paces, the trace is the outline of the letter π. This page finds those circles for an outline: a sample letter, or a picture chosen by the reader. The slider sets how many circles are kept, the largest first. The question: how few circles are enough for the shape to be recognised?")}
+      job={L("How few turning arrows are enough to recognise a shape?")}
       input={
         <div className="space-y-3">
+          <Text kind="note" as="p">
+            <TextLink asChild>
+              <Link to="/topics/series/play/fourier">{L("First read the story on the Fourier page")}</Link>
+            </TextLink>
+          </Text>
           <Choices options={GLYPHS.map((s) => ({ id: s.id, label: s.label }))} value={own ? "" : sample} onPick={(id) => { setOwn(null); setSample(id); reset(); }} />
           <label className="block">
             <span data-text="label">{L("Or a picture of one's own")}</span>

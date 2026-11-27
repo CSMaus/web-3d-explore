@@ -34,6 +34,14 @@ describe("The series topic's pages", () => {
     expect(SYSTEMS.map((s) => s.id)).toEqual(["taylor", "radius", "fourier", "draw", "frequencies"]);
   });
 
+  it("the page of outlines asks its question in one sentence and points to the Fourier story first", async () => {
+    await siteAt("/topics/series/play/draw");
+    await waitFor(() => expect(document.querySelector('[data-slot="task-job"]')).toBeTruthy());
+    expect(document.querySelector('[data-slot="task-job"]')?.textContent).toBe("How few turning arrows are enough to recognise a shape?");
+    const link = screen.getByRole("link", { name: "First read the story on the Fourier page" });
+    expect(link.getAttribute("href")).toBe("/topics/series/play/fourier");
+  });
+
   it("the Fourier story lists its first arrows, then writes them as one formula", async () => {
     await siteAt("/topics/series/play/fourier");
     await waitFor(() => expect(document.querySelector('[data-slot="story"]')).toBeTruthy());
