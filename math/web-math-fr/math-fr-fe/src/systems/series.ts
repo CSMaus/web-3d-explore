@@ -112,6 +112,65 @@ export function peakOf(terms: { k: number; a: number; b: number }[], samples = 2
   return best;
 }
 
+export type UnitWave = "square" | "sawtooth";
+export type Arm = { k: number; len: number };
+
+const SUM_TERMS: Record<UnitWave, string[]> = {
+  square: ["sin t", "⅓ sin 3t", "⅕ sin 5t", "⅐ sin 7t"],
+  sawtooth: ["sin t", "½ sin 2t", "⅓ sin 3t", "¼ sin 4t"],
+};
+const SUM_PLUS = " + ";
+const SUM_MINUS = " − ";
+const SUM_MORE = " + …";
+const SUM_NONE = "0";
+
+export function unitArms(wave: UnitWave, n: number): Arm[] {
+  const out: Arm[] = [];
+  for (let i = 0; i < n; i += 1) {
+    if (wave === "square") out.push({ k: 2 * i + 1, len: 1 / (2 * i + 1) });
+    else out.push({ k: i + 1, len: (i % 2 === 0 ? 1 : -1) / (i + 1) });
+  }
+  return out;
+}
+
+export function armsChain(arms: Arm[], count: number, t: number): C[] {
+  const chain: C[] = [[0, 0]];
+  let x = 0;
+  let y = 0;
+  const terms = Math.min(Math.ceil(count), arms.length);
+  for (let i = 0; i < terms; i += 1) {
+    const f = Math.min(1, count - i);
+    x += f * arms[i].len * Math.cos(arms[i].k * t);
+    y += f * arms[i].len * Math.sin(arms[i].k * t);
+    chain.push([x, y]);
+  }
+  return chain;
+}
+
+export function armsHeight(arms: Arm[], count: number, t: number): number {
+  let s = 0;
+  const terms = Math.min(Math.ceil(count), arms.length);
+  for (let i = 0; i < terms; i += 1) s += Math.min(1, count - i) * arms[i].len * Math.sin(arms[i].k * t);
+  return s;
+}
+
+export function unitTarget(wave: UnitWave, t: number): number {
+  const turn = 2 * Math.PI;
+  const u = ((t % turn) + turn) % turn;
+  if (wave === "sawtooth") return (u < Math.PI ? u : u - turn) / 2;
+  if (u === 0 || u === Math.PI) return 0;
+  return u < Math.PI ? Math.PI / 4 : -Math.PI / 4;
+}
+
+export function sumText(wave: UnitWave, n: number): string {
+  const count = Math.floor(n);
+  if (count < 1) return SUM_NONE;
+  const terms = SUM_TERMS[wave];
+  let out = terms[0];
+  for (let i = 1; i < Math.min(count, terms.length); i += 1) out += (wave === "sawtooth" && i % 2 === 1 ? SUM_MINUS : SUM_PLUS) + terms[i];
+  return count > terms.length ? out + SUM_MORE : out;
+}
+
 // ------------------------------------------------------------------ an outline as circles
 
 export type Circle = { n: number; re: number; im: number; r: number };
@@ -139,14 +198,25 @@ export function circlesOf(points: C[]): Circle[] {
 
 /** the tip of the first `count` circles at time t in [0, 1), and every circle's centre on the way */
 export function circlesAt(circles: Circle[], count: number, t: number): C[] {
-  const chain: C[] = [[0, 0]];
-  let x = 0;
-  let y = 0;
-  for (let i = 0; i < Math.min(count, circles.length); i += 1) {
-    const c = circles[i];
+  return chainFrom([0, 0], circles, count, t);
+}
+
+export function splitHub(circles: Circle[]): { hub: C; arms: Circle[] } {
+  const still = circles.find((c) => c.n === 0);
+  return { hub: still ? [still.re, still.im] : [0, 0], arms: circles.filter((c) => c.n !== 0) };
+}
+
+export function chainFrom(hub: C, arms: Circle[], count: number, t: number): C[] {
+  const chain: C[] = [[hub[0], hub[1]]];
+  let x = hub[0];
+  let y = hub[1];
+  const terms = Math.min(Math.ceil(count), arms.length);
+  for (let i = 0; i < terms; i += 1) {
+    const c = arms[i];
+    const f = Math.min(1, count - i);
     const a = 2 * Math.PI * c.n * t;
-    x += c.re * Math.cos(a) - c.im * Math.sin(a);
-    y += c.re * Math.sin(a) + c.im * Math.cos(a);
+    x += f * (c.re * Math.cos(a) - c.im * Math.sin(a));
+    y += f * (c.re * Math.sin(a) + c.im * Math.cos(a));
     chain.push([x, y]);
   }
   return chain;

@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Button, Text } from "@kit/index";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { Button, Text, TextLink } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Choices } from "@/components/Choices";
@@ -13,55 +13,18 @@ import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY } from "@/lib/draw";
 import { L } from "@/lib/lang";
+import { GLYPHS, glyphShape, imageGrey, shapeOf } from "@/lib/outline";
 import { useRunner } from "@/lib/runner";
 import { TOPIC } from "@/lib/series";
-import { circlesAt, circlesOf, droppedEnergy, outlineOf, resample, type C } from "@/systems/series";
+import { circlesAt, circlesOf, droppedEnergy, type C } from "@/systems/series";
 
 export const Route = createFileRoute("/topics/series/play/draw")({
   loader: () => api.system(TOPIC, "draw"),
   component: DrawPage,
 });
 
-const POINTS = 512;
 const STEPS = 400;
 const BOX: Box = { x0: -1.25, x1: 1.25, y0: -1.25, y1: 1.25 };
-const SIDE = 300;
-/** the samples are drawn as text and then read back like any uploaded picture */
-const SAMPLES = [
-  { id: "pi", label: "π", glyph: "π" },
-  { id: "sigma", label: "∑", glyph: "∑" },
-  { id: "amp", label: "&", glyph: "&" },
-  { id: "three", label: "3", glyph: "3" },
-];
-
-/** a picture of SIDE by SIDE grey values, from an image or from a glyph; null where canvas is not there (tests) */
-function greyOf(draw: (ctx: CanvasRenderingContext2D) => void): Uint8ClampedArray | null {
-  if (typeof document === "undefined") return null;
-  const canvas = document.createElement("canvas");
-  canvas.width = SIDE;
-  canvas.height = SIDE;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return null;
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, SIDE, SIDE);
-  draw(ctx);
-  const data = ctx.getImageData(0, 0, SIDE, SIDE).data;
-  const grey = new Uint8ClampedArray(SIDE * SIDE);
-  for (let i = 0; i < grey.length; i += 1) grey[i] = Math.round(0.299 * data[4 * i] + 0.587 * data[4 * i + 1] + 0.114 * data[4 * i + 2]);
-  return grey;
-}
-
-/** the outline as N points centred on the origin, scaled into the unit square, y up */
-function shapeOf(grey: Uint8ClampedArray | null): C[] {
-  if (!grey) return [];
-  const raw = outlineOf(grey, SIDE, SIDE);
-  if (raw.length < 24) return [];
-  const pts = resample(raw, POINTS);
-  const mx = pts.reduce((s, p) => s + p[0], 0) / pts.length;
-  const my = pts.reduce((s, p) => s + p[1], 0) / pts.length;
-  const reach = Math.max(...pts.map((p) => Math.hypot(p[0] - mx, p[1] - my))) || 1;
-  return pts.map((p) => [(p[0] - mx) / reach, -(p[1] - my) / reach]);
-}
 
 /**
  * any outline as circles: a sample glyph or the reader's own picture, its longest outline found in
@@ -81,16 +44,7 @@ function DrawPage() {
 
   const shape = useMemo(() => {
     if (own) return shapeOf(own.grey);
-    const glyph = SAMPLES.find((s) => s.id === sample)!.glyph;
-    return shapeOf(
-      greyOf((ctx) => {
-        ctx.fillStyle = "#000000";
-        ctx.font = `bold ${Math.round(SIDE * 0.8)}px Georgia, "Times New Roman", serif`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(glyph, SIDE / 2, SIDE / 2 + SIDE * 0.04);
-      }),
-    );
+    return glyphShape(GLYPHS.find((s) => s.id === sample)!.glyph);
   }, [own, sample]);
   const circles = useMemo(() => (shape.length ? circlesOf(shape) : []), [shape]);
   const total = useMemo(() => droppedEnergy(circles, 0), [circles]);
@@ -116,12 +70,7 @@ function DrawPage() {
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
-      const grey = greyOf((ctx) => {
-        const scale = Math.min(SIDE / img.width, SIDE / img.height);
-        const w = img.width * scale;
-        const h = img.height * scale;
-        ctx.drawImage(img, (SIDE - w) / 2, (SIDE - h) / 2, w, h);
-      });
+      const grey = imageGrey(img);
       URL.revokeObjectURL(url);
       if (!grey || shapeOf(grey).length === 0) {
         setTrouble(true);
@@ -140,10 +89,15 @@ function DrawPage() {
   return (
     <TaskPage
       title={system?.name ?? L("Any outline drawn by turning circles")}
-      job={L("Can any drawing be made by circles that only turn? One circle is fixed in place. A second circle sits on the edge of the first, a third on the edge of the second, and so on. Each circle turns at a steady pace: some faster, some slower, some the other way. A point on the edge of the last circle moves and leaves a trace. With the right sizes and paces, the trace is the outline of the letter π. This page finds those circles for an outline: a sample letter, or a picture chosen by the reader. The slider sets how many circles are kept, the largest first. The question: how few circles are enough for the shape to be recognised?")}
+      job={L("How few turning arrows are enough to recognise a shape?")}
       input={
         <div className="space-y-3">
-          <Choices options={SAMPLES.map((s) => ({ id: s.id, label: s.label }))} value={own ? "" : sample} onPick={(id) => { setOwn(null); setSample(id); reset(); }} />
+          <Text kind="note" as="p">
+            <TextLink asChild>
+              <Link to="/topics/series/play/fourier">{L("First read the story on the Fourier page")}</Link>
+            </TextLink>
+          </Text>
+          <Choices options={GLYPHS.map((s) => ({ id: s.id, label: s.label }))} value={own ? "" : sample} onPick={(id) => { setOwn(null); setSample(id); reset(); }} />
           <label className="block">
             <span data-text="label">{L("Or a picture of one's own")}</span>
             <div className="mt-2">

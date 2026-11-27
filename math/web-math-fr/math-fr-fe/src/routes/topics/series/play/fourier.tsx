@@ -9,13 +9,24 @@ import { Plot, type Box } from "@/components/Plot";
 import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
+import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
+import type { At } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
+import { Tex } from "@/components/Tex";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, TWO } from "@/lib/draw";
+import { addPoint, finish, fromStage } from "@/lib/freehand";
 import { L } from "@/lib/lang";
+import { GLYPHS } from "@/lib/outline";
 import { useRunner } from "@/lib/runner";
 import { TOPIC } from "@/lib/series";
-import { peakOf, waveAt, waveSum, waveTerms, type Wave } from "@/systems/series";
+import type { StoryStep } from "@/lib/storyline";
+import * as scene from "@/scenes/series/fourier";
+import type { Data, Shape, Values } from "@/scenes/series/fourier";
+import { STEPS } from "@/storylines/series/fourier";
+import type { Act, Fade, Set, Top } from "@/storylines/series/fourier";
+import { peakOf, sumText, waveAt, waveSum, waveTerms, type Wave } from "@/systems/series";
 
 export const Route = createFileRoute("/topics/series/play/fourier")({
   loader: () => api.system(TOPIC, "fourier"),
@@ -31,6 +42,159 @@ const WAVES: { id: Wave; label: string }[] = [
   { id: "sawtooth", label: L("Sawtooth") },
   { id: "triangle", label: L("Triangle") },
 ];
+
+const LEAST = 1;
+const KNOWN: Record<Shape, true> = { cat: true, pi: true, sigma: true, amp: true, three: true };
+const isShape = (id: string): id is Shape => id in KNOWN;
+const SHAPES: { id: Shape; label: string }[] = [
+  { id: "cat", label: L("Cat") },
+  ...GLYPHS.flatMap((g) => (isShape(g.id) ? [{ id: g.id, label: g.glyph }] : [])),
+];
+
+type Change = (next: Values) => void;
+
+function storyAct(act: Act, values: Values, change: Change, data: Data, set: Set) {
+  if (act === "count") {
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        <Button variant="outline" disabled={set.count <= LEAST} onClick={() => change({ ...values, count: set.count - 1 })}>
+          {L("One arrow fewer")}
+        </Button>
+        <Button variant="outline" disabled={set.count >= scene.MOST[set.mode]} onClick={() => change({ ...values, count: set.count + 1 })}>
+          {L("One more arrow")}
+        </Button>
+      </div>
+    );
+  }
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <Button variant="outline" disabled={values.own === null} onClick={() => change({ ...values, own: null, drawing: false, count: null })}>
+        {L("Clear the drawing")}
+      </Button>
+      {data.own === null ? <Text kind="note" as="span">{L("Draw one closed line here")}</Text> : null}
+    </div>
+  );
+}
+
+function storyTune(_step: StoryStep<Fade, Set, Top, Act>, values: Values, change: Change, _data: Data, set: Set) {
+  return (
+    <div className="max-w-2xl space-y-3">
+      <Slider
+        label={L("Number of arrows")}
+        min={LEAST}
+        max={scene.MOST[set.mode]}
+        step={1}
+        value={set.count}
+        format={(v) => String(Math.round(v))}
+        onChange={(v) => change({ ...values, count: Math.round(v) })}
+      />
+      {set.mode === "draw" ? (
+        <OptionGroup
+          title={L("Shape to draw")}
+          note={L("The chain of arrows redraws the chosen outline. The four signs are the outlines of the next page.")}
+        >
+          <Choices options={SHAPES} value={values.shape} onPick={(id) => change({ ...values, shape: id, count: null })} />
+        </OptionGroup>
+      ) : null}
+    </div>
+  );
+}
+
+const ROWS = 5;
+const CELL = "py-0.5 pl-2 text-right first:pl-0 sm:pl-4 sm:first:pl-0";
+const MARK = "§";
+const MINUS = "−";
+const HALF_TURN = 180;
+const SERIES_TEX = "c_1 e^{it} + c_{-1} e^{-it} + c_2 e^{2it} + \\dots";
+const TEX_OF: [string, string][] = [
+  ["sin", "\\sin"],
+  ["½", "\\tfrac{1}{2}"],
+  ["⅓", "\\tfrac{1}{3}"],
+  ["¼", "\\tfrac{1}{4}"],
+  ["⅕", "\\tfrac{1}{5}"],
+  ["⅐", "\\tfrac{1}{7}"],
+  ["…", "\\dots"],
+];
+
+const texOf = (sum: string) => TEX_OF.reduce((s, [from, to]) => s.split(from).join(to), sum);
+const signed = (n: number, plus: string) => (n < 0 ? MINUS : plus) + String(Math.abs(n));
+
+function storyAside(step: StoryStep<Fade, Set, Top, Act>, data: Data, set: Set) {
+  if (step.fade.list !== 1) return null;
+  return (
+    <>
+      <div className="overflow-x-auto">
+        <table data-slot="story-list" className="tabular-nums">
+          <thead>
+            <tr>
+              <th scope="col" className={CELL}>{L("Arrow")}</th>
+              <th scope="col" className={CELL}>{L("Length of the arrow")}</th>
+              <th scope="col" className={CELL}>{L("Turns per lap")}</th>
+              <th scope="col" className={CELL}>{L("Starting angle")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.arms.slice(0, ROWS).map((arm, i) => (
+              <tr key={arm.n}>
+                <td className={CELL}>{i + 1}</td>
+                <td className={CELL}>{arm.r.toFixed(3)}</td>
+                <td className={CELL}>{signed(arm.n, "+")}</td>
+                <td className={CELL}>{signed(Math.round((Math.atan2(arm.im, arm.re) * HALF_TURN) / Math.PI), "")}°</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Text kind="note" as="div">{L("More rows: {{n}}", { n: Math.max(0, set.count - ROWS) })}</Text>
+    </>
+  );
+}
+
+function storyTop(step: StoryStep<Fade, Set, Top, Act>, data: Data, set: Set) {
+  if (step.top === "sum") {
+    const [lead, tail] = L("height = {{sum}}", { sum: MARK }).split(MARK);
+    return (
+      <>
+        <span aria-hidden="true">
+          {lead}
+          <Tex tex={texOf(sumText(set.wave, set.count))} />
+          {tail}
+        </span>
+        <span className="sr-only">{scene.topLine("sum", data, set)}</span>
+      </>
+    );
+  }
+  if (step.top === "formula") {
+    const [lead, tail] = L("drawing(t) = {{sum}}", { sum: MARK }).split(MARK);
+    return (
+      <>
+        {lead}
+        <Tex tex={SERIES_TEX} />
+        {tail}
+        <Text kind="note" as="div">{L("c holds the length and the starting angle of an arrow. The number before t is its speed. A minus sign means it spins the other way.")}</Text>
+      </>
+    );
+  }
+  return undefined;
+}
+
+type Where = At<Fade, Set, Top, Act, Values>;
+
+const storyPointer = {
+  onDrag: (sx: number, sy: number, at: Where) => {
+    if (at.set.mode !== "own") return;
+    const p = fromStage(sx, sy);
+    if (!at.values.drawing) {
+      at.change({ ...at.values, own: [p], drawing: true, count: null });
+      return;
+    }
+    at.change({ ...at.values, own: addPoint(at.values.own ?? [], p) });
+  },
+  onRelease: (at: Where) => {
+    if (at.set.mode !== "own" || !at.values.drawing) return;
+    at.change({ ...at.values, own: finish(at.values.own ?? []), drawing: false });
+  },
+};
 
 /**
  * a wave rebuilt from sines, each sine a circle turning on the tip of the one before. the tip's
@@ -90,7 +254,8 @@ function FourierPage() {
   return (
     <TaskPage
       title={system?.name ?? L("Fourier series: a wave from turning circles")}
-      job={L("How can a square wave, with flat tops and sudden jumps, be made from circles that turn smoothly? A square wave is a line that stays at 1, jumps down to -1, stays there, jumps back up, and so on for ever. A point going round a circle at a steady pace has a height that rises and falls smoothly. This curve is called a sine wave. One circle gives a sine wave whose top is at 1.273, too high. A second circle sits on the edge of the first. It is a third as big and turns three times as fast. A point on its edge draws a curve that is already flatter on top. More circles follow, each smaller and faster, at the speeds 5, 7, 9 and so on, and the drawn curve turns into a square wave. Three circles bring the top down to 1.188, ten to 1.180, forty to 1.179. There it stays, about 9 per cent of the jump above the flat top. A sum of sine waves like this is called a Fourier series, and the sizes of the circles are its Fourier coefficients. Almost any repeating wave met in practice can be built this way. The question: which waves need many circles, and which error never goes away however many circles are added?")}
+      job={L("How do smoothly turning arrows make a wave with sharp corners?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} tune={storyTune} aside={storyAside} top={storyTop} pointer={storyPointer} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("Which wave")}>
