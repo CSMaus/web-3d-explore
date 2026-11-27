@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 const PORT = 9390;
 const SITE = "http://localhost:1263";
 const WIDTH = 1200;
-const HEIGHT = 900;
+const HEIGHT = 1400;
 const SETTLE = 1600;
 const PATIENCE = 5000;
 const POLL = 250;

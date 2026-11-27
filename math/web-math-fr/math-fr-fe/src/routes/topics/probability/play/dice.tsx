@@ -10,6 +10,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { EDGE, INK, MUTED, ONE, SKY, blend, GROUND } from "@/lib/draw";
@@ -17,6 +18,10 @@ import { L } from "@/lib/lang";
 import { UNIT, block, frame, label, line, pane, split } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/dice";
+import type { Values } from "@/scenes/probability/dice";
+import { STEPS } from "@/storylines/probability/dice";
+import type { Act } from "@/storylines/probability/dice";
 import { rngFrom, sumWays, throwTwo } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/dice")({
@@ -27,6 +32,17 @@ export const Route = createFileRoute("/topics/probability/play/dice")({
 const MOST = 10000;
 const SUMS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const OPTIONS = SUMS.map((s) => ({ id: String(s), label: String(s) }));
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "sum":
+      return (
+        <OptionGroup title={L("Sum of the two dice")} note={L("Each button lights the cells of the grid that give that sum.")}>
+          <Choices options={OPTIONS} value={String(values.sum)} onPick={(id) => change({ sum: Number(id) })} />
+        </OptionGroup>
+      );
+  }
+}
 
 /**
  * two dice thrown again and again from one seeded list. on the left the 36 equally likely pairs,
@@ -65,7 +81,8 @@ function DicePage() {
   return (
     <TaskPage
       title={system?.name ?? L("Two dice: why 7 comes up six times as often as 2")}
-      job={L("When two dice are thrown, why does a sum of 7 come up six times as often as a sum of 2? The sum is the two numbers added, a whole number from 2 to 12. Each die lands on a number from 1 to 6, so two dice can land in 6 x 6 = 36 ways, counting the first die and the second die apart. Each of these 36 pairs is as likely as any other. A sum of 2 comes from one pair only: 1 and 1. A sum of 7 comes from six pairs: 1 and 6, 2 and 5, 3 and 4, 4 and 3, 5 and 2, 6 and 1. First set a guess with the slider. Then press run: the computer throws the two dice again and again. The question: does the share of throws with each sum settle on that sum's share of the 36 pairs?")}
+      job={L("When two dice are thrown, why does a sum of 7 come up six times as often as a sum of 2?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("A guess first")} note={L("How many times as often does 7 come up as 2 in a long run of throws? After the run, the result compares the guess with the throws and with the count of pairs.")}>

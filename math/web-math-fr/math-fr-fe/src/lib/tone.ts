@@ -49,6 +49,7 @@ export function forLight(colour: string, ground: string): string {
   const c = rgbaOf(colour);
   const g = rgbaOf(ground);
   if (!c || !g) return colour;
+  if (c.every((v, i) => v === g[i])) return colour;
   const [h, s, l] = hsl(c);
   const gl = hsl(g)[2];
   let [S, L] = [s, l];

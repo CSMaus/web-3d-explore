@@ -1,5 +1,5 @@
 import type { Pen } from "@/components/Plot";
-import { FAINT, GROUND, INK, MUTED, ONE, SKY, TWO, blend } from "@/lib/draw";
+import { FAINT, GROUND, INK, MUTED, ONE, SKY, TWO } from "@/lib/draw";
 import { L } from "@/lib/lang";
 import { num, share } from "@/lib/storyline";
 import { dieFace, lerp, ramp, sBars, sBox, sFrame, sLine, sText, stageOf, withAlpha } from "@/scenes/kit";
@@ -144,7 +144,6 @@ function drawName(pen: Pen, st: Stage, name: string, x: number, y: number, colou
 
 function drawGrid(pen: Pen, st: Stage, grid: number, sum: number) {
   const seen = Math.round(CELLS * ramp(grid, 0, GRID_FULL));
-  const plain = blend(GROUND, MUTED, CELL_MIX);
   const picked = sum >= LOW;
   for (let cell = 0; cell < seen; cell += 1) {
     const [first, second] = pairOf(cell);
@@ -152,7 +151,7 @@ function drawGrid(pen: Pen, st: Stage, grid: number, sum: number) {
     const y = cellY(cell);
     const lit = picked && first + second === sum;
     withAlpha(pen, picked && !lit ? DIM : 1, () => {
-      sBox(pen, st, x + INSET, y - INSET, x + CELL - INSET, y - CELL + INSET, lit ? ONE : plain);
+      withAlpha(pen, lit ? 1 : CELL_MIX, () => sBox(pen, st, x + INSET, y - INSET, x + CELL - INSET, y - CELL + INSET, lit ? ONE : MUTED));
       sText(pen, st, String(first + second), x + CELL / 2, y - CELL / 2, lit ? GROUND : INK, "center", SUM_SIZE);
     });
   }
