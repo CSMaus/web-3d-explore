@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { JSX, ReactNode } from "react";
 import { Plot } from "@/components/Plot";
 import type { Pen } from "@/components/Plot";
@@ -54,6 +54,7 @@ export function StoryOf<F extends Fades, S extends Sets, T extends string, A ext
   const host = useRef<HTMLElement | null>(null);
   const [step, setStep] = useState(0);
   const [values, setValues] = useState<V>(scene.DEFAULTS);
+  const live = useRef<V>(scene.DEFAULTS);
   const [shown, setShown] = useState<F>(steps[0].fade);
   const [eased, setEased] = useState(0);
   const clock = useStoryClock(host);
@@ -73,6 +74,17 @@ export function StoryOf<F extends Fades, S extends Sets, T extends string, A ext
     }
   }
 
+  // the values are also kept outside the render, so a pointer event that comes before the next
+  // render builds on what the event before it left
+  useLayoutEffect(() => {
+    live.current = values;
+  }, [values]);
+
+  const change = (next: V) => {
+    live.current = next;
+    setValues(next);
+  };
+
   const go = (n: number) => {
     const next = clampStep(n, steps.length);
     if (next === step) return;
@@ -80,14 +92,19 @@ export function StoryOf<F extends Fades, S extends Sets, T extends string, A ext
     setValues((v) => scene.onStep(v));
   };
 
-  const at: At<F, S, T, A, V> = { step: current, values, change: setValues, set };
+  const where = (): At<F, S, T, A, V> => ({
+    step: current,
+    values: live.current,
+    change,
+    set: scene.applyAct(current.set, live.current, current.act),
+  });
 
   const drag = (x: number, y: number) => {
     const canvas = host.current?.querySelector("canvas");
     if (!canvas || !pointer) return;
     const rect = canvas.getBoundingClientRect();
     const [sx, sy] = stagePoint(x, y, rect.width, rect.height);
-    pointer.onDrag(sx, sy, at);
+    pointer.onDrag(sx, sy, where());
   };
 
   const own = top?.(current, data, set);
@@ -107,7 +124,7 @@ export function StoryOf<F extends Fades, S extends Sets, T extends string, A ext
           deps={[clock.time, clock.playing, shown, set, data]}
           draw={(pen) => scene.draw(pen, data, shown, set, clock.time, clock.playing)}
           onDrag={pointer ? drag : undefined}
-          onRelease={pointer ? () => pointer.onRelease(at) : undefined}
+          onRelease={pointer ? () => pointer.onRelease(where()) : undefined}
         />
       }
       aside={aside?.(current, data, set)}

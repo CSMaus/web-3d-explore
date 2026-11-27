@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { StoryOf } from "@/components/StoryOf";
@@ -194,6 +194,34 @@ describe("The story of a scene", () => {
     fireEvent.pointerUp(canvas, { pointerId: 1 });
     expect(onRelease).toHaveBeenCalledTimes(1);
     expect(onRelease.mock.calls[0][0].step.id).toBe("two");
+    proto.setPointerCapture = capture;
+  });
+
+  it("gives each pointer event the values the event before it left, with no picture drawn between", () => {
+    const proto = HTMLCanvasElement.prototype;
+    const capture = proto.setPointerCapture;
+    proto.setPointerCapture = () => {};
+    const seen: number[] = [];
+    const onDrag = (_x: number, _y: number, at: Where) => {
+      seen.push(at.values.extra);
+      at.change({ ...at.values, extra: at.values.extra + 1 });
+    };
+    const onRelease = (at: Where) => seen.push(at.values.extra);
+    const { story, build } = show({ pointer: { onDrag, onRelease } });
+    next();
+    const canvas = story.querySelector("canvas") as HTMLCanvasElement;
+    act(() => {
+      fireEvent.pointerDown(canvas, { pointerId: 1, buttons: 1 });
+      fireEvent.pointerMove(canvas, { pointerId: 1, buttons: 1 });
+      fireEvent.pointerMove(canvas, { pointerId: 1, buttons: 1 });
+      fireEvent.pointerUp(canvas, { pointerId: 1 });
+    });
+    expect(seen).toEqual([0, 1, 2, 3]);
+    expect(build).toHaveBeenLastCalledWith({ extra: 3 });
+    fireEvent.click(button("Add a dot"));
+    expect(build).toHaveBeenLastCalledWith({ extra: 4 });
+    next();
+    expect(build).toHaveBeenLastCalledWith({ extra: 0 });
     proto.setPointerCapture = capture;
   });
 
