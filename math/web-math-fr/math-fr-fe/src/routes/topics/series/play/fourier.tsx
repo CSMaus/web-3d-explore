@@ -12,6 +12,7 @@ import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
+import { Tex } from "@/components/Tex";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, TWO } from "@/lib/draw";
 import { L } from "@/lib/lang";
@@ -23,7 +24,7 @@ import * as scene from "@/scenes/series/fourier";
 import type { Data, Shape, Values } from "@/scenes/series/fourier";
 import { STEPS } from "@/storylines/series/fourier";
 import type { Act, Fade, Set, Top } from "@/storylines/series/fourier";
-import { peakOf, waveAt, waveSum, waveTerms, type Wave } from "@/systems/series";
+import { peakOf, sumText, waveAt, waveSum, waveTerms, type Wave } from "@/systems/series";
 
 export const Route = createFileRoute("/topics/series/play/fourier")({
   loader: () => api.system(TOPIC, "fourier"),
@@ -97,6 +98,84 @@ function storyTune(_step: StoryStep<Fade, Set, Top, Act>, values: Values, change
   );
 }
 
+const ROWS = 5;
+const CELL = "py-0.5 pl-2 text-right first:pl-0 sm:pl-4 sm:first:pl-0";
+const MARK = "§";
+const MINUS = "−";
+const HALF_TURN = 180;
+const SERIES_TEX = "c_1 e^{it} + c_{-1} e^{-it} + c_2 e^{2it} + \\dots";
+const TEX_OF: [string, string][] = [
+  ["sin", "\\sin"],
+  ["½", "\\tfrac{1}{2}"],
+  ["⅓", "\\tfrac{1}{3}"],
+  ["¼", "\\tfrac{1}{4}"],
+  ["⅕", "\\tfrac{1}{5}"],
+  ["⅐", "\\tfrac{1}{7}"],
+  ["…", "\\dots"],
+];
+
+const texOf = (sum: string) => TEX_OF.reduce((s, [from, to]) => s.split(from).join(to), sum);
+const signed = (n: number, plus: string) => (n < 0 ? MINUS : plus) + String(Math.abs(n));
+
+function storyAside(step: StoryStep<Fade, Set, Top, Act>, data: Data, set: Set) {
+  if (step.fade.list !== 1) return null;
+  return (
+    <>
+      <div className="overflow-x-auto">
+        <table data-slot="story-list" className="tabular-nums">
+          <thead>
+            <tr>
+              <th scope="col" className={CELL}>{L("Arrow")}</th>
+              <th scope="col" className={CELL}>{L("Length of the arrow")}</th>
+              <th scope="col" className={CELL}>{L("Turns per lap")}</th>
+              <th scope="col" className={CELL}>{L("Starting angle")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.arms.slice(0, ROWS).map((arm, i) => (
+              <tr key={arm.n}>
+                <td className={CELL}>{i + 1}</td>
+                <td className={CELL}>{arm.r.toFixed(3)}</td>
+                <td className={CELL}>{signed(arm.n, "+")}</td>
+                <td className={CELL}>{signed(Math.round((Math.atan2(arm.im, arm.re) * HALF_TURN) / Math.PI), "")}°</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Text kind="note" as="div">{L("More rows: {{n}}", { n: Math.max(0, set.count - ROWS) })}</Text>
+    </>
+  );
+}
+
+function storyTop(step: StoryStep<Fade, Set, Top, Act>, data: Data, set: Set) {
+  if (step.top === "sum") {
+    const [lead, tail] = L("height = {{sum}}", { sum: MARK }).split(MARK);
+    return (
+      <>
+        <span aria-hidden="true">
+          {lead}
+          <Tex tex={texOf(sumText(set.wave, set.count))} />
+          {tail}
+        </span>
+        <span className="sr-only">{scene.topLine("sum", data, set)}</span>
+      </>
+    );
+  }
+  if (step.top === "formula") {
+    const [lead, tail] = L("drawing(t) = {{sum}}", { sum: MARK }).split(MARK);
+    return (
+      <>
+        {lead}
+        <Tex tex={SERIES_TEX} />
+        {tail}
+        <Text kind="note" as="div">{L("c holds the length and the starting angle of an arrow. The number before t is its speed. A minus sign means it spins the other way.")}</Text>
+      </>
+    );
+  }
+  return undefined;
+}
+
 /**
  * a wave rebuilt from sines, each sine a circle turning on the tip of the one before. the tip's
  * height, carried across, traces the sum beside the wave it is aiming at; run adds the sines one
@@ -156,7 +235,7 @@ function FourierPage() {
     <TaskPage
       title={system?.name ?? L("Fourier series: a wave from turning circles")}
       job={L("How do smoothly turning arrows make a wave with sharp corners?")}
-      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} tune={storyTune} />}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} tune={storyTune} aside={storyAside} top={storyTop} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("Which wave")}>

@@ -1,5 +1,5 @@
 import { RouterProvider, createMemoryHistory, createRouter } from "@tanstack/react-router";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { routeTree } from "@/routeTree.gen";
 import { SYSTEMS } from "@/lib/series";
@@ -32,5 +32,29 @@ describe("The series topic's pages", () => {
     await siteAt("/topics/series/play");
     await waitFor(() => expect(screen.getByRole("heading", { name: "The pages, in order" })).toBeTruthy());
     expect(SYSTEMS.map((s) => s.id)).toEqual(["taylor", "radius", "fourier", "draw", "frequencies"]);
+  });
+
+  it("the Fourier story lists its first arrows, then writes them as one formula", async () => {
+    await siteAt("/topics/series/play/fourier");
+    await waitFor(() => expect(document.querySelector('[data-slot="story"]')).toBeTruthy());
+    const story = document.querySelector('[data-slot="story"]') as HTMLElement;
+    const next = () => fireEvent.click(within(story).getByRole("button", { name: "Next step" }));
+
+    for (let i = 0; i < 14; i += 1) next();
+    expect(story.getAttribute("data-step")).toBe("forty");
+    expect(story.querySelector('[data-slot="story-aside"]')).toBeNull();
+
+    next();
+    expect(story.getAttribute("data-step")).toBe("list");
+    const aside = story.querySelector('[data-slot="story-aside"]') as HTMLElement;
+    expect(aside.querySelectorAll('table[data-slot="story-list"] tr').length).toBe(6);
+    expect(aside.textContent).toContain("More rows: 35");
+
+    next();
+    expect(story.getAttribute("data-step")).toBe("series");
+    const top = story.querySelector('[data-slot="story-top"]') as HTMLElement;
+    expect(top.textContent).toContain("drawing(t) =");
+    expect(top.querySelector(".katex")).toBeTruthy();
+    expect(within(top).getByText(/^c holds the length/)).toBeTruthy();
   });
 });
