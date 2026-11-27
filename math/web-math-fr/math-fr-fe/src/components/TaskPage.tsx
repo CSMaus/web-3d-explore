@@ -1,6 +1,9 @@
-import type { ReactNode } from "react";
-import { Text, Heading, Panel, Verdict as KitVerdict } from "@kit/index";
+import type { JSX, ReactNode } from "react";
+import { Button, Text, Heading, Panel, Verdict as KitVerdict } from "@kit/index";
 import { L } from "@/lib/lang";
+
+const LAB = "lab";
+const REDUCED = "(prefers-reduced-motion: reduce)";
 
 /**
  * the shape every play page in an applied topic has, in the same places every
@@ -20,6 +23,7 @@ type Props = {
   result: ReactNode;
   more?: ReactNode;
   below?: ReactNode;
+  story?: ReactNode;
 };
 
 /**
@@ -41,11 +45,36 @@ export function PlayColumns({ input, output }: { input: ReactNode; output: React
   );
 }
 
-export function TaskPage({ title, job, input, run, picture, result, more, below }: Props) {
+export function ToLab(): JSX.Element {
+  const go = () => {
+    const lab = document.getElementById(LAB);
+    if (!lab) return;
+    const reduced = window.matchMedia?.(REDUCED)?.matches ?? false;
+    if (typeof lab.scrollIntoView === "function") {
+      lab.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    }
+    lab.focus({ preventScroll: true });
+  };
+  return (
+    <Button variant="outline" onClick={go}>
+      {L("Go to the experiment")}
+    </Button>
+  );
+}
+
+export function TaskPage({ title, job, input, run, picture, result, more, below, story }: Props) {
   return (
     <>
       <Heading className="mt-4">{title}</Heading>
-      <Text kind="body" as="p" className="mt-2 max-w-2xl">{job}</Text>
+      <Text kind="body" as="p" data-slot="task-job" className="mt-2 max-w-2xl">{job}</Text>
+      {story ? (
+        <>
+          <div className="mt-4">{story}</div>
+          <Heading level={2} id={LAB} tabIndex={-1} className="mt-10 scroll-mt-24">
+            {L("The experiment")}
+          </Heading>
+        </>
+      ) : null}
 
       <PlayColumns
         input={
