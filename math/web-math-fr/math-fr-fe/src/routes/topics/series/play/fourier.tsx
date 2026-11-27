@@ -11,10 +11,12 @@ import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
 import { StoryOf } from "@/components/StoryOf";
+import type { At } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { Tex } from "@/components/Tex";
 import { api } from "@/lib/api";
 import { FAINT, INK, MUTED, ONE, SKY, TWO } from "@/lib/draw";
+import { addPoint, finish, fromStage } from "@/lib/freehand";
 import { L } from "@/lib/lang";
 import { GLYPHS } from "@/lib/outline";
 import { useRunner } from "@/lib/runner";
@@ -176,6 +178,24 @@ function storyTop(step: StoryStep<Fade, Set, Top, Act>, data: Data, set: Set) {
   return undefined;
 }
 
+type Where = At<Fade, Set, Top, Act, Values>;
+
+const storyPointer = {
+  onDrag: (sx: number, sy: number, at: Where) => {
+    if (at.set.mode !== "own") return;
+    const p = fromStage(sx, sy);
+    if (!at.values.drawing) {
+      at.change({ ...at.values, own: [p], drawing: true, count: null });
+      return;
+    }
+    at.change({ ...at.values, own: addPoint(at.values.own ?? [], p) });
+  },
+  onRelease: (at: Where) => {
+    if (at.set.mode !== "own" || !at.values.drawing) return;
+    at.change({ ...at.values, own: finish(at.values.own ?? []), drawing: false });
+  },
+};
+
 /**
  * a wave rebuilt from sines, each sine a circle turning on the tip of the one before. the tip's
  * height, carried across, traces the sum beside the wave it is aiming at; run adds the sines one
@@ -235,7 +255,7 @@ function FourierPage() {
     <TaskPage
       title={system?.name ?? L("Fourier series: a wave from turning circles")}
       job={L("How do smoothly turning arrows make a wave with sharp corners?")}
-      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} tune={storyTune} aside={storyAside} top={storyTop} />}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} tune={storyTune} aside={storyAside} top={storyTop} pointer={storyPointer} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("Which wave")}>
