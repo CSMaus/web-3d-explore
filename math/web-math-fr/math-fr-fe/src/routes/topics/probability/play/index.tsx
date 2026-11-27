@@ -35,7 +35,7 @@ function ProbabilityIndex() {
     <>
       <Heading level={1} className="mt-4">{L("Twelve pages in six groups")}</Heading>
       <Text kind="intro" as="p" className="mt-3 max-w-2xl">
-        {L("This topic is about chance: how often something happens over many tries, given as a number from 0 to 1. Each page asks one question with an exact answer, such as why two dice show 7 more often than 2. The six groups are: counting equally likely outcomes, how new knowledge changes a chance, the average result of a game, counting successes, waiting times as curves, and walks made of coin tosses. Every page has the same three panels: what goes in, a run button, and what came out. The computer makes every random run with a fixed rule that imitates chance, so the numbers on a page can be checked.")}
+        {L("Twelve questions about chance. Each has an exact answer, and each can be checked by hand.")}
       </Text>
       {!theory ? (
         <Text kind="note" as="p" className="mt-3">{L("The page descriptions come from the site's server, which is not answering. The pages themselves work without it.")}</Text>
