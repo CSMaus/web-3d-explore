@@ -48,6 +48,7 @@ const HALF_SIGN = "½";
 const HALF_X = 57.5;
 const HALF_SIZE = 2.6;
 const DASH = [3, 4];
+const HALF_WEIGHT = 2;
 
 const pairsOf = (n: number) => (n * (n - 1)) / 2;
 const differ = (n: number) => 1 - shared(n, DAYS);
@@ -127,7 +128,7 @@ function drawBars(pen: Pen, st: Stage, n: number, last: boolean) {
   const y = BARS.y0 + (BARS.y1 - BARS.y0) * HALF;
   sBars(pen, st, BARS, values, BAR_MOST, (i) => (last && i === n - 1 ? ONE : SKY));
   pen.ctx.setLineDash(DASH);
-  sLine(pen, st, [[BARS.x0, y], [BARS.x1, y]], MUTED, THIN);
+  sLine(pen, st, [[BARS.x0, y], [BARS.x1, y]], INK, HALF_WEIGHT);
   pen.ctx.setLineDash([]);
   sText(pen, st, HALF_SIGN, HALF_X, y, MUTED, "center", HALF_SIZE);
 }
