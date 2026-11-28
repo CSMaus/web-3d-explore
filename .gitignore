@@ -31,6 +31,10 @@ node_modules/
 # the pictures of story steps taken by scripts/browser/story-shots.mjs
 math/web-math-fr/math-fr-fe/shots/
 
+# the cached voice files and the rendered output of the short videos
+math/07-probability/shorts/voice_cache/
+math/07-probability/shorts/out/
+
 # claude code state, all of it. the skill packs are third-party material with
 # their own licences and are not this project's code.
 .claude/
