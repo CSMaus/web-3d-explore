@@ -6,6 +6,27 @@ ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "out"
 MEDIA = OUT / "media"
 CACHE = ROOT / "voice_cache"
+ENV_FILE = os.getenv("SHORT_ENV_FILE", str(ROOT.parents[1] / "web-math-fr" / ".env"))
+ENV_COMMENT, ENV_EXPORT, ENV_QUOTES = "#", "export ", ("'", '"')
+
+
+def load_env(path: str) -> None:
+    if not path or not Path(path).is_file():
+        return
+    for raw in Path(path).read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith(ENV_COMMENT) or "=" not in line:
+            continue
+        if line.startswith(ENV_EXPORT):
+            line = line[len(ENV_EXPORT):]
+        key, value = (part.strip() for part in line.split("=", 1))
+        if len(value) > 1 and value[0] == value[-1] and value[0] in ENV_QUOTES:
+            value = value[1:-1]
+        if key and value and key not in os.environ:
+            os.environ[key] = value
+
+
+load_env(ENV_FILE)
 
 PIXEL_W, PIXEL_H, FPS = 1080, 1920, 30
 DRAFT_W, DRAFT_H, DRAFT_FPS = 540, 960, 15
@@ -57,7 +78,10 @@ LOUDNESS = "loudnorm=I=-16:TP=-1.5:LRA=11"
 LANG_ENV = "SHORT_LANG"
 TOP_FADE = 0.25
 CAPTION_OUTLINE = 4
+CAPTION_MAX_PX = 960
+CAPTION_CHAR_W = 0.62
 VIDEO_CRF = 18
+RENDER_LIMIT = int(os.getenv("SHORT_RENDER_LIMIT", "900"))
 SOUND_RATE = "192k"
 VOICE_NOTE = {
     "ru": "Голос синтезирован (OpenAI).",

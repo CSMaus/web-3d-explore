@@ -58,6 +58,17 @@ def test_inside_speech():
     assert made[len(FIRST.split())].start - made[len(FIRST.split()) - 1].end == pytest.approx(settings.PAUSE)
 
 
+def test_long_piece_shrinks():
+    short = captions.Event(0, 1, ("Два", "кубика", "бросили"), 0)
+    wide = captions.Event(0, 1, ("Число", "называют", "ожидаемым", "выигрышем."), 0)
+    assert captions.fitted(short.words) == settings.CAPTION_SIZE_PX
+    size = captions.fitted(wide.words)
+    assert size < settings.CAPTION_SIZE_PX
+    assert len(" ".join(wide.words)) * size * settings.CAPTION_CHAR_W <= settings.CAPTION_MAX_PX
+    assert f"{{\\fs{size}}}" in captions.line(wide)
+    assert "\\fs" not in captions.line(short)
+
+
 def test_file(tmp_path):
     timeline = scale()
     path = captions.write(timeline, tmp_path / "say" / "captions.ass")

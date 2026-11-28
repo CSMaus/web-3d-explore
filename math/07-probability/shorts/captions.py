@@ -68,10 +68,19 @@ def events(timeline: Timeline) -> list[Event]:
     return out
 
 
+def fitted(words) -> int:
+    full = settings.CAPTION_SIZE_PX
+    width = len(" ".join(words)) * full * settings.CAPTION_CHAR_W
+    return full if width <= settings.CAPTION_MAX_PX else int(full * settings.CAPTION_MAX_PX / width)
+
+
 def line(event: Event) -> str:
     lit, plain = ass_colour(settings.INK), ass_colour(settings.MUTED)
     words = [f"{{\\c{lit}}}{w}{{\\c{plain}}}" if i == event.lit else w for i, w in enumerate(event.words)]
     place = f"{{\\an5\\pos({settings.PIXEL_W // 2},{settings.CAPTION_Y_PX})}}"
+    size = fitted(event.words)
+    if size < settings.CAPTION_SIZE_PX:
+        place += f"{{\\fs{size}}}"
     return f"Dialogue: 0,{stamp(event.start)},{stamp(event.end)},{STYLE},,0,0,0,,{place}{' '.join(words)}"
 
 

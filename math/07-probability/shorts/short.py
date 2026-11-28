@@ -23,9 +23,13 @@ class BeatOverrun(Exception):
 class BeatTime:
     seconds: float
     speech: float
+    start: float = 0.0
 
     def share(self, f: float) -> float:
         return self.seconds * f
+
+    def at(self, f: float) -> float:
+        return self.start + self.seconds * f
 
 
 def pick_top(spec: str, lang: str, **values) -> str | None:
@@ -81,26 +85,44 @@ class Short(Scene):
         slot = self.timeline[id]
         self.hold(slot.start)
         length = round(slot.end - slot.start, PLACES)
-        yield BeatTime(seconds=length, speech=slot.speech)
+        yield BeatTime(seconds=length, speech=slot.speech, start=slot.start)
         if self.now() - slot.end > self.frame():
             took = self.now() - slot.start
             raise BeatOverrun(f"{id}: animations took {took:.2f} s, the beat has {length:.2f} s")
         self.hold(slot.end)
 
-    def top(self, spec: str, **values) -> None:
+    def top_line(self, words: str):
+        if not words:
+            return None
+        fresh = layout.label(words, settings.TOP_H, settings.INK)
+        return layout.fit_width(fresh, settings.TOP_MAX_W).move_to([0, settings.TOP_Y, 0])
+
+    def top_moves(self, spec: str, **values) -> list:
         words = pick_top(spec, self.lang, **values)
         if words is None:
-            return
+            return []
         moves = []
         if self.line is not None:
             moves.append(FadeOut(self.line))
-        self.line = None
-        if words:
-            fresh = layout.label(words, settings.TOP_H, settings.INK)
-            self.line = layout.fit_width(fresh, settings.TOP_MAX_W).move_to([0, settings.TOP_Y, 0])
+        self.line = self.top_line(words)
+        if self.line is not None:
             moves.append(FadeIn(self.line))
+        return moves
+
+    def top(self, spec: str, **values) -> None:
+        moves = self.top_moves(spec, **values)
         if moves:
             self.play(*moves, run_time=settings.TOP_FADE)
+
+    def top_now(self, spec: str, **values) -> None:
+        words = pick_top(spec, self.lang, **values)
+        if words is None:
+            return
+        if self.line is not None:
+            self.remove(self.line)
+        self.line = self.top_line(words)
+        if self.line is not None:
+            self.add(self.line)
 
     def finish(self) -> None:
         self.hold(self.timeline.total)

@@ -1,6 +1,6 @@
 manim==0.20.1
 numpy
-pillow
+pillow<12
 openai
 websockets
 pytest

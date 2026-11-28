@@ -56,7 +56,7 @@ def render(video: str, lang: str, quality: str) -> Path:
     subprocess.run([
         sys.executable, "-m", "manim", "render", f"{video}/scene.py", scene_name(video),
         "-o", name, "--media_dir", str(MEDIA), "--disable_caching",
-    ], cwd=ROOT, env=env, check=True)
+    ], cwd=ROOT, env=env, check=True, timeout=settings.RENDER_LIMIT)
     made = sorted((ROOT / MEDIA / "videos").glob(f"*/*/{name}.mp4"), key=lambda p: p.stat().st_mtime)
     if not made:
         raise FileNotFoundError(f"{name}.mp4 under {MEDIA}")

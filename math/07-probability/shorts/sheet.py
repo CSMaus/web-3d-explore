@@ -17,6 +17,14 @@ def frame(path, at: float) -> Image.Image:
     return Image.open(io.BytesIO(shot.stdout)).convert("RGB")
 
 
+def probe(path) -> str:
+    seen = subprocess.run([
+        settings.FFPROBE, "-v", "error", "-select_streams", "v:0",
+        "-show_entries", "stream=width,height:format=duration", "-of", "csv=p=0", str(path),
+    ], capture_output=True, text=True, check=True)
+    return " ".join(seen.stdout.split())
+
+
 def moments(made: timeline.Timeline) -> list[tuple[str, float]]:
     return [(s.id, s.start + settings.SHEET_SHARE * (s.end - s.start)) for s in made.slots]
 
@@ -45,6 +53,7 @@ def main() -> None:
     out_path = timeline.folder(video, lang) / "sheet.png"
     count = sheet(args.v, out_path, made)
     print(f"{out_path} {count} frames")
+    print(f"video {probe(args.v)} timeline {made.total}")
 
 
 if __name__ == "__main__":
