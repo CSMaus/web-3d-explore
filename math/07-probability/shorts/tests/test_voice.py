@@ -8,6 +8,7 @@ import pytest
 
 import settings
 import voice
+import voice_realtime
 
 TONE_RATE = 22050
 TONE_HZ = 440
@@ -33,6 +34,19 @@ class Tone:
     def synth(self, text, lang, out_path):
         self.calls += 1
         tone(out_path, self.length)
+
+
+class Batch:
+    name = "batch"
+    model = "batch-1"
+
+    def __init__(self):
+        self.asked = []
+
+    def synth_all(self, lines, lang):
+        self.asked.append([beat for beat, _, _ in lines])
+        for _, _, out_path in lines:
+            tone(out_path, 0.5)
 
 
 @pytest.fixture(autouse=True)
@@ -74,8 +88,51 @@ def test_key_changes(monkeypatch):
     assert voice.key(source, "en", "Семь.") != base
     assert voice.key(source, "ru", "Шесть.") != base
     assert voice.key(voice.SilentProvider(), "ru", "Семь.") != base
-    monkeypatch.setattr(settings, "VOICE", "cedar")
+    monkeypatch.setattr(settings, "VOICE", "ballad")
     assert voice.key(source, "ru", "Семь.") != base
+
+
+def test_key_voice(monkeypatch):
+    plain = voice.key(voice_realtime.RealtimeProvider(), "ru", "Семь.")
+    assert voice.key(voice_realtime.RealtimeProvider(voice=settings.VOICE), "ru", "Семь.") == plain
+    assert voice.key(voice_realtime.RealtimeProvider(voice="verse"), "ru", "Семь.") != plain
+    assert voice.fields(voice_realtime.RealtimeProvider(), "ru", "Семь.")["instruction"] == settings.READ_STYLE["ru"]
+    spoken = voice.key(voice.SpeechProvider(), "ru", "Семь.")
+    assert voice.fields(voice.SpeechProvider(), "ru", "Семь.")["voice"] == "onyx"
+    monkeypatch.setattr(settings, "VOICE", "ballad")
+    assert voice.key(voice_realtime.RealtimeProvider(), "ru", "Семь.") != plain
+    assert voice.key(voice.SpeechProvider(), "ru", "Семь.") == spoken
+
+
+def test_all_once():
+    source = Batch()
+    lines = [("b01", "Раз."), ("b02", "Два."), ("b03", "Раз.")]
+    voice.speak("Два.", "ru", source)
+    assert source.asked == [[settings.LONE_BEAT]]
+    clips = voice.speak_all(lines, "ru", source)
+    assert source.asked == [[settings.LONE_BEAT], ["b01"]]
+    assert voice.speak_all(lines, "ru", source) == clips
+    assert len(source.asked) == 2
+    assert clips[0] == clips[2] != clips[1]
+    assert clips[0] == voice.speak("Раз.", "ru", source)
+    assert clips[0].path.with_suffix(".json").exists()
+
+
+def test_all_whole():
+    source = Batch()
+    clips = voice.speak_all([("b01", "Раз."), ("b02", "Два."), ("b03", "Три.")], "ru", source)
+    assert source.asked == [["b01", "b02", "b03"]]
+    assert len({clip.path for clip in clips}) == 3
+
+
+def test_all_single():
+    source = Tone()
+    lines = [("b01", "Раз."), ("b02", "Два."), ("b03", "Три.")]
+    clips = voice.speak_all(lines, "ru", source)
+    assert source.calls == 3
+    assert voice.speak_all(lines, "ru", source) == clips
+    assert source.calls == 3
+    assert [clip.seconds for clip in clips] == pytest.approx([0.5] * 3, abs=0.02)
 
 
 def test_silent_length():
@@ -99,6 +156,8 @@ def test_provider_choice(monkeypatch):
     monkeypatch.delenv(settings.VOICE_ENV, raising=False)
     assert isinstance(voice.provider(), voice.SilentProvider)
     monkeypatch.setenv(settings.KEY_ENV, "set")
+    assert isinstance(voice.provider(), voice_realtime.RealtimeProvider)
+    monkeypatch.setenv(settings.VOICE_ENV, "speech")
     assert isinstance(voice.provider(), voice.SpeechProvider)
     monkeypatch.setenv(settings.VOICE_ENV, "silent")
     assert isinstance(voice.provider(), voice.SilentProvider)

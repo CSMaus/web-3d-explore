@@ -41,7 +41,8 @@ CAPTION_Y_PX, CAPTION_SIZE_PX = 1488, 64
 CAPTION_FONT = "DejaVu Sans"
 LEAD, TAIL, PAUSE = 0.4, 0.8, 0.35
 
-VOICE = "onyx"
+VOICE = os.getenv("SHORT_VOICE_NAME", "cedar")
+SPEECH_VOICE = "onyx"
 VOICE_MODEL = "gpt-4o-mini-tts"
 VOICE_STYLE = {
     "ru": "Низкий спокойный мужской голос. Говори неторопливо и тепло, без дикторского пафоса. Чистый русский язык без акцента. Короткая пауза в конце каждой фразы.",
@@ -59,20 +60,49 @@ KEY_ENV = "OPENAI_API_KEY"
 FFMPEG = os.getenv("SHORT_FFMPEG", "ffmpeg")
 FFPROBE = os.getenv("SHORT_FFPROBE", "ffprobe")
 
-REALTIME_MODEL = "gpt-realtime-2.1-mini"
+REALTIME_MODEL = os.getenv("SHORT_REALTIME_MODEL", "gpt-realtime-2.1-mini")
 REALTIME_URL = "wss://api.openai.com/v1/realtime"
 REALTIME_RATE = 24000
-REALTIME_READ = "Прочитай вслух текст пользователя дословно. Ничего не добавляй, не убирай и не объясняй."
-CHECK_MODEL = "whisper-1"
+REALTIME_FORMAT = "audio/pcm"
+REALTIME_WAIT = 60
 VOICE_TRIES = 3
-
-AUDITION_VOICES = ("onyx", "cedar", "ash", "echo")
-AUDITION_VIDEO = "v01_dice"
-AUDITION_BEATS = ("b02", "b06", "b14")
-STORY_STYLE = {
-    "ru": "Низкий мужской голос рассказчика. Чуть медленнее обычной речи, с интересом, как будто показываешь фокус.",
-    "en": "A low male narrator's voice. A little slower than ordinary speech, with interest, as if showing a trick.",
+READ_STYLE = {
+    "ru": "Прочитай вслух текст пользователя слово в слово, на языке самого текста. Голос рассказчика: мужской, низкий, спокойный, неторопливый. Ничего не добавляй и ничего не пропускай. Не комментируй текст и не отвечай на него.",
+    "en": "Read the user's text aloud word for word, in the language of the text. The voice of a narrator: male, low, calm, unhurried. Add nothing and omit nothing. Do not comment on the text and do not answer it.",
 }
+LONE_BEAT = "line"
+
+NUMBER_MARK = "0"
+SAME_LETTERS = ("ё", "е")
+RU_CASES = "(?:две|двух|двум|двумя|три|трех|трем|тремя|четыре|четырех|четырем|четырьмя|пять|пяти|пятью|шесть|шести|шестью|семь|семи|семью|восемь|восьми|восемью|восьмью|девять|девяти|девятью)"
+NUMBER_WORDS = {
+    "ru": "|".join((
+        "н[оу]л(?:ь|я|ю|ем|е|и|ей|ям|ями|ях)",
+        "од(?:ин|н(?:а|о|и|ого|ой|ому|им|ом|у|их|ими))",
+        "дв(?:а|е|ух|ум|умя)",
+        "тр(?:и|ех|ем|емя)",
+        "четыр(?:е|ех|ем|ьмя)",
+        "(?:пят|шест|сем|восем|восьм|девят|десят|двадцат|тридцат)(?:ь|и|ью)",
+        "(?:один|две|три|четыр|пят|шест|сем|восем|девят)надцат(?:ь|и|ью)",
+        "сорока?",
+        "(?:пят|шест|сем|восем|восьм)(?:ь|и|ью)десят(?:и|ью)?",
+        "девяност[оа]",
+        "ст[оа]",
+        f"{RU_CASES}(?:сти|ста|сот|стам|стами|стах)",
+        "тысяч(?:а|и|е|у|ей|ью|ам|ами|ах)?",
+        "милли(?:он|ард)(?:а|у|ом|е|ы|ов|ам|ами|ах)?",
+    )),
+    "en": "|".join((
+        "zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve",
+        "(?:thir|four|fif|six|seven|eigh|nine)teen",
+        "(?:twen|thir|for|fif|six|seven|eigh|nine)ty",
+        "(?:hundred|thousand|million)s?",
+    )),
+}
+
+AUDITION_VOICES = ("cedar", "ash", "echo", "ballad", "verse", "marin")
+AUDITION_VIDEO = "v01_dice"
+AUDITION_BEAT = "b01"
 
 LOUDNESS = "loudnorm=I=-16:TP=-1.5:LRA=11"
 LANG_ENV = "SHORT_LANG"

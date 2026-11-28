@@ -43,11 +43,12 @@ def folder(video: str, lang: str) -> Path:
 
 def build(video: str, lang: str, provider=None) -> Timeline:
     _, steps = beats.load(video)
+    lines = [(beat.id, beat.say(lang)) for beat in steps]
+    clips = voice.speak_all(lines, lang, provider)
     slots = []
     at = settings.LEAD
-    for beat in steps:
-        text = beat.say(lang)
-        speech = round(voice.speak(text, lang, provider).seconds, PLACES)
+    for beat, (_, text), clip in zip(steps, lines, clips):
+        speech = round(clip.seconds, PLACES)
         end = round(at + speech + beat.pause, PLACES)
         slots.append(Slot(beat.id, text, round(at, PLACES), speech, end))
         at = end

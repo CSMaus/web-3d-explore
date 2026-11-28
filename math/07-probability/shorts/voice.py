@@ -44,13 +44,13 @@ class SilentProvider:
 class SpeechProvider:
     name: str = "speech"
     model: str = settings.VOICE_MODEL
-    voice: str = ""
+    voice: str = settings.SPEECH_VOICE
     style: dict | None = None
 
     def synth(self, text: str, lang: str, out_path) -> None:
         reply = OpenAI().audio.speech.create(
             model=self.model,
-            voice=self.voice or settings.VOICE,
+            voice=self.voice,
             input=text,
             instructions=(self.style or settings.VOICE_STYLE)[lang],
             response_format="wav",
@@ -63,12 +63,13 @@ MAKERS = {
     "speech": SpeechProvider,
     "realtime": voice_realtime.RealtimeProvider,
 }
+STYLES = {"realtime": settings.READ_STYLE}
 
 
 def mode() -> str:
     asked = os.getenv(settings.VOICE_ENV, settings.VOICE_DEFAULT)
     if asked == settings.VOICE_DEFAULT:
-        return "speech" if os.getenv(settings.KEY_ENV) else "silent"
+        return "realtime" if os.getenv(settings.KEY_ENV) else "silent"
     if asked not in MAKERS:
         raise ValueError(f"{settings.VOICE_ENV}={asked}")
     return asked
@@ -82,8 +83,8 @@ def fields(source, lang: str, text: str) -> dict:
     return {
         "provider": source.name,
         "model": source.model,
-        "voice": settings.VOICE,
-        "instruction": settings.VOICE_STYLE[lang],
+        "voice": getattr(source, "voice", "") or settings.VOICE,
+        "instruction": STYLES.get(source.name, settings.VOICE_STYLE)[lang],
         "lang": lang,
         "text": text,
     }
@@ -108,18 +109,29 @@ def tidy(raw, out, trim: bool) -> None:
     subprocess.run(cmd, check=True)
 
 
-def speak(text: str, lang: str, provider=None) -> Clip:
+def speak_all(lines: list[tuple[str, str]], lang: str, provider=None) -> list[Clip]:
     source = provider or MAKERS[mode()]()
-    name = key(source, lang, text)
-    path = CACHE / f"{name}.wav"
-    if not path.exists():
-        raw = CACHE / "raw" / f"{name}.wav"
-        raw.parent.mkdir(parents=True, exist_ok=True)
-        source.synth(text, lang, raw)
+    paths = [CACHE / f"{key(source, lang, text)}.wav" for _, text in lines]
+    missing = {}
+    for (beat, text), path in zip(lines, paths):
+        if not path.exists():
+            missing.setdefault(path, (beat, text, CACHE / "raw" / path.name))
+    if missing:
+        (CACHE / "raw").mkdir(parents=True, exist_ok=True)
+        if hasattr(source, "synth_all"):
+            source.synth_all(list(missing.values()), lang)
+        else:
+            for _, text, raw in missing.values():
+                source.synth(text, lang, raw)
+    for path, (_, text, raw) in missing.items():
         tidy(raw, path, source.name != "silent")
         note = fields(source, lang, text) | {"seconds": seconds(path)}
         path.with_suffix(".json").write_text(json.dumps(note, ensure_ascii=False, indent=2), encoding="utf-8")
-    return Clip(path, seconds(path))
+    return [Clip(path, seconds(path)) for path in paths]
+
+
+def speak(text: str, lang: str, provider=None) -> Clip:
+    return speak_all([(settings.LONE_BEAT, text)], lang, provider)[0]
 
 
 def main() -> None:
@@ -128,12 +140,11 @@ def main() -> None:
     parser.add_argument("--l", default=beats.LANGS[0], choices=beats.LANGS)
     args = parser.parse_args()
     _, steps = beats.load(args.v)
+    lines = [(beat.id, beat.say(args.l)) for beat in steps]
     total = 0.0
-    for beat in steps:
-        text = beat.say(args.l)
-        clip = speak(text, args.l)
+    for (beat, text), clip in zip(lines, speak_all(lines, args.l)):
         total += clip.seconds
-        print(f"{beat.id}  {clip.seconds:6.2f}  {text}")
+        print(f"{beat}  {clip.seconds:6.2f}  {text}")
     print(f"sum  {total:6.2f}")
 
 

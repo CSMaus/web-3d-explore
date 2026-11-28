@@ -4,21 +4,29 @@ import os
 import re
 import wave
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Iterator
 
-from openai import OpenAI
 from websockets.sync.client import connect
 
 import settings
 
+SESSION_SET = "session.update"
+REPLY_ASK = "response.create"
 AUDIO_PART = "response.output_audio.delta"
+TEXT_PART = "response.output_audio_transcript.done"
 RESPONSE_END = "response.done"
 FAILURE = "error"
+DONE = "completed"
+NO_CONTEXT = "none"
+MARKS = re.compile(r"[^\w\s]|_")
+DIGIT = re.compile(r"\d")
+NUMBERS = {lang: re.compile(words) for lang, words in settings.NUMBER_WORDS.items()}
 
 
 class VoiceMismatch(Exception):
-    def __init__(self, asked: str, heard: str):
-        super().__init__(f"asked: {asked} | heard: {heard}")
+    def __init__(self, beat: str, asked: str, heard: str):
+        super().__init__(f"{beat} | asked: {asked} | heard: {heard}")
+        self.beat = beat
         self.asked = asked
         self.heard = heard
 
@@ -31,68 +39,110 @@ def pcm_to_wav(chunks: list[bytes], rate: int, path) -> None:
         out.writeframes(b"".join(chunks))
 
 
-def bare(text: str) -> str:
-    plain = re.sub(r"[^\w\s]|_", " ", text.lower().replace("ё", "е"))
-    return " ".join(plain.split())
+def plain(text: str, lang: str) -> str:
+    mark = settings.NUMBER_MARK
+    kept = []
+    for word in MARKS.sub(" ", text.lower().replace(*settings.SAME_LETTERS)).split():
+        if DIGIT.search(word) or NUMBERS[lang].fullmatch(word):
+            word = mark
+        if word != mark or kept[-1:] != [mark]:
+            kept.append(word)
+    return " ".join(kept)
 
 
-def same_text(a: str, b: str) -> bool:
-    return bare(a) == bare(b)
+def same_text(a: str, b: str, lang: str) -> bool:
+    return plain(a, lang) == plain(b, lang)
 
 
-def requests(text: str, lang: str, model: str) -> list[dict]:
-    session = {
+def session_event(lang: str, voice: str) -> dict:
+    return {"type": SESSION_SET, "session": {
         "type": "realtime",
-        "model": model,
         "output_modalities": ["audio"],
-        "audio": {"output": {
-            "format": {"type": "audio/pcm", "rate": settings.REALTIME_RATE},
-            "voice": settings.VOICE,
-        }},
-        "instructions": f"{settings.REALTIME_READ} {settings.VOICE_STYLE[lang]}",
-    }
+        "audio": {
+            "input": {"turn_detection": None},
+            "output": {
+                "format": {"type": settings.REALTIME_FORMAT, "rate": settings.REALTIME_RATE},
+                "voice": voice,
+            },
+        },
+        "instructions": settings.READ_STYLE[lang],
+    }}
+
+
+def beat_events(text: str, lang: str) -> list[dict]:
     item = {"type": "message", "role": "user", "content": [{"type": "input_text", "text": text}]}
-    return [
-        {"type": "session.update", "session": session},
-        {"type": "conversation.item.create", "item": item},
-        {"type": "response.create", "response": {"output_modalities": ["audio"]}},
-    ]
+    return [{"type": REPLY_ASK, "response": {
+        "conversation": NO_CONTEXT,
+        "input": [item],
+        "instructions": settings.READ_STYLE[lang],
+        "output_modalities": ["audio"],
+    }}]
 
 
-def collect(events: Iterable[dict]) -> list[bytes]:
-    chunks = []
+def trouble(reply: dict) -> str:
+    details = reply.get("status_details") or {}
+    fault = details.get("error") or {}
+    return fault.get("message") or details.get("reason") or str(reply.get("status"))
+
+
+def collect(events: Iterable[dict]) -> tuple[list[bytes], str]:
+    chunks, heard = [], []
     for event in events:
         kind = event.get("type")
         if kind == FAILURE:
             raise RuntimeError(event["error"]["message"])
         if kind == AUDIO_PART:
             chunks.append(base64.b64decode(event["delta"]))
+        if kind == TEXT_PART:
+            heard.append(event["transcript"])
         if kind == RESPONSE_END:
+            reply = event.get("response") or {}
+            if reply.get("status") != DONE:
+                raise RuntimeError(trouble(reply))
             break
-    return chunks
+    return chunks, " ".join(heard)
+
+
+def incoming(socket) -> Iterator[dict]:
+    while True:
+        yield json.loads(socket.recv(timeout=settings.REALTIME_WAIT))
 
 
 @dataclass(frozen=True)
 class RealtimeProvider:
     name: str = "realtime"
     model: str = settings.REALTIME_MODEL
+    voice: str = ""
 
-    def read(self, text: str, lang: str) -> list[bytes]:
+    def open(self, lang: str):
         headers = {"Authorization": f"Bearer {os.getenv(settings.KEY_ENV)}"}
-        with connect(f"{settings.REALTIME_URL}?model={self.model}", additional_headers=headers, max_size=None) as socket:
-            for request in requests(text, lang, self.model):
-                socket.send(json.dumps(request))
-            return collect(json.loads(message) for message in socket)
+        socket = connect(f"{settings.REALTIME_URL}?model={self.model}", additional_headers=headers, max_size=None)
+        socket.send(json.dumps(session_event(lang, self.voice or settings.VOICE)))
+        return socket
 
-    def heard(self, path, lang: str) -> str:
-        with open(path, "rb") as clip:
-            return OpenAI().audio.transcriptions.create(model=settings.CHECK_MODEL, file=clip, language=lang).text
+    def read(self, socket, text: str, lang: str) -> tuple[list[bytes], str]:
+        for event in beat_events(text, lang):
+            socket.send(json.dumps(event))
+        return collect(incoming(socket))
 
-    def synth(self, text: str, lang: str, out_path) -> None:
+    def take(self, socket, beat: str, text: str, lang: str, out_path) -> None:
         heard = ""
         for _ in range(settings.VOICE_TRIES):
-            pcm_to_wav(self.read(text, lang), settings.REALTIME_RATE, out_path)
-            heard = self.heard(out_path, lang)
-            if same_text(text, heard):
+            chunks, heard = self.read(socket, text, lang)
+            if same_text(text, heard, lang):
+                pcm_to_wav(chunks, settings.REALTIME_RATE, out_path)
                 return
-        raise VoiceMismatch(text, heard)
+        raise VoiceMismatch(beat, text, heard)
+
+    def synth_mixed(self, lines: list[tuple]) -> None:
+        if not lines:
+            return
+        with self.open(lines[0][2]) as socket:
+            for beat, text, lang, out_path in lines:
+                self.take(socket, beat, text, lang, out_path)
+
+    def synth_all(self, lines: list[tuple], lang: str) -> None:
+        self.synth_mixed([(beat, text, lang, out_path) for beat, text, out_path in lines])
+
+    def synth(self, text: str, lang: str, out_path) -> None:
+        self.synth_all([(settings.LONE_BEAT, text, out_path)], lang)
