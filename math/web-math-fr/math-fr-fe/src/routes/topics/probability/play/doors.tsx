@@ -10,6 +10,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { EDGE, GROUND, INK, MUTED, ONE, SKY, TWO, blend } from "@/lib/draw";
@@ -17,6 +18,10 @@ import { L } from "@/lib/lang";
 import { UNIT, block, frame, label, line, pane, split } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/doors";
+import type { Values } from "@/scenes/probability/doors";
+import { STEPS } from "@/storylines/probability/doors";
+import type { Act } from "@/storylines/probability/doors";
 import { doorsGame, pick, rngFrom } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/doors")({
@@ -30,6 +35,25 @@ const COUNTS = [
   { id: "100", label: L("100 doors") },
 ];
 type Hand = { car: number; first: number; left: number; choice: "stay" | "switch" | null } | null;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "hand":
+      return (
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" disabled={values.choice !== "none"} onClick={() => change(scene.decide(values, "stay"))}>
+            {L("Keep the first door")}
+          </Button>
+          <Button variant="outline" size="sm" disabled={values.choice !== "none"} onClick={() => change(scene.decide(values, "switch"))}>
+            {L("Switch to the other door")}
+          </Button>
+          <Button variant="outline" size="sm" disabled={values.choice === "none"} onClick={() => change(scene.deal(values))}>
+            {L("Deal a new game")}
+          </Button>
+        </div>
+      );
+  }
+}
 
 /**
  * the doors game. one game by hand: pick a door, the host opens every other door but one, stay or
@@ -91,7 +115,8 @@ function DoorsPage() {
   return (
     <TaskPage
       title={system?.name ?? L("Three doors: stay or switch")}
-      job={L("Does it help to switch doors? There are three closed doors. Behind one is a car, behind each of the other two a goat. A player picks a door. The host knows where the car is. He opens one of the two other doors, always one with a goat, and offers the player a switch to the last closed door. Most people say switching cannot matter: two doors are left, so each wins half the time. Play a few games by hand with the buttons. Then press run: the computer plays a thousand games in which the player stays and a thousand in which the player switches. Then try 100 doors, where the host opens 98.")}
+      job={L("Three doors, one car: is it better to stay or to switch?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("Number of doors")} note={L("Three doors is the usual game. With 100 doors the host opens 98 doors with goats and leaves one door closed besides the player's. Changing the number of doors starts the games again.")}>

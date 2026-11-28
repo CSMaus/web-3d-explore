@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Swatch, Text } from "@kit/index";
+import { Button, Swatch, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Choices } from "@/components/Choices";
@@ -9,6 +9,7 @@ import { Plot } from "@/components/Plot";
 import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { GROUND, INK, MUTED, ONE, SKY, TWO, blend } from "@/lib/draw";
@@ -16,6 +17,10 @@ import { L } from "@/lib/lang";
 import { UNIT, block, frame, line, pane, split } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/walks";
+import type { Values } from "@/scenes/probability/walks";
+import { STEPS } from "@/storylines/probability/walks";
+import type { Act } from "@/storylines/probability/walks";
 import { arcsine, arcsineDensity, rngFrom } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/walks")({
@@ -27,6 +32,17 @@ const MOST = 2000;
 const WALKS = 1000;
 const DRAWN = 50;
 const BINS = 20;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "again":
+      return (
+        <Button variant="outline" size="sm" onClick={() => change({ seed: values.seed + 1 })}>
+          {L("Fifty new walks")}
+        </Button>
+      );
+  }
+}
 const GUESSES = [
   { id: "half", label: L("Near half the time") },
   { id: "ends", label: L("Mostly on one side") },
@@ -81,7 +97,8 @@ function WalksPage() {
   return (
     <TaskPage
       title={system?.name ?? L("Fifty walks of coin tosses")}
-      job={L("A coin is tossed again and again. Each head moves a counter one step up, each tail one step down. The path of the counter is called a random walk. After 1000 tosses of a fair coin, how far is the walk from zero, where it started? And for what share of the time was it above zero? The usual answers are 'close to zero' and 'about half the time'. First make a guess about the second question. Then press run: the computer tosses 1000 walks at once and draws fifty of them. After n tosses, a typical walk is about the square root of n steps from zero: 20 after 400 tosses, 31.6 after 1000. The share of time above zero holds a surprise.")}
+      job={L("Where does a player end up after hundreds of fair coin tosses?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("A guess first")} note={L("'Near half the time' means a fair walk spends about as long above zero as below. 'Mostly on one side' means it tends to stay on the side it reached first. The result says which guess the walks support.")}>

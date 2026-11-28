@@ -9,6 +9,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { EDGE, GROUND, INK, SKY, TWO, blend } from "@/lib/draw";
@@ -16,6 +17,10 @@ import { L } from "@/lib/lang";
 import { UNIT, block, frame, label, pane, split } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/test";
+import type { Values } from "@/scenes/probability/test";
+import { STEPS as STORY } from "@/storylines/probability/test";
+import type { Act } from "@/storylines/probability/test";
 import { bayes, counted, population } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/test")({
@@ -29,6 +34,19 @@ const ROWS = 200;
 /** one step tests this many people, two rows of the block */
 const BATCH = 1000;
 const STEPS = PEOPLE / BATCH;
+const ILL_LEAST = 1;
+const ILL_MOST = 300;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "prevalence":
+      return (
+        <div className="max-w-2xl">
+          <Slider label={L("Ill people in every 1000")} min={ILL_LEAST} max={ILL_MOST} step={1} value={values.per1000} format={(v) => String(Math.round(v))} onChange={(v) => change({ per1000: Math.round(v) })} />
+        </div>
+      );
+  }
+}
 
 /**
  * 100,000 people as a block of 500 by 200, tested two rows a step. every positive result is lit as it
@@ -68,7 +86,8 @@ function TestPage() {
   return (
     <TaskPage
       title={system?.name ?? L("A positive test")}
-      job={L("A person takes a test for a disease, and the result is positive: the test says the person is ill. What is the chance that the person really is ill? The test finds 99 per cent of the people who have the disease. It also wrongly says 'ill' for 5 per cent of healthy people. One person in 1000 has the disease. First set a guess. Then, instead of using a formula, count. Take 100,000 people: 100 of them are ill and 99,900 are healthy. Press run to test them, a thousand people a step. Then look only at the people with a positive result. The chance of being ill, once the result is known to be positive, is the share of ill people among them.")}
+      job={L("After a positive test result, how likely is the disease?")}
+      story={<StoryOf steps={STORY} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("A guess first")} note={L("Set the chance, in per cent, that a person with a positive result is ill. The result compares the guess with the count.")}>

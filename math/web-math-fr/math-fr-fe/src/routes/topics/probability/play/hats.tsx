@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Swatch, Text } from "@kit/index";
+import { Button, Swatch, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Equations } from "@/components/Equations";
@@ -9,6 +9,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { GROUND, INK, MUTED, ONE, SKY, blend } from "@/lib/draw";
@@ -16,6 +17,10 @@ import { L } from "@/lib/lang";
 import { UNIT, block, dot, frame, line, pane, split } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/hats";
+import type { Values } from "@/scenes/probability/hats";
+import { STEPS } from "@/storylines/probability/hats";
+import type { Act } from "@/storylines/probability/hats";
 import { matchChance, matches, rngFrom, shuffleHats } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/hats")({
@@ -25,6 +30,17 @@ export const Route = createFileRoute("/topics/probability/play/hats")({
 
 const MOST = 5000;
 const SHOWN = 8;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "shuffle":
+      return (
+        <Button variant="outline" size="sm" onClick={() => change({ seed: values.seed + 1 })}>
+          {L("Shuffle the hats")}
+        </Button>
+      );
+  }
+}
 
 /**
  * n hats handed back in a random order, shuffle after shuffle from one seed. on the left the shuffle
@@ -65,7 +81,8 @@ function HatsPage() {
   return (
     <TaskPage
       title={system?.name ?? L("Hats handed back at random")}
-      job={L("Ten people leave their hats at a cloakroom, and the hats are handed back in a random order. Each random handing-out is called a shuffle. On average, how many people get their own hat back? And with a hundred people, more or fewer? First set a guess. Listing every possible shuffle is hopeless: 10 hats can be handed out in 3,628,800 orders. Instead, count person by person. Each person gets their own hat with chance 1/10, that is, one time in ten. So each person adds 1/10 of a match on average, and ten people add 1. The people affect each other, since one hat cannot go to two people. The averages still add.")}
+      job={L("Hats come back at random. How many people get their own?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("A guess first")} note={L("Set the average number of people who get their own hat back. The result compares the guess with the shuffles.")}>

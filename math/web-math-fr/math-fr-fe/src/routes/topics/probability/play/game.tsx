@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Swatch, Text } from "@kit/index";
+import { Button, Swatch, Text } from "@kit/index";
 import { useMemo, useRef, useState } from "react";
 import { Caption } from "@/components/Caption";
 import { Equations } from "@/components/Equations";
@@ -9,6 +9,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { MUTED, ONE, SKY, TWO } from "@/lib/draw";
@@ -16,6 +17,10 @@ import { L } from "@/lib/lang";
 import { UNIT, frame, line, pane, split } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/game";
+import type { Values } from "@/scenes/probability/game";
+import { STEPS } from "@/storylines/probability/game";
+import type { Act } from "@/storylines/probability/game";
 import { expectedGain, gainSpread, pick, rngFrom } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/game")({
@@ -25,6 +30,17 @@ export const Route = createFileRoute("/topics/probability/play/game")({
 
 const MOST = 10000;
 const COST = 2;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "play":
+      return (
+        <Button variant="outline" size="sm" onClick={() => change({ seed: values.seed + 1 })}>
+          {L("Play 20 rounds")}
+        </Button>
+      );
+  }
+}
 
 /**
  * the game: pay 2, throw a die, collect the prize on a six. the throws come from one seed; the run
@@ -69,7 +85,8 @@ function GamePage() {
   return (
     <TaskPage
       title={system?.name ?? L("A game with a die: pay 2, win 10 on a six")}
-      job={L("A game costs 2 a round. In each round a die is thrown, and a six wins a prize of 10. After 1000 rounds, roughly how much has a player won or lost? First set a guess. In one round the player loses 2 five times in six, and gains 10 - 2 = 8 once in six. Multiply each result by its chance and add: 8 x 1/6 - 2 x 5/6 = -1/3. This number is called the expected gain of a round. No single round ever gives -1/3, but the average over many rounds comes close to it. Press run to play the rounds. Watch the average per round settle while the total keeps wandering.")}
+      job={L("A round costs 2, and a six on a die wins 10. How much has a player won or lost after 1000 rounds?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("A guess first")} note={L("Set the total a player has after 1000 rounds with a prize of 10: above zero is a gain, below zero a loss. The result compares the guess with the run and with the expected total.")}>

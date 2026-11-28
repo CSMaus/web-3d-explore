@@ -9,6 +9,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { INK, MUTED, ONE, SKY, TWO } from "@/lib/draw";
@@ -16,6 +17,10 @@ import { L } from "@/lib/lang";
 import { UNIT, frame, line, pane, split } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/ruin";
+import type { Values } from "@/scenes/probability/ruin";
+import { STEPS } from "@/storylines/probability/ruin";
+import type { Act } from "@/storylines/probability/ruin";
 import { expectedBets, playRuin, reachChance, rngFrom } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/ruin")({
@@ -25,6 +30,23 @@ export const Route = createFileRoute("/topics/probability/play/ruin")({
 
 const KEEP = 12;
 const SEED = 20;
+const COIN_LEAST = 0.4;
+const COIN_MOST = 0.6;
+const COIN_STEP = 0.01;
+const START_LEAST = 1;
+const START_MOST = 19;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "coin":
+      return (
+        <div className="max-w-2xl space-y-3">
+          <Slider label={L("Chance to win one toss")} min={COIN_LEAST} max={COIN_MOST} step={COIN_STEP} value={values.p} format={(v) => v.toFixed(2)} onChange={(v) => change({ ...values, p: v })} />
+          <Slider label={L("Coins at the start")} min={START_LEAST} max={START_MOST} step={1} value={values.start} format={(v) => String(Math.round(v))} onChange={(v) => change({ ...values, start: Math.round(v) })} />
+        </div>
+      );
+  }
+}
 type Tally = { games: number; won: number; bets: number; paths: number[][]; share: [number, number][] };
 const EMPTY: Tally = { games: 0, won: 0, bets: 0, paths: [], share: [] };
 
@@ -69,7 +91,8 @@ function RuinPage() {
   return (
     <TaskPage
       title={system?.name ?? L("Gambler's ruin")}
-      job={L("A gambler has 10 and bets 1 at a time on a coin toss. Each win adds 1, each loss takes 1 away. The gambler stops on reaching 20 or on losing everything. With a fair coin, how often is 20 reached, and after how many bets? And what changes if the coin wins only 49 times in 100? With a fair coin the answer is one half, by symmetry: the gambler starts as far from 20 as from 0. The number of bets averages 10 x 10 = 100. A coin that wins 49 times in 100 looks almost fair, yet it cuts the chance of reaching 20 to 0.40. Press run to play the games and compare the share of games that reach 20 with the formula.")}
+      job={L("A gambler starts with 10 and bets 1 at a time on a coin. How often is 20 reached before 0?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("The game")} note={L("Three sliders set the game: the money the gambler starts with, the amount at which the gambler stops, and the chance of winning each bet. Each change starts the games again.")}>

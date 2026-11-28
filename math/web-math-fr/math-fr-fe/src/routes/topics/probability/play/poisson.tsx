@@ -9,6 +9,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { EDGE, GROUND, INK, ONE, SKY, blend } from "@/lib/draw";
@@ -16,6 +17,10 @@ import { L } from "@/lib/lang";
 import { UNIT, block, dot, frame, pane } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/poisson";
+import type { Values } from "@/scenes/probability/poisson";
+import { STEPS } from "@/storylines/probability/poisson";
+import type { Act } from "@/storylines/probability/poisson";
 import { TRIALS, binomial, distance, poisson, rngFrom } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/poisson")({
@@ -24,6 +29,20 @@ export const Route = createFileRoute("/topics/probability/play/poisson")({
 });
 
 const SHOWN = 12;
+const MEAN_LEAST = 0.5;
+const MEAN_MOST = 6;
+const MEAN_STEP = 0.5;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "mean":
+      return (
+        <div className="max-w-2xl">
+          <Slider label={L("Average number of calls a minute")} min={MEAN_LEAST} max={MEAN_MOST} step={MEAN_STEP} value={values.mean} format={(v) => v.toFixed(1)} onChange={(v) => change({ mean: v })} />
+        </div>
+      );
+  }
+}
 
 /**
  * a minute cut into n slices, a call in each slice with chance mean / n. each step of the run cuts
@@ -56,7 +75,8 @@ function PoissonPage() {
   return (
     <TaskPage
       title={system?.name ?? L("Rare events: a minute with no call")}
-      job={L("A call centre gets 3 calls a minute on average, at random moments. How often does a whole minute pass with no call? Cut the minute into 10 slices of 6 seconds. Say each slice holds a call with chance 3/10, that is, 3 times in 10, and the slices do not affect each other. Then a minute with no call has chance 0.7^10 = 0.028, where 0.7^10 means 0.7 multiplied by itself 10 times. But a slice could hold two calls, so cut finer: 100 slices, each with chance 3/100, give 0.97^100 = 0.048. Press run to keep cutting finer. Watch the chances of 0, 1, 2 and more calls settle on one list of numbers, called the Poisson chances. In that list a minute with no call has chance e^-3 = 0.0498. The number e = 2.718... is a constant, and e^-3 is 1 divided by e three times.")}
+      job={L("A call centre gets three calls a minute on average. How often does a minute pass with no call?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("Calls a minute on average")} note={L("The average number of calls in a minute stays fixed while the slices get finer. The question above uses 3. Changing it starts the cutting again.")}>

@@ -10,6 +10,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { GROUND, INK, MUTED, ONE, SKY, blend } from "@/lib/draw";
@@ -17,6 +18,10 @@ import { L } from "@/lib/lang";
 import { UNIT, block, frame, line, pane } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/bins";
+import type { Values } from "@/scenes/probability/bins";
+import { STEPS } from "@/storylines/probability/bins";
+import type { Act } from "@/storylines/probability/bins";
 import { BINS, beyond, density, histogram, samples, shareAbove, type Shape } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/bins")({
@@ -26,6 +31,17 @@ export const Route = createFileRoute("/topics/probability/play/bins")({
 
 const COUNT = 10000;
 const SPAN = 50;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "cut":
+      return (
+        <div className="max-w-2xl">
+          <Slider label={L("Border, in minutes")} min={0} max={SPAN} step={1} value={values.cut} format={(v) => String(Math.round(v))} onChange={(v) => change({ cut: Math.round(v) })} />
+        </div>
+      );
+  }
+}
 const SHAPES: { id: Shape; label: string }[] = [
   { id: "exponential", label: L("Taxis at random") },
   { id: "uniform", label: L("A bus every 20 minutes") },
@@ -63,7 +79,8 @@ function BinsPage() {
   return (
     <TaskPage
       title={system?.name ?? L("From bars to a curve: waits for a taxi")}
-      job={L("Taxis arrive at random moments, 10 minutes apart on average. How often does a wait for a taxi last more than 20 minutes? The page holds 10,000 waits made by the computer. To see their pattern, the waits are sorted into bins: equal stretches of time, such as 0 to 5 minutes, 5 to 10 minutes and so on. A bar over each bin shows how many waits fall in it, and such a picture is called a histogram. With 2 bins of 25 minutes it says almost nothing. With 200 bins of a quarter of a minute each bar holds only a few waits. To compare the pictures, each count is divided by the number of waits and by the width of the bin. Then the bars keep their height as the bins narrow, and the total area of the bars stays 1. Press run to narrow the bins. The bars come close to a curve, and the chance of a range of waits is the area under the curve over that range.")}
+      job={L("Taxis come at random, 10 minutes apart on average. How often is the wait over 20 minutes?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("How the waits arise")} note={L("Taxis at random: the curve falls steadily, and it is called the exponential curve. A bus every 20 minutes, reached at a random moment: the average wait is also 10 minutes, and the curve is flat from 0 to 20. About 10 minutes, give or take 3: the curve is a bell, called the normal curve.")}>

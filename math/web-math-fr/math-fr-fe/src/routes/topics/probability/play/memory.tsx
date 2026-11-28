@@ -10,6 +10,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { GROUND, ONE, SKY, blend } from "@/lib/draw";
@@ -17,6 +18,10 @@ import { L } from "@/lib/lang";
 import { UNIT, block, frame, line, pane } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/memory";
+import type { Values } from "@/scenes/probability/memory";
+import { STEPS as STORY } from "@/storylines/probability/memory";
+import type { Act } from "@/storylines/probability/memory";
 import { histogram, mean, remaining, samples, shareAbove, type Shape } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/memory")({
@@ -29,6 +34,18 @@ const BATCH = 100;
 const STEPS = COUNT / BATCH;
 const SPAN = 40;
 const BINS = 20;
+const WAITED_MOST = 30;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "waited":
+      return (
+        <div className="max-w-2xl">
+          <Slider label={L("Already waited, in minutes")} min={0} max={WAITED_MOST} step={1} value={values.waited} format={(v) => String(Math.round(v))} onChange={(v) => change({ waited: Math.round(v) })} />
+        </div>
+      );
+  }
+}
 const WAYS: { id: Shape; label: string }[] = [
   { id: "exponential", label: L("Taxis at random") },
   { id: "uniform", label: L("A bus every 20 minutes") },
@@ -64,7 +81,8 @@ function MemoryPage() {
   return (
     <TaskPage
       title={system?.name ?? L("Waiting that forgets the past")}
-      job={L("Taxis arrive at random moments, 10 minutes apart on average. A person has already waited 10 minutes. How long is the wait still ahead? It feels as though a taxi must be due soon. In fact the wait still ahead is 10 minutes on average, the same as at the start. Press run to collect waits, a hundred at a time. The page keeps only the people who waited at least 10 minutes and measures the time still ahead of them. Then switch to a bus that comes every 20 minutes on a timetable. Its average wait is also 10 minutes, but after 10 minutes of waiting only 5 are left on average.")}
+      job={L("After ten minutes of waiting for a taxi, how much longer is the wait?")}
+      story={<StoryOf steps={STORY} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("How the arrivals come")} note={L("Taxis at random follow no schedule, so the time already waited says nothing about when the next one comes. A bus every 20 minutes keeps a schedule, so every minute waited brings the bus closer. Changing the choice starts the count again.")}>

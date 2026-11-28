@@ -9,6 +9,7 @@ import { Readout } from "@/components/Readout";
 import { RunBar } from "@/components/RunBar";
 import { SaveImage } from "@/components/SaveImage";
 import { Slider } from "@/components/Slider";
+import { StoryOf } from "@/components/StoryOf";
 import { TaskPage, Verdict } from "@/components/TaskPage";
 import { api } from "@/lib/api";
 import { INK, MUTED, ONE, SKY, TWO } from "@/lib/draw";
@@ -16,6 +17,10 @@ import { L } from "@/lib/lang";
 import { UNIT, block, dot, frame, line, pane } from "@/lib/panes";
 import { TOPIC } from "@/lib/probability";
 import { useRunner } from "@/lib/runner";
+import * as scene from "@/scenes/probability/galton";
+import type { Values } from "@/scenes/probability/galton";
+import { STEPS } from "@/storylines/probability/galton";
+import type { Act } from "@/storylines/probability/galton";
 import { binomial, choose, dropBall, rngFrom } from "@/systems/probability";
 
 export const Route = createFileRoute("/topics/probability/play/galton")({
@@ -25,6 +30,20 @@ export const Route = createFileRoute("/topics/probability/play/galton")({
 
 const MOST = 5000;
 const TRAIL = 6;
+const TILT_LEAST = 0.2;
+const TILT_MOST = 0.8;
+const TILT_STEP = 0.05;
+
+function storyAct(act: Act, values: Values, change: (next: Values) => void) {
+  switch (act) {
+    case "tilt":
+      return (
+        <div className="max-w-2xl">
+          <Slider label={L("Tilt: chance of going right")} min={TILT_LEAST} max={TILT_MOST} step={TILT_STEP} value={values.p} format={(v) => v.toFixed(2)} onChange={(v) => change({ p: v })} />
+        </div>
+      );
+  }
+}
 
 /**
  * a board of pins: at every pin a ball goes right with chance p and left otherwise, and it lands in
@@ -62,7 +81,8 @@ function GaltonPage() {
   return (
     <TaskPage
       title={system?.name ?? L("The Galton board")}
-      job={L("A Galton board is a board with rows of pins. A ball dropped at the top falls through the rows. At each pin it bounces right or left, each with chance one half, that is, half the time. At the bottom it lands in a bin. The bins are numbered by how many times the ball went right: with 10 rows there are 11 bins, from 0 to 10. Which bin fills most, and by how much? A ball reaches bin 5 by any path with 5 rights among the 10 rows. There are 252 such paths out of 1024 possible paths. Bin 0 has one path only, left every time. Press run to drop balls and watch the bins fill. Then tilt the board: change the chance of going right and watch the pile move.")}
+      job={L("Why do balls falling at random always pile up in the same shape?")}
+      story={<StoryOf steps={STEPS} scene={scene} act={storyAct} />}
       input={
         <div className="space-y-3">
           <OptionGroup title={L("The board")} note={L("The first slider sets the chance that a ball goes right at a pin, the same at every pin. A value above one half tilts the board to the right. The second slider sets the number of rows, which is the number of bounces. Either change starts the drops again.")}>
